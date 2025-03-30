@@ -1,0 +1,3 @@
+echo "------- run here to check lint ------- "
+cd frontend
+npm run check:all
