@@ -1,9 +1,10 @@
+import { Button } from '@/components/ui/button'
 function App() {
-  console.log('App component loaded')
   return (
-    <>
-      <h1>This is our OOSE project: HDmoVie</h1>
-    </>
+    <div className='text-center mx-auto '>
+      <h1 className='text-3xl font-bold text-primary-50'>This is our OOSE project: HDmoVie</h1>
+      <Button className='my-10'>Demo Shadcn</Button>
+    </div>
   )
 }
 
