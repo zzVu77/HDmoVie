@@ -1,3 +1,7 @@
-echo "------- run here to check lint ------- "
+
+echo "------- run here to check backend lint ------- "
+cd backend
+npm run check:all
+echo "------- run here to check frontend lint ------- "
 cd frontend
 npm run check:all
