@@ -1,4 +1,4 @@
-# 🎬 HDMovie Monorepo
+# 🎬 HDmoVie Monorepo
 
 ![Node.js](https://img.shields.io/badge/Node.js-20.x-green?style=flat&logo=node.js) ![TypeScript](https://img.shields.io/badge/TypeScript-5.8.2-blue?style=flat&logo=typescript) ![Express](https://img.shields.io/badge/Express-4.21.2-black?style=flat&logo=express) ![React](https://img.shields.io/badge/React-19.x-blue?style=flat&logo=react)
 
