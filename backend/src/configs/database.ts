@@ -15,4 +15,3 @@
 // );
 
 // export default sequelize;
-console.log('hello')
