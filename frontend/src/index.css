@@ -3,10 +3,14 @@
 
 @custom-variant dark (&:is(.dark *));
 @theme {
-  /* color */
+  /* define for color --color-* */
   --color-primary-50: #1e3a8a;
   --color-primary-100: #fbbf24;
   --color-primary-200: #9333ea;
+  /* define for border radius --border-radius-* */
+  --border-radius-sm: 0.25rem; /* 4px */
+  --border-radius-md: 0.5rem; /* 8px */
+  --border-radius-lg: 1rem; /* 16px */
 }
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

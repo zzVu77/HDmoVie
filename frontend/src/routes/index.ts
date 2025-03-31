@@ -1,33 +1,30 @@
-//Sample code for a React Router setup with TypeScript
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import HomePage from "../pages/HomePage";
-// import LoginPage from "../pages/LoginPage";
-// import DashboardPage from "../pages/DashboardPage";
-// import NotFoundPage from "../pages/NotFoundPage";
-// import PrivateRoute from "./PrivateRoute";
+//Sample code for a React Router setup
+// import { createBrowserRouter } from 'react-router-dom'
+// import { MainLayout } from '../layouts/MainLayout'
+// import { Home } from '../pages/Home'
+// import { About } from '../pages/About'
+// import { Contact } from '../pages/Contact'
 
-// const AppRoutes = () => {
-//   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/" element={<HomePage />} />
-//         <Route path="/login" element={<LoginPage />} />
-
-//         {/* Route bảo vệ - Chỉ người dùng đăng nhập mới có thể vào Dashboard */}
-//         <Route
-//           path="/dashboard"
-//           element={
-//             <PrivateRoute>
-//               <DashboardPage />
-//             </PrivateRoute>
-//           }
-//         />
-
-//         {/* 404 - Trang không tìm thấy */}
-//         <Route path="*" element={<NotFoundPage />} />
-//       </Routes>
-//     </Router>
-//   );
-// };
-
-// export default AppRoutes;
+// export const router = createBrowserRouter([
+//   {
+//     element: <MainLayout />,
+//     children: [
+//       {
+//         path: '/',
+//         element: <Home />,
+//       },
+//       {
+//         path: '/about',
+//         element: <About />,
+//       },
+//       {
+//         path: '/contact',
+//         element: <Contact />,
+//       },
+//       {
+//         path: '*',
+//         element: <div>404 - Page Not Found</div>,
+//       },
+//     ],
+//   },
+// ])
