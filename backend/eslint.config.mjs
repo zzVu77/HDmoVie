@@ -37,7 +37,6 @@ export default defineConfig([
           tabWidth: 2,
         },
       ],
-      'no-console': 'error',
     },
     ignores: ['**/node_modules/', '**/dist/'],
   },
