@@ -1,54 +1,57 @@
-# React + TypeScript + Vite
+# 🚀 Frontend Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Vite](https://img.shields.io/badge/Vite-6.2.0-blue?style=flat&logo=vite) ![React](https://img.shields.io/badge/React-19.0.0-blue?style=flat&logo=react) ![TypeScript](https://img.shields.io/badge/TypeScript-5.7.2-blue?style=flat&logo=typescript) ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.0.17-blue?style=flat&logo=tailwindcss)
 
-Currently, two official plugins are available:
+A modern frontend project built with Vite, React, TypeScript, and Tailwind CSS. ✨
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ⚡ Getting Started
 
-## Expanding the ESLint configuration
+### 🔧 Install Dependencies
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```sh
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 🏃 Run Development Server
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```sh
+npm run dev
 ```
+
+### 🔨 Build Project
+
+```sh
+npm run build
+```
+
+### 🔍 Preview Build
+
+```sh
+npm run preview
+```
+
+### 🧹 Lint & Format Code
+
+```sh
+npm run check:all
+```
+
+## 📦 Dependencies
+
+### 🔹 Main Dependencies
+
+- **React** `^19.0.0`
+- **React DOM** `^19.0.0`
+- **React Router** `^7.4.1`
+- **Axios** `^1.8.4`
+- **Tailwind CSS** `^4.0.17`
+
+### 🔹 Development Dependencies
+
+- **Vite** `^6.2.0`
+- **TypeScript** `~5.7.2`
+- **ESLint & Prettier** for code linting and formatting
+
+---
+
+Made with ❤️ using Vite, React, and Tailwind CSS! 🚀

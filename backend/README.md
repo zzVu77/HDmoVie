@@ -1,0 +1,69 @@
+# 🚀 Backend Project
+
+![Node.js](https://img.shields.io/badge/Node.js-20.x-green?style=flat&logo=node.js) ![Express](https://img.shields.io/badge/Express-4.21.2-black?style=flat&logo=express) ![TypeScript](https://img.shields.io/badge/TypeScript-5.8.2-blue?style=flat&logo=typescript) ![Sequelize](https://img.shields.io/badge/Sequelize-6.37.7-blue?style=flat&logo=sequelize)
+
+A modern backend project built with Node.js, Express, TypeScript, and Sequelize ORM. 🛠️
+
+## 📂 Project Structure
+
+```
+backend/
+├── src/              # Source code
+├── dist/             # Compiled JavaScript files
+├── node_modules/     # Dependencies
+├── package.json      # Project metadata and dependencies
+├── tsconfig.json     # TypeScript configuration
+├── .eslintrc.js      # ESLint configuration
+├── .prettierrc       # Prettier configuration
+└── .env              # Environment variables
+```
+
+## ⚡ Getting Started
+
+### 🔧 Install Dependencies
+
+```sh
+npm install
+```
+
+### 🏃 Run Development Server
+
+```sh
+npm run dev
+```
+
+### 🔨 Build Project
+
+```sh
+npm run build
+```
+
+### 🚀 Start Production Server
+
+```sh
+npm start
+```
+
+### 🧹 Lint & Format Code
+
+```sh
+npm run check:all
+```
+
+## 📦 Dependencies
+
+### 🔹 Main Dependencies
+
+- **Express** `^4.21.2`
+- **Sequelize** `^6.37.7`
+- **CORS** `^2.8.5`
+
+### 🔹 Development Dependencies
+
+- **TypeScript** `^5.8.2`
+- **Nodemon** `^3.1.9`
+- **ESLint & Prettier** for code linting and formatting
+
+---
+
+Made with ❤️ using Node.js, Express, and TypeScript! 🚀
