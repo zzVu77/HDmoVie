@@ -1,12 +1,18 @@
 #!/bin/sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "------- 🔍 Checking frontend lint and types -------"
-cd frontend && npx lint-staged
+set -e  # Dừng script nếu có lỗi
 
+echo "------- 🔍 Checking frontend lint and types -------"
+cd frontend && npx lint-staged || { 
+  echo "❌ Frontend check failed! Please fix the issues and run: git add ."; 
+  exit 1; 
+}
 
 echo "------- 🔍 Checking backend lint and types -------"
-cd ../backend && npx lint-staged
+cd ../backend && npx lint-staged || { 
+  echo "❌ Backend check failed! Please fix the issues and run: git add ."; 
+  exit 1; 
+}
 
-
-echo "✅ All checks passed, you can proceed with the commit!"
+echo "✅ All checks passed! 🎉 You can proceed with the commit."
