@@ -2,15 +2,16 @@
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
-@theme {
+@theme extend {
   /* define for color --color-* */
   --color-primary-50: #1e3a8a;
   --color-primary-100: #fbbf24;
   --color-primary-200: #9333ea;
+  --color-success-50: #059669;
   /* define for border radius --border-radius-* */
-  --border-radius-sm: 0.25rem; /* 4px */
-  --border-radius-md: 0.5rem; /* 8px */
-  --border-radius-lg: 1rem; /* 16px */
+  --radius-small: 0.25rem; /* 4px */
+  --radius-medium: 0.5rem; /* 8px */
+  --radius-large: 1rem; /* 16px */
 }
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
