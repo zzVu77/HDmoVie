@@ -2,7 +2,7 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 echo "------- 🔍 Checking frontend lint and types -------"
-cd frontend2 && npx lint-staged
+cd frontend && npx lint-staged
 
 
 echo "------- 🔍 Checking backend lint and types -------"
