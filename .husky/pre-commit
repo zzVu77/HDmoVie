@@ -5,12 +5,14 @@ set -e  # Dừng script nếu có lỗi
 
 echo "------- 🔍 Checking frontend lint and types -------"
 cd frontend && npx lint-staged || { 
+  echo "------- 🚀  Checking Result  -------"
   echo "❌ Frontend check failed! Please fix the issues and run: git add ."; 
   exit 1; 
 }
 
 echo "------- 🔍 Checking backend lint and types -------"
 cd ../backend && npx lint-staged || { 
+  echo "------- 🚀  Checking Result  -------"
   echo "❌ Backend check failed! Please fix the issues and run: git add ."; 
   exit 1; 
 }
