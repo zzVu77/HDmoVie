@@ -1,33 +1,13 @@
-// import { DataTypes, Model } from "sequelize";
-// import sequelize from "../config/database";
+// import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 
-// class User extends Model {
-//   public id!: number;
-//   public username!: string;
-//   public email!: string;
+// @Entity()
+// export class User {
+//   @PrimaryGeneratedColumn('uuid')
+//   id!: string
+
+//   @Column()
+//   name!: string
+
+//   @Column()
+//   email!: string
 // }
-
-// User.init(
-//   {
-//     id: {
-//       type: DataTypes.INTEGER,
-//       autoIncrement: true,
-//       primaryKey: true,
-//     },
-//     username: {
-//       type: DataTypes.STRING,
-//       allowNull: false,
-//     },
-//     email: {
-//       type: DataTypes.STRING,
-//       allowNull: false,
-//       unique: true,
-//     },
-//   },
-//   {
-//     sequelize,
-//     tableName: "users",
-//   },
-// );
-
-// export default User;
