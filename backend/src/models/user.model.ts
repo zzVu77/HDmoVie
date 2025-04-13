@@ -10,4 +10,14 @@
 
 //   @Column()
 //   email!: string
+// @Column()
+//   password: string;
+
+//   constructor(data: Partial<{ name: string; email: string;  password: string }>) {
+//     if (data) {
+//       this.name = data.name || ''
+//       this.email = data.email || ''
+//       this.password = data.password || ''
+//     }
+//   }
 // }

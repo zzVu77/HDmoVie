@@ -1,41 +1,21 @@
-// import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+// import { Router } from 'express';
+// import { UserController } from '../controllers/UserController';
+// import { UserService } from '../services/UserService';
+// import { UserRepository } from '../repositories/UserRepository';
+// import { AppDataSource } from '../data-source';
 
-// // Class cha Account
-// @Entity()
-// export abstract class Account {
-//   @PrimaryGeneratedColumn('uuid')
-//   id: string;
+// const router = Router();
 
-//   @Column()
-//   name: string;
+// // Khởi tạo dependencies
+// const userRepository = new UserRepository(AppDataSource);
+// const userService = new UserService(userRepository);
+// const userController = new UserController(userService);
 
-//   @Column({ unique: true })
-//   email: string;
+// // Định nghĩa routes
+// router.get('/', (req, res) => userController.getAllUsers(req, res));
+// router.get('/:id', (req, res) => userController.getUserById(req, res));
+// router.post('/', (req, res) => userController.createUser(req, res));
+// router.put('/:id', (req, res) => userController.updateUser(req, res));
+// router.delete('/:id', (req, res) => userController.deleteUser(req, res));
 
-//   @Column()
-//   password: string; // Lưu ý: Trong thực tế, password nên được hash trước khi lưu
-
-//   @CreateDateColumn()
-//   createdAt: Date;
-
-//   @UpdateDateColumn()
-//   updatedAt: Date;
-// }
-
-// // Class con RegisteredUser
-// @Entity({ name: 'accounts', discriminatorValue: 'registered_user' })
-// export class RegisteredUser extends Account {
-//   // Các phương thức của RegisteredUser có thể được định nghĩa ở đây
-//   someRegisteredUserMethod(): string {
-//     return `This is a method for RegisteredUser: ${this.email}`;
-//   }
-// }
-
-// // Class con Admin
-// @Entity({ name: 'accounts', discriminatorValue: 'admin' })
-// export class Admin extends RegisteredUser {
-//   // Các phương thức của Admin có thể được định nghĩa ở đây
-//   someAdminMethod(): string {
-//     return `This is a method for Admin: ${this.email}`;
-//   }
-// }
+// export default router;

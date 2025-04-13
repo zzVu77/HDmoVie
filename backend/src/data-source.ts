@@ -13,3 +13,10 @@
 //   migrations: ['src/migrations/**/*.ts'], // Đường dẫn đến các migration
 //   subscribers: ['src/subscribers/**/*.ts'], // Đường dẫn đến các subscriber
 // })
+// AppDataSource.initialize()
+//     .then(() => {
+//         console.log("Data Source has been initialized!")
+//     })
+//     .catch((err) => {
+//         console.error("Error during Data Source initialization", err)
+//     })
