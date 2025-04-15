@@ -1,4 +1,3 @@
-import Joi from 'joi'
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm'
 import { Genre } from './genre.model'
 

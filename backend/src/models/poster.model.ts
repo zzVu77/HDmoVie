@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm'
 import { Movie } from './movie.model'
+@Entity('posters') // Define the table name in the database
 export class Poster {
   @PrimaryGeneratedColumn('uuid')
   id!: string
