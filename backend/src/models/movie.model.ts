@@ -18,6 +18,7 @@ export class Movie {
   trailerSource!: string[]
 
   @ManyToMany(() => Genre, { cascade: true })
+  // Define intermediate table for many-to-many relationship
   @JoinTable({
     name: 'movies_genres',
     joinColumn: { name: 'movie_id', referencedColumnName: 'id' },
