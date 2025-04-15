@@ -5,8 +5,8 @@ Entity('movies')
 export class Movie {
   @PrimaryGeneratedColumn('uuid')
   id!: string
-  @Column({ type: 'varchar', length: 255 })
-  title!: string
+  // @Column({ type: 'varchar', length: 255 })
+  // title!: string
   @Column({ type: 'text' })
   description!: string
   @Column({ type: 'number' })
