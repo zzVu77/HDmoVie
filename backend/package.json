@@ -16,7 +16,9 @@
     "migration:generate": "npm run typeorm migration:generate -- -d src/data-source.ts",
     "migration:run": "npm run typeorm migration:run -- -d src/data-source.ts",
     "migration:revert": "npm run typeorm migration:revert -- -d src/data-source.ts",
-    "migration:show": "npm run typeorm migration:show -- -d src/data-source.ts"
+    "migration:show": "npm run typeorm migration:show -- -d src/data-source.ts",
+    "mysql:up": " cd db && docker-compose up -d",
+    "mysql:down": " cd db && docker-compose down -v"
   },
   "keywords": [],
   "author": "",

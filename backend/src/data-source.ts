@@ -8,7 +8,7 @@ export const AppDataSource = new DataSource({
   username: 'root',
   password: '123456',
   database: 'HDmoVie',
-  synchronize: false, // LUÔN ĐỂ false KHI DÙNG MIGRATION
+  synchronize: false,
   logging: true,
   entities: [path.join(__dirname, 'models/**/*.{js,ts}')],
   migrations: [path.join(__dirname, 'migrations/**/*.{js,ts}')],

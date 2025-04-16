@@ -1,15 +1,15 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm'
 import { Genre } from './genre.model'
 
-Entity('movies')
+@Entity('movies')
 export class Movie {
   @PrimaryGeneratedColumn('uuid')
   id!: string
-  // @Column({ type: 'varchar', length: 255 })
-  // title!: string
+  @Column({ type: 'varchar', length: 255 })
+  title!: string
   @Column({ type: 'text' })
   description!: string
-  @Column({ type: 'number' })
+  @Column({ type: 'int' })
   releaseYear!: number
   @Column({ type: 'varchar', length: 100 })
   director!: string[]
