@@ -8,7 +8,7 @@ HDMovie is a full-stack monorepo project built with Node.js, Express, React, and
 
 ```
 hdmovie/
-├── backend/         # Backend service (Node.js + Express + Sequelize)
+├── backend/         # Backend service (Node.js + Express + TypeORM)
 ├── frontend/        # Frontend service (React + Vite + Tailwind CSS)
 ├── node_modules/    # Dependencies
 ├── package.json     # Monorepo management
@@ -54,7 +54,7 @@ Runs linting, type checking, and formatting checks for both frontend and backend
 
 ### 🔹 Main Dependencies
 
-- **Backend**: Express, Sequelize
+- **Backend**: Express, TypeORM
 - **Frontend**: React, Tailwind CSS
 
 ### 🔹 Dev Dependencies
