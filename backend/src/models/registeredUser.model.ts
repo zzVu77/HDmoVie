@@ -1,5 +1,5 @@
 import { IsDate, IsEmail, IsNotEmpty, Length } from 'class-validator'
-import { Entity, PrimaryGeneratedColumn, Column, TableInheritance } from 'typeorm'
+import { Column, Entity, PrimaryGeneratedColumn, TableInheritance } from 'typeorm'
 
 @Entity('registeredUsers')
 @TableInheritance({ column: { type: 'varchar', name: 'role' } })
@@ -31,7 +31,6 @@ export class RegisteredUser {
 
   @Column({ type: 'varchar', default: 'REGISTERED_USER' })
   protected role: string = 'REGISTERED_USER' // Giá trị mặc định là REGISTERED_USER
-
   // Phương thức cho RegisteredUser
   public getUserInfo(): string {
     return `User: ${this.fullName} (${this.email})`

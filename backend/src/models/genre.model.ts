@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm'
-import { Movie } from './movie.model' // Import Movie entity
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity('genres')
 export class Genre {
