@@ -1,8 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm'
+import { Movie } from './movie.model' // Import Movie entity
+
 @Entity('genres')
 export class Genre {
   @PrimaryGeneratedColumn('uuid')
-  id!: string
+  private id!: string
+
   @Column({ type: 'varchar', length: 100 })
-  name!: string
+  private name!: string
 }

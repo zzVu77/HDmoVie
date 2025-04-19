@@ -1,29 +1,51 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm'
 import { Genre } from './genre.model'
+import { Cast } from './cast.model' // Import Cast entity
 
 @Entity('movies')
 export class Movie {
   @PrimaryGeneratedColumn('uuid')
-  id!: string
+  private id!: string
+
   @Column({ type: 'varchar', length: 255 })
-  title!: string
+  private title!: string
+
   @Column({ type: 'text' })
-  description!: string
+  private description!: string
+
+  @Column({ type: 'datetime' })
+  private releaseYear!: string
+
+  @Column({ type: 'text' })
+  private trailerSource!: string
+
+  @Column({ type: 'text' })
+  private posterSource!: string
+
+  @Column({ type: 'text' })
+  private backdropSource!: string
+
+  @Column({ type: 'float' })
+  private voteAvg!: number
+
   @Column({ type: 'int' })
-  releaseYear!: number
-  @Column({ type: 'varchar', length: 100 })
-  director!: string[]
-  @Column({ type: 'text' })
-  trailerSource!: string[]
+  private voteCount!: number
 
   @ManyToMany(() => Genre, { cascade: true })
-  // Define intermediate table for many-to-many relationship
   @JoinTable({
     name: 'movies_genres',
     joinColumn: { name: 'movie_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'genre_id', referencedColumnName: 'id' },
   })
-  genres!: Genre[]
+  private genres!: Genre[]
+
+  @ManyToMany(() => Cast, { cascade: true })
+  @JoinTable({
+    name: 'movies_casts',
+    joinColumn: { name: 'movie_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'cast_id', referencedColumnName: 'id' },
+  })
+  private casts!: Cast[]
 
   constructor(data?: Partial<Movie>) {
     if (data) {
