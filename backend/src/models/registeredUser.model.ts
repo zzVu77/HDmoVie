@@ -30,8 +30,15 @@ export class RegisteredUser {
   protected dateOfBirth!: Date
 
   @Column({ type: 'varchar', default: 'REGISTERED_USER' })
-  protected role: string = 'REGISTERED_USER' // Giá trị mặc định là REGISTERED_USER
-  // Phương thức cho RegisteredUser
+  protected role: string = 'REGISTERED_USER' //default value is REGISTERED_USER
+
+  constructor(username: string, email: string, password: string, fullName: string, dateOfBirth: Date) {
+    this.username = username
+    this.email = email
+    this.password = password
+    this.fullName = fullName
+    this.dateOfBirth = dateOfBirth
+  }
   public getUserInfo(): string {
     return `User: ${this.fullName} (${this.email})`
   }
