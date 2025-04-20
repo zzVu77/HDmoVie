@@ -85,7 +85,7 @@ VALUES
 
 
 -- movie_genres
-INSERT INTO movies_genres (movie_id, genre_id)
+INSERT INTO movies_genres (movieId, genreId)
 VALUES 
 (1197306, 28),
 (1197306, 80),
@@ -104,7 +104,7 @@ VALUES
 (1195506, 35),
 (1195506, 53);
 
-INSERT INTO movies_genres (movie_id, genre_id)
+INSERT INTO movies_genres (movieId, genreId)
 VALUES 
 (1293286, 37), (1293286, 28),
 (822119, 28), (822119, 53), (822119, 878),
@@ -112,7 +112,7 @@ VALUES
 (1312833, 27), (1312833, 28), (1312833, 14),
 (1353117, 27), (1353117, 14), (1353117, 53), (1353117, 9648), (1353117, 28);
 
-INSERT INTO movies_genres (movie_id, genre_id)
+INSERT INTO movies_genres (movieId, genreId)
 VALUES 
 (1125899, 28),
 (1125899, 53),
@@ -132,7 +132,7 @@ VALUES
 (939243, 12),
 (939243, 14);
 
-INSERT INTO movies_genres (movie_id, genre_id)
+INSERT INTO movies_genres (movieId, genreId)
 VALUES 
 (1373723, 28),
 (1373723, 10752),
@@ -147,7 +147,7 @@ VALUES
 (1101401, 53),
 (1101401, 35);
 
-INSERT INTO movies_genres (movie_id, genre_id)
+INSERT INTO movies_genres (movieId, genreId)
 VALUES 
 (615, 18), 
 (1126166, 28), (1126166, 53),
@@ -155,7 +155,7 @@ VALUES
 (1261050, 28), (1261050, 18),
 (1233413, 18), (1233413, 27), (1233413, 53);
 
-INSERT INTO movies_genres (movie_id, genre_id)
+INSERT INTO movies_genres (movieId, genreId)
 VALUES 
 (1208808, 27),
 (1195585, 28),
@@ -165,7 +165,7 @@ VALUES
 (696506, 35),
 (696506, 12);
 
-INSERT INTO movies_genres (movie_id, genre_id)
+INSERT INTO movies_genres (movieId, genreId)
 VALUES 
 (1087891, 53), (1087891, 28),
 (1103432, 16), (1103432, 28), (1103432, 878),
@@ -173,7 +173,7 @@ VALUES
 (950396, 10749), (950396, 878), (950396, 53),
 (1020414, 27), (1020414, 53), (1020414, 14);
 
-INSERT INTO movies_genres (movie_id, genre_id) VALUES
+INSERT INTO movies_genres (movieId, genreId) VALUES
 (1297763, 16),
 (1297763, 28),
 (1302916, 27),
@@ -188,7 +188,7 @@ INSERT INTO movies_genres (movie_id, genre_id) VALUES
 (1212855, 35),
 (1212855, 53);
 
-INSERT INTO movies_genres (movie_id, genre_id) VALUES
+INSERT INTO movies_genres (movieId, genreId) VALUES
 (1226572, 35), (1226572, 18),
 (1356039, 28), (1356039, 12), (1356039, 53),
 (1304594, 35),
@@ -528,7 +528,7 @@ VALUES
 (313,'Delroy Lindo', 'https://image.tmdb.org/t/p/original/kLwUBBmEIdchrLqwsYzgLB2B6q5.jpg');
 
 -- movies_cast
-INSERT INTO movies_casts (movie_id, cast_id)
+INSERT INTO movies_casts (movieId, castId)
 VALUES 
 (1197306, 1),
 (1197306, 2),
