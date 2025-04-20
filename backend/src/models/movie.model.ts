@@ -16,7 +16,7 @@ export class Movie {
   @Column({ type: 'datetime' })
   private releaseYear!: string
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   private trailerSource!: string
 
   @Column({ type: 'text' })

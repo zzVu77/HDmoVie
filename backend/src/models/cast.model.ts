@@ -5,6 +5,6 @@ export class Cast {
   private id!: string
   @Column({ type: 'varchar', length: 255 })
   private name!: string
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   private profilePath!: string
 }

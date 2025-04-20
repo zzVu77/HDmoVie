@@ -36,16 +36,6 @@ To start the MySQL database using Docker, run:
 
 This will start the MySQL container and set up the HDmoVie database.
 
-### 🧰 Generate a New Migration
-
-To generate a new migration file after changing your entities, run:
-
-```sh
- npm run migration:generate src/migrations/<YourMigrationName>
-```
-
-This will create a new migration file for the changes in your entities.
-
 ### 📦 Run Migrations
 
 To apply the migrations to the database, run:
@@ -55,6 +45,26 @@ To apply the migrations to the database, run:
 ```
 
 This will execute all pending migrations and update the database schema.
+
+### 🌱 Seeding the Database
+
+Use this command to insert sample data into your MySQL database:
+
+```sh
+ npm run db:seed
+```
+
+This will execute all pending migrations and update the database schema.
+
+### 🧰 Generate a New Migration
+
+To generate a new migration file after changing your entities, run:
+
+```sh
+ npm run migration:generate src/migrations/<YourMigrationName>
+```
+
+This will create a new migration file for the changes in your entities.
 
 ### 🏃 Run Development Server
 

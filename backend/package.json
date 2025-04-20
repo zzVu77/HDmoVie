@@ -18,7 +18,8 @@
     "migration:revert": "npm run typeorm migration:revert -- -d src/data-source.ts",
     "migration:show": "npm run typeorm migration:show -- -d src/data-source.ts",
     "mysql:up": " cd db && docker-compose up -d",
-    "mysql:down": " cd db && docker-compose down -v"
+    "mysql:down": " cd db && docker-compose down -v",
+    "db:seed": "docker exec -i hdmovie mysql -u root -p123456 HDmoVie < db/init.sql"
   },
   "keywords": [],
   "author": "",
