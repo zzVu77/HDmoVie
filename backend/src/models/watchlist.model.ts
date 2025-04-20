@@ -22,8 +22,8 @@ export class Watchlist {
   @ManyToMany(() => Movie, { cascade: true })
   @JoinTable({
     name: 'watchlists_movies',
-    joinColumn: { name: 'watchlist_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'movie_id', referencedColumnName: 'id' },
+    joinColumn: { name: 'watchlistId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'movieId', referencedColumnName: 'id' },
   })
   private movies!: Movie[]
 

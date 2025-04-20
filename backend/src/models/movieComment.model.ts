@@ -4,7 +4,7 @@ import { Movie } from './movie.model'
 
 @ChildEntity('MOVIE')
 export class MovieComment extends Comment {
-  @ManyToOne(() => Movie, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(() => Movie, { nullable: true, onDelete: 'CASCADE' })
   movie!: Movie
 
   constructor(data?: Partial<MovieComment>) {

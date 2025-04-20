@@ -34,16 +34,16 @@ export class Movie {
   @ManyToMany(() => Genre, { cascade: true })
   @JoinTable({
     name: 'movies_genres',
-    joinColumn: { name: 'movie_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'genre_id', referencedColumnName: 'id' },
+    joinColumn: { name: 'movieId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'genreId', referencedColumnName: 'id' },
   })
   private genres!: Genre[]
 
   @ManyToMany(() => Cast, { cascade: true })
   @JoinTable({
     name: 'movies_casts',
-    joinColumn: { name: 'movie_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'cast_id', referencedColumnName: 'id' },
+    joinColumn: { name: 'movieId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'castId', referencedColumnName: 'id' },
   })
   private casts!: Cast[]
 

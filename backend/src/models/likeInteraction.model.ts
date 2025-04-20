@@ -14,8 +14,8 @@ export class LikeInteraction {
   @ManyToMany(() => RegisteredUser)
   @JoinTable({
     name: 'like_interactions_users',
-    joinColumn: { name: 'like_interaction_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    joinColumn: { name: 'likeInteractionId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' },
   })
   private likers!: RegisteredUser[]
   //Methods

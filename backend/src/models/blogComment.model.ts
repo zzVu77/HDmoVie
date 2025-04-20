@@ -4,7 +4,7 @@ import { Blog } from './blog.model'
 
 @ChildEntity('BLOG')
 export class BlogComment extends Comment {
-  @ManyToOne(() => Blog, { nullable: false })
+  @ManyToOne(() => Blog, { nullable: true })
   blog!: Blog
 
   constructor(data?: Partial<BlogComment>) {

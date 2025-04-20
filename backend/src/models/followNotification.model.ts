@@ -5,7 +5,7 @@ import { RegisteredUser } from './registeredUser.model'
 
 @ChildEntity('FOLLOW_NOTI')
 export class FollowNotification extends Notification {
-  @ManyToOne(() => RegisteredUser, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(() => RegisteredUser, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'followerId', referencedColumnName: 'id' })
   @IsNotEmpty({ message: 'Follower is required' })
   protected follower!: RegisteredUser

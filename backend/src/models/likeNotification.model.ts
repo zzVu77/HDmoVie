@@ -5,7 +5,7 @@ import { RegisteredUser } from './registeredUser.model'
 
 @ChildEntity('LIKE_NOTI')
 export class LikeNotification extends Notification {
-  @ManyToOne(() => RegisteredUser, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(() => RegisteredUser, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
   @IsNotEmpty({ message: 'User is required' })
   protected user!: RegisteredUser
