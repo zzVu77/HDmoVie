@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm'
 
-export class Init1745114637318 implements MigrationInterface {
-  name = 'Init1745114637318'
+export class Init1745120168644 implements MigrationInterface {
+  name = 'Init1745120168644'
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -20,19 +20,22 @@ export class Init1745114637318 implements MigrationInterface {
       `CREATE TABLE \`watchlists\` (\`id\` varchar(36) NOT NULL, \`title\` varchar(255) NOT NULL, \`description\` text NULL, \`isPublic\` tinyint NOT NULL DEFAULT 0, \`ownerId\` varchar(36) NOT NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
     )
     await queryRunner.query(
+      `CREATE TABLE \`tags\` (\`id\` varchar(36) NOT NULL, \`name\` varchar(100) NOT NULL, UNIQUE INDEX \`IDX_d90243459a697eadb8ad56e909\` (\`name\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
+    )
+    await queryRunner.query(
       `CREATE TABLE \`reports\` (\`id\` varchar(36) NOT NULL, \`reason\` enum ('Spam or scams', 'Hate speech or discrimination', 'Misinformation or false information', 'Harassment or bullying', 'Violence or threats of violence', 'Illegal content or activity', 'Sexual content or nudity') NOT NULL, \`type\` varchar(255) NOT NULL, \`reporterId\` varchar(36) NOT NULL, \`commentId\` varchar(36) NOT NULL, \`blogId\` varchar(36) NOT NULL, INDEX \`IDX_d5e66723d29c6f38b2ba70542d\` (\`type\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
+    )
+    await queryRunner.query(
+      `CREATE TABLE \`notifications\` (\`id\` varchar(36) NOT NULL, \`time\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, \`status\` varchar(255) NOT NULL DEFAULT 'UNREAD', \`type\` varchar(255) NOT NULL, \`ownerId\` varchar(36) NOT NULL, \`reportId\` varchar(36) NOT NULL, \`userId\` varchar(36) NOT NULL, \`followerId\` varchar(36) NOT NULL, \`commentId\` varchar(36) NOT NULL, INDEX \`IDX_aef1c7aef3725068e5540f8f00\` (\`type\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
     )
     await queryRunner.query(
       `CREATE TABLE \`comments\` (\`id\` varchar(36) NOT NULL, \`content\` text NOT NULL, \`date\` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP, \`type\` varchar(255) NOT NULL, \`userId\` varchar(36) NOT NULL, \`parentCommentId\` varchar(36) NULL, \`movieId\` varchar(36) NOT NULL, \`blogId\` varchar(36) NOT NULL, INDEX \`IDX_31c4b42dcb286e8ee825f0127f\` (\`type\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
     )
     await queryRunner.query(
-      `CREATE TABLE \`tags\` (\`id\` varchar(36) NOT NULL, \`name\` varchar(100) NOT NULL, UNIQUE INDEX \`IDX_d90243459a697eadb8ad56e909\` (\`name\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
-    )
-    await queryRunner.query(
       `CREATE TABLE \`blogs\` (\`id\` varchar(36) NOT NULL, \`content\` text NOT NULL, \`dateCreated\` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP, \`ownerId\` varchar(36) NOT NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
     )
     await queryRunner.query(
-      `CREATE TABLE \`like_interactions\` (\`id\` varchar(36) NOT NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
+      `CREATE TABLE \`like_interactions\` (\`id\` varchar(36) NOT NULL, \`blogId\` varchar(36) NOT NULL, UNIQUE INDEX \`REL_bc8540090e8c59857b771b1550\` (\`blogId\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
     )
     await queryRunner.query(
       `CREATE TABLE \`movies_genres\` (\`movie_id\` varchar(36) NOT NULL, \`genre_id\` varchar(36) NOT NULL, INDEX \`IDX_4729d9b8d47986f936cb5e9540\` (\`movie_id\`), INDEX \`IDX_ef4fe5a96b6f83e9472bdaefbc\` (\`genre_id\`), PRIMARY KEY (\`movie_id\`, \`genre_id\`)) ENGINE=InnoDB`,
@@ -62,6 +65,21 @@ export class Init1745114637318 implements MigrationInterface {
       `ALTER TABLE \`reports\` ADD CONSTRAINT \`FK_585d50a9854c9a4b8605470c8d2\` FOREIGN KEY (\`blogId\`) REFERENCES \`blogs\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
     )
     await queryRunner.query(
+      `ALTER TABLE \`notifications\` ADD CONSTRAINT \`FK_59ca06b1bcf1ad63cb253f2965c\` FOREIGN KEY (\`ownerId\`) REFERENCES \`registeredUsers\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    )
+    await queryRunner.query(
+      `ALTER TABLE \`notifications\` ADD CONSTRAINT \`FK_b47807ec432524080fc20e0501c\` FOREIGN KEY (\`reportId\`) REFERENCES \`reports\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    )
+    await queryRunner.query(
+      `ALTER TABLE \`notifications\` ADD CONSTRAINT \`FK_692a909ee0fa9383e7859f9b406\` FOREIGN KEY (\`userId\`) REFERENCES \`registeredUsers\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    )
+    await queryRunner.query(
+      `ALTER TABLE \`notifications\` ADD CONSTRAINT \`FK_ca9c53b38f30059b0c452f2136e\` FOREIGN KEY (\`followerId\`) REFERENCES \`registeredUsers\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    )
+    await queryRunner.query(
+      `ALTER TABLE \`notifications\` ADD CONSTRAINT \`FK_9faba56a12931cf4e38f9dddb49\` FOREIGN KEY (\`commentId\`) REFERENCES \`comments\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    )
+    await queryRunner.query(
       `ALTER TABLE \`comments\` ADD CONSTRAINT \`FK_7e8d7c49f218ebb14314fdb3749\` FOREIGN KEY (\`userId\`) REFERENCES \`registeredUsers\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
     )
     await queryRunner.query(
@@ -75,6 +93,9 @@ export class Init1745114637318 implements MigrationInterface {
     )
     await queryRunner.query(
       `ALTER TABLE \`blogs\` ADD CONSTRAINT \`FK_998d6c1e3c685955774e5195f49\` FOREIGN KEY (\`ownerId\`) REFERENCES \`registeredUsers\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    )
+    await queryRunner.query(
+      `ALTER TABLE \`like_interactions\` ADD CONSTRAINT \`FK_bc8540090e8c59857b771b1550a\` FOREIGN KEY (\`blogId\`) REFERENCES \`blogs\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
     )
     await queryRunner.query(
       `ALTER TABLE \`movies_genres\` ADD CONSTRAINT \`FK_4729d9b8d47986f936cb5e9540e\` FOREIGN KEY (\`movie_id\`) REFERENCES \`movies\`(\`id\`) ON DELETE CASCADE ON UPDATE CASCADE`,
@@ -123,11 +144,17 @@ export class Init1745114637318 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE \`movies_casts\` DROP FOREIGN KEY \`FK_6f28c1a0e1dd6a646ae2d074ff8\``)
     await queryRunner.query(`ALTER TABLE \`movies_genres\` DROP FOREIGN KEY \`FK_ef4fe5a96b6f83e9472bdaefbc5\``)
     await queryRunner.query(`ALTER TABLE \`movies_genres\` DROP FOREIGN KEY \`FK_4729d9b8d47986f936cb5e9540e\``)
+    await queryRunner.query(`ALTER TABLE \`like_interactions\` DROP FOREIGN KEY \`FK_bc8540090e8c59857b771b1550a\``)
     await queryRunner.query(`ALTER TABLE \`blogs\` DROP FOREIGN KEY \`FK_998d6c1e3c685955774e5195f49\``)
     await queryRunner.query(`ALTER TABLE \`comments\` DROP FOREIGN KEY \`FK_42a37ec3be9f871d4e44dd21bf9\``)
     await queryRunner.query(`ALTER TABLE \`comments\` DROP FOREIGN KEY \`FK_bb2283b93a5414b9cfe834a181a\``)
     await queryRunner.query(`ALTER TABLE \`comments\` DROP FOREIGN KEY \`FK_4875672591221a61ace66f2d4f9\``)
     await queryRunner.query(`ALTER TABLE \`comments\` DROP FOREIGN KEY \`FK_7e8d7c49f218ebb14314fdb3749\``)
+    await queryRunner.query(`ALTER TABLE \`notifications\` DROP FOREIGN KEY \`FK_9faba56a12931cf4e38f9dddb49\``)
+    await queryRunner.query(`ALTER TABLE \`notifications\` DROP FOREIGN KEY \`FK_ca9c53b38f30059b0c452f2136e\``)
+    await queryRunner.query(`ALTER TABLE \`notifications\` DROP FOREIGN KEY \`FK_692a909ee0fa9383e7859f9b406\``)
+    await queryRunner.query(`ALTER TABLE \`notifications\` DROP FOREIGN KEY \`FK_b47807ec432524080fc20e0501c\``)
+    await queryRunner.query(`ALTER TABLE \`notifications\` DROP FOREIGN KEY \`FK_59ca06b1bcf1ad63cb253f2965c\``)
     await queryRunner.query(`ALTER TABLE \`reports\` DROP FOREIGN KEY \`FK_585d50a9854c9a4b8605470c8d2\``)
     await queryRunner.query(`ALTER TABLE \`reports\` DROP FOREIGN KEY \`FK_1a7a328279e62111bebddfc2649\``)
     await queryRunner.query(`ALTER TABLE \`reports\` DROP FOREIGN KEY \`FK_4353be8309ce86650def2f8572d\``)
@@ -147,14 +174,17 @@ export class Init1745114637318 implements MigrationInterface {
     await queryRunner.query(`DROP INDEX \`IDX_ef4fe5a96b6f83e9472bdaefbc\` ON \`movies_genres\``)
     await queryRunner.query(`DROP INDEX \`IDX_4729d9b8d47986f936cb5e9540\` ON \`movies_genres\``)
     await queryRunner.query(`DROP TABLE \`movies_genres\``)
+    await queryRunner.query(`DROP INDEX \`REL_bc8540090e8c59857b771b1550\` ON \`like_interactions\``)
     await queryRunner.query(`DROP TABLE \`like_interactions\``)
     await queryRunner.query(`DROP TABLE \`blogs\``)
-    await queryRunner.query(`DROP INDEX \`IDX_d90243459a697eadb8ad56e909\` ON \`tags\``)
-    await queryRunner.query(`DROP TABLE \`tags\``)
     await queryRunner.query(`DROP INDEX \`IDX_31c4b42dcb286e8ee825f0127f\` ON \`comments\``)
     await queryRunner.query(`DROP TABLE \`comments\``)
+    await queryRunner.query(`DROP INDEX \`IDX_aef1c7aef3725068e5540f8f00\` ON \`notifications\``)
+    await queryRunner.query(`DROP TABLE \`notifications\``)
     await queryRunner.query(`DROP INDEX \`IDX_d5e66723d29c6f38b2ba70542d\` ON \`reports\``)
     await queryRunner.query(`DROP TABLE \`reports\``)
+    await queryRunner.query(`DROP INDEX \`IDX_d90243459a697eadb8ad56e909\` ON \`tags\``)
+    await queryRunner.query(`DROP TABLE \`tags\``)
     await queryRunner.query(`DROP TABLE \`watchlists\``)
     await queryRunner.query(`DROP TABLE \`movies\``)
     await queryRunner.query(`DROP TABLE \`casts\``)

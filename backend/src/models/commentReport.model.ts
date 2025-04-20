@@ -2,7 +2,7 @@ import { ChildEntity, ManyToOne } from 'typeorm'
 import { Report } from './report.model'
 import { Comment } from './comment.model'
 
-@ChildEntity('comment')
+@ChildEntity('COMMENT_REPORT')
 export class CommentReport extends Report {
   @ManyToOne(() => Comment, { nullable: false })
   comment!: Comment

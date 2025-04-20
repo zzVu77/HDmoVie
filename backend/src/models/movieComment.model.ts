@@ -2,7 +2,7 @@ import { ChildEntity, ManyToOne } from 'typeorm'
 import { Comment } from './comment.model'
 import { Movie } from './movie.model'
 
-@ChildEntity('movie')
+@ChildEntity('MOVIE')
 export class MovieComment extends Comment {
   @ManyToOne(() => Movie, { nullable: false })
   movie!: Movie
