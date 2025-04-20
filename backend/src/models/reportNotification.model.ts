@@ -5,7 +5,7 @@ import { Report } from './report.model'
 
 @ChildEntity('REPORT_NOTI')
 export class ReportNotification extends Notification {
-  @ManyToOne(() => Report, { nullable: false })
+  @ManyToOne(() => Report, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'reportId', referencedColumnName: 'id' })
   @IsNotEmpty({ message: 'Report is required' })
   protected report!: Report

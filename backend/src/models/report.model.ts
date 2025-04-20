@@ -20,7 +20,7 @@ export abstract class Report {
   @Column({ type: 'enum', enum: ReportReason })
   protected reason!: ReportReason
 
-  @ManyToOne(() => RegisteredUser, { nullable: false })
+  @ManyToOne(() => RegisteredUser, { nullable: false, onDelete: 'CASCADE' })
   protected reporter!: RegisteredUser
 
   constructor(data?: Partial<Report>) {

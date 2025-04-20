@@ -7,7 +7,7 @@ export class LikeInteraction {
   @PrimaryGeneratedColumn('uuid')
   private id!: string
 
-  @OneToOne(() => Blog, { nullable: false })
+  @OneToOne(() => Blog, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'blogId', referencedColumnName: 'id' })
   private blog!: Blog
 

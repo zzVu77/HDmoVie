@@ -4,7 +4,7 @@ import { Comment } from './comment.model'
 
 @ChildEntity('COMMENT_REPORT')
 export class CommentReport extends Report {
-  @ManyToOne(() => Comment, { nullable: false })
+  @ManyToOne(() => Comment, { nullable: false, onDelete: 'CASCADE' })
   comment!: Comment
 
   constructor(data?: Partial<CommentReport>) {

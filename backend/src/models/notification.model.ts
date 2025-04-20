@@ -18,7 +18,7 @@ export abstract class Notification {
   @IsNotEmpty({ message: 'Status is required' })
   protected status: 'UNREAD' | 'READ' = 'UNREAD'
 
-  @ManyToOne(() => RegisteredUser, { nullable: false })
+  @ManyToOne(() => RegisteredUser, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'ownerId', referencedColumnName: 'id' })
   @IsNotEmpty({ message: 'Owner is required' })
   protected owner!: RegisteredUser

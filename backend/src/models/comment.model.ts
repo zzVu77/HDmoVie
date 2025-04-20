@@ -7,7 +7,7 @@ export abstract class Comment {
   @PrimaryGeneratedColumn('uuid')
   protected id!: string
 
-  @ManyToOne(() => RegisteredUser, { nullable: false })
+  @ManyToOne(() => RegisteredUser, { nullable: false, onDelete: 'CASCADE' })
   protected user!: RegisteredUser
 
   @Column({ type: 'text' })

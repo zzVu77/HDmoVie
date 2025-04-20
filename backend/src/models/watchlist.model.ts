@@ -16,10 +16,10 @@ export class Watchlist {
   @Column({ type: 'boolean', default: false })
   private isPublic!: boolean
 
-  @ManyToOne(() => RegisteredUser, { nullable: false })
+  @ManyToOne(() => RegisteredUser, { nullable: false, onDelete: 'CASCADE' })
   private owner!: RegisteredUser
 
-  @ManyToMany(() => Movie)
+  @ManyToMany(() => Movie, { cascade: true })
   @JoinTable({
     name: 'watchlists_movies',
     joinColumn: { name: 'watchlist_id', referencedColumnName: 'id' },
