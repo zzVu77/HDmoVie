@@ -7,9 +7,6 @@ export class RegisteredUser {
   @PrimaryGeneratedColumn('uuid')
   protected id!: string
 
-  @Column({ type: 'varchar', length: 100 })
-  protected username!: string
-
   @Column({ type: 'varchar', length: 255, unique: true })
   @IsEmail({}, { message: 'Invalid email format' })
   @IsNotEmpty({ message: 'Email is required' })
@@ -32,14 +29,27 @@ export class RegisteredUser {
   @Column({ type: 'varchar', default: 'REGISTERED_USER' })
   protected role: string = 'REGISTERED_USER' //default value is REGISTERED_USER
 
-  constructor(username: string, email: string, password: string, fullName: string, dateOfBirth: Date) {
-    this.username = username
+  constructor(email: string, password: string, fullName: string, dateOfBirth: Date) {
     this.email = email
     this.password = password
     this.fullName = fullName
     this.dateOfBirth = dateOfBirth
   }
-  public getUserInfo(): string {
-    return `User: ${this.fullName} (${this.email})`
+  //Methods
+  //Getters and Setters
+  public getId(): string {
+    return this.id
+  }
+
+  public getFullName(): string {
+    return this.fullName
+  }
+
+  public getDateOfBirth(): Date {
+    return this.dateOfBirth
+  }
+
+  public getRole(): string {
+    return this.role
   }
 }
