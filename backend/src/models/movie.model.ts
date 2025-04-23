@@ -13,7 +13,7 @@ export class Movie {
   @Column({ type: 'text' })
   private description!: string
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'date' })
   private releaseYear!: string
 
   @Column({ type: 'text', nullable: true })

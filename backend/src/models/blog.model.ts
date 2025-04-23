@@ -19,8 +19,8 @@ export class Blog {
   @ManyToMany(() => Tag)
   @JoinTable({
     name: 'blogs_tags',
-    joinColumn: { name: 'blog_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'tag_id', referencedColumnName: 'id' },
+    joinColumn: { name: 'blogId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'tagId', referencedColumnName: 'id' },
   })
   tags!: Tag[]
 

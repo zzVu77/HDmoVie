@@ -819,3 +819,154 @@ VALUES
 (1405338, 266),
 (1405338, 267),
 (1405338, 268);
+
+
+-- Registered User
+INSERT INTO registeredUsers (id, email, password, fullName, dateOfBirth, role) VALUES
+('1',  'alice@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Alice Wonderland', NOW(), 'REGISTERED_USER'),
+('2', 'bob@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Bob Dave Tint', NOW(), 'REGISTERED_USER'),
+('3', 'carol@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Caroline', NOW(), 'REGISTERED_USER'),
+('4', 'dave@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Dave Kit', NOW(), 'REGISTERED_USER'),
+('5', 'eve@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Eve Me', NOW(), 'REGISTERED_USER');
+
+
+-- Follow Interactions
+INSERT INTO follow_interactions (id, userId) VALUES
+('uuid-1', '1'), -- FollowInteraction cho Alice
+('uuid-2', '2'), -- FollowInteraction cho Bob
+('uuid-3', '3'), -- FollowInteraction cho Carol
+('uuid-4', '4'), -- FollowInteraction cho Dave
+('uuid-5', '5'); -- FollowInteraction cho Eve
+
+INSERT INTO followers_interactions_users (followInteractionId, userId) VALUES
+('uuid-1', '2'), -- Bob theo dõi Alice
+('uuid-1', '4'), -- Dave theo dõi Alice
+('uuid-2', '1'), -- Alice theo dõi Bob
+('uuid-3', '1'), -- Alice theo dõi Carol
+('uuid-4', '3'), -- Carol theo dõi Dave
+('uuid-5', '2'); -- Bob theo dõi Eve
+
+
+
+-- Blog
+INSERT INTO blogs (id, content, dateCreated, ownerId) VALUES
+('1', 'Please release new version of Avenger', NOW(), '1'),
+('2', 'Wibu never die', NOW(), '2'),
+('3', 'Looking forward for Spider 100...', NOW(), '3'),
+('4', 'Doraemon now is so boring', NOW(), '4'),
+('5', 'Ai Viet Nam diem danh', NOW(), '5');
+
+
+-- Tag
+INSERT INTO tags (id, name) VALUES
+('1', 'Avenger'),
+('2', 'Anime'),
+('3', 'Spiderman'),
+('4', 'Doraemon'),
+('5', 'Fun');
+
+
+-- Blogs Tags
+INSERT INTO blogs_tags (blogId, tagId) VALUES
+('1', '1'),
+('2', '2'),
+('3', '3'),
+('4', '4'),
+('5', '5');
+
+
+-- Like Interaction
+INSERT INTO like_interactions (id, blogId) VALUES
+('1', '1'),
+('2', '2'),
+('3', '3'),
+('4', '4'),
+('5', '5');
+
+
+-- Like Interaction User
+INSERT INTO like_interactions_users (likeInteractionId, userId) VALUES
+('1', '1'),
+('1', '2'),
+('1', '3'),
+('2', '1'),
+('2', '4'),
+('3', '1'),
+('4', '3'),
+('5', '5');
+
+
+-- Comment
+INSERT INTO comments (id, content, date, type, userId, parentCommentId, movieId, blogId) VALUES
+('1', 'I have the same thought', NOW(), 'BLOG', '1', NULL, NULL, '1'),
+('2', 'Lmao, cant believe that', NOW(), 'BLOG', '2', NULL, NULL, '1'),
+('3', 'For real man', NOW(), 'BLOG', '3', NULL, NULL, '2'),
+('4', 'Nonsense!', NOW(), 'BLOG', '4', NULL, NULL, '2'),
+('5', 'Haha I think so', NOW(), 'BLOG', '5', '1', NULL, '1'),
+('6', 'Yeah...', NOW(), 'BLOG', '1', NULL, NULL, '3');
+
+
+-- Notification
+INSERT INTO notifications (id, time, `status`, type, ownerId, reportId, userId, followerId, commentId) VALUES
+('1', NOW(), 'UNREAD', 'FOLLOW', '1', NULL, NULL, '2', NULL),
+('2', NOW(), 'UNREAD', 'FOLLOW', '1', NULL, NULL, '3', NULL),
+('3', NOW(), 'UNREAD', 'FOLLOW', '2', NULL, NULL, '1', NULL),
+('4', NOW(), 'UNREAD', 'FOLLOW', '2', NULL, NULL, '5', NULL),
+('5', NOW(), 'UNREAD', 'FOLLOW', '3', NULL, NULL, '1', NULL),
+('6', NOW(), 'UNREAD', 'FOLLOW', '3', NULL, NULL, '2', NULL),
+('7', NOW(), 'UNREAD', 'FOLLOW', '3', NULL, NULL, '5', NULL),
+('8', NOW(), 'UNREAD', 'FOLLOW', '4', NULL, NULL, '1', NULL),
+('9', NOW(), 'UNREAD', 'FOLLOW', '4', NULL, NULL, '3', NULL),
+('10', NOW(), 'UNREAD', 'FOLLOW', '5', NULL, NULL, '1', NULL),
+('11', NOW(), 'UNREAD', 'FOLLOW', '5', NULL, NULL, '4', NULL),
+('12', NOW(), 'UNREAD', 'LIKE', '1', NULL, '1', NULL, NULL),
+('13', NOW(), 'UNREAD', 'LIKE', '1', NULL, '2', NULL, NULL),
+('14', NOW(), 'UNREAD', 'LIKE', '1', NULL, '3', NULL, NULL),
+('15', NOW(), 'UNREAD', 'LIKE', '2', NULL, '1', NULL, NULL),
+('16', NOW(), 'UNREAD', 'LIKE', '2', NULL, '4', NULL, NULL),
+('17', NOW(), 'UNREAD', 'LIKE', '3', NULL, '1', NULL, NULL),
+('18', NOW(), 'UNREAD', 'LIKE', '4', NULL, '3', NULL, NULL),
+('19', NOW(), 'UNREAD', 'LIKE', '5', NULL, '5', NULL, NULL),
+('20', NOW(), 'UNREAD', 'COMMENT', '1', NULL, NULL, NULL, '1'),
+('21', NOW(), 'UNREAD', 'COMMENT', '1', NULL, NULL, NULL, '2'),
+('22', NOW(), 'UNREAD', 'COMMENT', '2', NULL, NULL, NULL, '3'),
+('23', NOW(), 'UNREAD', 'COMMENT', '2', NULL, NULL, NULL, '4'),
+('24', NOW(), 'UNREAD', 'COMMENT', '1', NULL, NULL, NULL, '5'),
+('25', NOW(), 'UNREAD', 'COMMENT', '3', NULL, NULL, NULL, '6');
+
+
+-- Watchlist
+INSERT INTO watchlists (id, title, description, isPublic, ownerId) VALUES
+('1', 'My watchlist', 'Nothing to say, just best to watch', 1, '1'),
+('2', 'YOU SHOULD WATCH THIS', 'Like the title', 1, '2'),
+('3', 'Blacklist', 'Save movies I neva watch again', 1, '3'),
+('4', 'Watch nonstop', 'Cant stop watching them', 1, '4'),
+('5', 'Favorite', 'My favorite movies <3', 1, '5');
+
+
+-- Watchlist movie
+INSERT INTO watchlists_movies (watchlistId, movieId) VALUES
+('1', '1010581'),
+('1', '1020414'),
+('1', '1029880'),
+('1', '1045938'),
+('1', '1064486'),
+('2', '1087891'),
+('2', '1101401'),
+('2', '1103432'),
+('2', '1104845'),
+('2', '1125899'),
+('2', '1126166'),
+('3', '1165067'),
+('3', '1195430'),
+('3', '1195506'),
+('3', '1195585'),
+('3', '1233413'),
+('4', '1229730'),
+('4', '1226572'),
+('4', '1212855'),
+('4', '1208808'),
+('5', '1241982'),
+('5', '1197306'),
+('5', '1244944'),
+('5', '1249385');
