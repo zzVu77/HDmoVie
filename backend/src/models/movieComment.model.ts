@@ -1,0 +1,16 @@
+import { ChildEntity, ManyToOne } from 'typeorm'
+import { Comment } from './comment.model'
+import { Movie } from './movie.model'
+
+@ChildEntity('MOVIE')
+export class MovieComment extends Comment {
+  @ManyToOne(() => Movie, { nullable: true, onDelete: 'CASCADE' })
+  movie!: Movie
+
+  constructor(data?: Partial<MovieComment>) {
+    super(data)
+    if (data) {
+      Object.assign(this, data)
+    }
+  }
+}

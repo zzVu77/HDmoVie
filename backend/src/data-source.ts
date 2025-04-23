@@ -1,22 +1,17 @@
-// import { DataSource } from 'typeorm'
+import { DataSource } from 'typeorm'
+import path from 'path'
 
-// export const AppDataSource = new DataSource({
-//   type: 'postgres', // Thay bằng database bạn dùng (mysql, sqlite, v.v.)
-//   host: 'localhost',
-//   port: 5432,
-//   username: 'your_username',
-//   password: 'your_password',
-//   database: 'your_database',
-//   synchronize: true, // Tự động tạo bảng dựa trên entity (chỉ dùng trong development)
-//   logging: true, // Log các truy vấn SQL
-//   entities: ['src/models/**/*.ts'], // Đường dẫn đến các entity
-//   migrations: ['src/migrations/**/*.ts'], // Đường dẫn đến các migration
-//   subscribers: ['src/subscribers/**/*.ts'], // Đường dẫn đến các subscriber
-// })
-// AppDataSource.initialize()
-//     .then(() => {
-//         console.log("Data Source has been initialized!")
-//     })
-//     .catch((err) => {
-//         console.error("Error during Data Source initialization", err)
-//     })
+export const AppDataSource = new DataSource({
+  type: 'mysql',
+  host: 'localhost', // hoặc 'mysql' nếu dùng Docker
+  port: 33061,
+  username: 'root',
+  password: '123456',
+  database: 'HDmoVie',
+  synchronize: false,
+  logging: true,
+  entities: [path.join(__dirname, 'models/**/*.{js,ts}')],
+  migrations: [path.join(__dirname, 'migrations/**/*.{js,ts}')],
+  migrationsTableName: 'migrations',
+  subscribers: [path.join(__dirname, 'subscribers/**/*.{js,ts}')],
+})
