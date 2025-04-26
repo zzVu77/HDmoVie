@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm'
 import { Genre } from './genre.model'
-import { Cast } from './cast.model' // Import Cast entity
+import { Cast } from './cast.model'
 
 @Entity('movies')
 export class Movie {
@@ -52,7 +52,8 @@ export class Movie {
       Object.assign(this, data)
     }
   }
-  // Getter and Setter methods
+
+  // Getter methods
   getId(): string {
     return this.id
   }
@@ -96,31 +97,8 @@ export class Movie {
   getCasts(): Cast[] {
     return this.casts
   }
-  //Business logic
-  static createNewMovie(data: Movie): Movie {
-    // Validation
-    if (!data.title || data.title.trim() === '') {
-      throw new Error('Movie title is required')
-    }
-    if (!data.description) {
-      throw new Error('Movie description is required')
-    }
-    if (!data.releaseYear) {
-      throw new Error('Release year is required')
-    }
-    if (!data.posterSource) {
-      throw new Error('Poster source is required')
-    }
-    if (!data.backdropSource) {
-      throw new Error('Backdrop source is required')
-    }
-    if (data.voteAvg === undefined || data.voteAvg < 0 || data.voteAvg > 10) {
-      throw new Error('Vote average must be between 0 and 10')
-    }
-    if (data.voteCount === undefined || data.voteCount < 0) {
-      throw new Error('Vote count must be non-negative')
-    }
 
+  static createNewMovie(data: Movie): Movie {
     // Ensure genres and casts are arrays
     data.genres = Array.isArray(data.genres) ? data.genres : []
     data.casts = Array.isArray(data.casts) ? data.casts : []
