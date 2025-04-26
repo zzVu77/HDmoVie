@@ -12,17 +12,17 @@ export class BlogService {
     return this.blogRepository.findById(id)
   }
 
-  async deleteBlog(blogId: string, isAdmin: boolean = false): Promise<void> {
-    const blog = await this.blogRepository.findById(blogId)
+//   async deleteBlog(blogId: string, isAdmin: boolean = false): Promise<void> {
+//     const blog = await this.blogRepository.findById(blogId)
 
-    if (!blog) {
-      throw new Error('Blog not found')
-    }
+//     if (!blog) {
+//       throw new Error('Blog not found')
+//     }
 
-    if (!isAdmin) {
-      throw new Error('You do not have permission to delete this blog')
-    }
+//     if (!isAdmin) {
+//       throw new Error('You do not have permission to delete this blog')
+//     }
 
-    await this.blogRepository.delete(blogId)
-  }
+//     await this.blogRepository.delete(blogId)
+//   }
 }
