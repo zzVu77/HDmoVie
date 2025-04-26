@@ -13,4 +13,14 @@ export class MovieController {
       res.status(500).json({ message: 'Internal server error' })
     }
   }
+  async createMovie(req: Request, res: Response): Promise<void> {
+    try {
+      const movieData = req.body
+      const newMovie = await this.movieService.createMovie(movieData)
+      res.status(201).json(newMovie)
+    } catch (error) {
+      console.error('Error creating movie:', error)
+      res.status(400).json({ message: (error as Error).message })
+    }
+  }
 }

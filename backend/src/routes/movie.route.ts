@@ -13,5 +13,6 @@ const movieController = new MovieController(movieService)
 
 // Định nghĩa routes
 movieRouter.get('/', (req, res) => movieController.getAllMovies(req, res))
+movieRouter.post('/create', (req, res) => movieController.createMovie(req, res))
 
 export default movieRouter

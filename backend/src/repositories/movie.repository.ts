@@ -10,6 +10,12 @@ export class MovieRepository {
   async findAll(): Promise<Movie[]> {
     return this.repository.find()
   }
+  async create(movieData: Movie): Promise<Movie> {
+    // Create movie instance using model
+    const movie = Movie.createNewMovie(movieData)
+    // Save to database
+    return this.repository.save(movie)
+  }
 
   // async findById(id: number): Promise<Movie | null> {
   //   return this.repository.findOneBy({ id })
