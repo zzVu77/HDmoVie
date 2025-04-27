@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm'
+import { DataSource, FindOptionsWhere, Repository } from 'typeorm'
 import { RegisteredUser } from '~/models/registeredUser.model'
 export class RegisteredUserRepository {
   private repository: Repository<RegisteredUser>
@@ -8,7 +8,7 @@ export class RegisteredUserRepository {
   }
 
   async findByEmail(email: string): Promise<RegisteredUser | null> {
-    return this.repository.createQueryBuilder('user').where('user.email = :email', { email }).getOne()
+    return this.repository.findOne({ where: { email } as FindOptionsWhere<RegisteredUser> })
   }
 
   async create(userData: RegisteredUser): Promise<RegisteredUser> {

@@ -70,13 +70,10 @@ export class RegisteredUser {
   }
 
   // Create instance
-  static createNewUser(data: {
-    email: string
-    password: string
-    fullName: string
-    dateOfBirth: string
-  }): RegisteredUser {
-    const user = new RegisteredUser(data.email, data.password, data.fullName, data.dateOfBirth)
+  static createNewUser(email: string, password: string, fullName: string, dateOfBirth: string): RegisteredUser {
+    const user = new RegisteredUser(email, password, fullName, dateOfBirth)
+
+    //Check user is older than 16 years old
     if (!user.isValidDOB()) {
       throw new Error('User must be at least 16 years old')
     }

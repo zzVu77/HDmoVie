@@ -4,10 +4,10 @@ import { RegisteredUserRepository } from '~/repositories/registeredUser.reposito
 
 export class RegisteredUserService {
   constructor(private registeredUserRepository: RegisteredUserRepository) {}
-  async createUser(userData: RegisteredUser): Promise<RegisteredUser> {
+  async createUser(email: string, password: string, fullName: string, dateOfBirth: string): Promise<RegisteredUser> {
     try {
       // Create user instance using createNewUser
-      const userInstance = userData
+      const userInstance = RegisteredUser.createNewUser(email, password, fullName, dateOfBirth)
       const existingUser = await this.registeredUserRepository.findByEmail(userInstance.getEmail())
       if (existingUser) {
         throw new Error('Email is existence')
