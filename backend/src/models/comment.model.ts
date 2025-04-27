@@ -19,9 +19,22 @@ export abstract class Comment {
   @ManyToOne(() => Comment, { nullable: true })
   protected parentComment?: Comment
 
-  constructor(data?: Partial<Comment>) {
-    if (data) {
-      Object.assign(this, data)
-    }
+  // Constructor nhận tham số từng thuộc tính cụ thể
+  constructor(user: RegisteredUser, content: string, date: Date, parentComment?: Comment) {
+    this.user = user
+    this.content = content
+    this.date = date
+    this.parentComment = parentComment 
+  }
+
+  // Setter cho parentComment
+  setParentComment(parent: Comment): void {
+    this.parentComment = parent
+  }
+  getId(): string {
+    return this.id;
+  }
+  getParentComment(): Comment | undefined {
+    return this.parentComment;
   }
 }

@@ -31,26 +31,25 @@ export class BlogController {
         }
     }
 
-    // async deleteBlog(req: Request, res: Response): Promise<void> {
-    //     try {
-    //     const { blogId } = req.params
-    //     //   const userId = req.user?.id
-    //     //   const isAdmin = req.user?.role === 'ADMIN'
+    async deleteBlog(req: Request, res: Response): Promise<void> {
+        try {
+        const { blogId } = req.params
+        //   const userId = req.user?.id
+        //   const isAdmin = req.user?.role === 'ADMIN'
+        const isAdmin = true 
 
-    //     const isAdmin = true
+        await this.blogService.deleteBlog(blogId, isAdmin)
+        res.status(200).json({ message: 'Blog deleted successfully' })
+        } catch (error) {
+        console.error('Error deleting blog:', error)
 
-    //     await this.blogService.deleteBlog(blogId, isAdmin)
-    //     res.status(200).json({ message: 'Blog deleted successfully' })
-    //     } catch (error) {
-    //     console.error('Error deleting blog:', error)
-
-    //     if ((error as Error).message === 'You do not have permission to delete this blog') {
-    //         res.status(403).json({ message: (error as Error).message })
-    //     } else if ((error as Error).message === 'Blog not found') {
-    //         res.status(404).json({ message: (error as Error).message })
-    //     } else {
-    //         res.status(400).json({ message: (error as Error).message })
-    //     }
-    //     }
-    // }
+        if ((error as Error).message === 'You do not have permission to delete this blog') {
+            res.status(403).json({ message: (error as Error).message })
+        } else if ((error as Error).message === 'Blog not found') {
+            res.status(404).json({ message: (error as Error).message })
+        } else {
+            res.status(400).json({ message: (error as Error).message })
+        }
+        }
+    }
 }

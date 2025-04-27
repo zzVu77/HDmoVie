@@ -23,9 +23,9 @@ export abstract class Report {
   @ManyToOne(() => RegisteredUser, { nullable: false, onDelete: 'CASCADE' })
   protected reporter!: RegisteredUser
 
-  constructor(data?: Partial<Report>) {
-    if (data) {
-      Object.assign(this, data)
-    }
+  // Updated constructor to accept direct parameters
+  constructor(reporter: RegisteredUser, reason: ReportReason) {
+    this.reporter = reporter
+    this.reason = reason
   }
 }

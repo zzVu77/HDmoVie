@@ -15,6 +15,7 @@ const blogController = new BlogController(blogService)
 // Define routes
 blogRouter.get('/', (req, res) => blogController.getAllBlogs(req, res))
 blogRouter.get('/:blogId', (req, res) => blogController.getBlogById(req, res))
-// blogRouter.delete('/:blogId', authMiddleware, (req, res) => blogController.deleteBlog(req, res))
-// blogRouter.delete('/:blogId', (req, res) => blogController.deleteBlog(req, res))
+
+blogRouter.delete('/:blogId', (req, res) => blogController.deleteBlog(req, res))
+
 export default blogRouter
