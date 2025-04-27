@@ -11,4 +11,13 @@ export class GenreService {
       throw new Error(`Failed to get all genres: ${(error as Error).message}`)
     }
   }
+
+  async createGenre(name: string): Promise<Genre> {
+    try {
+      const genreData = Genre.createNewGenre(name)
+      return await this.genreRepository.create(genreData)
+    } catch (error) {
+      throw new Error(`Failed to create genre: ${(error as Error).message}`)
+    }
+  }
 }

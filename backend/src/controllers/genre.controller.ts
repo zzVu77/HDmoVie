@@ -13,4 +13,14 @@ export class GenreController {
       res.status(500).json({ message: 'Internal server error' })
     }
   }
+  async createGenre(req: Request, res: Response): Promise<void> {
+    try {
+      const { name } = req.body
+      const newGenre = await this.genreService.createGenre(name)
+      res.status(201).json(newGenre)
+    } catch (error) {
+      console.error('Error creating movie:', error)
+      res.status(400).json({ message: (error as Error).message })
+    }
+  }
 }
