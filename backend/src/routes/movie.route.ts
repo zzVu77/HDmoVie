@@ -17,5 +17,7 @@ movieRouter.get('/search', (req, res) => movieController.searchMoviesByTitle(req
 movieRouter.get('/:id', (req, res) => movieController.getMovieById(req, res))
 //POST route
 movieRouter.post('/create', movieMiddleware, (req, res) => movieController.createMovie(req, res))
+//DELETE route
+movieRouter.delete('/:id', (req, res) => movieController.deleteMovie(req, res))
 
 export default movieRouter

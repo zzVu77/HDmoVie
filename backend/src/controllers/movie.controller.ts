@@ -51,4 +51,20 @@ export class MovieController {
       res.status(500).json({ message: 'Internal server error' })
     }
   }
+
+  async deleteMovie(req: Request, res: Response): Promise<void> {
+    try {
+      const movieId = req.params.id
+      const movie = await this.movieService.getMovieById(movieId)
+      if (!movie) {
+        res.status(404).json({ message: 'Movie not found' })
+        return
+      }
+      await this.movieService.deleteMovie(movieId)
+      res.status(200).json({ message: 'Movie deleted successfully' })
+    } catch (error) {
+      console.error('Error deleting movie:', error)
+      res.status(500).json({ message: 'Internal server error' })
+    }
+  }
 }

@@ -33,6 +33,10 @@ export class MovieRepository {
       throw error
     }
   }
+
+  async delete(id: string): Promise<void> {
+    await this.repository.delete(id)
+  }
 }
 
 // async create(movieData: Partial<Movie>): Promise<Movie> {
@@ -45,9 +49,6 @@ export class MovieRepository {
 //   return this.findById(id)
 // }
 
-// async delete(id: number): Promise<void> {
-//   await this.repository.delete(id)
-// }
 // async findByTitle(title: string): Promise<Movie | null> {
 //   return this.repository.findOneBy({ title })
 // }

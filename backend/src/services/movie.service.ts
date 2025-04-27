@@ -4,23 +4,43 @@ export class MovieService {
   constructor(private movieRepository: MovieRepository) {}
 
   async getAllMovies(): Promise<Movie[]> {
-    return this.movieRepository.findAll()
+    try {
+      return this.movieRepository.findAll()
+    } catch (error) {
+      throw new Error(`Failed to get all movies: ${(error as Error).message}`)
+    }
   }
 
   async createMovie(movieData: Movie): Promise<Movie> {
     try {
-      // Create Movie instance using createNewMovie
       const movieInstance = Movie.createNewMovie(movieData)
-      // Save the movie instance
       return await this.movieRepository.create(movieInstance)
     } catch (error) {
       throw new Error(`Failed to create movie: ${(error as Error).message}`)
     }
   }
+
   async getMovieById(id: string): Promise<Movie | null> {
-    return this.movieRepository.findById(id)
+    try {
+      return this.movieRepository.findById(id)
+    } catch (error) {
+      throw new Error(`Failed to get movie by ID: ${(error as Error).message}`)
+    }
   }
+
   async searchMoviesByTitle(title: string): Promise<Movie[]> {
-    return this.movieRepository.searchByTitle(title)
+    try {
+      return this.movieRepository.searchByTitle(title)
+    } catch (error) {
+      throw new Error(`Failed to search movies by title: ${(error as Error).message}`)
+    }
+  }
+
+  async deleteMovie(id: string): Promise<void> {
+    try {
+      await this.movieRepository.delete(id)
+    } catch (error) {
+      throw new Error(`Failed to delete movie: ${(error as Error).message}`)
+    }
   }
 }
