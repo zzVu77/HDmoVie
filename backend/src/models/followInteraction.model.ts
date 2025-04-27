@@ -25,6 +25,14 @@ export class FollowInteraction {
   })
   private following!: RegisteredUser[]
   //Methods
+
+  public getFollowerCount(): number {
+    return this.followers.length
+  }
+
+  public getFollowingCount(): number {
+    return this.following.length
+  }
 }
 //Usage example
 // async function addUserToLikeInteraction(blogId: string, user: RegisteredUser) {
