@@ -4,6 +4,7 @@ import 'reflect-metadata'
 import express from 'express'
 import { AppDataSource } from './data-source'
 import movieRouter from './routes/movie.route'
+import commentRouter from './routes/comment.route' // Import commentRouter
 
 const app = express()
 app.use(cors())
@@ -11,6 +12,7 @@ app.use(express.json())
 const port = 3001
 
 app.use('/api/movies', movieRouter)
+app.use('/api/comments', commentRouter) // Thêm route cho comment
 
 app.get('/', (req, res) => {
   res.send('HDmoVie API is running')

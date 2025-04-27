@@ -1,5 +1,9 @@
 import { IsDate, IsEmail, IsNotEmpty, Length } from 'class-validator'
 import { Column, Entity, PrimaryGeneratedColumn, TableInheritance } from 'typeorm'
+import { Movie } from './movie.model'
+import { Blog } from './blog.model'
+import { MovieComment } from './movieComment.model'
+import { BlogComment } from './blogComment.model'
 
 @Entity('registeredUsers')
 @TableInheritance({ column: { type: 'varchar', name: 'role' } })
@@ -52,4 +56,24 @@ export class RegisteredUser {
   public getRole(): string {
     return this.role
   }
+  commentOnMovieDetail(movie: Movie, content: string): MovieComment {
+    const comment = new MovieComment(
+      this, // user (this chính là đối tượng RegisteredUser)
+      content, // content
+      new Date(), // date
+      movie, // movie
+      undefined, // parentComment (nếu không có thì truyền undefined)
+    )
+    return comment
+  }
+
+  // commentOnBlog(blog: Blog, content: string): BlogComment {
+  //   const comment = new BlogComment({
+  //     user: this,
+  //     blog,
+  //     content,
+  //     date: new Date(),
+  //   })
+  //   return comment
+  // }
 }
