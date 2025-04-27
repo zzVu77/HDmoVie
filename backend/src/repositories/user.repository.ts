@@ -1,32 +1,35 @@
-// import { DataSource, Repository } from 'typeorm';
-// import { User } from '../entities/User';
+import { DataSource, FindOptionsWhere, FindOptionsSelect, Repository } from 'typeorm'
+import { RegisteredUser } from '../models/registeredUser.model'
 
-// export class UserRepository {
-//   private repository: Repository<User>;
+export class UserRepository {
+  private repository: Repository<RegisteredUser>
 
-//   constructor(dataSource: DataSource) {
-//     this.repository = dataSource.getRepository(User);
-//   }
+  constructor(dataSource: DataSource) {
+    this.repository = dataSource.getRepository(RegisteredUser)
+  }
 
-//   async findAll(): Promise<User[]> {
-//     return this.repository.find();
-//   }
+  async findAll(): Promise<RegisteredUser[]> {
+    return this.repository.find()
+  }
 
-//   async findById(id: number): Promise<User | null> {
-//     return this.repository.findOneBy({ id });
-//   }
+  async findById(id: string): Promise<RegisteredUser | null> {
+    return this.repository.findOne({
+      where: { id: id } as FindOptionsWhere<RegisteredUser>,
+      select: ['id', 'email', 'fullName', 'dateOfBirth', 'role'] as FindOptionsSelect<RegisteredUser>,
+    })
+  }
 
-//   async create(userData: Partial<User>): Promise<User> {
-//     const user = this.repository.create(userData);
-//     return this.repository.save(user);
-//   }
+  async create(userData: Partial<RegisteredUser>): Promise<RegisteredUser> {
+    const user = this.repository.create(userData)
+    return this.repository.save(user)
+  }
 
-//   async update(id: number, userData: Partial<User>): Promise<User | null> {
-//     await this.repository.update(id, userData);
-//     return this.findById(id);
-//   }
+  async update(id: string, userData: Partial<RegisteredUser>): Promise<RegisteredUser | null> {
+    await this.repository.update(id, userData)
+    return this.findById(id)
+  }
 
-//   async delete(id: number): Promise<void> {
-//     await this.repository.delete(id);
-//   }
-// }
+  async delete(id: number): Promise<void> {
+    await this.repository.delete(id)
+  }
+}
