@@ -7,4 +7,14 @@ export class Genre {
 
   @Column({ type: 'varchar', length: 100 })
   private name!: string
+
+  constructor(name: string) {
+    this.name = name
+  }
+  public getName(): string {
+    return this.name
+  }
+  static createNewGenre(name: string): Genre {
+    return new Genre(name)
+  }
 }
