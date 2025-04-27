@@ -13,6 +13,7 @@ export class MovieController {
       res.status(500).json({ message: 'Internal server error' })
     }
   }
+
   async createMovie(req: Request, res: Response): Promise<void> {
     try {
       const movieData = req.body
@@ -23,6 +24,7 @@ export class MovieController {
       res.status(400).json({ message: (error as Error).message })
     }
   }
+
   async getMovieById(req: Request, res: Response): Promise<void> {
     try {
       const movieId = req.params.id
@@ -37,6 +39,7 @@ export class MovieController {
       res.status(500).json({ message: 'Internal server error' })
     }
   }
+
   async searchMoviesByTitle(req: Request, res: Response): Promise<void> {
     try {
       const { title } = req.query
