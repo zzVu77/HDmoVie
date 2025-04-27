@@ -17,27 +17,10 @@ export class MovieService {
       throw new Error(`Failed to create movie: ${(error as Error).message}`)
     }
   }
-  // async getMovieById(id: number): Promise<Movie | null> {
-  //   return this.movieRepository.findById(id)
-  // }
-
-  // async createMovie(movieData: Partial<Movie>): Promise<Movie> {
-  //   // Thêm logic validate hoặc xử lý business logic nếu cần
-  //   if (!movieData.title || !movieData.description || !movieData.releaseDate) {
-  //     throw new Error("Missing required fields");
-  //   }
-  //   return this.movieRepository.create(movieData);
-  // }
-
-  // async updateMovie(id: number, movieData: Partial<Movie>): Promise<Movie | null> {
-  //   return this.movieRepository.update(id, movieData);
-  // }
-
-  // async deleteMovie(id: number): Promise<void> {
-  //   return this.movieRepository.delete(id);
-  // }
-
-  // async findByTitle(title: string): Promise<Movie | null> {
-  //   return this.movieRepository.findByTitle(title);
-  // }
+  async getMovieById(id: string): Promise<Movie | null> {
+    return this.movieRepository.findById(id)
+  }
+  async searchMoviesByTitle(title: string): Promise<Movie[]> {
+    return this.movieRepository.searchByTitle(title)
+  }
 }
