@@ -3,14 +3,14 @@ import { AppDataSource } from '~/data-source'
 import { ProfileController } from '~/controllers/profile.controller'
 import { ProfileService } from '~/services/profile.service'
 
-import { UserRepository } from '~/repositories/user.repository'
+import { RegisteredUserRepository } from '~/repositories/user.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
 import { FollowInteractionRepository } from '~/repositories/followInteraction.repository'
 
 const profileRouter = Router()
 
 // Initilize dependencies
-const userRepository = new UserRepository(AppDataSource)
+const userRepository = new RegisteredUserRepository(AppDataSource)
 const blogRepository = new BlogRepository(AppDataSource)
 const followInteractionRepository = new FollowInteractionRepository(AppDataSource)
 const profileService = new ProfileService(userRepository, followInteractionRepository, blogRepository)
@@ -18,5 +18,8 @@ const profileController = new ProfileController(profileService)
 
 // Define routes
 profileRouter.get('/:id', (req, res) => profileController.get(req, res))
+profileRouter.get('/:id/blogs', (req, res) => profileController.getBlogs(req, res))
+profileRouter.get('/:id/followers', (req, res) => profileController.getFollowers(req, res))
+profileRouter.get('/:id/followings', (req, res) => profileController.getFollowings(req, res))
 
 export default profileRouter
