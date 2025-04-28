@@ -31,9 +31,8 @@ export class ProfileController {
     try {
       const userId = req.params.id
       const page = parseInt(req.query.page as string) || 0 // Default page = 0
-      const pageSize = 5 // Maximum blogs on a page
 
-      const blogs = await this.profileService.getUserBlogs(userId, page, pageSize)
+      const blogs = await this.profileService.getUserBlogs(userId, page)
 
       res.json(blogs)
     } catch (error) {
@@ -64,6 +63,22 @@ export class ProfileController {
       const followings = await this.profileService.getUserFollowings(userId)
 
       res.json(followings)
+    } catch (error) {
+      console.error('Error fetching followings:', error)
+      res.status(500).json({ message: 'Internal server error' })
+    }
+  }
+
+  // Return the watchlists of user
+  // get/:id/watchlists?page=0
+  async getWatchlists(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = req.params.id
+      const page = parseInt(req.query.page as string) || 0 // Default page = 0
+
+      const watchlists = this.profileService.getUserWatchlists(userId, page)
+
+      res.json(watchlists)
     } catch (error) {
       console.error('Error fetching followings:', error)
       res.status(500).json({ message: 'Internal server error' })

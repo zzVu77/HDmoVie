@@ -6,13 +6,15 @@ import { Blog } from '~/models/blog.model'
 import { RegisteredUserRepository } from '~/repositories/user.repository'
 import { FollowInteractionRepository } from '~/repositories/followInteraction.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
-import { off } from 'process'
+import { WatchlistRepository } from '~/repositories/watchlist.repository'
+import { Watchlist } from '~/models/watchlist.model'
 
 export class ProfileService {
   constructor(
     private registeredUserRepository: RegisteredUserRepository,
     private followInteractionRepository: FollowInteractionRepository,
     private blogRepository: BlogRepository,
+    private watchlistRepository: WatchlistRepository,
   ) {}
 
   // Get user basic profile information: user information + follow information
@@ -42,7 +44,8 @@ export class ProfileService {
   }
 
   // Get user blogs
-  public async getUserBlogs(userId: string, page: number, pageSize: number): Promise<Blog[]> {
+  public async getUserBlogs(userId: string, page: number): Promise<Blog[]> {
+    const pageSize = 5
     const offset = page * pageSize
     return this.blogRepository.findByUserId(userId, offset, pageSize)
   }
@@ -67,5 +70,12 @@ export class ProfileService {
     }
 
     return followInteraction.getFollowings()
+  }
+
+  // Get user watchlists
+  public async getUserWatchlists(userId: string, page: number): Promise<Watchlist[]> {
+    const pageSize = 10
+    const offset = page * pageSize
+    return this.watchlistRepository.findByUserId(userId, offset, pageSize)
   }
 }
