@@ -56,9 +56,9 @@ export class RegisteredUser {
   }
 
   // Check Date of birth is valid
-  private isValidDOB(): boolean {
+  static isValidDOB(userData: RegisteredUser): boolean {
     const today = new Date()
-    const birthDate = new Date(this.dateOfBirth)
+    const birthDate = new Date(userData.getDateOfBirth())
     let age = today.getFullYear() - birthDate.getFullYear()
     const monthDiff = today.getMonth() - birthDate.getMonth()
 
@@ -70,14 +70,14 @@ export class RegisteredUser {
   }
 
   // Create instance
-  static createNewUser(email: string, password: string, fullName: string, dateOfBirth: string): RegisteredUser {
-    const user = new RegisteredUser(email, password, fullName, dateOfBirth)
+  // static createNewUser(email: string, password: string, fullName: string, dateOfBirth: string): RegisteredUser {
+  //   const user = new RegisteredUser(email, password, fullName, dateOfBirth)
 
-    //Check user is older than 16 years old
-    if (!user.isValidDOB()) {
-      throw new Error('User must be at least 16 years old')
-    }
+  //   //Check user is older than 16 years old
+  //   if (!user.isValidDOB()) {
+  //     throw new Error('User must be at least 16 years old')
+  //   }
 
-    return user
-  }
+  //   return user
+  // }
 }

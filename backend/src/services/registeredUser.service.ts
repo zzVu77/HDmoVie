@@ -4,18 +4,19 @@ import { RegisteredUserRepository } from '~/repositories/registeredUser.reposito
 
 export class RegisteredUserService {
   constructor(private registeredUserRepository: RegisteredUserRepository) {}
-  async createUser(email: string, password: string, fullName: string, dateOfBirth: string): Promise<RegisteredUser> {
+  async createUser(userData: RegisteredUser): Promise<RegisteredUser> {
     try {
-      // Create user instance using createNewUser
-      const userInstance = RegisteredUser.createNewUser(email, password, fullName, dateOfBirth)
-      const existingUser = await this.registeredUserRepository.findByEmail(userInstance.getEmail())
+      if (!RegisteredUser.isValidDOB(userData)) {
+        throw new Error('User must be at least 16 years old')
+      }
+      const existingUser = await this.registeredUserRepository.findByEmail(userData.getEmail())
       if (existingUser) {
         throw new Error('Email is existence')
       }
       // hash password
-      userInstance.setPassword(await bcrypt.hash(userInstance.getPassword(), 8))
+      userData.setPassword(await bcrypt.hash(userData.getPassword(), 8))
       // Save user
-      return await this.registeredUserRepository.create(userInstance)
+      return await this.registeredUserRepository.create(userData)
     } catch (error) {
       throw new Error(`Failed to create user  : ${(error as Error).message}`)
     }

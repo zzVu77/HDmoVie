@@ -6,9 +6,11 @@ export class RegisteredUserController {
 
   async register(req: Request, res: Response): Promise<void> {
     try {
-      const { email, password, fullName, dateOfBirth } = req.body
+      const data = req.body
+      // Create instance RegisterUser
+      const userData = new RegisteredUser(data.email, data.password, data.fullName, data.dateOfBirth)
       // move to service
-      const newUser = await this.registeredUserService.createUser(email, password, fullName, dateOfBirth)
+      const newUser = await this.registeredUserService.createUser(userData)
       res.status(201).json(newUser)
     } catch (error) {
       console.error('Error creating user:', error)
