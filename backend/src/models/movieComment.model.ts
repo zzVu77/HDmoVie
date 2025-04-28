@@ -1,7 +1,7 @@
 import { ChildEntity, ManyToOne } from 'typeorm'
 import { Comment } from './comment.model'
 import { Movie } from './movie.model'
-import { RegisteredUser } from '~/models/registeredUser.model'
+import { RegisteredUser } from './registeredUser.model'
 
 @ChildEntity('MOVIE')
 export class MovieComment extends Comment {

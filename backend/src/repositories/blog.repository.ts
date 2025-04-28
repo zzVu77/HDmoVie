@@ -4,11 +4,9 @@ import { BlogComment } from '~/models/blogComment.model'
 
 export class BlogRepository {
     private repository: Repository<Blog>
-    private blogCommentRepository: Repository<BlogComment>
 
     constructor(dataSource: DataSource) {
         this.repository = dataSource.getRepository(Blog)
-        this.blogCommentRepository = dataSource.getRepository(BlogComment)
     }
 
     async findById(id: string): Promise<Blog | null> {
@@ -29,29 +27,29 @@ export class BlogRepository {
     }
 
     async delete(id: string): Promise<void> {
-        const comments = await this.blogCommentRepository.find({
-            where: { blog: { id } },
-            relations: ['parentComment'],
-        });
+        // const comments = await this.blogCommentRepository.find({
+        //     where: { blog: { id } },
+        //     relations: ['parentComment'],
+        // });
     
-        if (comments.length > 0) {
-            const commentIds = comments.map(comment => comment.getId());
+        // if (comments.length > 0) {
+        //     const commentIds = comments.map(comment => comment.getId());
     
-            if (commentIds.length > 0) {
-                const childComments = await this.blogCommentRepository
-                    .createQueryBuilder('blogComment')
-                    .leftJoin('blogComment.parentComment', 'parentComment')
-                    .where('parentComment.id IN (:...ids)', { ids: commentIds })
-                    .getMany();
+        //     if (commentIds.length > 0) {
+        //         const childComments = await this.blogCommentRepository
+        //             .createQueryBuilder('blogComment')
+        //             .leftJoin('blogComment.parentComment', 'parentComment')
+        //             .where('parentComment.id IN (:...ids)', { ids: commentIds })
+        //             .getMany();
     
-                if (childComments.length > 0) {
-                    const childCommentIds = childComments.map(c => c.getId());
-                    await this.blogCommentRepository.delete(childCommentIds);
-                }
+        //         if (childComments.length > 0) {
+        //             const childCommentIds = childComments.map(c => c.getId());
+        //             await this.blogCommentRepository.delete(childCommentIds);
+        //         }
     
-                await this.blogCommentRepository.delete(commentIds);
-            }
-        }
+        //         await this.blogCommentRepository.delete(commentIds);
+        //     }
+        // }
     
         await this.repository.delete(id);
     }    

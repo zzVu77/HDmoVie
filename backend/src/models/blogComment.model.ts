@@ -1,11 +1,11 @@
 import { ChildEntity, ManyToOne } from 'typeorm'
 import { Comment } from './comment.model'
 import { Blog } from './blog.model'
-import { RegisteredUser } from '~/models/registeredUser.model'
+import { RegisteredUser } from './registeredUser.model'
 
 @ChildEntity('BLOG')
 export class BlogComment extends Comment {
-  @ManyToOne(() => Blog, { nullable: true })
+  @ManyToOne(() => Blog, { nullable: true, onDelete: 'CASCADE' })
   blog!: Blog
 
   // Constructor gọn hơn, trực tiếp nhận từng tham số

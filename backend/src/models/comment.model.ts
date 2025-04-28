@@ -16,7 +16,7 @@ export abstract class Comment {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   protected date!: Date
 
-  @ManyToOne(() => Comment, { nullable: true })
+  @ManyToOne(() => Comment, { nullable: true, onDelete: 'CASCADE' })
   protected parentComment?: Comment
 
   // Constructor nhận tham số từng thuộc tính cụ thể
