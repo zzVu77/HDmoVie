@@ -30,5 +30,6 @@ profileRouter.get('/:id/blogs', (req, res) => profileController.getBlogs(req, re
 profileRouter.get('/:id/followers', (req, res) => profileController.getFollowers(req, res))
 profileRouter.get('/:id/followings', (req, res) => profileController.getFollowings(req, res))
 profileRouter.get('/:id/watchlists', (req, res) => profileController.getWatchlists(req, res))
+profileRouter.get('/:id/watchlists/:wid', (req, res) => profileController.getWatchlistDetail(req, res))
 
 export default profileRouter

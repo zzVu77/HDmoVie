@@ -8,6 +8,13 @@ export class WatchlistRepository {
     this.repository = dataSource.getRepository(Watchlist)
   }
 
+  async find(watchlistId: string): Promise<Watchlist | null> {
+    return this.repository.findOne({
+      where: { id: watchlistId } as FindOptionsWhere<Watchlist>,
+      relations: ['movies'],
+    })
+  }
+
   async findByUserId(userId: string, offset: number, amount: number): Promise<Watchlist[]> {
     return this.repository.find({
       where: { owner: { id: userId } } as FindOptionsWhere<Watchlist>,

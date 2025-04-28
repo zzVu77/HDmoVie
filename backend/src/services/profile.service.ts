@@ -78,4 +78,13 @@ export class ProfileService {
     const offset = page * pageSize
     return await this.watchlistRepository.findByUserId(userId, offset, pageSize)
   }
+
+  // Get watchlist detail
+  public async getWatchlistDetail(watchlistId: string): Promise<Watchlist | null> {
+    const watchlist = await this.watchlistRepository.find(watchlistId)
+    if (!watchlist) {
+      return null
+    }
+    return watchlist
+  }
 }

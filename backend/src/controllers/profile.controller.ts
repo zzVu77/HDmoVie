@@ -84,4 +84,24 @@ export class ProfileController {
       res.status(500).json({ message: 'Internal server error' })
     }
   }
+
+  // Return the watchlist detail
+  // get/:id/watchlists/:wid
+  async getWatchlistDetail(req: Request, res: Response): Promise<void> {
+    try {
+      const watchlistId = req.params.wid
+
+      const watchlist = await this.profileService.getWatchlistDetail(watchlistId)
+
+      if (!watchlist) {
+        res.status(404).json({ message: 'Watchlist not found' })
+        return
+      }
+
+      res.json(watchlist)
+    } catch (error) {
+      console.error('Error fetching followings:', error)
+      res.status(500).json({ message: 'Internal server error' })
+    }
+  }
 }
