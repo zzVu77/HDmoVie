@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
+import { Movie } from '~/models/movie.model'
 import { MovieService } from '~/services/movie.service'
+import { MovieType } from '~/type'
 
 export class MovieController {
   constructor(private movieService: MovieService) {}
@@ -16,7 +18,19 @@ export class MovieController {
 
   async createMovie(req: Request, res: Response): Promise<void> {
     try {
-      const movieData = req.body
+      const data = req.body
+      const movieData = new Movie(
+        data.title,
+        data.description,
+        data.releaseYear,
+        data.trailerSource,
+        data.posterSource,
+        data.backdropSource,
+        data.voteAvg,
+        data.voteCount,
+        data.genres,
+        data.casts,
+      )
       const newMovie = await this.movieService.createMovie(movieData)
       res.status(201).json(newMovie)
     } catch (error) {
@@ -67,6 +81,20 @@ export class MovieController {
       res.status(200).json({ message: 'Movie deleted successfully' })
     } catch (error) {
       console.error('Error deleting movie:', error)
+      res.status(500).json({ message: 'Internal server error' })
+    }
+  }
+  async updateMovie(req: Request, res: Response): Promise<void> {
+    try {
+      const movieId = req.params.id
+      const updatedMovie = await this.movieService.updateMovie(movieId, req.body as MovieType)
+      if (!updatedMovie) {
+        res.status(404).json({ message: 'Movie not found' })
+        return
+      }
+      res.json(updatedMovie)
+    } catch (error) {
+      console.error('Updating movie failed ==>', error)
       res.status(500).json({ message: 'Internal server error' })
     }
   }

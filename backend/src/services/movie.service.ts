@@ -1,22 +1,28 @@
 import { Movie } from '~/models/movie.model'
 import { MovieRepository } from '~/repositories/movie.repository'
+import { MovieType } from '~/type'
+import { CastService } from './cast.service'
+import { GenreService } from './genre.service'
 export class MovieService {
-  constructor(private movieRepository: MovieRepository) {}
+  constructor(
+    private movieRepository: MovieRepository,
+    private castService: CastService,
+    private genreService: GenreService,
+  ) {}
 
   async getAllMovies(): Promise<Movie[]> {
     try {
       return this.movieRepository.findAll()
     } catch (error) {
-      throw new Error(`Failed to get all movies: ${(error as Error).message}`)
+      throw new Error((error as Error).message)
     }
   }
 
   async createMovie(movieData: Movie): Promise<Movie> {
     try {
-      const movieInstance = Movie.createNewMovie(movieData)
-      return await this.movieRepository.create(movieInstance)
+      return await this.movieRepository.create(movieData)
     } catch (error) {
-      throw new Error(`Failed to create movie: ${(error as Error).message}`)
+      throw new Error((error as Error).message)
     }
   }
 
@@ -24,7 +30,7 @@ export class MovieService {
     try {
       return this.movieRepository.findById(id)
     } catch (error) {
-      throw new Error(`Failed to get movie by ID: ${(error as Error).message}`)
+      throw new Error((error as Error).message)
     }
   }
 
@@ -32,7 +38,7 @@ export class MovieService {
     try {
       return this.movieRepository.searchByTitle(title)
     } catch (error) {
-      throw new Error(`Failed to search movies by title: ${(error as Error).message}`)
+      throw new Error((error as Error).message)
     }
   }
 
@@ -40,7 +46,30 @@ export class MovieService {
     try {
       await this.movieRepository.delete(id)
     } catch (error) {
-      throw new Error(`Failed to delete movie: ${(error as Error).message}`)
+      throw new Error((error as Error).message)
     }
+  }
+  async updateMovie(id: string, movieData: Partial<MovieType>): Promise<Movie | null> {
+    const movie = await this.movieRepository.findById(id)
+    if (!movie) {
+      throw new Error('Movie not found')
+    }
+    const castIds = movieData.casts?.map((cast) => cast.id)
+    const casts = castIds && (await this.castService.validateCasts(castIds))
+    const genreIds = movieData.genres?.map((genre) => genre.id)
+    const genres = genreIds && (await this.genreService.validateGenres(genreIds))
+    movie.updateMovie(
+      movieData.title,
+      movieData.description,
+      movieData.releaseYear,
+      movieData.trailerSource,
+      movieData.posterSource,
+      movieData.backdropSource,
+      movieData.voteAvg,
+      movieData.voteCount,
+      genres,
+      casts,
+    )
+    return this.movieRepository.update(movie)
   }
 }
