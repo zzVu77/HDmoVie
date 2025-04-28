@@ -76,7 +76,7 @@ export class ProfileController {
       const userId = req.params.id
       const page = parseInt(req.query.page as string) || 0 // Default page = 0
 
-      const watchlists = this.profileService.getUserWatchlists(userId, page)
+      const watchlists = await this.profileService.getUserWatchlists(userId, page)
 
       res.json(watchlists)
     } catch (error) {
