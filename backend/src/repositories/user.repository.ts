@@ -1,7 +1,7 @@
 import { DataSource, FindOptionsWhere, FindOptionsSelect, Repository } from 'typeorm'
 import { RegisteredUser } from '../models/registeredUser.model'
 
-export class UserRepository {
+export class RegisteredUserRepository {
   private repository: Repository<RegisteredUser>
 
   constructor(dataSource: DataSource) {
