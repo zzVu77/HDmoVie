@@ -9,14 +9,11 @@ export class Genre {
   @Column({ type: 'varchar', length: 100 })
   private name!: string
 
-  constructor(name: string, id: string) {
+  constructor(name: string, id?: string) {
     this.id = id ? id : uuidv4()
     this.name = name
   }
   public getName(): string {
     return this.name
-  }
-  static createNewGenre(name: string): Genre {
-    return new Genre(name, '')
   }
 }

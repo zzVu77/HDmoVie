@@ -12,9 +12,8 @@ export class GenreService {
     }
   }
 
-  async createGenre(name: string): Promise<Genre> {
+  async createGenre(genreData: Genre): Promise<Genre> {
     try {
-      const genreData = Genre.createNewGenre(name)
       return await this.genreRepository.create(genreData)
     } catch (error) {
       throw new Error(`Failed to create genre: ${(error as Error).message}`)

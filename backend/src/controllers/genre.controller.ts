@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { GenreService } from '~/services/genre.service'
-
+import { Genre } from '~/models/genre.model'
 export class GenreController {
   constructor(private genreService: GenreService) {}
 
@@ -15,11 +15,12 @@ export class GenreController {
   }
   async createGenre(req: Request, res: Response): Promise<void> {
     try {
-      const { name } = req.body
-      const newGenre = await this.genreService.createGenre(name)
+      const data = req.body
+      const genreData = new Genre(data.name)
+      const newGenre = await this.genreService.createGenre(genreData)
       res.status(201).json(newGenre)
     } catch (error) {
-      console.error('Error creating movie:', error)
+      console.error('Error creating Genre:', error)
       res.status(400).json({ message: (error as Error).message })
     }
   }
