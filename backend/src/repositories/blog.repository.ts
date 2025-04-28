@@ -8,9 +8,11 @@ export class BlogRepository {
     this.repository = dataSource.getRepository(Blog)
   }
 
-  async findByUserId(userId: string): Promise<Blog[]> {
+  async findByUserId(userId: string, offset: number, amount: number): Promise<Blog[]> {
     return this.repository.find({
       where: { owner: { id: userId } } as FindOptionsWhere<Blog>,
+      skip: offset,
+      take: amount,
       relations: ['tags'],
     })
   }
