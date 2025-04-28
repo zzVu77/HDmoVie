@@ -43,12 +43,14 @@ export class GenreService {
       throw new Error((error as Error).message)
     }
   }
-  async updateGenre(id: string, genreData: Partial<GenreType>): Promise<Genre | null> {
+  async updateGenre(id: string, genreName: string): Promise<Genre | null> {
     const genre = await this.genreRepository.findById(id)
+
+    const genreData = new Genre(genreName)
     if (!genre) {
       throw new Error('Genre not found')
     }
-    genre.updateGenre(genreData.name)
+    genre.updateGenre(genreData.getName())
     return this.genreRepository.update(genre)
   }
 }

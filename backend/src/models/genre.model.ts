@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 @Entity('genres')
 export class Genre {
   @PrimaryGeneratedColumn('uuid')
-  private id!: string
+  public id!: string
 
   @Column({ type: 'varchar', length: 100 })
   private name!: string
@@ -19,6 +19,9 @@ export class Genre {
 
   public setName(name: string): void {
     this.name = name
+  }
+  public getId(): string {
+    return this.id
   }
   updateGenre(updateName?: string): void {
     this.setName(updateName ?? this.name)

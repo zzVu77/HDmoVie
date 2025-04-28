@@ -45,7 +45,8 @@ export class GenreController {
   async updateGenre(req: Request, res: Response): Promise<void> {
     try {
       const genreId = req.params.id
-      const updatedGenre = await this.genreService.updateGenre(genreId, req.body as GenreType)
+
+      const updatedGenre = await this.genreService.updateGenre(genreId, req.body.name)
       if (!updatedGenre) {
         res.status(404).json({ message: 'Movie not found' })
         return

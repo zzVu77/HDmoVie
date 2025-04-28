@@ -66,7 +66,7 @@ export class RegisteredUser {
       age--
     }
 
-    return age >= 16
+    return age >= 10 && age <= 100
   }
 
   // Create instance

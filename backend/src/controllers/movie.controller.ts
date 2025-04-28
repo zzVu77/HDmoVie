@@ -87,7 +87,21 @@ export class MovieController {
   async updateMovie(req: Request, res: Response): Promise<void> {
     try {
       const movieId = req.params.id
-      const updatedMovie = await this.movieService.updateMovie(movieId, req.body as MovieType)
+      const data = req.body
+
+      const updatedMovie = await this.movieService.updateMovie(
+        movieId,
+        data.title,
+        data.description,
+        data.releaseYear,
+        data.trailerSource,
+        data.posterSource,
+        data.backdropSource,
+        data.voteAvg,
+        data.voteCount,
+        data.genres,
+        data.casts,
+      )
       if (!updatedMovie) {
         res.status(404).json({ message: 'Movie not found' })
         return
