@@ -20,4 +20,11 @@ export class GenreService {
       throw new Error(`Failed to create genre: ${(error as Error).message}`)
     }
   }
+  async validateGenres(genreIds: string[]): Promise<Genre[]> {
+    const genres = await this.genreRepository.findByIds(genreIds)
+    if (genres.length !== genreIds.length) {
+      throw new Error('One or more genre IDs do not exist')
+    }
+    return genres
+  }
 }

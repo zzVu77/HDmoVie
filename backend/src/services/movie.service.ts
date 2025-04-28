@@ -1,43 +1,75 @@
 import { Movie } from '~/models/movie.model'
 import { MovieRepository } from '~/repositories/movie.repository'
+import { MovieType } from '~/type'
+import { CastService } from './cast.service'
+import { GenreService } from './genre.service'
 export class MovieService {
-  constructor(private movieRepository: MovieRepository) {}
+  constructor(
+    private movieRepository: MovieRepository,
+    private castService: CastService,
+    private genreService: GenreService,
+  ) {}
 
   async getAllMovies(): Promise<Movie[]> {
-    return this.movieRepository.findAll()
+    try {
+      return this.movieRepository.findAll()
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 
   async createMovie(movieData: Movie): Promise<Movie> {
     try {
-      // Create Movie instance using createNewMovie
-      const movieInstance = Movie.createNewMovie(movieData)
-      // Save the movie instance
-      return await this.movieRepository.create(movieInstance)
+      return await this.movieRepository.create(movieData)
     } catch (error) {
-      throw new Error(`Failed to create movie: ${(error as Error).message}`)
+      throw new Error((error as Error).message)
     }
   }
-  // async getMovieById(id: number): Promise<Movie | null> {
-  //   return this.movieRepository.findById(id)
-  // }
 
-  // async createMovie(movieData: Partial<Movie>): Promise<Movie> {
-  //   // Thêm logic validate hoặc xử lý business logic nếu cần
-  //   if (!movieData.title || !movieData.description || !movieData.releaseDate) {
-  //     throw new Error("Missing required fields");
-  //   }
-  //   return this.movieRepository.create(movieData);
-  // }
+  async getMovieById(id: string): Promise<Movie | null> {
+    try {
+      return this.movieRepository.findById(id)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
 
-  // async updateMovie(id: number, movieData: Partial<Movie>): Promise<Movie | null> {
-  //   return this.movieRepository.update(id, movieData);
-  // }
+  async searchMoviesByTitle(title: string): Promise<Movie[]> {
+    try {
+      return this.movieRepository.searchByTitle(title)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
 
-  // async deleteMovie(id: number): Promise<void> {
-  //   return this.movieRepository.delete(id);
-  // }
-
-  // async findByTitle(title: string): Promise<Movie | null> {
-  //   return this.movieRepository.findByTitle(title);
-  // }
+  async deleteMovie(id: string): Promise<void> {
+    try {
+      await this.movieRepository.delete(id)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+  async updateMovie(id: string, movieData: Partial<MovieType>): Promise<Movie | null> {
+    const movie = await this.movieRepository.findById(id)
+    if (!movie) {
+      throw new Error('Movie not found')
+    }
+    const castIds = movieData.casts?.map((cast) => cast.id)
+    const casts = castIds && (await this.castService.validateCasts(castIds))
+    const genreIds = movieData.genres?.map((genre) => genre.id)
+    const genres = genreIds && (await this.genreService.validateGenres(genreIds))
+    movie.updateMovie(
+      movieData.title,
+      movieData.description,
+      movieData.releaseYear,
+      movieData.trailerSource,
+      movieData.posterSource,
+      movieData.backdropSource,
+      movieData.voteAvg,
+      movieData.voteCount,
+      genres,
+      casts,
+    )
+    return this.movieRepository.update(movie)
+  }
 }
