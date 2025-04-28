@@ -3,7 +3,7 @@ import { AppDataSource } from '~/data-source'
 import { ProfileController } from '~/controllers/profile.controller'
 import { ProfileService } from '~/services/profile.service'
 
-import { RegisteredUserRepository } from '~/repositories/user.repository'
+import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
 import { FollowInteractionRepository } from '~/repositories/followInteraction.repository'
 import { WatchlistRepository } from '~/repositories/watchlist.repository'

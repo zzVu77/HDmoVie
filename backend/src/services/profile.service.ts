@@ -3,7 +3,7 @@ import { FollowInteraction } from '~/models/followInteraction.model'
 import { Blog } from '~/models/blog.model'
 // import { Watchlist } from "~/models/watchlist.model";
 
-import { RegisteredUserRepository } from '~/repositories/user.repository'
+import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { FollowInteractionRepository } from '~/repositories/followInteraction.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
 import { WatchlistRepository } from '~/repositories/watchlist.repository'
