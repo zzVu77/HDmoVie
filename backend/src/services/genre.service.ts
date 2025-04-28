@@ -26,4 +26,20 @@ export class GenreService {
     }
     return genres
   }
+
+  async getGenreById(id: string): Promise<Genre | null> {
+    try {
+      return this.genreRepository.findById(id)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  async deleteGenre(id: string): Promise<void> {
+    try {
+      await this.genreRepository.delete(id)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
 }

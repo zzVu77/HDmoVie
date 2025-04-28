@@ -24,4 +24,19 @@ export class GenreController {
       res.status(400).json({ message: (error as Error).message })
     }
   }
+  async deleteGenre(req: Request, res: Response): Promise<void> {
+    try {
+      const genreId = req.params.id
+      const genre = await this.genreService.getGenreById(genreId)
+      if (!genre) {
+        res.status(404).json({ message: 'Movie not found' })
+        return
+      }
+      await this.genreService.deleteGenre(genreId)
+      res.status(200).json({ message: 'Genre deleted successfully' })
+    } catch (error) {
+      console.error('Error deleting movie:', error)
+      res.status(500).json({ message: 'Internal server error' })
+    }
+  }
 }

@@ -28,4 +28,12 @@ export class GenreRepository {
   async findByIds(ids: string[]): Promise<Genre[]> {
     return this.repository.find({ where: { id: In(ids) } as FindOptionsWhere<Genre> })
   }
+
+  async delete(id: string): Promise<void> {
+    try {
+      await this.repository.delete(id)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
 }
