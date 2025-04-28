@@ -29,4 +29,7 @@ export class Blog {
       Object.assign(this, data)
     }
   }
+  getId(): string {
+    return this.id
+  }
 }

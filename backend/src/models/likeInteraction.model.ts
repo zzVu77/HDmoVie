@@ -18,28 +18,34 @@ export class LikeInteraction {
     inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' },
   })
   private likers!: RegisteredUser[]
-  //Methods
+
+  constructor(blog: Blog) {
+    this.blog = blog
+  }
+
+  public getId(): string {
+    return this.id
+  }
+
+  public getBlog(): Blog {
+    return this.blog
+  }
+
   public getLikers(): RegisteredUser[] {
     return this.likers
   }
+
   public addLiker(user: RegisteredUser): void {
-    if (!this.likers.some((u) => u.getId() === user.getId())) {
+    // Kiểm tra nếu likers là mảng trước khi thao tác
+    if (Array.isArray(this.likers)) {
       this.likers.push(user)
+    } else {
+      this.likers = [user] // Nếu likers không phải mảng, khởi tạo mảng mới với user
     }
   }
+
   public removeLiker(userId: string): void {
+    // Loại bỏ user khỏi danh sách likers
     this.likers = this.likers.filter((u) => u.getId() !== userId)
   }
 }
-//Usage example
-// async function addUserToLikeInteraction(blogId: string, user: RegisteredUser) {
-//   const likeInteractionRepo = getRepository(LikeInteraction);
-//   const likeInteraction = await likeInteractionRepo.findOne({
-//     where: { blog: { id: blogId } },
-//     relations: ['likers'],
-//   });
-//   if (likeInteraction) {
-//     likeInteraction.addLiker(user); // this.likers.push(user) bên trong
-//     await likeInteractionRepo.save(likeInteraction); // Lưu vào cơ sở dữ liệu
-//   }
-// }
