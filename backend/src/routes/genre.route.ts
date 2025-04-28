@@ -3,7 +3,7 @@ import { GenreController } from '~/controllers/genre.controller'
 import { AppDataSource } from '~/data-source'
 import { GenreRepository } from '~/repositories/genre.repository'
 import { GenreService } from '~/services/genre.service'
-import { createGenreMiddleware } from '~/middlewares/genre.middleware'
+import { createGenreMiddleware, updateGenreMiddleware } from '~/middlewares/genre.middleware'
 
 const genreRouter = Router()
 
@@ -19,4 +19,5 @@ genreRouter.post('/create', createGenreMiddleware, (req, res) => genreController
 
 genreRouter.delete('/delete/:id', (req, res) => genreController.deleteGenre(req, res))
 
+genreRouter.put('/update/:id', updateGenreMiddleware, (req, res) => genreController.updateGenre(req, res))
 export default genreRouter

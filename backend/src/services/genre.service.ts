@@ -1,5 +1,6 @@
 import { Genre } from '~/models/genre.model'
 import { GenreRepository } from '~/repositories/genre.repository'
+import { GenreType } from '~/type'
 
 export class GenreService {
   constructor(private genreRepository: GenreRepository) {}
@@ -41,5 +42,13 @@ export class GenreService {
     } catch (error) {
       throw new Error((error as Error).message)
     }
+  }
+  async updateGenre(id: string, genreData: Partial<GenreType>): Promise<Genre | null> {
+    const genre = await this.genreRepository.findById(id)
+    if (!genre) {
+      throw new Error('Genre not found')
+    }
+    genre.updateGenre(genreData.name)
+    return this.genreRepository.update(genre)
   }
 }

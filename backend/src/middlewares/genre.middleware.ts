@@ -32,7 +32,23 @@ class CreateGenreValidationStrategy implements ValidationStrategy {
     next()
   }
 }
+//Strategy validation for UPDATING
+class UpdateGenreValidationStrategy implements ValidationStrategy {
+  private schema = Joi.object({
+    ...baseGenreSchema,
+    // Tất cả các trường đều tùy chọn, không có required()
+  })
 
+  validate(req: Request, res: Response, next: NextFunction): void {
+    const { error } = this.schema.validate(req.body, { abortEarly: false })
+    if (error) {
+      const messages = error.details.map((detail) => detail.message)
+      res.status(400).json({ message: messages.join(', ') })
+      return
+    }
+    next()
+  }
+}
 export const genreValidationMiddleware = (strategy: ValidationStrategy) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     strategy.validate(req, res, next)
@@ -41,3 +57,4 @@ export const genreValidationMiddleware = (strategy: ValidationStrategy) => {
 
 // Export  middlewares
 export const createGenreMiddleware = genreValidationMiddleware(new CreateGenreValidationStrategy())
+export const updateGenreMiddleware = genreValidationMiddleware(new UpdateGenreValidationStrategy())

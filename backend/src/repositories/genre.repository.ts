@@ -36,4 +36,8 @@ export class GenreRepository {
       throw new Error((error as Error).message)
     }
   }
+
+  async update(genre: Genre): Promise<Genre> {
+    return this.repository.save(genre)
+  }
 }

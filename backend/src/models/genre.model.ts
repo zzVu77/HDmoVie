@@ -16,4 +16,11 @@ export class Genre {
   public getName(): string {
     return this.name
   }
+
+  public setName(name: string): void {
+    this.name = name
+  }
+  updateGenre(updateName?: string): void {
+    this.setName(updateName ?? this.name)
+  }
 }
