@@ -8,9 +8,9 @@ export class MovieComment extends Comment {
   @ManyToOne(() => Movie, { nullable: true, onDelete: 'CASCADE' })
   public movie!: Movie
 
-  // Constructor gọn hơn, trực tiếp nhận từng tham số
+  // Constructor
   constructor(user: RegisteredUser, content: string, date: Date, movie: Movie, parentComment?: Comment) {
-    super(user, content, date, parentComment) // Gọi constructor của Comment
-    this.movie = movie // Gán movie cho thuộc tính movie
+    super(user, content, date, parentComment) // call constructor of Comment
+    this.movie = movie 
   }
 }

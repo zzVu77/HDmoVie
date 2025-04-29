@@ -11,7 +11,7 @@ import { MovieService } from '~/services/movie.service'
 
 const commentRouter = Router()
 
-// Khởi tạo dependencies
+// Initialize dependencies
 const commentRepository = new CommentRepository(AppDataSource)
 const userRepository = new UserRepository(AppDataSource) // Khởi tạo userRepository
 const movieRepository = new MovieRepository(AppDataSource) // Khởi tạo movieRepository
@@ -20,10 +20,10 @@ const blogRepository = new BlogRepository(AppDataSource)
 
 const commentService = new CommentService(commentRepository, userRepository, movieRepository,blogRepository ) // Truyền vào service
 const movieService = new MovieService(movieRepository) // Khởi tạo MovieService (chỉ cần movieRepository)
-// Khởi tạo CommentController với đúng các service đã truyền vào
+// Initialize CommentController
 const commentController = new CommentController(commentService, movieService)
 
-// Định nghĩa routes
+// Define routes
 commentRouter.post('/movie', (req, res) => commentController.createMovieComment(req, res))
 commentRouter.post('/blog', (req, res) => commentController.commentOnBlog(req, res))
 commentRouter.get('/blog/:blogId', (req, res) => commentController.getBlogComments(req, res))

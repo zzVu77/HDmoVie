@@ -31,18 +31,14 @@ export class CommentService {
     date: string
     parentComment: string | null
   }): Promise<MovieComment> {
-    // Lấy user từ userId
-    const user = await this.userRepository.findOne(userId) // Dùng userRepository
+    const user = await this.userRepository.findOne(userId) 
     if (!user) throw new Error('User not found')
 
-    // Lấy movie từ movieId
-    const movie = await this.movieRepository.findOne(movieId) // Dùng movieRepository
+    const movie = await this.movieRepository.findOne(movieId) 
     if (!movie) throw new Error('Movie not found')
 
-    // Tạo comment mới thông qua phương thức commentOnMovieDetail của user
     const movieComment = user.commentOnMovieDetail(movie, content)
 
-    // Nếu có parentComment, gán lại parent cho comment
     if (parentComment) {
       const parent = await this.commentRepository.findMovieCommentById(parentComment)
       if (parent) {
@@ -50,7 +46,6 @@ export class CommentService {
       }
     }
 
-    // Lưu comment vào database
     return this.commentRepository.saveMovieComment(movieComment)
   }
   async getBlogComments(blogId: string): Promise<BlogComment[]> {

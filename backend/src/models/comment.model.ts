@@ -19,7 +19,7 @@ export abstract class Comment {
   @ManyToOne(() => Comment, { nullable: true, onDelete: 'CASCADE' })
   protected parentComment?: Comment
 
-  // Constructor nhận tham số từng thuộc tính cụ thể
+  // Constructor
   constructor(user: RegisteredUser, content: string, date: Date, parentComment?: Comment) {
     this.user = user
     this.content = content

@@ -9,13 +9,9 @@ export class UserRepository {
     this.repository = dataSource.getRepository(RegisteredUser)
   }
 
-  // async findAll(): Promise<RegisteredUser[]> {
-  //   return this.repository.find();
-  // }
 
-  // Thêm phương thức findOne để tìm người dùng theo ID
+  // method findOne to find user by ID
   async findOne(id: string): Promise<RegisteredUser | null> {
-    // Đảm bảo rằng TypeORM hiểu rằng bạn đang tìm kiếm trường 'id' cụ thể
     return this.repository.findOne({ where: { id } as FindOptionsWhere<RegisteredUser> })
   }
 }

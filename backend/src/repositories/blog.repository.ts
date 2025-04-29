@@ -27,29 +27,7 @@ export class BlogRepository {
     }
 
     async delete(id: string): Promise<void> {
-        // const comments = await this.blogCommentRepository.find({
-        //     where: { blog: { id } },
-        //     relations: ['parentComment'],
-        // });
-    
-        // if (comments.length > 0) {
-        //     const commentIds = comments.map(comment => comment.getId());
-    
-        //     if (commentIds.length > 0) {
-        //         const childComments = await this.blogCommentRepository
-        //             .createQueryBuilder('blogComment')
-        //             .leftJoin('blogComment.parentComment', 'parentComment')
-        //             .where('parentComment.id IN (:...ids)', { ids: commentIds })
-        //             .getMany();
-    
-        //         if (childComments.length > 0) {
-        //             const childCommentIds = childComments.map(c => c.getId());
-        //             await this.blogCommentRepository.delete(childCommentIds);
-        //         }
-    
-        //         await this.blogCommentRepository.delete(commentIds);
-        //     }
-        // }
+
     
         await this.repository.delete(id);
     }    

@@ -24,24 +24,4 @@ export class MovieRepository {
     return this.repository.findOne({ where: { id } as FindOptionsWhere<Movie> })
   }
 
-  // async findById(id: number): Promise<Movie | null> {
-  //   return this.repository.findOneBy({ id })
-  // }
-
-  // async create(movieData: Partial<Movie>): Promise<Movie> {
-  //   const movie = this.repository.create(movieData)
-  //   return this.repository.save(movie)
-  // }
-
-  // async update(id: number, movieData: Partial<Movie>): Promise<Movie | null> {
-  //   await this.repository.update(id, movieData)
-  //   return this.findById(id)
-  // }
-
-  // async delete(id: number): Promise<void> {
-  //   await this.repository.delete(id)
-  // }
-  // async findByTitle(title: string): Promise<Movie | null> {
-  //   return this.repository.findOneBy({ title })
-  // }
 }
