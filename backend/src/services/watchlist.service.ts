@@ -14,7 +14,7 @@ export class WatchlistService {
       // Find owner object
       const owner = await this.registeredUserRepository.findById(ownerId)
 
-      if (owner == null) {
+      if (owner === null) {
         throw new Error("User doesn't exist")
       }
       const newWatchlistt = new Watchlist(title, description, isPublic, owner)
@@ -36,17 +36,38 @@ export class WatchlistService {
       const watchlist = await this.watchlistRepository.findById(id)
 
       // Check existance
-      if (watchlist == null) {
+      if (watchlist === null) {
         throw new Error('Watchlist does not exist')
       }
 
       // Check valid
-      if (senderId != watchlist.getOwner().getId()) {
+      if (senderId !== watchlist.getOwner().getId()) {
         throw new Error('Invalid request')
       }
 
       watchlist.updateInformation(title, description, isPublic)
       return await this.watchlistRepository.update(watchlist)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  async deleteWatchlist(id: string, senderId: string): Promise<boolean> {
+    try {
+      // Find watchlist
+      const watchlist = await this.watchlistRepository.findById(id)
+
+      // Check existance
+      if (watchlist === null) {
+        throw new Error('Watchlist does not exist')
+      }
+
+      // Check valid
+      if (senderId !== watchlist.getOwner().getId()) {
+        throw new Error('Unauthorized to perform operation')
+      }
+
+      return await this.watchlistRepository.delete(id)
     } catch (error) {
       throw new Error((error as Error).message)
     }

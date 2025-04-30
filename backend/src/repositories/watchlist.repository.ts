@@ -32,9 +32,10 @@ export class WatchlistRepository {
     }
   }
 
-  async delete(watchlistId: string): Promise<void> {
+  async delete(id: string): Promise<boolean> {
     try {
-      await this.repository.delete(watchlistId)
+      const result = await this.repository.delete(id)
+      return result.affected !== 0
     } catch (error) {
       throw new Error((error as Error).message)
     }
