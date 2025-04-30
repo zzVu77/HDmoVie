@@ -68,21 +68,13 @@ export class CommentService {
     if (!blog) throw new Error('Blog not found')
 
     // Create a new blog comment
-    let parentComment = undefined
+    let parentComment: BlogComment | undefined
     if (parentCommentId) {
-      parentComment = await this.commentRepository.findCommentById(parentCommentId)
-      if (!parentComment) {
-        throw new Error('Parent comment not found')
-      }
+      const found = await this.commentRepository.findBlogCommentById(parentCommentId)
+      if (!found) throw new Error('Parent comment not found')
+      parentComment = found
     }
-
-    const comment = new BlogComment(
-      user,
-      content,
-      new Date(),
-      blog,
-      parentComment
-    )
+    const comment = user.commentOnBlog(blog, content, parentComment)
 
     // Save the comment
     return this.commentRepository.saveBlogComment(comment)

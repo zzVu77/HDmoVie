@@ -58,22 +58,22 @@ export class RegisteredUser {
   }
   commentOnMovieDetail(movie: Movie, content: string): MovieComment {
     const comment = new MovieComment(
-      this, // user (this chính là đối tượng RegisteredUser)
+      this, // user 
       content, // content
       new Date(), // date
       movie, // movie
-      undefined, // parentComment (nếu không có thì truyền undefined)
+      undefined, // parentComment 
     )
     return comment
   }
+  commentOnBlog(blog: Blog, content: string, parentComment?: BlogComment): BlogComment {
+    return new BlogComment(
+      this,            // the user (RegisteredUser)
+      content,         // the comment content
+      new Date(),      // timestamp
+      blog,            // the blog post
+      parentComment    // optional parent comment
+    )
+  }
 
-  // commentOnBlog(blog: Blog, content: string): BlogComment {
-  //   const comment = new BlogComment({
-  //     user: this,
-  //     blog,
-  //     content,
-  //     date: new Date(),
-  //   })
-  //   return comment
-  // }
 }
