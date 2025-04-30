@@ -38,6 +38,10 @@ export class Watchlist {
     return this.owner
   }
 
+  public isPrivate() {
+    return this.isPublic == false
+  }
+
   public updateInformation(title: string, description: string, isPublic: boolean) {
     this.title = title
     this.description = description

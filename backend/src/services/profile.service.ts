@@ -80,11 +80,22 @@ export class ProfileService {
   }
 
   // Get watchlist detail
-  public async getWatchlistDetail(watchlistId: string): Promise<Watchlist | null> {
-    const watchlist = await this.watchlistRepository.findById(watchlistId)
-    if (!watchlist) {
-      return null
+  public async getWatchlistDetail(watchlistId: string, senderId: string): Promise<Watchlist | null> {
+    try {
+      const watchlist = await this.watchlistRepository.findById(watchlistId)
+
+      if (!watchlist) {
+        return null
+      }
+
+      const isOwner = watchlist.getOwner().getId() === senderId
+      if (watchlist.isPrivate() && !isOwner) {
+        throw new Error('Unauthorized access to private watchlist')
+      }
+
+      return watchlist
+    } catch (error) {
+      throw new Error((error as Error).message)
     }
-    return watchlist
   }
 }

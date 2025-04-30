@@ -90,8 +90,9 @@ export class ProfileController {
   async getWatchlistDetail(req: Request, res: Response): Promise<void> {
     try {
       const watchlistId = req.params.wid
+      const senderId = req.body.senderId
 
-      const watchlist = await this.profileService.getWatchlistDetail(watchlistId)
+      const watchlist = await this.profileService.getWatchlistDetail(watchlistId, senderId)
 
       if (!watchlist) {
         res.status(404).json({ message: 'Watchlist not found' })
