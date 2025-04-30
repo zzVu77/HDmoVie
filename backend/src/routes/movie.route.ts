@@ -26,8 +26,8 @@ movieRouter.get('/:id', (req, res) => movieController.getMovieById(req, res))
 //POST route
 movieRouter.post('/create', createMovieMiddleware, (req, res) => movieController.createMovie(req, res))
 //DELETE route
-movieRouter.delete('/:id', (req, res) => movieController.deleteMovie(req, res))
+movieRouter.delete('/delete/:id', (req, res) => movieController.deleteMovie(req, res))
 //PUT route
-movieRouter.put('/:id', updateMovieMiddleware, (req, res) => movieController.updateMovie(req, res))
+movieRouter.put('/update/:id', updateMovieMiddleware, (req, res) => movieController.updateMovie(req, res))
 
 export default movieRouter
