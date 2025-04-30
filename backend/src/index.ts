@@ -3,11 +3,13 @@ import cors from 'cors'
 import 'reflect-metadata'
 import express from 'express'
 import { AppDataSource } from './data-source'
+
 import movieRouter from './routes/movie.route'
 import blogRouter from './routes/blog.route'
 import reportRouter from './routes/report.route'
 import commentRouter from './routes/comment.route' // Import commentRouter
-
+import registeredUserRouter from './routes/registeredUser.route'
+import genreRouter from './routes/genre.route'
 const app = express()
 app.use(cors())
 app.use(express.json())
@@ -18,7 +20,8 @@ app.use('/api/movies', movieRouter)
 app.use('/api/blogs', blogRouter)
 app.use('/api/reports', reportRouter)
 app.use('/api/comments', commentRouter) // Thêm route cho comment
-
+app.use('/api/registeredusers', registeredUserRouter)
+app.use('/api/genres', genreRouter)
 app.get('/', (req, res) => {
   res.send('HDmoVie API is running')
 })
