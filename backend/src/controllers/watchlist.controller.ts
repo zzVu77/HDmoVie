@@ -17,7 +17,7 @@ export class WatchlistController {
     }
   }
 
-  // PUT: /watchlists/update/:wid
+  // PUT: /watchlists/:wid/update
   async updateWatchlist(req: Request, res: Response): Promise<void> {
     try {
       const watchlistId = req.params.wid
@@ -42,7 +42,7 @@ export class WatchlistController {
     }
   }
 
-  // DELETE: /watchlists/delete/:wid
+  // DELETE: /watchlists/:wid/delete
   async deleteWatchlist(req: Request, res: Response): Promise<void> {
     try {
       const wid = req.params.wid
@@ -52,6 +52,26 @@ export class WatchlistController {
         res.status(400).json({ message: 'Watchlist have not been deleted' })
       } else {
         res.status(200).json({ message: 'Watchlist have been deleted' })
+      }
+    } catch (error) {
+      console.error('Error deleting watchlist: ', error)
+      res.status(400).json({ message: (error as Error).message })
+    }
+  }
+
+  // DELETE: /watchlists/:wid/:mid/delete
+  async deleteMovie(req: Request, res: Response): Promise<void> {
+    try {
+      const watchlistId = req.params.wid
+      const movieId = req.params.mid
+      const senderId = req.body.senderId
+
+      const isDeleted = await this.watchlistService.deleteMovie(movieId, watchlistId, senderId)
+
+      if (isDeleted) {
+        res.status(200).json({ message: 'Movie have been removed from watchlist' })
+      } else {
+        res.status(404).json({ message: 'Movie was not found in the watchlist' })
       }
     } catch (error) {
       console.error('Error deleting watchlist: ', error)

@@ -1,5 +1,6 @@
 import { RegisteredUser } from '~/models/registeredUser.model'
 import { Watchlist } from '~/models/watchlist.model'
+import { MovieRepository } from '~/repositories/movie.repository'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { WatchlistRepository } from '~/repositories/watchlist.repository'
 
@@ -64,10 +65,38 @@ export class WatchlistService {
 
       // Check valid
       if (senderId !== watchlist.getOwner().getId()) {
-        throw new Error('Unauthorized to perform operation')
+        throw new Error('Unauthorized to perform action')
       }
 
       return await this.watchlistRepository.delete(id)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  async deleteMovie(movieId: string, watchlistId: string, senderId: string): Promise<boolean> {
+    try {
+      // Find watchlist
+      const watchlist = await this.watchlistRepository.findById(watchlistId)
+
+      // Check existance
+      if (watchlist === null) {
+        throw new Error('Watchlist does not exist')
+      }
+
+      // Check authorization
+      if (watchlist.getOwner().getId() !== senderId) {
+        throw new Error('Unauthorized to perform action')
+      }
+
+      const isDeleted = watchlist.removeMovie(movieId)
+
+      if (isDeleted) {
+        await this.watchlistRepository.update(watchlist)
+        return true
+      }
+
+      return false
     } catch (error) {
       throw new Error((error as Error).message)
     }

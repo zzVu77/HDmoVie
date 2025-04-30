@@ -21,11 +21,12 @@ const watchlistController = new WatchlistController(watchlistService)
 watchlistRouter.post('/create', createWatchlistMiddleware, (req, res) => watchlistController.createWatchlist(req, res))
 
 // PUT route
-watchlistRouter.put('/update/:wid', updateWatchlistMiddleware, (req, res) =>
+watchlistRouter.put('/:wid/update', updateWatchlistMiddleware, (req, res) =>
   watchlistController.updateWatchlist(req, res),
 )
 
 // DELETE route
-watchlistRouter.delete('/delete/:wid', (req, res) => watchlistController.deleteWatchlist(req, res))
+watchlistRouter.delete('/:wid/delete', (req, res) => watchlistController.deleteWatchlist(req, res))
+watchlistRouter.delete('/:wid/:mid/delete', (req, res) => watchlistController.deleteMovie(req, res))
 
 export default watchlistRouter

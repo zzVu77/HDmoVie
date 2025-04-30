@@ -34,17 +34,26 @@ export class Watchlist {
     this.owner = owner
   }
 
-  public getOwner() {
+  public getOwner(): RegisteredUser {
     return this.owner
   }
 
-  public isPrivate() {
+  public isPrivate(): boolean {
     return this.isPublic === false
   }
 
-  public updateInformation(title: string, description: string, isPublic: boolean) {
+  public updateInformation(title: string, description: string, isPublic: boolean): void {
     this.title = title
     this.description = description
     this.isPublic = isPublic
+  }
+
+  // Return true if succesfully delete
+  public removeMovie(movieId: string): boolean {
+    const initialLength = this.movies.length
+
+    this.movies = this.movies.filter((movie) => movie.getId() !== movieId)
+
+    return this.movies.length < initialLength
   }
 }
