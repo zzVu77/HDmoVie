@@ -33,4 +33,14 @@ export class Watchlist {
     this.isPublic = isPublic
     this.owner = owner
   }
+
+  public getOwner() {
+    return this.owner
+  }
+
+  public updateInformation(title: string, description: string, isPublic: boolean) {
+    this.title = title
+    this.description = description
+    this.isPublic = isPublic
+  }
 }

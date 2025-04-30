@@ -49,24 +49,29 @@ class CreateWatchlistValidationStrategy implements ValidationStrategy {
 }
 
 class UpdateWatchlistValidationStrategy implements ValidationStrategy {
-  // Override schema for this strategy
   private schema = Joi.object({
     ...baseWatchlistSchema,
 
-    //  title is required and not empty
+    // Required and not empty title
     title: baseWatchlistSchema.title.trim().required().messages({
       'string.empty': 'Title cannot be empty',
       'any.required': 'Title is required',
     }),
 
-    // Allow empty string for description
+    // Optional, allow empty string
     description: baseWatchlistSchema.description.allow('').optional(),
 
+    // Required boolean
     isPublic: baseWatchlistSchema.isPublic.required().messages({
       'any.required': 'Privacy is required',
     }),
 
-    // Make sure ownerId is required
+    // senderId is required (for authorization, not update)
+    senderId: baseWatchlistSchema.ownerId.required().messages({
+      'any.required': 'Sender ID is required',
+    }),
+
+    // Forbid this field
     ownerId: Joi.forbidden().messages({
       'any.unknown': 'Cannot modify the owner of a watchlist',
     }),

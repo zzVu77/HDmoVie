@@ -23,4 +23,32 @@ export class WatchlistService {
       throw new Error((error as Error).message)
     }
   }
+
+  async updateWatchlist(
+    id: string,
+    title: string,
+    description: string,
+    isPublic: boolean,
+    senderId: string,
+  ): Promise<Watchlist | null> {
+    try {
+      // Find watchlist
+      const watchlist = await this.watchlistRepository.findById(id)
+
+      // Check existance
+      if (watchlist == null) {
+        throw new Error('Watchlist does not exist')
+      }
+
+      // Check valid
+      if (senderId != watchlist.getOwner().getId()) {
+        throw new Error('Invalid request')
+      }
+
+      watchlist.updateInformation(title, description, isPublic)
+      return await this.watchlistRepository.update(watchlist)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
 }

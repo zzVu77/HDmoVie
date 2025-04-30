@@ -9,10 +9,10 @@ export class WatchlistRepository {
     this.repository = dataSource.getRepository(Watchlist)
   }
 
-  async find(watchlistId: string): Promise<Watchlist | null> {
-    return this.repository.findOne({
+  async findById(watchlistId: string): Promise<Watchlist | null> {
+    return await this.repository.findOne({
       where: { id: watchlistId } as FindOptionsWhere<Watchlist>,
-      relations: ['movies'],
+      relations: ['movies', 'owner'],
     })
   }
 
@@ -21,7 +21,6 @@ export class WatchlistRepository {
       where: { owner: { id: userId } } as FindOptionsWhere<Watchlist>,
       skip: offset,
       take: amount,
-      select: ['id', 'title', 'description', 'isPublic'],
       relations: ['movies'],
     })
   }
@@ -35,6 +34,14 @@ export class WatchlistRepository {
   }
 
   async create(watchlist: Watchlist): Promise<Watchlist> {
+    try {
+      return await this.repository.save(watchlist)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  async update(watchlist: Watchlist): Promise<Watchlist> {
     try {
       return await this.repository.save(watchlist)
     } catch (error) {
