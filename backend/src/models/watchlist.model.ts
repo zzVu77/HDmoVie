@@ -39,7 +39,7 @@ export class Watchlist {
   }
 
   public isPrivate() {
-    return this.isPublic == false
+    return this.isPublic === false
   }
 
   public updateInformation(title: string, description: string, isPublic: boolean) {
