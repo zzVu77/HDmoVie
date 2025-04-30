@@ -81,7 +81,7 @@ export class ProfileService {
 
   // Get watchlist detail
   public async getWatchlistDetail(watchlistId: string): Promise<Watchlist | null> {
-    const watchlist = await this.watchlistRepository.find(watchlistId)
+    const watchlist = await this.watchlistRepository.findById(watchlistId)
     if (!watchlist) {
       return null
     }
