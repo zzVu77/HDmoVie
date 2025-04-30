@@ -1,5 +1,5 @@
 import { CommentRepository } from '~/repositories/comment.repository'
-import { UserRepository } from '~/repositories/user.repository'
+import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { MovieRepository } from '~/repositories/movie.repository'
 import { MovieComment } from '~/models/movieComment.model'
 import { RegisteredUser } from '~/models/registeredUser.model'
@@ -8,7 +8,7 @@ import { Movie } from '~/models/movie.model'
 export class CommentService {
   constructor(
     private commentRepository: CommentRepository,
-    private userRepository: UserRepository, // Thêm userRepository vào constructor
+    private userRepository: RegisteredUserRepository, // Thêm userRepository vào constructor
     private movieRepository: MovieRepository, // Thêm movieRepository vào constructor
   ) {}
 
@@ -16,13 +16,11 @@ export class CommentService {
     userId,
     movieId,
     content,
-    date,
     parentComment,
   }: {
     userId: string
     movieId: number
     content: string
-    date: string
     parentComment: string | null
   }): Promise<MovieComment> {
     // Lấy user từ userId

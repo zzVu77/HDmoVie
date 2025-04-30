@@ -12,13 +12,12 @@ export class CommentController {
   async createMovieComment(req: Request, res: Response): Promise<void> {
     try {
       // Truyền nguyên req.body vào service để xử lý
-      const { userId, movieId, content, date, parentComment } = req.body
+      const { userId, movieId, content, parentComment } = req.body
 
       const comment = await this.commentService.commentOnMovie({
         userId,
         movieId,
         content,
-        date,
         parentComment,
       })
 

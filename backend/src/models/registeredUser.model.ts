@@ -57,6 +57,9 @@ export class RegisteredUser {
   public getRole(): string {
     return this.role
   }
+  public setPassword(newPassword: string): void {
+    this.password = newPassword
+  }
   commentOnMovieDetail(movie: Movie, content: string): MovieComment {
     const comment = new MovieComment(
       this, // user (this chính là đối tượng RegisteredUser)

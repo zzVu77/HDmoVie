@@ -1,17 +1,17 @@
 import { LikeInteractionRepository } from '~/repositories/likeInteraction.repository'
-import { UserRepository } from '~/repositories/user.repository'
+import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
 import { LikeInteraction } from '../models/likeInteraction.model'
 import { DataSource } from 'typeorm'
 
 export class InteractionService {
   private likeInteractionRepo: LikeInteractionRepository
-  private userRepo: UserRepository
+  private userRepo: RegisteredUserRepository
   private blogRepo: BlogRepository
 
   constructor(dataSource: DataSource) {
     this.likeInteractionRepo = new LikeInteractionRepository(dataSource)
-    this.userRepo = new UserRepository(dataSource)
+    this.userRepo = new RegisteredUserRepository(dataSource)
     this.blogRepo = new BlogRepository(dataSource)
   }
 
@@ -24,7 +24,7 @@ export class InteractionService {
     }
 
     // Chỉ tìm bằng blogId
-    let likeInteraction = await this.likeInteractionRepo.findLikeInteractionByTarget(blog.getId())
+    let likeInteraction = await this.likeInteractionRepo.findLikeInteractionByBlogID(blog.getId())
 
     if (!likeInteraction) {
       likeInteraction = new LikeInteraction(blog)

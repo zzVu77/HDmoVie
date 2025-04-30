@@ -13,7 +13,7 @@ export class LikeInteractionRepository {
     return this.likeInteractionRepo.save(likeInteraction)
   }
 
-  async findLikeInteractionByTarget(blogId: string): Promise<LikeInteraction | null> {
+  async findLikeInteractionByBlogID(blogId: string): Promise<LikeInteraction | null> {
     return this.likeInteractionRepo.findOne({
       where: {
         blog: {
