@@ -66,15 +66,41 @@ export class WatchlistController {
       const movieId = req.params.mid
       const senderId = req.body.senderId
 
-      const isDeleted = await this.watchlistService.deleteMovie(movieId, watchlistId, senderId)
+      const updatedWatchlist = await this.watchlistService.deleteMovie(movieId, watchlistId, senderId)
 
-      if (isDeleted) {
-        res.status(200).json({ message: 'Movie have been removed from watchlist' })
+      if (updatedWatchlist) {
+        res.status(200).json({
+          message: 'Movie has been removed from the watchlist',
+          watchlist: updatedWatchlist,
+        })
       } else {
-        res.status(404).json({ message: 'Movie was not found in the watchlist' })
+        res.status(400).json({ message: 'Movie was not removed from the watchlist' })
       }
     } catch (error) {
       console.error('Error deleting watchlist: ', error)
+      res.status(400).json({ message: (error as Error).message })
+    }
+  }
+
+  // PUT: /watchlists/:wid/add/:mid
+  async addMovie(req: Request, res: Response): Promise<void> {
+    try {
+      const watchlistId = req.params.wid
+      const movieId = req.params.mid
+      const senderId = req.body.senderId
+
+      const updatedWatchlist = await this.watchlistService.addMovie(movieId, watchlistId, senderId)
+
+      if (updatedWatchlist) {
+        res.status(200).json({
+          message: 'Movie has been added to the watchlist',
+          watchlist: updatedWatchlist,
+        })
+      } else {
+        res.status(400).json({ message: 'Movie already exists in the watchlist' })
+      }
+    } catch (error) {
+      console.error('Error adding movie to watchlist:', error)
       res.status(400).json({ message: (error as Error).message })
     }
   }

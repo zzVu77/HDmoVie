@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm'
+import { DataSource, Repository, FindOptionsWhere } from 'typeorm'
 import { Movie } from '~/models/movie.model'
 export class MovieRepository {
   private repository: Repository<Movie>
@@ -15,6 +15,17 @@ export class MovieRepository {
     const movie = Movie.createNewMovie(movieData)
     // Save to database
     return this.repository.save(movie)
+  }
+
+  async findById(id: string): Promise<Movie | null> {
+    try {
+      return this.repository.findOne({
+        where: { id } as FindOptionsWhere<Movie>,
+        relations: ['genres', 'casts'],
+      })
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 
   // async findById(id: number): Promise<Movie | null> {

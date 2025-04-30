@@ -8,6 +8,7 @@ export class WatchlistService {
   constructor(
     private watchlistRepository: WatchlistRepository,
     private registeredUserRepository: RegisteredUserRepository,
+    private movieRepository: MovieRepository,
   ) {}
 
   async createWatchlist(title: string, description: string, isPublic: boolean, ownerId: string): Promise<Watchlist> {
@@ -74,7 +75,7 @@ export class WatchlistService {
     }
   }
 
-  async deleteMovie(movieId: string, watchlistId: string, senderId: string): Promise<boolean> {
+  async deleteMovie(movieId: string, watchlistId: string, senderId: string): Promise<Watchlist | null> {
     try {
       // Find watchlist
       const watchlist = await this.watchlistRepository.findById(watchlistId)
@@ -92,11 +93,46 @@ export class WatchlistService {
       const isDeleted = watchlist.removeMovie(movieId)
 
       if (isDeleted) {
-        await this.watchlistRepository.update(watchlist)
-        return true
+        return await this.watchlistRepository.update(watchlist)
       }
 
-      return false
+      return null
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  async addMovie(movieId: string, watchlistId: string, senderId: string): Promise<Watchlist | null> {
+    try {
+      // Find watchlist
+      const watchlist = await this.watchlistRepository.findById(watchlistId)
+
+      // Check existance
+      if (watchlist === null) {
+        throw new Error('Watchlist does not exist')
+      }
+
+      // Check authorization
+      if (watchlist.getOwner().getId() !== senderId) {
+        throw new Error('Unauthorized to perform action')
+      }
+
+      // Find movie
+      const newMovie = await this.movieRepository.findById(movieId)
+
+      // Check movie existance
+      if (!newMovie) {
+        throw new Error('Movie does not exist')
+      }
+
+      // Add movie
+      const isAdded = watchlist.addMovie(newMovie)
+
+      if (isAdded) {
+        return await this.watchlistRepository.update(watchlist)
+      }
+
+      return null
     } catch (error) {
       throw new Error((error as Error).message)
     }
