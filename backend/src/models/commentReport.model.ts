@@ -10,7 +10,7 @@ export class CommentReport extends Report {
 
   // Updated constructor with direct parameters
   constructor(reporter: RegisteredUser, reason: ReportReason, comment: Comment) {
-    super(reporter, reason) 
+    super(reporter, reason)
     this.comment = comment
   }
 }

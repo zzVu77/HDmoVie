@@ -15,7 +15,7 @@ export class CommentService {
     private commentRepository: CommentRepository,
     private userRepository: UserRepository, // Thêm userRepository vào constructor
     private movieRepository: MovieRepository, // Thêm movieRepository vào constructor
-    private blogRepository: BlogRepository
+    private blogRepository: BlogRepository,
   ) {}
 
   async commentOnMovie({
@@ -31,10 +31,10 @@ export class CommentService {
     date: string
     parentComment: string | null
   }): Promise<MovieComment> {
-    const user = await this.userRepository.findOne(userId) 
+    const user = await this.userRepository.findOne(userId)
     if (!user) throw new Error('User not found')
 
-    const movie = await this.movieRepository.findOne(movieId) 
+    const movie = await this.movieRepository.findOne(movieId)
     if (!movie) throw new Error('Movie not found')
 
     const movieComment = user.commentOnMovieDetail(movie, content)
@@ -54,12 +54,11 @@ export class CommentService {
     if (!blog) {
       throw new Error('Blog not found')
     }
-    
+
     return this.commentRepository.findCommentsByBlogId(blogId)
   }
 
   async commentOnBlog(userId: string, blogId: string, content: string, parentCommentId?: string): Promise<BlogComment> {
-
     const user = await this.userRepository.findOne(userId)
     if (!user) throw new Error('User not found')
 

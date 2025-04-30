@@ -8,18 +8,26 @@ import { BlogRepository } from '~/repositories/blog.repository'
 import { CommentController } from '~/controllers/comment.controller'
 import { CommentService } from '~/services/comment.service'
 import { MovieService } from '~/services/movie.service'
+import { CastRepository } from '~/repositories/cast.repository'
+import { CastService } from '~/services/cast.service'
+import { GenreRepository } from '~/repositories/genre.repository'
+import { GenreService } from '~/services/genre.service'
 
 const commentRouter = Router()
 
 // Initialize dependencies
 const commentRepository = new CommentRepository(AppDataSource)
-const userRepository = new UserRepository(AppDataSource) // Khởi tạo userRepository
-const movieRepository = new MovieRepository(AppDataSource) // Khởi tạo movieRepository
+const userRepository = new UserRepository(AppDataSource) 
+const movieRepository = new MovieRepository(AppDataSource) 
 const blogRepository = new BlogRepository(AppDataSource)
+const genreRepository = new GenreRepository(AppDataSource)
+const castRepository = new CastRepository(AppDataSource)
 
+const castService = new CastService(castRepository)
+const genreService = new GenreService(genreRepository)
 
-const commentService = new CommentService(commentRepository, userRepository, movieRepository,blogRepository ) // Truyền vào service
-const movieService = new MovieService(movieRepository) // Khởi tạo MovieService (chỉ cần movieRepository)
+const commentService = new CommentService(commentRepository, userRepository, movieRepository, blogRepository) 
+const movieService = new MovieService(movieRepository, castService, genreService)
 // Initialize CommentController
 const commentController = new CommentController(commentService, movieService)
 

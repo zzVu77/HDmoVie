@@ -31,4 +31,3 @@ export class LikeInteraction {
     this.likers = this.likers.filter((u) => u.getId() !== userId)
   }
 }
-

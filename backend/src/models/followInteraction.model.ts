@@ -26,4 +26,3 @@ export class FollowInteraction {
   private following!: RegisteredUser[]
   //Methods
 }
-

@@ -34,7 +34,7 @@ export class CommentController {
       res.json(comments)
     } catch (error) {
       console.error('Error fetching blog comments:', error)
-      
+
       if ((error as Error).message === 'Blog not found') {
         res.status(404).json({ message: (error as Error).message })
       } else {
@@ -46,19 +46,16 @@ export class CommentController {
   async commentOnBlog(req: Request, res: Response): Promise<void> {
     try {
       const { userId, blogId, content, parentCommentId } = req.body
-      const comment = await this.commentService.commentOnBlog(
-        userId,
-        blogId,
-        content,
-        parentCommentId
-      )
+      const comment = await this.commentService.commentOnBlog(userId, blogId, content, parentCommentId)
       res.status(201).json(comment)
     } catch (error) {
       console.error('Error creating blog comment:', error)
-      
-      if ((error as Error).message === 'Blog not found' || 
-          (error as Error).message === 'User not found' ||
-          (error as Error).message === 'Parent comment not found') {
+
+      if (
+        (error as Error).message === 'Blog not found' ||
+        (error as Error).message === 'User not found' ||
+        (error as Error).message === 'Parent comment not found'
+      ) {
         res.status(404).json({ message: (error as Error).message })
       } else {
         res.status(400).json({ message: (error as Error).message })

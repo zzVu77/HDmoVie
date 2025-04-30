@@ -24,25 +24,25 @@ export class CommentRepository {
 
   // Find any comment (movie or blog) by id
   async findCommentById(id: string): Promise<Comment | null> {
-    return this.commentRepo.findOne({ 
+    return this.commentRepo.findOne({
       where: { id } as FindOptionsWhere<Comment>,
-      relations: ['user']
+      relations: ['user'],
     })
   }
 
   // Find specifically a movie comment by id
   async findMovieCommentById(id: string): Promise<MovieComment | null> {
-    return this.movieCommentRepo.findOne({ 
+    return this.movieCommentRepo.findOne({
       where: { id } as FindOptionsWhere<MovieComment>,
-      relations: ['user', 'movie', 'parentComment'] 
+      relations: ['user', 'movie', 'parentComment'],
     })
   }
 
   // Find specifically a blog comment by id
   async findBlogCommentById(id: string): Promise<BlogComment | null> {
-    return this.blogCommentRepo.findOne({ 
+    return this.blogCommentRepo.findOne({
       where: { id } as FindOptionsWhere<BlogComment>,
-      relations: ['user', 'blog', 'parentComment'] 
+      relations: ['user', 'blog', 'parentComment'],
     })
   }
 
@@ -50,7 +50,7 @@ export class CommentRepository {
   async findCommentsByBlogId(blogId: string): Promise<BlogComment[]> {
     return this.blogCommentRepo.find({
       where: { blog: { id: blogId } },
-      relations: ['user', 'parentComment', 'blog']
+      relations: ['user', 'parentComment', 'blog'],
     })
   }
 }

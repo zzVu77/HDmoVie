@@ -26,5 +26,4 @@ export class BlogService {
 
     await this.blogRepository.delete(blogId)
   }
-  
 }

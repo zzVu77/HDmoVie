@@ -57,21 +57,21 @@ export class RegisteredUser {
   }
   commentOnMovieDetail(movie: Movie, content: string): MovieComment {
     const comment = new MovieComment(
-      this, // user 
+      this, // user
       content, // content
       new Date(), // date
       movie, // movie
-      undefined, // parentComment 
+      undefined, // parentComment
     )
     return comment
   }
   commentOnBlog(blog: Blog, content: string, parentComment?: BlogComment): BlogComment {
     return new BlogComment(
-      this,            // the user (RegisteredUser)
-      content,         // the comment content
-      new Date(),      // timestamp
-      blog,            // the blog post
-      parentComment    // optional parent comment
+      this, // the user (RegisteredUser)
+      content, // the comment content
+      new Date(), // timestamp
+      blog, // the blog post
+      parentComment, // optional parent comment
     )
   }
 

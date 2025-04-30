@@ -24,7 +24,7 @@ export abstract class Comment {
     this.user = user
     this.content = content
     this.date = date
-    this.parentComment = parentComment 
+    this.parentComment = parentComment
   }
 
   // Setter cho parentComment
@@ -32,9 +32,9 @@ export abstract class Comment {
     this.parentComment = parent
   }
   getId(): string {
-    return this.id;
+    return this.id
   }
   getParentComment(): Comment | undefined {
-    return this.parentComment;
+    return this.parentComment
   }
 }

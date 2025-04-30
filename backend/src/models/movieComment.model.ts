@@ -11,6 +11,6 @@ export class MovieComment extends Comment {
   // Constructor
   constructor(user: RegisteredUser, content: string, date: Date, movie: Movie, parentComment?: Comment) {
     super(user, content, date, parentComment) // call constructor of Comment
-    this.movie = movie 
+    this.movie = movie
   }
 }

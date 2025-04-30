@@ -15,12 +15,7 @@ const userRepository = new UserRepository(AppDataSource)
 const blogRepository = new BlogRepository(AppDataSource)
 const commentRepository = new CommentRepository(AppDataSource)
 
-const reportService = new ReportService(
-  reportRepository,
-  userRepository,
-  blogRepository,
-  commentRepository
-)
+const reportService = new ReportService(reportRepository, userRepository, blogRepository, commentRepository)
 const reportController = new ReportController(reportService)
 
 // Define routes
