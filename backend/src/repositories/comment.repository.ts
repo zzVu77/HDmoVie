@@ -53,4 +53,19 @@ export class CommentRepository {
       relations: ['user', 'parentComment', 'blog'],
     })
   }
+  //Load Movie Comments by Movie ID
+  async findCommentsByMovieId(movieId: string): Promise<MovieComment[]> {
+    return this.movieCommentRepo.find({
+      select: {
+        id: true,
+        content: true,
+        date: true,
+        parentComment: true,
+        user: { id: true, fullName: true, role: false },
+        movie: { id: true, title: true },
+      } as FindOptionsWhere<Comment>,
+      where: { movie: { id: movieId } as FindOptionsWhere<MovieComment> },
+      relations: ['user', 'parentComment', 'movie'],
+    })
+  }
 }

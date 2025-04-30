@@ -35,5 +35,6 @@ const commentController = new CommentController(commentService, movieService)
 commentRouter.post('/movie', (req, res) => commentController.createMovieComment(req, res))
 commentRouter.post('/blog', (req, res) => commentController.commentOnBlog(req, res))
 commentRouter.get('/blog/:blogId', (req, res) => commentController.getBlogComments(req, res))
+commentRouter.get('/movie/:movieId', (req, res) => commentController.getMovieComments(req, res))
 
 export default commentRouter
