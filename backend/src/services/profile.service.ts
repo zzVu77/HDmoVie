@@ -19,64 +19,84 @@ export class ProfileService {
 
   // Get user basic profile information: user information + follow information
   public async getProfile(userId: string) {
-    const user = await this.registeredUserRepository.findById(userId)
+    try {
+      const user = await this.registeredUserRepository.findById(userId)
 
-    // In case user does not exist
-    if (!user) {
-      return null
-    }
+      // In case user does not exist
+      if (!user) {
+        return null
+      }
 
-    const userFollowInteraction = await this.followInteractionRepository.findByUserId(userId)
-    let followerCount = 0
-    let followingCount = 0
+      const userFollowInteraction = await this.followInteractionRepository.findByUserId(userId)
+      let followerCount = 0
+      let followingCount = 0
 
-    // In case there's a follow interaction
-    if (userFollowInteraction) {
-      followerCount = userFollowInteraction.getFollowerCount()
-      followingCount = userFollowInteraction.getFollowingCount()
-    }
+      // In case there's a follow interaction
+      if (userFollowInteraction) {
+        followerCount = userFollowInteraction.getFollowerCount()
+        followingCount = userFollowInteraction.getFollowingCount()
+      }
 
-    return {
-      user,
-      followersCount: followerCount,
-      followingCount: followingCount,
+      return {
+        user,
+        followersCount: followerCount,
+        followingCount: followingCount,
+      }
+    } catch (error) {
+      throw new Error((error as Error).message)
     }
   }
 
   // Get user blogs
   public async getUserBlogs(userId: string, page: number): Promise<Blog[]> {
-    const pageSize = 5
-    const offset = page * pageSize
-    return this.blogRepository.findByUserId(userId, offset, pageSize)
+    try {
+      const pageSize = 5
+      const offset = page * pageSize
+      return this.blogRepository.findByUserId(userId, offset, pageSize)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 
   // Get user follower list
   public async getUserFollowers(userId: string): Promise<RegisteredUser[]> {
-    const followInteraction = await this.followInteractionRepository.findByUserId(userId)
+    try {
+      const followInteraction = await this.followInteractionRepository.findByUserId(userId)
 
-    if (!followInteraction) {
-      return []
+      if (!followInteraction) {
+        return []
+      }
+
+      return followInteraction.getFollowers()
+    } catch (error) {
+      throw new Error((error as Error).message)
     }
-
-    return followInteraction.getFollowers()
   }
 
   // Get user following list
   public async getUserFollowings(userId: string): Promise<RegisteredUser[]> {
-    const followInteraction = await this.followInteractionRepository.findByUserId(userId)
+    try {
+      const followInteraction = await this.followInteractionRepository.findByUserId(userId)
 
-    if (!followInteraction) {
-      return []
+      if (!followInteraction) {
+        return []
+      }
+
+      return followInteraction.getFollowings()
+    } catch (error) {
+      throw new Error((error as Error).message)
     }
-
-    return followInteraction.getFollowings()
   }
 
   // Get user watchlists
   public async getUserWatchlists(userId: string, page: number): Promise<Watchlist[]> {
-    const pageSize = 10
-    const offset = page * pageSize
-    return await this.watchlistRepository.findByUserId(userId, offset, pageSize)
+    try {
+      const pageSize = 10
+      const offset = page * pageSize
+      return await this.watchlistRepository.findByUserId(userId, offset, pageSize)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 
   // Get watchlist detail

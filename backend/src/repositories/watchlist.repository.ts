@@ -1,4 +1,3 @@
-import { error } from 'console'
 import { DataSource, FindOptionsWhere, Repository } from 'typeorm'
 import { Watchlist } from '~/models/watchlist.model'
 
@@ -10,19 +9,27 @@ export class WatchlistRepository {
   }
 
   async findById(watchlistId: string): Promise<Watchlist | null> {
-    return await this.repository.findOne({
-      where: { id: watchlistId } as FindOptionsWhere<Watchlist>,
-      relations: ['movies', 'owner'],
-    })
+    try {
+      return await this.repository.findOne({
+        where: { id: watchlistId } as FindOptionsWhere<Watchlist>,
+        relations: ['movies', 'owner'],
+      })
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 
   async findByUserId(userId: string, offset: number, amount: number): Promise<Watchlist[]> {
-    return this.repository.find({
-      where: { owner: { id: userId } } as FindOptionsWhere<Watchlist>,
-      skip: offset,
-      take: amount,
-      relations: ['movies'],
-    })
+    try {
+      return this.repository.find({
+        where: { owner: { id: userId } } as FindOptionsWhere<Watchlist>,
+        skip: offset,
+        take: amount,
+        relations: ['movies'],
+      })
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 
   async delete(watchlistId: string): Promise<void> {

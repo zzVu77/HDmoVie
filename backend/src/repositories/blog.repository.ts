@@ -9,11 +9,15 @@ export class BlogRepository {
   }
 
   async findByUserId(userId: string, offset: number, amount: number): Promise<Blog[]> {
-    return this.repository.find({
-      where: { owner: { id: userId } } as FindOptionsWhere<Blog>,
-      skip: offset,
-      take: amount,
-      relations: ['tags'],
-    })
+    try {
+      return this.repository.find({
+        where: { owner: { id: userId } } as FindOptionsWhere<Blog>,
+        skip: offset,
+        take: amount,
+        relations: ['tags'],
+      })
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 }

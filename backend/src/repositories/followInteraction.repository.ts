@@ -9,9 +9,13 @@ export class FollowInteractionRepository {
   }
 
   public async findByUserId(userId: string): Promise<FollowInteraction | null> {
-    return this.repository.findOne({
-      where: { user: { id: userId } } as FindOptionsWhere<FollowInteraction>,
-      relations: ['followers', 'following'],
-    })
+    try {
+      return this.repository.findOne({
+        where: { user: { id: userId } } as FindOptionsWhere<FollowInteraction>,
+        relations: ['followers', 'following'],
+      })
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 }
