@@ -5,10 +5,7 @@ import { BlogRepository } from '~/repositories/blog.repository'
 
 import { MovieComment } from '~/models/movieComment.model'
 import { BlogComment } from '~/models/blogComment.model'
-import { Blog } from '~/models/blog.model'
 
-import { RegisteredUser } from '~/models/registeredUser.model'
-import { Movie } from '~/models/movie.model'
 
 export class CommentService {
   constructor(
@@ -22,14 +19,12 @@ export class CommentService {
     userId,
     movieId,
     content,
-    date,
-    parentComment,
+    parentCommentId,
   }: {
     userId: string
     movieId: number
     content: string
-    date: string
-    parentComment: string | null
+    parentCommentId: string | null
   }): Promise<MovieComment> {
     const user = await this.userRepository.findOne(userId)
     if (!user) throw new Error('User not found')
@@ -37,15 +32,23 @@ export class CommentService {
     const movie = await this.movieRepository.findOne(movieId)
     if (!movie) throw new Error('Movie not found')
 
-    const movieComment = user.commentOnMovieDetail(movie, content)
-
-    if (parentComment) {
-      const parent = await this.commentRepository.findMovieCommentById(parentComment)
-      if (parent) {
-        movieComment.setParentComment(parent)
+    
+    // Create a new blog comment
+    let parentComment = undefined
+    if (parentCommentId) {
+      parentComment = await this.commentRepository.findCommentById(parentCommentId)
+      if (!parentComment) {
+        throw new Error('Parent comment not found')
       }
     }
 
+    const movieComment = new MovieComment(
+      user,
+      content,
+      new Date(),
+      movie,
+      parentComment
+    )
     return this.commentRepository.saveMovieComment(movieComment)
   }
   async getBlogComments(blogId: string): Promise<BlogComment[]> {
@@ -67,15 +70,23 @@ export class CommentService {
     if (!blog) throw new Error('Blog not found')
 
     // Create a new blog comment
-    let parentComment: BlogComment | undefined
+    let parentComment = undefined
     if (parentCommentId) {
-      const found = await this.commentRepository.findBlogCommentById(parentCommentId)
-      if (!found) throw new Error('Parent comment not found')
-      parentComment = found
+      parentComment = await this.commentRepository.findCommentById(parentCommentId)
+      if (!parentComment) {
+        throw new Error('Parent comment not found')
+      }
     }
-    const comment = user.commentOnBlog(blog, content, parentComment)
+
+    const blogComment = new BlogComment(
+      user,
+      content,
+      new Date(),
+      blog,
+      parentComment
+    )
 
     // Save the comment
-    return this.commentRepository.saveBlogComment(comment)
+    return this.commentRepository.saveBlogComment(blogComment)
   }
 }
