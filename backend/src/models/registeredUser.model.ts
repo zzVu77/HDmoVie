@@ -18,6 +18,12 @@ export class RegisteredUser {
   @Column({ type: 'date' })
   protected dateOfBirth!: string
 
+  @Column({ type: 'varchar', length: 512, nullable: true })
+  protected refreshToken?: string
+
+  @Column({ type: 'timestamp', nullable: true })
+  protected refreshTokenExpiresAt?: Date
+
   @Column({ type: 'varchar', default: 'REGISTERED_USER' })
   protected role: string = 'REGISTERED_USER' //default value is REGISTERED_USER
 
@@ -28,8 +34,22 @@ export class RegisteredUser {
     this.dateOfBirth = dateOfBirth
   }
 
-  //Methods
-  //Getters and Setters
+  updateToken(refreshToken: string, expiresInDays: number = 7): void {
+    this.refreshToken = refreshToken
+    this.refreshTokenExpiresAt = new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000)
+  }
+
+  clearToken(): void {
+    this.refreshToken = undefined
+    this.refreshTokenExpiresAt = undefined
+  }
+
+  isTokenExpired(): boolean {
+    if (!this.refreshToken || !this.refreshTokenExpiresAt) {
+      return true
+    }
+    return new Date() > this.refreshTokenExpiresAt
+  }
   public getId(): string {
     return this.id
   }
@@ -68,16 +88,4 @@ export class RegisteredUser {
 
     return age >= 10 && age <= 100
   }
-
-  // Create instance
-  // static createNewUser(email: string, password: string, fullName: string, dateOfBirth: string): RegisteredUser {
-  //   const user = new RegisteredUser(email, password, fullName, dateOfBirth)
-
-  //   //Check user is older than 16 years old
-  //   if (!user.isValidDOB()) {
-  //     throw new Error('User must be at least 16 years old')
-  //   }
-
-  //   return user
-  // }
 }

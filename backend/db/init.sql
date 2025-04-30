@@ -822,12 +822,12 @@ VALUES
 
 
 -- Registered User
-INSERT INTO registeredUsers (id, email, password, fullName, dateOfBirth, role) VALUES
-('1',  'alice@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Alice Wonderland', NOW(), 'REGISTERED_USER'),
-('2', 'bob@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Bob Dave Tint', NOW(), 'REGISTERED_USER'),
-('3', 'carol@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Caroline', NOW(), 'REGISTERED_USER'),
-('4', 'dave@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Dave Kit', NOW(), 'REGISTERED_USER'),
-('5', 'eve@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Eve Me', NOW(), 'REGISTERED_USER');
+INSERT INTO registeredUsers (id, email, password, fullName, dateOfBirth, role, refreshToken, refreshTokenExpiresAt) VALUES
+('1',  'alice@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Alice Wonderland', NOW(), 'REGISTERED_USER', null,null),
+('2', 'bob@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Bob Dave Tint', NOW(), 'REGISTERED_USER',null,null),
+('3', 'carol@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Caroline', NOW(), 'REGISTERED_USER',null,null),
+('4', 'dave@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Dave Kit', NOW(), 'REGISTERED_USER',null,null),
+('5', 'eve@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Eve Me', NOW(), 'REGISTERED_USER',null,null);
 
 
 -- Follow Interactions

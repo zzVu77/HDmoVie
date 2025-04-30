@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import { RegisteredUser } from '~/models/registeredUser.model'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 
