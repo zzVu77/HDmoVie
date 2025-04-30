@@ -3,18 +3,33 @@ import cors from 'cors'
 import 'reflect-metadata'
 import express from 'express'
 import { AppDataSource } from './data-source'
+
 import movieRouter from './routes/movie.route'
+import blogRouter from './routes/blog.route'
+import reportRouter from './routes/report.route'
+import commentRouter from './routes/comment.route'
+import registeredUserRouter from './routes/registeredUser.route'
+import genreRouter from './routes/genre.route'
+import tagRouter from './routes/tag.route'
 
 const app = express()
 app.use(cors())
 app.use(express.json())
 const port = 3001
 
+// API routes
 app.use('/api/movies', movieRouter)
+app.use('/api/blogs', blogRouter)
+app.use('/api/reports', reportRouter)
+app.use('/api/comments', commentRouter)
+app.use('/api/registeredusers', registeredUserRouter)
+app.use('/api/genres', genreRouter)
+app.use('/api/tags', tagRouter)
 
 app.get('/', (req, res) => {
   res.send('HDmoVie API is running')
 })
+
 AppDataSource.initialize()
   .then(() => {
     console.log('Database connected')

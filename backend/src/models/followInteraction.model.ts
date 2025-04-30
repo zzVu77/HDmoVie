@@ -26,15 +26,3 @@ export class FollowInteraction {
   private following!: RegisteredUser[]
   //Methods
 }
-//Usage example
-// async function addUserToLikeInteraction(blogId: string, user: RegisteredUser) {
-//   const likeInteractionRepo = getRepository(LikeInteraction);
-//   const likeInteraction = await likeInteractionRepo.findOne({
-//     where: { blog: { id: blogId } },
-//     relations: ['likers'],
-//   });
-//   if (likeInteraction) {
-//     likeInteraction.addLiker(user); // this.likers.push(user) bên trong
-//     await likeInteractionRepo.save(likeInteraction); // Lưu vào cơ sở dữ liệu
-//   }
-// }

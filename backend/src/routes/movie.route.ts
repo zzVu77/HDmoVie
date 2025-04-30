@@ -19,6 +19,7 @@ const genreService = new GenreService(genreRepository)
 const movieService = new MovieService(movieRepository, castService, genreService)
 const movieController = new MovieController(movieService)
 
+// Define routes
 //GET route
 movieRouter.get('/', (req, res) => movieController.getAllMovies(req, res))
 movieRouter.get('/search', (req, res) => movieController.searchMoviesByTitle(req, res))

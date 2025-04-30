@@ -16,12 +16,25 @@ export abstract class Comment {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   protected date!: Date
 
-  @ManyToOne(() => Comment, { nullable: true })
+  @ManyToOne(() => Comment, { nullable: true, onDelete: 'CASCADE' })
   protected parentComment?: Comment
 
-  constructor(data?: Partial<Comment>) {
-    if (data) {
-      Object.assign(this, data)
-    }
+  // Constructor
+  constructor(user: RegisteredUser, content: string, date: Date, parentComment?: Comment) {
+    this.user = user
+    this.content = content
+    this.date = date
+    this.parentComment = parentComment
+  }
+
+  // Setter cho parentComment
+  setParentComment(parent: Comment): void {
+    this.parentComment = parent
+  }
+  getId(): string {
+    return this.id
+  }
+  getParentComment(): Comment | undefined {
+    return this.parentComment
   }
 }

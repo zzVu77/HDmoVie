@@ -61,4 +61,9 @@ export class MovieRepository {
   async update(movie: Movie): Promise<Movie> {
     return this.repository.save(movie)
   }
+
+  // Thêm phương thức findOne để tìm bộ phim theo ID
+  async findOne(id: number): Promise<Movie | null> {
+    return this.repository.findOne({ where: { id } as FindOptionsWhere<Movie> })
+  }
 }

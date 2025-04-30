@@ -1,32 +1,16 @@
-// import { DataSource, Repository } from 'typeorm';
-// import { User } from '../entities/User';
+import { DataSource, Repository } from 'typeorm'
+import { RegisteredUser } from '~/models/registeredUser.model'
+import { FindOneOptions, FindOptionsWhere } from 'typeorm' // Import thêm các kiểu cần thiết
 
-// export class UserRepository {
-//   private repository: Repository<User>;
+export class UserRepository {
+  private repository: Repository<RegisteredUser>
 
-//   constructor(dataSource: DataSource) {
-//     this.repository = dataSource.getRepository(User);
-//   }
+  constructor(dataSource: DataSource) {
+    this.repository = dataSource.getRepository(RegisteredUser)
+  }
 
-//   async findAll(): Promise<User[]> {
-//     return this.repository.find();
-//   }
-
-//   async findById(id: number): Promise<User | null> {
-//     return this.repository.findOneBy({ id });
-//   }
-
-//   async create(userData: Partial<User>): Promise<User> {
-//     const user = this.repository.create(userData);
-//     return this.repository.save(user);
-//   }
-
-//   async update(id: number, userData: Partial<User>): Promise<User | null> {
-//     await this.repository.update(id, userData);
-//     return this.findById(id);
-//   }
-
-//   async delete(id: number): Promise<void> {
-//     await this.repository.delete(id);
-//   }
-// }
+  // method findOne to find user by ID
+  async findOne(id: string): Promise<RegisteredUser | null> {
+    return this.repository.findOne({ where: { id } as FindOptionsWhere<RegisteredUser> })
+  }
+}

@@ -24,9 +24,9 @@ export class Blog {
   })
   tags!: Tag[]
 
-  constructor(data?: Partial<Blog>) {
-    if (data) {
-      Object.assign(this, data)
-    }
+  constructor(owner: RegisteredUser, content: string, tags: Tag[]) {
+    this.owner = owner
+    this.content = content
+    this.tags = tags
   }
 }
