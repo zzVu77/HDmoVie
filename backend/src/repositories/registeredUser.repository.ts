@@ -13,7 +13,7 @@ export class RegisteredUserRepository {
   }
 
   async findById(id: string): Promise<RegisteredUser | null> {
-    return this.repository.findOne({
+    return await this.repository.findOne({
       where: { id: id } as FindOptionsWhere<RegisteredUser>,
       select: ['id', 'email', 'fullName', 'dateOfBirth', 'role'] as FindOptionsSelect<RegisteredUser>,
     })
