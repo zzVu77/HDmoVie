@@ -27,9 +27,10 @@ export class Watchlist {
   })
   private movies!: Movie[]
 
-  constructor(data?: Partial<Watchlist>) {
-    if (data) {
-      Object.assign(this, data)
-    }
+  constructor(title: string, description: string, isPublic: boolean, owner: RegisteredUser) {
+    this.title = title
+    this.description = description
+    this.isPublic = isPublic
+    this.owner = owner
   }
 }
