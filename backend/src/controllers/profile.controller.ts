@@ -1,9 +1,12 @@
 import { Request, Response } from 'express'
-import { string } from 'joi'
 import { ProfileService } from '~/services/profile.service'
+import { RegisteredUserService } from '~/services/registeredUser.service'
 
 export class ProfileController {
-  constructor(private profileService: ProfileService) {}
+  constructor(
+    private profileService: ProfileService,
+    private registeredUserService: RegisteredUserService,
+  ) {}
 
   // Return the entire profile include: user information, follow counts
   // get/:id
@@ -103,6 +106,24 @@ export class ProfileController {
     } catch (error) {
       console.error('Error fetching followings:', error)
       res.status(500).json({ message: 'Internal server error' })
+    }
+  }
+
+  // POST: /profile/:id/update
+  async updateInfor(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = req.params.id
+      const { fullName, dateOfBirth, senderId } = req.body
+
+      const updatedUser = await this.registeredUserService.updateInfor(
+        userId,
+        fullName,
+        new Date(dateOfBirth),
+        senderId,
+      )
+      res.status(200).json(updatedUser)
+    } catch (error) {
+      res.status(400).json({ message: (error as Error).message })
     }
   }
 }

@@ -9,7 +9,7 @@ import {
   createWatchlistFastMiddleware,
   createWatchlistMiddleware,
   updateWatchlistMiddleware,
-} from '~/middlewares/watchlist.midleware'
+} from '~/middlewares/watchlist.middleware'
 import { MovieRepository } from '~/repositories/movie.repository'
 
 const watchlistRouter = Router()

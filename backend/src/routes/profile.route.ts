@@ -7,6 +7,8 @@ import { RegisteredUserRepository } from '~/repositories/registeredUser.reposito
 import { BlogRepository } from '~/repositories/blog.repository'
 import { FollowInteractionRepository } from '~/repositories/followInteraction.repository'
 import { WatchlistRepository } from '~/repositories/watchlist.repository'
+import { RegisteredUserService } from '~/services/registeredUser.service'
+import { updateUserInfoMiddleware } from '~/middlewares/registeredUser.middleware'
 
 const profileRouter = Router()
 
@@ -22,7 +24,8 @@ const profileService = new ProfileService(
   blogRepository,
   watchlistRepository,
 )
-const profileController = new ProfileController(profileService)
+const registeredUserService = new RegisteredUserService(userRepository)
+const profileController = new ProfileController(profileService, registeredUserService)
 
 // Define routes
 profileRouter.get('/:id', (req, res) => profileController.get(req, res))
@@ -31,5 +34,6 @@ profileRouter.get('/:id/followers', (req, res) => profileController.getFollowers
 profileRouter.get('/:id/followings', (req, res) => profileController.getFollowings(req, res))
 profileRouter.get('/:id/watchlists', (req, res) => profileController.getWatchlists(req, res))
 profileRouter.get('/:id/watchlists/:wid', (req, res) => profileController.getWatchlistDetail(req, res))
+profileRouter.post('/:id/update', updateUserInfoMiddleware, (req, res) => profileController.updateInfor(req, res))
 
 export default profileRouter

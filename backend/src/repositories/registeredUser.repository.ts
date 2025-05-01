@@ -24,9 +24,12 @@ export class RegisteredUserRepository {
     return this.repository.save(user)
   }
 
-  async update(id: string, userData: Partial<RegisteredUser>): Promise<RegisteredUser | null> {
-    await this.repository.update(id, userData)
-    return this.findById(id)
+  async update(user: RegisteredUser): Promise<RegisteredUser> {
+    try {
+      return await this.repository.save(user)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 
   async delete(id: number): Promise<void> {

@@ -52,4 +52,14 @@ export class RegisteredUser {
   public getRole(): string {
     return this.role
   }
+
+  public setFullName(fullname: string): this {
+    this.fullName = fullname
+    return this
+  }
+
+  public setDob(dob: Date): this {
+    this.dateOfBirth = dob
+    return this
+  }
 }

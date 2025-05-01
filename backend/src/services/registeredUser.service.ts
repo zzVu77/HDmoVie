@@ -28,3 +28,25 @@
 //     return this.userRepository.delete(id);
 //   }
 // }
+
+import { RegisteredUser } from '../models/registeredUser.model'
+import { RegisteredUserRepository } from '../repositories/registeredUser.repository'
+
+export class RegisteredUserService {
+  constructor(private registeredUserRepository: RegisteredUserRepository) {}
+
+  async updateInfor(id: string, fullName: string, dob: Date, senderId: string): Promise<RegisteredUser> {
+    if (id !== senderId) {
+      throw new Error('Unauthorized: You can only update your own profile.')
+    }
+
+    const user = await this.registeredUserRepository.findById(id)
+    if (!user) {
+      throw new Error('User not found.')
+    }
+
+    user.setFullName(fullName).setDob(dob)
+
+    return await this.registeredUserRepository.update(user)
+  }
+}
