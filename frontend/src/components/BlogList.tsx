@@ -1,4 +1,4 @@
-import BlogPost, { BlogPostProps } from './BlogPost';
+import BlogPost, { BlogPostProps } from './BlogCard';
 
 // Sample blog data
 const blogPosts: BlogPostProps[] = [
