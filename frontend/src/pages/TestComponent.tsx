@@ -1,8 +1,12 @@
+import CommentBox from '@/components/CommentBox'
 import MovieCard from '@/components/MovieCard'
 import MovieComment from '@/components/MovieComment'
+import { Button } from '@/components/ui/button'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { MovieCardProps } from '@/types'
+import { Loader2 } from 'lucide-react'
 
-export const dummyMovies: MovieCardProps[] = [
+const dummyMovies: MovieCardProps[] = [
   {
     posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
     releaseYear: '2023',
@@ -54,7 +58,7 @@ export const dummyMovies: MovieCardProps[] = [
     ],
   },
 ]
-export const dummyComments = [
+const dummyComments = [
   {
     userName: 'John Doe',
     comment: 'This movie was absolutely amazing! The story was captivating.',
@@ -69,7 +73,8 @@ export const dummyComments = [
   },
   {
     userName: 'Michael Johnson',
-    comment: 'A masterpiece! The acting and direction were top-notch.',
+    comment:
+      'A masterpiece! The acting and direction were top-notch asdasd dsd asds sdas dasdasd sda sdassad asd ádasđá as asdsadas asd asd adsa a asdasds .',
     rating: 5.0,
     date: '2025-04-28',
   },
@@ -101,16 +106,28 @@ const TestComponent = () => {
           />
         ))}
       </div>
-      <div className='flex flex-col gap-5 '>
-        {dummyComments.map((comment, index) => (
-          <MovieComment
-            key={index}
-            userName={comment.userName}
-            comment={comment.comment}
-            date={comment.date}
-            rating={comment.rating}
-          />
-        ))}
+      <div className='flex flex-col gap-5 w-[90vw] mx-auto '>
+        <div className='w-full'>
+          <CommentBox></CommentBox>
+        </div>
+        <ScrollArea className=' h-[70vh] w-[90vw] mx-auto flex flex-col items-center mb-10 lg:px-5'>
+          {dummyComments.map((comment, index) => (
+            <div className='pb-8' key={index}>
+              <MovieComment
+                userName={comment.userName}
+                comment={comment.comment}
+                date={comment.date}
+                rating={comment.rating}
+              />
+            </div>
+          ))}
+          <div className='mx-auto text-center'>
+            <Button disabled className='w-fit mx-auto bg-secondary-yellow text-black font-bold'>
+              <Loader2 className='animate-spin' />
+              Load more ...
+            </Button>
+          </div>
+        </ScrollArea>
       </div>
     </>
   )

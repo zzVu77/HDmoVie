@@ -16,7 +16,7 @@
   --radius-medium: 0.5rem; /* 8px */
   --radius-large: 1rem; /* 16px */
   /* --drop-shadow-*	Drop shadow filter utilities like drop-shadow-md */
-  --drop-shadow-white-glow: 0 8px 10px rgba(255, 255, 255, 0.2);
+  --drop-shadow-white-glow: 0 8px 10px rgba(255, 255, 255, 0.1);
   /* --font-*	Font family utilities like font-sans */
   /* --text-*	Font size utilities like text-xl */
   /* --font-weight-*	Font weight utilities like font-bold */
