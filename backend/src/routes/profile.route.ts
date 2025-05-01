@@ -9,23 +9,33 @@ import { FollowInteractionRepository } from '~/repositories/followInteraction.re
 import { WatchlistRepository } from '~/repositories/watchlist.repository'
 import { RegisteredUserService } from '~/services/registeredUser.service'
 import { changePasswordMiddleware, updateUserInfoMiddleware } from '~/middlewares/registeredUser.middleware'
+import { FollowInteractionService } from '~/services/followInteraction.service'
+import { BlogService } from '~/services/blog.service'
+import { WatchlistService } from '~/services/watchlist.service'
+import { MovieRepository } from '~/repositories/movie.repository'
 
 const profileRouter = Router()
 
 // Initilize dependencies
-const userRepository = new RegisteredUserRepository(AppDataSource)
+const registeredUserRepository = new RegisteredUserRepository(AppDataSource)
 const blogRepository = new BlogRepository(AppDataSource)
 const followInteractionRepository = new FollowInteractionRepository(AppDataSource)
 const watchlistRepository = new WatchlistRepository(AppDataSource)
+const movieRepository = new MovieRepository(AppDataSource)
 
-const profileService = new ProfileService(
-  userRepository,
-  followInteractionRepository,
-  blogRepository,
-  watchlistRepository,
+const profileService = new ProfileService(registeredUserRepository, followInteractionRepository)
+const registeredUserService = new RegisteredUserService(registeredUserRepository)
+const blogService = new BlogService(blogRepository)
+const followInteractionService = new FollowInteractionService(followInteractionRepository)
+const watchlistService = new WatchlistService(watchlistRepository, registeredUserRepository, movieRepository)
+
+const profileController = new ProfileController(
+  profileService,
+  registeredUserService,
+  followInteractionService,
+  blogService,
+  watchlistService,
 )
-const registeredUserService = new RegisteredUserService(userRepository)
-const profileController = new ProfileController(profileService, registeredUserService)
 
 // Define routes
 profileRouter.get('/:id', (req, res) => profileController.get(req, res))

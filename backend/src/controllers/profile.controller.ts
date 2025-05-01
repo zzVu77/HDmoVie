@@ -1,11 +1,17 @@
 import { Request, Response } from 'express'
+import { BlogService } from '~/services/blog.service'
+import { FollowInteractionService } from '~/services/followInteraction.service'
 import { ProfileService } from '~/services/profile.service'
 import { RegisteredUserService } from '~/services/registeredUser.service'
+import { WatchlistService } from '~/services/watchlist.service'
 
 export class ProfileController {
   constructor(
     private profileService: ProfileService,
     private registeredUserService: RegisteredUserService,
+    private followInteractionService: FollowInteractionService,
+    private blogService: BlogService,
+    private watchlistService: WatchlistService,
   ) {}
 
   // Return the entire profile include: user information, follow counts
@@ -35,7 +41,7 @@ export class ProfileController {
       const userId = req.params.id
       const page = parseInt(req.query.page as string) || 0 // Default page = 0
 
-      const blogs = await this.profileService.getUserBlogs(userId, page)
+      const blogs = await this.blogService.getUserBlogs(userId, page)
 
       res.json(blogs)
     } catch (error) {
@@ -49,7 +55,7 @@ export class ProfileController {
   async getFollowers(req: Request, res: Response): Promise<void> {
     try {
       const userId = req.params.id
-      const followers = await this.profileService.getUserFollowers(userId)
+      const followers = await this.followInteractionService.getUserFollowers(userId)
 
       res.json(followers)
     } catch (error) {
@@ -63,7 +69,7 @@ export class ProfileController {
   async getFollowings(req: Request, res: Response): Promise<void> {
     try {
       const userId = req.params.id
-      const followings = await this.profileService.getUserFollowings(userId)
+      const followings = await this.followInteractionService.getUserFollowings(userId)
 
       res.json(followings)
     } catch (error) {
@@ -79,7 +85,7 @@ export class ProfileController {
       const userId = req.params.id
       const page = parseInt(req.query.page as string) || 0 // Default page = 0
 
-      const watchlists = await this.profileService.getUserWatchlists(userId, page)
+      const watchlists = await this.watchlistService.getUserWatchlists(userId, page)
 
       res.json(watchlists)
     } catch (error) {
@@ -95,7 +101,7 @@ export class ProfileController {
       const watchlistId = req.params.wid
       const senderId = req.body.senderId
 
-      const watchlist = await this.profileService.getWatchlistDetail(watchlistId, senderId)
+      const watchlist = await this.watchlistService.getWatchlistDetail(watchlistId, senderId)
 
       if (!watchlist) {
         res.status(404).json({ message: 'Watchlist not found' })
@@ -110,6 +116,7 @@ export class ProfileController {
   }
 
   // POST: /profile/:id/update
+  // Update personal iformation: fname & dob
   async updateInfor(req: Request, res: Response): Promise<void> {
     try {
       const userId = req.params.id

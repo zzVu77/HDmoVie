@@ -13,8 +13,6 @@ export class ProfileService {
   constructor(
     private registeredUserRepository: RegisteredUserRepository,
     private followInteractionRepository: FollowInteractionRepository,
-    private blogRepository: BlogRepository,
-    private watchlistRepository: WatchlistRepository,
   ) {}
 
   // Get user basic profile information: user information + follow information
@@ -42,78 +40,6 @@ export class ProfileService {
         followersCount: followerCount,
         followingCount: followingCount,
       }
-    } catch (error) {
-      throw new Error((error as Error).message)
-    }
-  }
-
-  // Get user blogs
-  public async getUserBlogs(userId: string, page: number): Promise<Blog[]> {
-    try {
-      const pageSize = 5
-      const offset = page * pageSize
-      return this.blogRepository.findByUserId(userId, offset, pageSize)
-    } catch (error) {
-      throw new Error((error as Error).message)
-    }
-  }
-
-  // Get user follower list
-  public async getUserFollowers(userId: string): Promise<RegisteredUser[]> {
-    try {
-      const followInteraction = await this.followInteractionRepository.findByUserId(userId)
-
-      if (!followInteraction) {
-        return []
-      }
-
-      return followInteraction.getFollowers()
-    } catch (error) {
-      throw new Error((error as Error).message)
-    }
-  }
-
-  // Get user following list
-  public async getUserFollowings(userId: string): Promise<RegisteredUser[]> {
-    try {
-      const followInteraction = await this.followInteractionRepository.findByUserId(userId)
-
-      if (!followInteraction) {
-        return []
-      }
-
-      return followInteraction.getFollowings()
-    } catch (error) {
-      throw new Error((error as Error).message)
-    }
-  }
-
-  // Get user watchlists
-  public async getUserWatchlists(userId: string, page: number): Promise<Watchlist[]> {
-    try {
-      const pageSize = 10
-      const offset = page * pageSize
-      return await this.watchlistRepository.findByUserId(userId, offset, pageSize)
-    } catch (error) {
-      throw new Error((error as Error).message)
-    }
-  }
-
-  // Get watchlist detail
-  public async getWatchlistDetail(watchlistId: string, senderId: string): Promise<Watchlist | null> {
-    try {
-      const watchlist = await this.watchlistRepository.findById(watchlistId)
-
-      if (!watchlist) {
-        return null
-      }
-
-      const isOwner = watchlist.getOwner().getId() === senderId
-      if (watchlist.isPrivate() && !isOwner) {
-        throw new Error('Unauthorized access to private watchlist')
-      }
-
-      return watchlist
     } catch (error) {
       throw new Error((error as Error).message)
     }

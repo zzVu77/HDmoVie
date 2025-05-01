@@ -13,6 +13,35 @@ export class WatchlistService {
     private movieRepository: MovieRepository,
   ) {}
 
+  public async getUserWatchlists(userId: string, page: number): Promise<Watchlist[]> {
+    try {
+      const pageSize = 10
+      const offset = page * pageSize
+      return await this.watchlistRepository.findByUserId(userId, offset, pageSize)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  public async getWatchlistDetail(watchlistId: string, senderId: string): Promise<Watchlist | null> {
+    try {
+      const watchlist = await this.watchlistRepository.findById(watchlistId)
+
+      if (!watchlist) {
+        return null
+      }
+
+      const isOwner = watchlist.getOwner().getId() === senderId
+      if (watchlist.isPrivate() && !isOwner) {
+        throw new Error('Unauthorized access to private watchlist')
+      }
+
+      return watchlist
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
   async createWatchlist(title: string, description: string, isPublic: boolean, ownerId: string): Promise<Watchlist> {
     try {
       // Find owner object
