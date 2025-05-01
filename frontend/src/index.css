@@ -2,18 +2,39 @@
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
-@theme extend {
-  /* define for color --color-* */
+@theme {
+  /* --color-*	Color utilities like bg-red-500, text-sky-300, and many more */
   --color-primary-dark: var(--primary-dark);
   --color-secondary-dark: var(--secondary-dark);
+  --color-tertiary-dark: var(--tertiary-dark);
   --color-primary-yellow: var(--accent-yellow);
   --color-secondary-yellow: var(--accent-yellow-light);
   --color-tertiary-yellow: var(--accent-yellow-dark);
   --color-success-50: #059669;
-  /* define for border radius --border-radius-* */
+  /* --radius-*	Border radius utilities like rounded-sm */
   --radius-small: 0.25rem; /* 4px */
   --radius-medium: 0.5rem; /* 8px */
   --radius-large: 1rem; /* 16px */
+  /* --drop-shadow-*	Drop shadow filter utilities like drop-shadow-md */
+  --drop-shadow-white-glow: 0 8px 10px rgba(255, 255, 255, 0.2);
+  /* --font-*	Font family utilities like font-sans */
+  /* --text-*	Font size utilities like text-xl */
+  /* --font-weight-*	Font weight utilities like font-bold */
+  /* --tracking-*	Letter spacing utilities like tracking-wide */
+  /* --leading-*	Line height utilities like leading-tight */
+  /* --breakpoint-*	Responsive breakpoint variants like sm:* */
+  /* --container-*	Container query variants like @sm:* and size utilities like max-w-md */
+  /* --spacing-*	Spacing and sizing utilities like px-4, max-h-16, and many more */
+  /* --shadow-*	Box shadow utilities like shadow-md */
+  /* --inset-shadow-*	Inset box shadow utilities like inset-shadow-xs */
+  /* --blur-*	Blur filter utilities like blur-md */
+  /* --perspective-*	Perspective utilities like perspective-near */
+  /* --aspect-*	Aspect ratio utilities like aspect-video */
+  /* --ease-*	Transition timing function utilities like ease-out */
+  /* --animate-*	Animation utilities like animate-spin */
+  /* define for color --color-* */
+
+  /* define for border radius --border-radius-* */
 }
 body {
   background-color: black;
@@ -25,8 +46,9 @@ body {
   font-size: 1rem; /* 16px */
   /* global variables style */
   /* begin */
-  --primary-dark: oklch(20% 0 0);
-  --secondary-dark: oklch(30% 0 0);
+  --primary-dark: #030303;
+  --secondary-dark: #121212;
+  --tertiary-dark: #2d2d2d;
   --accent-yellow: #ffc107;
   --accent-yellow-light: #ffd54f;
   --accent-yellow-dark: #ffa000;

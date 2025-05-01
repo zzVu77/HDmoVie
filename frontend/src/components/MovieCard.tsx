@@ -13,7 +13,7 @@ const MovieCard = ({ posterSource = '', releaseYear = '', title = '', voteAvg = 
         <CardHeader className='w-full flex flex-col items-center p-0 gap-7 min-w-[250px] '>
           <AspectRatio ratio={3 / 4}>
             <img
-              className='object-cover w-full h-[350px] object-center rounded-lg filter hover:drop-shadow-[0_4px_50px_rgba(255,255,255,0.5)] hover:scale-105 transition-all duration-300'
+              className='object-cover w-full h-[350px] object-center rounded-lg filter hover:drop-shadow-[0_4px_50px_rgba(255,255,255,0.5)] hover:scale-105 transition-all duration-300 drop-shadow-white-glow'
               src={posterSource || 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg'}
               alt='poster'
             />
@@ -31,9 +31,9 @@ const MovieCard = ({ posterSource = '', releaseYear = '', title = '', voteAvg = 
           </Text>
         </CardContent>
         <CardFooter className='gap-2 flex-col px-2'>
-          <div className='flex flex-row justify-start gap-2'>
+          <div className='flex flex-row gap-2'>
             {genres?.map((genre) => (
-              <Badge key={genre.id} className='bg-secondary-dark'>
+              <Badge key={genre.id} className='bg-tertiary-dark'>
                 {genre.name}
               </Badge>
             ))}

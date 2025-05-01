@@ -16,9 +16,13 @@ const titleVariants = cva('scroll-m-20 font-extrabold', {
       7: 'text-xs leading-[18px]',
       8: 'text-[10px] leading-[16px]',
     },
+    color: {
+      true: 'text-white',
+    },
   },
   defaultVariants: {
     level: 1,
+    color: true,
   },
 })
 
