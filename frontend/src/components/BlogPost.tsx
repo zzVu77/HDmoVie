@@ -91,7 +91,7 @@ const BlogPost = ({
             </div>
           </div>
           <div className="flex items-center gap-2 text-white">
-            <Button variant="ghost" size="icon" className="h-8 w-8">
+            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-zinc-700  hover:text-white ">
               <MoreHorizontal size={16} />
             </Button>
           </div>
@@ -122,8 +122,10 @@ const BlogPost = ({
           <Button
             variant="ghost"
             size="sm"
-            className={`p-0 h-auto flex items-center gap-1 ${
-              isLiked ? 'text-red-500' : 'text-yellow-400'
+            className={`p-0 h-auto flex items-center gap-1 hover:bg-zinc-700 transition-colors ${
+              isLiked
+                ? 'text-red-500 hover:text-red-400'
+                : 'text-yellow-400 hover:text-yellow-300'
             }`}
             onClick={handleLike}
           >
@@ -133,7 +135,7 @@ const BlogPost = ({
           <Button
             variant="ghost"
             size="sm"
-            className="p-0 h-auto flex items-center gap-1 text-yellow-400"
+            className="p-0 h-auto flex items-center gap-1 text-yellow-400 hover:text-yellow-300 hover:bg-zinc-700 transition-colors"
           >
             <MessageCircle size={18} />
             <Text>{post.comments}</Text>
@@ -141,7 +143,7 @@ const BlogPost = ({
           <Button
             variant="ghost"
             size="sm"
-            className="p-0 h-auto flex items-center gap-1 text-yellow-400"
+            className="p-0 h-auto flex items-center gap-1 text-yellow-400 hover:text-yellow-300 hover:bg-zinc-700 transition-colors"
           >
             <Share2 size={18} />
             <Text>{post.shares}</Text>
