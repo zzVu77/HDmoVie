@@ -1,4 +1,5 @@
 import MovieCard from '@/components/MovieCard'
+import MovieComment from '@/components/MovieComment'
 import { MovieCardProps } from '@/types'
 
 export const dummyMovies: MovieCardProps[] = [
@@ -53,15 +54,42 @@ export const dummyMovies: MovieCardProps[] = [
     ],
   },
 ]
+export const dummyComments = [
+  {
+    userName: 'John Doe',
+    comment: 'This movie was absolutely amazing! The story was captivating.',
+    rating: 4.8,
+    date: '2025-04-30',
+  },
+  {
+    userName: 'Jane Smith',
+    comment: 'I enjoyed the visuals, but the plot was a bit predictable.',
+    rating: 3.5,
+    date: '2025-04-29',
+  },
+  {
+    userName: 'Michael Johnson',
+    comment: 'A masterpiece! The acting and direction were top-notch.',
+    rating: 5.0,
+    date: '2025-04-28',
+  },
+  {
+    userName: 'Emily Davis',
+    comment: 'Not my cup of tea, but I can see why others might like it.',
+    rating: 2.8,
+    date: '2025-04-27',
+  },
+  {
+    userName: 'Chris Brown',
+    comment: 'Great movie for a family night. Highly recommend it!',
+    rating: 4.2,
+    date: '2025-04-26',
+  },
+]
 const TestComponent = () => {
-  const dummyGenres = [
-    { id: '1', name: 'Action' },
-    { id: '2', name: 'Adventure' },
-    { id: '3', name: 'Fantasy' },
-  ]
   return (
     <>
-      <div className='flex flex-wrap items-center justify-center gap-10 p-4'>
+      <div className='flex flex-wrap items-center justify-center gap-10 '>
         {dummyMovies.map((movie, index) => (
           <MovieCard
             key={index}
@@ -69,7 +97,18 @@ const TestComponent = () => {
             releaseYear={movie.releaseYear}
             title={movie.title}
             voteAvg={movie.voteAvg}
-            genres={dummyGenres}
+            genres={movie.genres}
+          />
+        ))}
+      </div>
+      <div className='flex flex-col gap-5 '>
+        {dummyComments.map((comment, index) => (
+          <MovieComment
+            key={index}
+            userName={comment.userName}
+            comment={comment.comment}
+            date={comment.date}
+            rating={comment.rating}
           />
         ))}
       </div>
