@@ -19,6 +19,13 @@ export class RegisteredUserRepository {
     })
   }
 
+  async findByIdWithPassword(id: string): Promise<RegisteredUser | null> {
+    return await this.repository.findOne({
+      where: { id: id } as FindOptionsWhere<RegisteredUser>,
+      select: ['id', 'email', 'password', 'fullName', 'dateOfBirth', 'role'] as FindOptionsSelect<RegisteredUser>,
+    })
+  }
+
   async create(userData: Partial<RegisteredUser>): Promise<RegisteredUser> {
     const user = this.repository.create(userData)
     return this.repository.save(user)

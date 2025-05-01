@@ -116,7 +116,36 @@ export const userValidationMiddleware = (strategy: ValidationStrategy) => {
   }
 }
 
+class ChangePasswordValidationStrategy implements ValidationStrategy {
+  private schema = Joi.object({
+    oldPassword: Joi.string().trim().min(1).required().messages({
+      'string.empty': 'Old password is required',
+      'any.required': 'Old password is required',
+    }),
+    newPassword: Joi.string().trim().min(8).required().messages({
+      'string.min': 'New password must be at least 8 characters',
+      'any.required': 'New password is required',
+    }),
+    repassword: Joi.string().trim().required().valid(Joi.ref('newPassword')).messages({
+      'any.only': 'Passwords do not match',
+      'any.required': 'Repassword is required',
+    }),
+    senderId: Joi.string().required(),
+  })
+
+  validate(req: Request, res: Response, next: NextFunction): void {
+    const { error } = this.schema.validate(req.body, { abortEarly: false })
+    if (error) {
+      const messages = error.details.map((detail) => detail.message)
+      res.status(400).json({ message: messages.join(', ') })
+      return
+    }
+    next()
+  }
+}
+
 // Export  middlewares
 export const loginUserMiddleware = userValidationMiddleware(new LoginUserValidationStrategy())
 export const registerUserMiddleware = userValidationMiddleware(new RegisterUserValidationStrategy())
 export const updateUserInfoMiddleware = userValidationMiddleware(new UpdateUserInfoValidationStrategy())
+export const changePasswordMiddleware = userValidationMiddleware(new ChangePasswordValidationStrategy())

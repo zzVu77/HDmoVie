@@ -41,6 +41,10 @@ export class RegisteredUser {
     return this.id
   }
 
+  public getPassword(): string {
+    return this.password
+  }
+
   public getFullName(): string {
     return this.fullName
   }
@@ -51,6 +55,10 @@ export class RegisteredUser {
 
   public getRole(): string {
     return this.role
+  }
+
+  public setPassword(password: string): void {
+    this.password = password
   }
 
   public setFullName(fullname: string): this {

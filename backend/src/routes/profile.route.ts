@@ -8,7 +8,7 @@ import { BlogRepository } from '~/repositories/blog.repository'
 import { FollowInteractionRepository } from '~/repositories/followInteraction.repository'
 import { WatchlistRepository } from '~/repositories/watchlist.repository'
 import { RegisteredUserService } from '~/services/registeredUser.service'
-import { updateUserInfoMiddleware } from '~/middlewares/registeredUser.middleware'
+import { changePasswordMiddleware, updateUserInfoMiddleware } from '~/middlewares/registeredUser.middleware'
 
 const profileRouter = Router()
 
@@ -34,6 +34,9 @@ profileRouter.get('/:id/followers', (req, res) => profileController.getFollowers
 profileRouter.get('/:id/followings', (req, res) => profileController.getFollowings(req, res))
 profileRouter.get('/:id/watchlists', (req, res) => profileController.getWatchlists(req, res))
 profileRouter.get('/:id/watchlists/:wid', (req, res) => profileController.getWatchlistDetail(req, res))
-profileRouter.post('/:id/update', updateUserInfoMiddleware, (req, res) => profileController.updateInfor(req, res))
 
+profileRouter.post('/:id/update', updateUserInfoMiddleware, (req, res) => profileController.updateInfor(req, res))
+profileRouter.post('/:id/change-password', changePasswordMiddleware, (req, res) =>
+  profileController.changePassword(req, res),
+)
 export default profileRouter

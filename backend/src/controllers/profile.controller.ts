@@ -126,4 +126,17 @@ export class ProfileController {
       res.status(400).json({ message: (error as Error).message })
     }
   }
+
+  // POST: /profile/:id/change-password
+  async changePassword(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = req.params.id
+      const { oldPassword, newPassword, senderId } = req.body
+
+      const result = await this.registeredUserService.changePassword(userId, oldPassword, newPassword, senderId)
+      res.status(200).json({ message: 'Password changed successfully' })
+    } catch (error) {
+      res.status(400).json({ message: (error as Error).message })
+    }
+  }
 }
