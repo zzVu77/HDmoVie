@@ -11,6 +11,14 @@ export class WatchlistRepository {
   async findById(watchlistId: string): Promise<Watchlist | null> {
     try {
       return await this.repository.findOne({
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          isPublic: true,
+          owner: { id: true, email: true, fullName: true, dateOfBirth: true, role: false },
+          movies: true,
+        } as FindOptionsWhere<Watchlist>,
         where: { id: watchlistId } as FindOptionsWhere<Watchlist>,
         relations: ['movies', 'owner'],
       })
@@ -22,10 +30,18 @@ export class WatchlistRepository {
   async findByUserId(userId: string, offset: number, amount: number): Promise<Watchlist[]> {
     try {
       return this.repository.find({
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          isPublic: true,
+          owner: { id: true, email: true, fullName: true, dateOfBirth: true, role: false },
+          movies: true,
+        } as FindOptionsWhere<Watchlist>,
         where: { owner: { id: userId } } as FindOptionsWhere<Watchlist>,
         skip: offset,
         take: amount,
-        relations: ['movies'],
+        relations: ['movies', 'owner'],
       })
     } catch (error) {
       throw new Error((error as Error).message)

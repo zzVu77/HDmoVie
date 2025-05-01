@@ -15,14 +15,20 @@ export class RegisteredUserRepository {
   async findById(id: string): Promise<RegisteredUser | null> {
     return await this.repository.findOne({
       where: { id: id } as FindOptionsWhere<RegisteredUser>,
-      select: ['id', 'email', 'fullName', 'dateOfBirth', 'role'] as FindOptionsSelect<RegisteredUser>,
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        dateOfBirth: true,
+        role: false,
+      } as FindOptionsSelect<RegisteredUser>,
     })
   }
 
   async findByIdWithPassword(id: string): Promise<RegisteredUser | null> {
     return await this.repository.findOne({
       where: { id: id } as FindOptionsWhere<RegisteredUser>,
-      select: ['id', 'email', 'password', 'fullName', 'dateOfBirth', 'role'] as FindOptionsSelect<RegisteredUser>,
+      select: ['id', 'email', 'password', 'fullName', 'dateOfBirth'] as FindOptionsSelect<RegisteredUser>,
     })
   }
 
