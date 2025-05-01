@@ -5,7 +5,11 @@ import { WatchlistService } from '~/services/watchlist.service'
 
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { WatchlistRepository } from '~/repositories/watchlist.repository'
-import { createWatchlistMiddleware, updateWatchlistMiddleware } from '~/middlewares/watchlist.midleware'
+import {
+  createWatchlistFastMiddleware,
+  createWatchlistMiddleware,
+  updateWatchlistMiddleware,
+} from '~/middlewares/watchlist.midleware'
 import { MovieRepository } from '~/repositories/movie.repository'
 
 const watchlistRouter = Router()
@@ -19,8 +23,11 @@ const watchlistService = new WatchlistService(watchlistRepository, registeredUse
 const watchlistController = new WatchlistController(watchlistService)
 
 // Define routes
-// GET route
+// POST route
 watchlistRouter.post('/create', createWatchlistMiddleware, (req, res) => watchlistController.createWatchlist(req, res))
+watchlistRouter.post('/create-fast', createWatchlistFastMiddleware, (req, res) =>
+  watchlistController.createWatchlistFast(req, res),
+)
 
 // PUT route
 watchlistRouter.put('/:wid/update', updateWatchlistMiddleware, (req, res) =>

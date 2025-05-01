@@ -48,6 +48,31 @@ class CreateWatchlistValidationStrategy implements ValidationStrategy {
   }
 }
 
+class CreateWatchlistFastValidationStrategy implements ValidationStrategy {
+  // Override schema for fast creation: only title is required
+  private schema = Joi.object({
+    title: Joi.string().trim().required().messages({
+      'string.empty': 'Title cannot be empty',
+      'any.required': 'Title is required',
+    }),
+
+    // Make sure ownerId is required
+    ownerId: baseWatchlistSchema.ownerId.required().messages({
+      'any.required': 'Owner ID is required',
+    }),
+  })
+
+  validate(req: Request, res: Response, next: NextFunction): void {
+    const { error } = this.schema.validate(req.body, { abortEarly: false })
+    if (error) {
+      const messages = error.details.map((detail) => detail.message)
+      res.status(400).json({ message: messages.join(', ') })
+      return
+    }
+    next()
+  }
+}
+
 class UpdateWatchlistValidationStrategy implements ValidationStrategy {
   private schema = Joi.object({
     ...baseWatchlistSchema,
@@ -96,4 +121,5 @@ export const watchlistValidationMiddleware = (strategy: ValidationStrategy) => {
 
 // Export
 export const createWatchlistMiddleware = watchlistValidationMiddleware(new CreateWatchlistValidationStrategy())
+export const createWatchlistFastMiddleware = watchlistValidationMiddleware(new CreateWatchlistFastValidationStrategy())
 export const updateWatchlistMiddleware = watchlistValidationMiddleware(new UpdateWatchlistValidationStrategy())

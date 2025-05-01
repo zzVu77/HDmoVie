@@ -3,6 +3,8 @@ import { Watchlist } from '~/models/watchlist.model'
 import { MovieRepository } from '~/repositories/movie.repository'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { WatchlistRepository } from '~/repositories/watchlist.repository'
+import { FullWatchlistCreator } from '~/patterns/factory_methods/fullwatchlist.creator'
+import { SimpleWatchlistCreator } from '~/patterns/factory_methods/simplewatchlist.creator'
 
 export class WatchlistService {
   constructor(
@@ -19,8 +21,27 @@ export class WatchlistService {
       if (owner === null) {
         throw new Error("User doesn't exist")
       }
-      const newWatchlistt = new Watchlist(title, description, isPublic, owner)
-      return this.watchlistRepository.create(newWatchlistt)
+
+      const fullWatchlistCreator = new FullWatchlistCreator(owner, title, description, isPublic)
+      const newWatchlistt = fullWatchlistCreator.createWatchlist()
+      return await this.watchlistRepository.create(newWatchlistt)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  async createWatchlistFast(title: string, ownerId: string): Promise<Watchlist> {
+    try {
+      // Find owner object
+      const owner = await this.registeredUserRepository.findById(ownerId)
+
+      if (owner === null) {
+        throw new Error("User doesn't exist")
+      }
+
+      const simpleWatchlistCreator = new SimpleWatchlistCreator(owner, title)
+      const newWatchlistt = simpleWatchlistCreator.createWatchlist()
+      return await this.watchlistRepository.create(newWatchlistt)
     } catch (error) {
       throw new Error((error as Error).message)
     }

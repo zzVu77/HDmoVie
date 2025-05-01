@@ -17,6 +17,18 @@ export class WatchlistController {
     }
   }
 
+  // POST: /watchlists/create-fast
+  async createWatchlistFast(req: Request, res: Response): Promise<void> {
+    try {
+      const { title, ownerId } = req.body
+      const createdMovie = await this.watchlistService.createWatchlistFast(title, ownerId)
+      res.status(200).json(createdMovie)
+    } catch (error) {
+      console.error('Error creating watchlist: ', error)
+      res.status(400).json({ message: (error as Error).message })
+    }
+  }
+
   // PUT: /watchlists/:wid/update
   async updateWatchlist(req: Request, res: Response): Promise<void> {
     try {
