@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Home = () => {
   return (
     <div className='mx-auto text-center flex justify-center'>
