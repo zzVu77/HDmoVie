@@ -1,10 +1,20 @@
-import { Button } from '@/components/ui/button'
+import { BrowserRouter, Route, Routes } from 'react-router'
+import About from './pages/About'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import NotFound404 from './pages/NotFound404'
+import TestComponent from './pages/TestComponent'
 function App() {
   return (
-    <div className='text-center mx-auto '>
-      <h1 className='text-3xl font-bold rounded-big'>This is our OOSE project: HDmoVie</h1>
-      <Button className='my-10'>Demo Shadcn</Button>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/about' element={<About />} />
+        <Route path='*' element={<NotFound404 />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/test' element={<TestComponent />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
