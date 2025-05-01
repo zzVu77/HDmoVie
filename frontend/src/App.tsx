@@ -5,7 +5,7 @@ import Register from './pages/Register'
 import NotFound404 from './pages/NotFound404'
 import TestComponent from './pages/TestComponent'
 import GenresPage from './pages/Genre'
-
+import Login from './pages/Login'
 function App() {
   return (
     <BrowserRouter>
@@ -16,6 +16,7 @@ function App() {
         <Route path='/register' element={<Register />} />
         <Route path='/test' element={<TestComponent />} />
         <Route path='/genre' element={<GenresPage />} />
+        <Route path='/login' element={<Login />} />
       </Routes>
     </BrowserRouter>
   )

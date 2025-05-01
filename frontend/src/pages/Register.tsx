@@ -1,9 +1,9 @@
-import SignUpForm from '../components/ui/Register/Register'
+import RegisterForm from '../components/ui/Register/Register'
 
 function Register() {
   return (
     <>
-      <SignUpForm />
+      <RegisterForm />
     </>
   )
 }
