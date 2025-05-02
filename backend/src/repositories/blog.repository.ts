@@ -1,6 +1,5 @@
-import { DataSource, Repository, In } from 'typeorm'
+import { DataSource, Repository } from 'typeorm'
 import { Blog } from '~/models/blog.model'
-import { BlogComment } from '~/models/blogComment.model'
 
 export class BlogRepository {
   private repository: Repository<Blog>
@@ -10,16 +9,56 @@ export class BlogRepository {
   }
 
   async findById(id: string): Promise<Blog | null> {
-    return this.repository.findOne({
-      where: { id },
-      relations: ['owner', 'tags'],
-    })
+    const blog = await this.repository
+      .createQueryBuilder('blog')
+      .select(['blog.id', 'blog.content', 'blog.dateCreated', 'owner.id', 'owner.fullName', 'tags.id', 'tags.name'])
+      .addSelect(
+        `(SELECT COUNT(*) 
+          FROM like_interactions_users liu 
+          JOIN like_interactions li ON liu.likeInteractionId = li.id 
+          WHERE li.blogId = blog.id)`,
+        'likeCount',
+      )
+      .addSelect(
+        `(SELECT COUNT(*) 
+          FROM comments c 
+          WHERE c.blogId = blog.id AND c.type = 'BLOG')`,
+        'commentCount',
+      )
+      .leftJoin('blog.owner', 'owner')
+      .leftJoin('blog.tags', 'tags')
+      .where('blog.id = :id', { id })
+      .getOne()
+
+    if (!blog) {
+      return null
+    }
+
+    return blog
   }
 
   async findAll(): Promise<Blog[]> {
-    return this.repository.find({
-      relations: ['owner', 'tags'],
-    })
+    const blogs = await this.repository
+      .createQueryBuilder('blog')
+      .select(['blog.id', 'blog.content', 'blog.dateCreated', 'owner.id', 'owner.fullName', 'tags.id', 'tags.name'])
+      .addSelect(
+        `(SELECT COUNT(*) 
+          FROM like_interactions_users liu 
+          JOIN like_interactions li ON liu.likeInteractionId = li.id 
+          WHERE li.blogId = blog.id)`,
+        'likeCount',
+      )
+      .addSelect(
+        `(SELECT COUNT(*) 
+          FROM comments c 
+          WHERE c.blogId = blog.id AND c.type = 'BLOG')`,
+        'commentCount',
+      )
+      .leftJoin('blog.owner', 'owner')
+      .leftJoin('blog.tags', 'tags')
+      .getMany()
+
+    return blogs
   }
 
   async create(blog: Blog): Promise<Blog> {
