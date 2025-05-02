@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
@@ -25,6 +25,7 @@ export interface Blog {
   dateCreated: Date
   owner: RegisteredUser
   tags: Tag[]
+  images?: string[]
 }
 
 export interface BlogPostProps {
@@ -40,6 +41,7 @@ export interface BlogPostProps {
   }[]
   likes: number
   comments: number
+  images?: string[]
 }
 
 interface BlogPostComponentProps {
@@ -59,6 +61,9 @@ const BlogPost = ({
 }: BlogPostComponentProps) => {
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(post.likes)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isClamped, setIsClamped] = useState(false)
+  const contentRef = useRef<HTMLParagraphElement>(null)
 
   const handleLike = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -66,6 +71,17 @@ const BlogPost = ({
     setIsLiked(!isLiked)
     setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
   }
+
+  useEffect(() => {
+    const el = contentRef.current
+    if (el) {
+      const lineHeight = parseFloat(getComputedStyle(el).lineHeight)
+      const maxHeight = lineHeight * 3
+      setIsClamped(el.scrollHeight > maxHeight)
+    }
+  }, [post.content])
+
+  const hasImages = post.images && post.images.length > 0
 
   return (
     <Link to={`/blog/${post.id}`}>
@@ -109,35 +125,63 @@ const BlogPost = ({
         </CardHeader>
 
         <CardContent className=''>
-          <Text className='text-base mb-4'>{post.content}</Text>
-
-          <div className=' mb-6'>
-            <Carousel className='w-full max-w-md mx-auto'>
-              <CarouselContent>
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <CarouselItem key={index}>
-                    <div className='p-1'>
-                      <Card>
-                        <CardContent className='flex aspect-square items-center justify-center p-6'>
-                          <Text className='text-primary-dark font-semibold'>{index + 1}</Text>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <div className='absolute top-1/2 -translate-y-1/2 w-full px-4 flex justify-between'>
-                <CarouselPrevious
-                  className='relative left-0 size-12 bg-secondary-yellow hover:bg-tertiary-yellow shadow-md'
-                  variant='ghost'
-                />
-                <CarouselNext
-                  className='relative right-0 size-12 bg-secondary-yellow hover:bg-tertiary-yellow shadow-md'
-                  variant='ghost'
-                />
-              </div>
-            </Carousel>
+          <div className='mb-4'>
+            <Text
+              ref={contentRef}
+              className={cn('text-base transition-all duration-300', !isExpanded && 'line-clamp-3')}
+            >
+              {post.content}
+            </Text>
+            {isClamped && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setIsExpanded(!isExpanded)
+                }}
+                className='text-sm text-blue-400 hover:underline mt-1 block'
+              >
+                {isExpanded ? 'Show less' : 'Show more'}
+              </button>
+            )}
           </div>
+
+          {hasImages && (
+            <div className='mb-6'>
+              <Carousel className='w-full max-w-md mx-auto'>
+                <CarouselContent>
+                  {post.images!.map((imageUrl, index) => (
+                    <CarouselItem key={index}>
+                      <div className='p-1'>
+                        <Card>
+                          <CardContent className='flex aspect-square items-center justify-center p-0 overflow-hidden'>
+                            <img
+                              src={imageUrl}
+                              alt={`Blog image ${index + 1}`}
+                              className='w-full h-full object-cover'
+                              onError={(e) => {
+                                ;(e.target as HTMLImageElement).src = '/api/placeholder/400/400'
+                              }}
+                            />
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <div className='group absolute top-1/2 -translate-y-1/2 w-full px-4 flex justify-between'>
+                  <CarouselPrevious
+                    className='invisible group-hover:visible relative left-0 size-12 bg-secondary-yellow hover:bg-tertiary-yellow shadow-md'
+                    variant='ghost'
+                  />
+                  <CarouselNext
+                    className='invisible group-hover:visible relative right-0 size-12 bg-secondary-yellow hover:bg-tertiary-yellow shadow-md'
+                    variant='ghost'
+                  />
+                </div>
+              </Carousel>
+            </div>
+          )}
 
           <div className='flex items-center gap-2 mt-4 flex-wrap'>
             {post.tags.map((tag) => (

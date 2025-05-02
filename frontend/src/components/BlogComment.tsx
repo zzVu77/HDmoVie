@@ -73,7 +73,7 @@ const Comment = ({ comment, isReply = false }: { comment: CommentProps; isReply?
       </CardHeader>
 
       <CardContent className='px-4 py-2'>
-        <Text>{comment.content}</Text>
+        <Text className='line-clamp-3'>{comment.content}</Text>
       </CardContent>
 
       <CardFooter className='px-4 py-2 flex justify-between border-t border-zinc-800'>
