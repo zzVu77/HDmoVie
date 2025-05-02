@@ -76,26 +76,26 @@ const CommentSection = () => {
       </Title>
 
       {/* Input Box */}
-      <Card className='bg-zinc-900 border border-zinc-700 mb-6'>
+      <Card className='bg-bg-tertiary-dark border border-zinc-700 mb-6'>
         <CardContent className='p-4'>
           <div className='flex items-start gap-3'>
             <Avatar className='h-10 w-10'>
               <AvatarImage src={`/api/placeholder/50/50`} />
               <AvatarFallback>ME</AvatarFallback>
             </Avatar>
-            <div className='flex-1 rounded-xl border border-zinc-700 bg-zinc-900 shadow-inner overflow-hidden'>
+            <div className='flex-1 rounded-xl border border-zinc-700 bg-tertiary-dark shadow-inner overflow-hidden'>
               <textarea
-                className='w-full bg-zinc-900 p-3 text-sm text-white placeholder-zinc-400 outline-none resize-none'
+                className='w-full bg-tertiary-dark p-3 text-sm text-white placeholder-zinc-400 outline-none resize-none'
                 rows={3}
                 placeholder='Add a comment...'
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
               />
-              <div className='flex justify-end px-3 py-2 border-t border-zinc-700 bg-zinc-900'>
+              <div className='flex justify-end px-3 py-2 border-t border-zinc-700 bg-tertiary-dark'>
                 <Button
                   disabled={!commentText.trim()}
                   onClick={handleSubmitComment}
-                  className='text-sm font-medium text-white bg-zinc-800 hover:bg-zinc-700 rounded-md px-3 py-1.5 disabled:opacity-50'
+                  className='text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-700 rounded-md px-3 py-1.5 disabled:opacity-50'
                 >
                   Comment
                 </Button>

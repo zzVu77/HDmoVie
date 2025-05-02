@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { MessageCircle, MoreHorizontal, Heart } from 'lucide-react'
 import { Text } from './ui/typography'
 import { cn } from '@/lib/utils'
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 
 export interface RegisteredUser {
   id: string
@@ -70,7 +71,7 @@ const BlogPost = ({
     <Link to={`/blog/${post.id}`}>
       <Card
         className={cn(
-          'overflow-hidden bg-zinc-900 border border-zinc-700 hover:shadow-md transition-shadow duration-300 m-0',
+          'overflow-hidden bg-tertiary-dark border border-zinc-700 hover:shadow-md transition-shadow duration-300 m-0',
           isFirst && 'rounded-t-md rounded-b-none',
           isLast && 'rounded-b-md rounded-t-none',
           !isFirst && !isLast && 'rounded-none',
@@ -109,6 +110,26 @@ const BlogPost = ({
 
         <CardContent className=''>
           <Text className='text-base mb-4'>{post.content}</Text>
+
+          {/* Image Carousel */}
+          <Carousel className='w-full max-w-md mx-auto mb-4'>
+            <CarouselContent>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <CarouselItem key={index}>
+                  <div className='p-1'>
+                    <Card>
+                      <CardContent className='flex aspect-square items-center justify-center p-6'>
+                        <span className='text-4xl font-semibold'>{index + 1}</span>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+
           <div className='flex items-center gap-2 mt-4 flex-wrap'>
             {post.tags.map((tag) => (
               <Badge
@@ -138,7 +159,7 @@ const BlogPost = ({
               size='lg'
               className={cn(
                 'p-0 h-auto flex items-center gap-1 hover:bg-zinc-700 transition-colors',
-                isLiked ? 'text-red-500 hover:text-red-400' : 'text-yellow-400 hover:text-yellow-300',
+                isLiked ? 'text-red-500 hover:text-red-400' : 'text-primary-yellow hover:text-yellow-300',
               )}
               onClick={handleLike}
             >
@@ -148,7 +169,7 @@ const BlogPost = ({
             <Button
               variant='ghost'
               size='lg'
-              className='p-0 h-auto flex items-center gap-1 text-yellow-400 hover:text-yellow-300 hover:bg-zinc-700 transition-colors'
+              className='p-0 h-auto flex items-center gap-1 text-primary-yellow hover:text-yellow-300 hover:bg-zinc-700 transition-colors'
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()

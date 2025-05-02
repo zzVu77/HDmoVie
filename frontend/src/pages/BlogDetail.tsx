@@ -66,7 +66,7 @@ const BlogDetail = () => {
 
   if (isLoading) {
     return (
-      <div className='min-h-screen bg-zinc-950 text-white'>
+      <div className='min-h-screen text-white'>
         <div className='container mx-auto py-8 px-4'>
           <div className='w-full'>
             <Text className='text-center'>Loading blog details...</Text>
@@ -104,16 +104,16 @@ const BlogDetail = () => {
             <Link to='/blog'>
               <Button
                 variant='ghost'
-                className='flex items-center gap-2 mb-4 text-yellow-400 hover:text-yellow-300 hover:bg-zinc-700'
+                className='flex items-center gap-2 mb-4 text-primary-yellow hover:text-yellow-300 hover:bg-zinc-700'
               >
                 <ArrowLeft size={16} />
                 <Text>Back to blogs</Text>
               </Button>
             </Link>
           </div>
-          <BlogPost post={post} className='bg-zinc-900' showFooterBorder={true} isFirst={true} isLast={false} />
+          <BlogPost post={post} className='bg-tertiary-dark' showFooterBorder={true} isFirst={true} isLast={false} />
           {/* Comments Section */}
-          <Card className='bg-zinc-900 border border-zinc-700 rounded-t-none rounded-b-md'>
+          <Card className='bg-tertiary-dark border border-zinc-700 rounded-t-none rounded-b-md'>
             <div className='p-4'>
               {/* <CommentSection blogId={post.id} /> */}
               <CommentSection />

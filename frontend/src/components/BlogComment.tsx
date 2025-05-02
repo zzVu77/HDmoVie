@@ -58,7 +58,7 @@ const Comment = ({ comment, isReply = false }: { comment: CommentProps; isReply?
   }
 
   return (
-    <Card className={`bg-zinc-900 border border-zinc-800 mb-3 ${isReply ? 'ml-12' : ''}`}>
+    <Card className={`bg-tertiary-dark border border-zinc-800 mb-3 ${isReply ? 'ml-12' : ''}`}>
       <CardHeader className='px-4 py-3 flex flex-row items-start gap-3'>
         <Avatar className='h-8 w-8'>
           <AvatarImage src={`/api/placeholder/40/40`} />
@@ -81,7 +81,7 @@ const Comment = ({ comment, isReply = false }: { comment: CommentProps; isReply?
           <Button
             variant='ghost'
             size='sm'
-            className='p-0 h-auto flex items-center gap-1 text-yellow-400 hover:text-yellow-300 hover:bg-zinc-700 transition-colors'
+            className='p-0 h-auto flex items-center gap-1 text-primary-yellow hover:text-yellow-300 hover:bg-zinc-700 transition-colors'
             onClick={handleReply}
           >
             <Reply size={14} />
@@ -97,18 +97,18 @@ const Comment = ({ comment, isReply = false }: { comment: CommentProps; isReply?
               <AvatarImage src={`/api/placeholder/30/30`} />
               <AvatarFallback>ME</AvatarFallback>
             </Avatar>
-            <div className='flex-1 rounded-xl border border-zinc-700 bg-zinc-900 shadow-inner overflow-hidden'>
+            <div className='flex-1 rounded-xl border border-zinc-700 bg-tertiary-dark shadow-inner overflow-hidden'>
               <textarea
-                className='w-full bg-zinc-900 p-3 text-sm text-white placeholder-zinc-400 outline-none resize-none'
+                className='w-full bg-tertiary-dark p-3 text-sm text-white placeholder-zinc-400 outline-none resize-none'
                 rows={2}
                 placeholder='Write a reply...'
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
               />
-              <div className='flex justify-end px-3 py-2 border-t border-zinc-700 bg-zinc-900'>
+              <div className='flex justify-end px-3 py-2 border-t border-zinc-700 bg-tertiary-dark'>
                 <Button
                   size='sm'
-                  className='text-sm font-medium text-white bg-zinc-800 hover:bg-zinc-700 rounded-md px-3 py-1.5 disabled:opacity-50'
+                  className='text-sm font-medium text-white border-zinc-800 hover:bg-zinc-700 rounded-md px-3 py-1.5 disabled:opacity-50'
                   disabled={!replyText.trim()}
                   onClick={submitReply}
                 >
