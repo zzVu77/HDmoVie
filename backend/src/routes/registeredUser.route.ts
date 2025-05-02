@@ -20,7 +20,6 @@ registeredUserRouter.post('/forgot-password', (req, res) => registeredUserContro
 // Reset password
 registeredUserRouter.post('/reset-password', (req, res) => registeredUserController.resetPassword(req, res))
 
-
 registeredUserRouter.post('/register', registerUserMiddleware, (req, res) =>
   registeredUserController.register(req, res),
 )
