@@ -23,7 +23,7 @@ const dummyData: Cast[] = [
 ]
 const ListCastCard = ({ casts = dummyData }: ListCastCardProps) => {
   return (
-    <div className='flex  flex-row flex-wrap items-center justify-around gap-10'>
+    <div className='flex flex-row flex-wrap items-center justify-center gap-20'>
       {casts.map((cast, index) => (
         <CastCard name={cast.name} profilePath={cast.profilePath} key={index}></CastCard>
       ))}

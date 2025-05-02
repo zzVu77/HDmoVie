@@ -16,7 +16,7 @@ const reviewSchema = z.object({
   rating: z.number().min(1, 'Please select at least 1 star').max(10, 'Maximum 10 stars allowed'),
   content: z
     .string()
-    .min(100, 'Review must be at least 10 characters long')
+    .min(60, 'Review must be at least 60 characters long')
     .max(500, 'Review can be up to 500 characters long'),
 })
 
@@ -111,7 +111,7 @@ const CommentBox: React.FC = () => {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className='text-error-red' />
+                  <FormMessage className=' text-red-400' />
                 </FormItem>
               )}
             />

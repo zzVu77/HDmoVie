@@ -25,10 +25,10 @@ const MovieComment = ({ userName, comment, date, rating }: MovieCommentProps) =>
             <div className='flex flex-row items-center justify-between  gap-2 '>
               <Title level={4}>{userName || 'Nguyen Van Vu'}</Title>
               <div className='flex flex-row items-center gap-2 h-auto'>
-                <Text body={4} className='text-white '>
+                <Text body={4} className='text-gray-300 italic '>
                   {date || '30/04/2025'}
                 </Text>
-                <Badge className='bg-white text-black font-bold rounded-xl flex flex-row items-start justify-around gap-2 px-3 text-center'>
+                <Badge className='bg-white text-black font-bold rounded-2xl min-w-20 flex flex-row items-start justify-center gap-2 px-3 text-center'>
                   <Text body={3} className='text-black font-extrabold '>
                     {rating || 4.5}
                   </Text>

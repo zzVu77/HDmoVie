@@ -33,6 +33,13 @@ const Home = () => {
             </Text>
           </Button>
         </a>
+        <a href='/movie'>
+          <Button className='bg-primary-yellow p-8 cursor-pointer'>
+            <Text body={1} className='font-extrabold text-2xl '>
+              Movie Page
+            </Text>
+          </Button>
+        </a>
       </div>
     </div>
   )

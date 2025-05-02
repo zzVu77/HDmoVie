@@ -4,7 +4,7 @@ import { Text, Title } from './ui/typography'
 import { Badge } from './ui/badge'
 import { MovieType } from '@/types'
 import { useMediaQuery } from 'usehooks-ts'
-import Desktop from './MediaQuery/Desktop'
+import Desktop from './shared/Desktop'
 interface BannerProps extends MovieType {
   isDesktop?: boolean
 }
@@ -18,7 +18,7 @@ const Banner = ({ description, genres = dummyGenres, release, title, voteAvg }: 
   return (
     <div className='w-full flex flex-col mx-auto relative'>
       <div className='w-full flex flex-col mx-auto relative'>
-        <AspectRatio ratio={2 / 1}>
+        <AspectRatio ratio={isDesktopBreakPoint ? 2 / 1 : 3 / 4}>
           {/* Movie Poster Image */}
           <img
             src='https://image.tmdb.org/t/p/original/ce3prrjh9ZehEl5JinNqr4jIeaB.jpg'
@@ -53,7 +53,7 @@ const InformationContainer = ({ description, genres, release, title, voteAvg, is
     >
       <div className='flex flex-col gap-4 w-fit max-w-[100vw] lg:max-w-[70vw] '>
         {/* Movie Title */}
-        <Title className='lg:text-[60px] font-extrabold text-gradient-yellow w-full py-  lg:text-start text-center'>
+        <Title className='lg:text-[60px] text-[40px] font-extrabold text-gradient-yellow w-full py-  lg:text-start text-center'>
           {title || 'The Matrix Avengers'}
         </Title>
         {/* Release Date and Rating */}
@@ -65,7 +65,7 @@ const InformationContainer = ({ description, genres, release, title, voteAvg, is
             <Text body={4} className='font-light'>
               Rating: {voteAvg || '8.7/10'}
             </Text>
-            <Star1 size={18} color='var(--accent-yellow)'></Star1>
+            <Star1 size={18} variant='Bold' color='var(--accent-yellow)'></Star1>
           </div>
         </div>
         {/* Movie Overview/Description */}

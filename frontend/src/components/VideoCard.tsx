@@ -1,6 +1,6 @@
 const VideoCard = () => {
   return (
-    <div className='w-[100vw] mx-auto px-10'>
+    <div className='w-full mx-auto px-10'>
       <iframe
         className='mx-auto w-full h-[85vh] object-contain rounded-xl'
         src='https://www.youtube.com/embed/DHlXDqo7VsU'
