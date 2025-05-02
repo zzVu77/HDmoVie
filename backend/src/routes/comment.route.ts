@@ -18,8 +18,8 @@ const commentRouter = Router()
 
 // Initialize dependencies
 const commentRepository = new CommentRepository(AppDataSource)
-const userRepository = new UserRepository(AppDataSource) 
-const movieRepository = new MovieRepository(AppDataSource) 
+const userRepository = new UserRepository(AppDataSource)
+const movieRepository = new MovieRepository(AppDataSource)
 const blogRepository = new BlogRepository(AppDataSource)
 const genreRepository = new GenreRepository(AppDataSource)
 const castRepository = new CastRepository(AppDataSource)
