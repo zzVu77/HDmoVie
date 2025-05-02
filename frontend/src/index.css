@@ -16,7 +16,7 @@
   --radius-medium: 0.5rem; /* 8px */
   --radius-large: 1rem; /* 16px */
   /* --drop-shadow-*	Drop shadow filter utilities like drop-shadow-md */
-  --drop-shadow-white-glow: 0 8px 10px rgba(255, 255, 255, 0.1);
+  --drop-shadow-white-glow: 0 8px 10px rgba(255, 255, 255, 0.15);
   /* --font-*	Font family utilities like font-sans */
   /* --text-*	Font size utilities like text-xl */
   /* --font-weight-*	Font weight utilities like font-bold */
@@ -36,9 +36,11 @@
 
   /* define for border radius --border-radius-* */
 }
+
 body {
   background-color: black;
 }
+
 :root {
   font-family: 'Nunito Sans', sans-serif;
   line-height: 1.5;
@@ -163,7 +165,27 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+  /* Hide scrollbar for Chrome, Safari, and Edge */
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for Firefox */
+  * {
+    scrollbar-width: none;
+  }
+
+  /* Ensure scrolling still works */
+  html,
   body {
-    @apply bg-background text-foreground;
+    overflow: auto;
+  }
+}
+@layer utilities {
+  .text-gradient-yellow {
+    background: linear-gradient(90deg, #ffa000, #ffc107, #ffd54f);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 }

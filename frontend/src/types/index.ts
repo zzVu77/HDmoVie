@@ -2,10 +2,12 @@ export type GenreType = {
   id?: string
   name?: string
 }
-export type MovieCardProps = {
+export interface MovieType {
   posterSource?: string
-  releaseYear?: string
+  release?: string
   title?: string
   voteAvg?: number
   genres?: GenreType[]
+  backdropSource?: string
+  description?: string
 }

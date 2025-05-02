@@ -4,9 +4,9 @@ import { Button } from './ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { Text } from './ui/typography'
 import { AspectRatio } from './ui/aspect-ratio'
-import { MovieCardProps } from '@/types'
+import { MovieType } from '@/types'
 
-const MovieCard = ({ posterSource = '', releaseYear = '', title = '', voteAvg = 0, genres }: MovieCardProps) => {
+const MovieCard = ({ posterSource = '', release = '', title = '', voteAvg = 0, genres }: MovieType) => {
   return (
     <div>
       <Card className='w-fit flex flex-col rounded-none bg-transparent border-none shadow-none hover:scale-100 transition-all duration-300 gap-1 cursor-pointer '>
@@ -24,7 +24,7 @@ const MovieCard = ({ posterSource = '', releaseYear = '', title = '', voteAvg = 
           </CardTitle>
         </CardHeader>
         <CardContent className='flex flex-row justify-between items-center w-full gap-4 px-2 '>
-          <Text body={4}>{releaseYear || '2018'}</Text>
+          <Text body={4}>{release || '2018'}</Text>
           <Text body={4} className='flex items-center gap-2'>
             {voteAvg || 4.5}
             <Star1 size='18' variant='Bold' color='var(--accent-yellow)' />

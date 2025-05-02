@@ -1,15 +1,16 @@
+import Banner from '@/components/Banner'
 import CommentBox from '@/components/CommentBox'
 import MovieCard from '@/components/MovieCard'
 import MovieComment from '@/components/MovieComment'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { MovieCardProps } from '@/types'
+import { MovieType } from '@/types'
 import { Loader2 } from 'lucide-react'
 
-const dummyMovies: MovieCardProps[] = [
+const dummyMovies: MovieType[] = [
   {
     posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-    releaseYear: '2023',
+    release: '2023',
     title: 'The Great Adventure',
     voteAvg: 8.5,
     genres: [
@@ -19,7 +20,7 @@ const dummyMovies: MovieCardProps[] = [
   },
   {
     posterSource: 'https://image.tmdb.org/t/p/original/O7REXWPANWXvX2jhQydHjAq2DV.jpg',
-    releaseYear: '2022',
+    release: '2022',
     title: 'Romantic Escape',
     voteAvg: 7.8,
     genres: [
@@ -29,7 +30,7 @@ const dummyMovies: MovieCardProps[] = [
   },
   {
     posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-    releaseYear: '2021',
+    release: '2021',
     title: 'Sci-Fi Chronicles',
     voteAvg: 9.0,
     genres: [
@@ -39,7 +40,7 @@ const dummyMovies: MovieCardProps[] = [
   },
   {
     posterSource: 'https://image.tmdb.org/t/p/original/O7REXWPANWXvX2jhQydHjAq2DV.jpg',
-    releaseYear: '2020',
+    release: '2020',
     title: 'Mystery of the Lost City',
     voteAvg: 8.2,
     genres: [
@@ -49,7 +50,7 @@ const dummyMovies: MovieCardProps[] = [
   },
   {
     posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-    releaseYear: '2019',
+    release: '2019',
     title: 'Comedy Nights',
     voteAvg: 7.5,
     genres: [
@@ -93,13 +94,14 @@ const dummyComments = [
 ]
 const TestComponent = () => {
   return (
-    <>
-      <div className='flex flex-wrap items-center justify-center gap-10 '>
+    <div>
+      <Banner></Banner>
+      <div className='flex flex-wrap items-center justify-center gap-10  '>
         {dummyMovies.map((movie, index) => (
           <MovieCard
             key={index}
             posterSource={movie.posterSource}
-            releaseYear={movie.releaseYear}
+            release={movie.release}
             title={movie.title}
             voteAvg={movie.voteAvg}
             genres={movie.genres}
@@ -129,7 +131,7 @@ const TestComponent = () => {
           </div>
         </ScrollArea>
       </div>
-    </>
+    </div>
   )
 }
 
