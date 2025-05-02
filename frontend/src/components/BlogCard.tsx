@@ -111,24 +111,33 @@ const BlogPost = ({
         <CardContent className=''>
           <Text className='text-base mb-4'>{post.content}</Text>
 
-          {/* Image Carousel */}
-          <Carousel className='w-full max-w-md mx-auto mb-4'>
-            <CarouselContent>
-              {Array.from({ length: 5 }).map((_, index) => (
-                <CarouselItem key={index}>
-                  <div className='p-1'>
-                    <Card>
-                      <CardContent className='flex aspect-square items-center justify-center p-6'>
-                        <span className='text-4xl font-semibold'>{index + 1}</span>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
+          <div className=' mb-6'>
+            <Carousel className='w-full max-w-md mx-auto'>
+              <CarouselContent>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <CarouselItem key={index}>
+                    <div className='p-1'>
+                      <Card>
+                        <CardContent className='flex aspect-square items-center justify-center p-6'>
+                          <Text className='text-primary-dark font-semibold'>{index + 1}</Text>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <div className='absolute top-1/2 -translate-y-1/2 w-full px-4 flex justify-between'>
+                <CarouselPrevious
+                  className='relative left-0 size-12 bg-secondary-yellow hover:bg-tertiary-yellow shadow-md'
+                  variant='ghost'
+                />
+                <CarouselNext
+                  className='relative right-0 size-12 bg-secondary-yellow hover:bg-tertiary-yellow shadow-md'
+                  variant='ghost'
+                />
+              </div>
+            </Carousel>
+          </div>
 
           <div className='flex items-center gap-2 mt-4 flex-wrap'>
             {post.tags.map((tag) => (
