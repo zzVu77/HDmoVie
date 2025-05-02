@@ -1,7 +1,6 @@
 import { Movie } from '~/models/movie.model'
 import { MovieRepository } from '~/repositories/movie.repository'
-import { Genre } from '~/models/genre.model'
-import { Cast } from '~/models/cast.model'
+import { MovieType } from '~/type'
 import { CastService } from './cast.service'
 import { GenreService } from './genre.service'
 export class MovieService {
@@ -50,51 +49,26 @@ export class MovieService {
       throw new Error((error as Error).message)
     }
   }
-  async updateMovie(
-    id: string,
-    title: string,
-    description: string,
-    releaseYear: string,
-    trailerSource: string,
-    posterSource: string,
-    backdropSource: string,
-    voteAvg: number,
-    voteCount: number,
-    genres: Genre[],
-    casts: Cast[],
-  ): Promise<Movie | null> {
+  async updateMovie(id: string, movieData: Partial<MovieType>): Promise<Movie | null> {
     const movie = await this.movieRepository.findById(id)
     if (!movie) {
       throw new Error('Movie not found')
     }
-    const castIds = casts?.map((cast) => cast['id'])
-    const castsData = castIds && (await this.castService.validateCasts(castIds))
-
-    const genreIds = genres?.map((genre) => genre['id'])
-    const genresData = genreIds && (await this.genreService.validateGenres(genreIds))
-    const movieData = new Movie(
-      title,
-      description,
-      releaseYear,
-      trailerSource,
-      posterSource,
-      backdropSource,
-      voteAvg,
-      voteCount,
-      genresData,
-      castsData,
-    )
+    const castIds = movieData.casts?.map((cast) => cast.id)
+    const casts = castIds && (await this.castService.validateCasts(castIds))
+    const genreIds = movieData.genres?.map((genre) => genre.id)
+    const genres = genreIds && (await this.genreService.validateGenres(genreIds))
     movie.updateMovie(
-      movieData.getTitle(),
-      movieData.getDescription(),
-      movieData.getReleaseYear(),
-      movieData.getTrailerSource(),
-      movieData.getPosterSource(),
-      movieData.getBackdropSource(),
-      movieData.getVoteAvg(),
-      movieData.getVoteCount(),
-      movieData.getGenres(),
-      movieData.getCasts(),
+      movieData.title,
+      movieData.description,
+      movieData.releaseYear,
+      movieData.trailerSource,
+      movieData.posterSource,
+      movieData.backdropSource,
+      movieData.voteAvg,
+      movieData.voteCount,
+      genres,
+      casts,
     )
     return this.movieRepository.update(movie)
   }

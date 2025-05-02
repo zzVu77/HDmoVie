@@ -75,4 +75,17 @@ export class CommentService {
     // Save the comment
     return this.commentRepository.saveBlogComment(blogComment)
   }
+  // Get all comments for a specific movie
+  async getMovieComments(movieId: string): Promise<MovieComment[]> {
+    // Check if movie exists first
+    const movie = await this.movieRepository.findById(movieId)
+    if (!movie) {
+      throw new Error('Movie not found')
+    }
+    const listMovieComments = this.commentRepository.findCommentsByMovieId(movieId)
+    if (!listMovieComments || Array(listMovieComments).length === 0) {
+      throw new Error('Movie comments not found')
+    }
+    return listMovieComments
+  }
 }

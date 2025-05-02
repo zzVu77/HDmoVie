@@ -4,20 +4,33 @@
 @custom-variant dark (&:is(.dark *));
 @theme extend {
   /* define for color --color-* */
-  --color-primary-50: #1e3a8a;
-  --color-primary-100: #fbbf24;
-  --color-primary-200: #9333ea;
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary-dark: var(--secondary-dark);
+  --color-primary-yellow: var(--accent-yellow);
+  --color-secondary-yellow: var(--accent-yellow-light);
+  --color-tertiary-yellow: var(--accent-yellow-dark);
   --color-success-50: #059669;
   /* define for border radius --border-radius-* */
   --radius-small: 0.25rem; /* 4px */
   --radius-medium: 0.5rem; /* 8px */
   --radius-large: 1rem; /* 16px */
 }
+body {
+  background-color: black;
+}
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   line-height: 1.5;
-  font-weight: 400;
-
+  font-weight: 500;
+  font-size: 1rem; /* 16px */
+  /* global variables style */
+  /* begin */
+  --primary-dark: oklch(20% 0 0);
+  --secondary-dark: oklch(30% 0 0);
+  --accent-yellow: #ffc107;
+  --accent-yellow-light: #ffd54f;
+  --accent-yellow-dark: #ffa000;
+  /* end */
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

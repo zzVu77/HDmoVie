@@ -40,5 +40,6 @@ commentRouter.get('/blog/:blogId', (req, res) => commentController.getBlogCommen
 
 // Định nghĩa routes
 commentRouter.post('/movie', createMovieCommentMiddleware, (req, res) => commentController.createMovieComment(req, res))
+commentRouter.get('/movie/:movieId', (req, res) => commentController.getMovieComments(req, res))
 
 export default commentRouter

@@ -9,10 +9,10 @@ export class MovieController {
   async getAllMovies(req: Request, res: Response): Promise<void> {
     try {
       const movies = await this.movieService.getAllMovies()
-      res.json(movies)
+      res.status(200).json({ status: 'success', data: movies })
     } catch (error) {
       console.error('Error fetching movies:', error)
-      res.status(500).json({ message: 'Internal server error' })
+      res.status(500).json({ status: 'failed', message: 'Internal server error' })
     }
   }
 
@@ -32,10 +32,10 @@ export class MovieController {
         data.casts,
       )
       const newMovie = await this.movieService.createMovie(movieData)
-      res.status(201).json(newMovie)
+      res.status(201).json({ status: 'success', data: newMovie })
     } catch (error) {
       console.error('Error creating movie:', error)
-      res.status(400).json({ message: (error as Error).message })
+      res.status(400).json({ status: 'failed', message: (error as Error).message })
     }
   }
 
@@ -44,13 +44,13 @@ export class MovieController {
       const movieId = req.params.id
       const movie = await this.movieService.getMovieById(movieId)
       if (!movie) {
-        res.status(404).json({ message: 'Movie not found' })
+        res.status(404).json({ status: 'failed', message: 'Movie not found' })
         return
       }
-      res.json(movie)
+      res.status(200).json({ status: 'success', data: movie })
     } catch (error) {
       console.error('Error fetching movie:', error)
-      res.status(500).json({ message: 'Internal server error' })
+      res.status(500).json({ status: 'failed', message: 'Internal server error' })
     }
   }
 
@@ -58,14 +58,14 @@ export class MovieController {
     try {
       const { title } = req.query
       if (!title || typeof title !== 'string') {
-        res.status(400).json({ message: 'Title query parameter is required' })
+        res.status(400).json({ status: 'failed', message: 'Title query parameter is required' })
         return
       }
       const movies = await this.movieService.searchMoviesByTitle(title)
-      res.json(movies)
+      res.status(200).json({ status: 'success', data: movies })
     } catch (error) {
       console.error('Error searching movies:', error)
-      res.status(500).json({ message: 'Internal server error' })
+      res.status(500).json({ status: 'failed', message: 'Internal server error' })
     }
   }
 
@@ -74,42 +74,29 @@ export class MovieController {
       const movieId = req.params.id
       const movie = await this.movieService.getMovieById(movieId)
       if (!movie) {
-        res.status(404).json({ message: 'Movie not found' })
+        res.status(404).json({ status: 'failed', message: 'Movie not found' })
         return
       }
       await this.movieService.deleteMovie(movieId)
-      res.status(200).json({ message: 'Movie deleted successfully' })
+      res.status(200).json({ status: 'success', message: 'Movie deleted successfully' })
     } catch (error) {
       console.error('Error deleting movie:', error)
-      res.status(500).json({ message: 'Internal server error' })
+      res.status(500).json({ status: 'failed', message: 'Internal server error' })
     }
   }
+
   async updateMovie(req: Request, res: Response): Promise<void> {
     try {
       const movieId = req.params.id
-      const data = req.body
-
-      const updatedMovie = await this.movieService.updateMovie(
-        movieId,
-        data.title,
-        data.description,
-        data.releaseYear,
-        data.trailerSource,
-        data.posterSource,
-        data.backdropSource,
-        data.voteAvg,
-        data.voteCount,
-        data.genres,
-        data.casts,
-      )
+      const updatedMovie = await this.movieService.updateMovie(movieId, req.body as MovieType)
       if (!updatedMovie) {
-        res.status(404).json({ message: 'Movie not found' })
+        res.status(404).json({ status: 'failed', message: 'Movie not found' })
         return
       }
-      res.json(updatedMovie)
+      res.status(200).json({ status: 'success', data: updatedMovie })
     } catch (error) {
       console.error('Updating movie failed ==>', error)
-      res.status(500).json({ message: 'Internal server error' })
+      res.status(500).json({ status: 'failed', message: 'Internal server error' })
     }
   }
 }
