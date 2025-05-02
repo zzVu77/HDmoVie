@@ -5,7 +5,7 @@ import { RegisteredUser } from './registeredUser.model'
 
 @ChildEntity('BLOG_REPORT')
 export class BlogReport extends Report {
-  @ManyToOne(() => Blog, { nullable: true })
+  @ManyToOne(() => Blog, { nullable: true, onDelete: 'CASCADE' })
   blog!: Blog
 
   // Updated constructor with direct parameters

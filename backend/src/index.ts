@@ -31,7 +31,7 @@ app.use('/api/genres', genreRouter)
 app.use('/api/tags', tagRouter)
 app.use('/api/comments', commentRouter)
 app.use('/api/like', likeInteractionRouter)
-app.use('/api/notification', notificationRouter)
+app.use('/api/notifications', notificationRouter)
 app.use('/api/registeredUser', registeredUserRouter)
 
 app.get('/', (req, res) => {
