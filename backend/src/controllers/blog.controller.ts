@@ -7,10 +7,10 @@ export class BlogController {
   async getAllBlogs(req: Request, res: Response): Promise<void> {
     try {
       const blogs = await this.blogService.getAllBlogs()
-      res.json(blogs)
+      res.status(200).json({ status: 'success', data: blogs })
     } catch (error) {
       console.error('Error fetching blogs:', error)
-      res.status(500).json({ message: 'Internal server error' })
+      res.status(500).json({ status: 'failed', message: 'Internal server error' })
     }
   }
 
@@ -20,35 +20,37 @@ export class BlogController {
       const blog = await this.blogService.getBlogById(blogId)
 
       if (!blog) {
-        res.status(404).json({ message: 'Blog not found' })
+        res.status(404).json({ status: 'failed', message: 'Blog not found' })
         return
       }
 
-      res.json(blog)
+      res.status(200).json({ status: 'success', data: blog })
     } catch (error) {
       console.error('Error fetching blog:', error)
-      res.status(500).json({ message: 'Internal server error' })
+      res.status(500).json({ status: 'failed', message: 'Internal server error' })
     }
   }
 
   async deleteBlog(req: Request, res: Response): Promise<void> {
     try {
       const { blogId } = req.params
-      //   const userId = req.user?.id
-      //   const isAdmin = req.user?.role === 'ADMIN'
+      // const userId = req.user?.id
+      // const isAdmin = req.user?.role === 'ADMIN'
       const isAdmin = true
 
       await this.blogService.deleteBlog(blogId, isAdmin)
-      res.status(200).json({ message: 'Blog deleted successfully' })
+      res.status(200).json({ status: 'success', message: 'Blog deleted successfully' })
     } catch (error) {
       console.error('Error deleting blog:', error)
 
-      if ((error as Error).message === 'You do not have permission to delete this blog') {
-        res.status(403).json({ message: (error as Error).message })
-      } else if ((error as Error).message === 'Blog not found') {
-        res.status(404).json({ message: (error as Error).message })
+      const message = (error as Error).message
+
+      if (message === 'You do not have permission to delete this blog') {
+        res.status(403).json({ status: 'failed', message })
+      } else if (message === 'Blog not found') {
+        res.status(404).json({ status: 'failed', message })
       } else {
-        res.status(400).json({ message: (error as Error).message })
+        res.status(400).json({ status: 'failed', message })
       }
     }
   }

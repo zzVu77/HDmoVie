@@ -10,19 +10,20 @@ export class ReportController {
       const { reporterId, blogId, reason } = req.body
 
       if (!Object.values(ReportReason).includes(reason)) {
-        res.status(400).json({ message: 'Invalid report reason' })
+        res.status(400).json({ status: 'failed', message: 'Invalid report reason' })
         return
       }
 
       const report = await this.reportService.reportBlog(reporterId, blogId, reason)
-      res.status(201).json(report)
+      res.status(201).json({ status: 'success', data: report })
     } catch (error) {
       console.error('Error reporting blog:', error)
 
-      if ((error as Error).message === 'Reporter not found' || (error as Error).message === 'Blog not found') {
-        res.status(404).json({ message: (error as Error).message })
+      const message = (error as Error).message
+      if (message === 'Reporter not found' || message === 'Blog not found') {
+        res.status(404).json({ status: 'failed', message })
       } else {
-        res.status(400).json({ message: (error as Error).message })
+        res.status(400).json({ status: 'failed', message })
       }
     }
   }
@@ -32,19 +33,20 @@ export class ReportController {
       const { reporterId, commentId, reason } = req.body
 
       if (!Object.values(ReportReason).includes(reason)) {
-        res.status(400).json({ message: 'Invalid report reason' })
+        res.status(400).json({ status: 'failed', message: 'Invalid report reason' })
         return
       }
 
       const report = await this.reportService.reportComment(reporterId, commentId, reason)
-      res.status(201).json(report)
+      res.status(201).json({ status: 'success', data: report })
     } catch (error) {
       console.error('Error reporting comment:', error)
 
-      if ((error as Error).message === 'Reporter not found' || (error as Error).message === 'Comment not found') {
-        res.status(404).json({ message: (error as Error).message })
+      const message = (error as Error).message
+      if (message === 'Reporter not found' || message === 'Comment not found') {
+        res.status(404).json({ status: 'failed', message })
       } else {
-        res.status(400).json({ message: (error as Error).message })
+        res.status(400).json({ status: 'failed', message })
       }
     }
   }

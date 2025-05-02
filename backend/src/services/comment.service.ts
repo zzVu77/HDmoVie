@@ -6,12 +6,11 @@ import { BlogRepository } from '~/repositories/blog.repository'
 import { MovieComment } from '~/models/movieComment.model'
 import { BlogComment } from '~/models/blogComment.model'
 
-
 export class CommentService {
   constructor(
     private commentRepository: CommentRepository,
-    private userRepository: UserRepository, // Thêm userRepository vào constructor
-    private movieRepository: MovieRepository, // Thêm movieRepository vào constructor
+    private userRepository: UserRepository,
+    private movieRepository: MovieRepository,
     private blogRepository: BlogRepository,
   ) {}
 
@@ -32,7 +31,6 @@ export class CommentService {
     const movie = await this.movieRepository.findOne(movieId)
     if (!movie) throw new Error('Movie not found')
 
-    
     // Create a new blog comment
     let parentComment = undefined
     if (parentCommentId) {
@@ -42,13 +40,7 @@ export class CommentService {
       }
     }
 
-    const movieComment = new MovieComment(
-      user,
-      content,
-      new Date(),
-      movie,
-      parentComment
-    )
+    const movieComment = new MovieComment(user, content, new Date(), movie, parentComment)
     return this.commentRepository.saveMovieComment(movieComment)
   }
   async getBlogComments(blogId: string): Promise<BlogComment[]> {
@@ -78,13 +70,7 @@ export class CommentService {
       }
     }
 
-    const blogComment = new BlogComment(
-      user,
-      content,
-      new Date(),
-      blog,
-      parentComment
-    )
+    const blogComment = new BlogComment(user, content, new Date(), blog, parentComment)
 
     // Save the comment
     return this.commentRepository.saveBlogComment(blogComment)
