@@ -155,7 +155,7 @@ type TitleProps = {
 }
 const Title = ({ children }: TitleProps) => {
   return (
-    <div className='w-fit h-100vh'>
+    <div className='w-fit px-3'>
       <Text className='lg:text-[40px] text-[30px] font-extrabold '>{children}</Text>
       <hr className=' w-3/5  border-2 border-primary-yellow' />
     </div>
