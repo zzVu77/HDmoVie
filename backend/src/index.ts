@@ -3,7 +3,7 @@ import cors from 'cors'
 import 'reflect-metadata'
 import express from 'express'
 import { AppDataSource } from './data-source'
-
+import cookieParser from 'cookie-parser'
 import movieRouter from './routes/movie.route'
 import blogRouter from './routes/blog.route'
 import reportRouter from './routes/report.route'
@@ -15,6 +15,7 @@ import tagRouter from './routes/tag.route'
 const app = express()
 app.use(cors())
 app.use(express.json())
+app.use(cookieParser())
 const port = 3001
 
 // API routes

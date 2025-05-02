@@ -11,6 +11,10 @@ export class RegisteredUserRepository {
     return this.repository.findOne({ where: { email } as FindOptionsWhere<RegisteredUser> })
   }
 
+  async findByToken(refreshToken: string): Promise<RegisteredUser | null> {
+    return this.repository.findOne({ where: { refreshToken } as FindOptionsWhere<RegisteredUser> })
+  }
+
   async create(userData: RegisteredUser): Promise<RegisteredUser> {
     const user = this.repository.create(userData)
     return this.repository.save(user)
