@@ -99,7 +99,7 @@ const Movie = () => {
     <div className='flex flex-col'>
       <Banner></Banner>
       <Wrapper className='mt-5'>
-        <Title>TopCast</Title>
+        <Title>Top Cast</Title>
         <ListCastCard></ListCastCard>
       </Wrapper>
       <Wrapper>
