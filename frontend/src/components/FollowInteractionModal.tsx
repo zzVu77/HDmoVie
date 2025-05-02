@@ -71,10 +71,7 @@ export default function FollowInteractionModal({ followers, followings }: Follow
 
   // Main component
   return (
-    <Tabs
-      defaultValue='followers'
-      className='lg:w-[400px] w-[350px] bg-secondary-dark border border-tertiary-dark rounded-lg'
-    >
+    <Tabs defaultValue='followers' className='w-full bg-secondary-dark border border-tertiary-dark rounded-lg'>
       <TabsList className='grid w-full grid-cols-2 bg-transparent mb-0 pt-2'>
         <TabsTrigger
           value='followers'
