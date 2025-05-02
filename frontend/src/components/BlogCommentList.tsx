@@ -1,14 +1,14 @@
 // components/CommentSection.tsx
-import { useState } from 'react';
-import Comment, { CommentProps } from './BlogComment';
-import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Text, Title } from './ui/typography';
+import { useState, useEffect } from 'react'
+import Comment, { CommentProps } from './BlogComment'
+import { Card, CardContent } from '@/components/ui/card'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Text, Title } from './ui/typography'
 
-interface CommentSectionProps {
-  blogId: string;
-}
+// interface CommentSectionProps {
+//   blogId: string
+// }
 
 const sampleComments: CommentProps[] = [
   {
@@ -17,9 +17,7 @@ const sampleComments: CommentProps[] = [
     dateCreated: new Date('2025-05-01T12:30:00Z').toISOString(),
     owner: {
       name: 'foodie_lover',
-      verified: false,
     },
-    likes: 4,
   },
   {
     id: '2',
@@ -27,9 +25,7 @@ const sampleComments: CommentProps[] = [
     dateCreated: new Date('2025-05-01T14:15:00Z').toISOString(),
     owner: {
       name: 'chef_marcus',
-      verified: true,
     },
-    likes: 7,
     replies: [
       {
         id: '2-1',
@@ -37,29 +33,29 @@ const sampleComments: CommentProps[] = [
         dateCreated: new Date('2025-05-01T15:30:00Z').toISOString(),
         owner: {
           name: 'helenscchin',
-          verified: false,
         },
-        likes: 2,
-      }
-    ]
+      },
+    ],
   },
-];
+]
 
-const CommentSection = ({ blogId }: CommentSectionProps) => {
-  const [comments, setComments] = useState<CommentProps[]>([]);
-  const [commentText, setCommentText] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+// const CommentSection = ({ blogId }: CommentSectionProps) => {
+const CommentSection = () => {
+  const [comments, setComments] = useState<CommentProps[]>([])
+  const [commentText, setCommentText] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Simulate API call
-  useState(() => {
-    setTimeout(() => {
-      setComments(sampleComments);
-      setIsLoading(false);
-    }, 500);
-  });
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setComments(sampleComments)
+      setIsLoading(false)
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleSubmitComment = () => {
-    if (!commentText.trim()) return;
+    if (!commentText.trim()) return
 
     const newComment: CommentProps = {
       id: `new-${Date.now()}`,
@@ -67,44 +63,43 @@ const CommentSection = ({ blogId }: CommentSectionProps) => {
       dateCreated: new Date().toISOString(),
       owner: {
         name: 'current_user',
-        verified: false,
       },
-      likes: 0,
-    };
-
-    setComments([...comments, newComment]);
-    setCommentText('');
-  };
+    }
+    setComments([...comments, newComment])
+    setCommentText('')
+  }
 
   return (
     <div>
-      <Title level={4} className="mb-4">Comments</Title>
+      <Title level={4} className='mb-4'>
+        Comments
+      </Title>
 
       {/* Input Box */}
-      <Card className="bg-zinc-900 border border-zinc-700 mb-6">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <Avatar className="h-10 w-10">
+      <Card className='bg-zinc-900 border border-zinc-700 mb-6'>
+        <CardContent className='p-4'>
+          <div className='flex items-start gap-3'>
+            <Avatar className='h-10 w-10'>
               <AvatarImage src={`/api/placeholder/50/50`} />
               <AvatarFallback>ME</AvatarFallback>
             </Avatar>
-            <div className="flex-1 rounded-xl border border-zinc-700 bg-zinc-900 shadow-inner overflow-hidden">
-                <textarea
-                    className="w-full bg-zinc-900 p-3 text-sm text-white placeholder-zinc-400 outline-none resize-none"
-                    rows={3}
-                    placeholder="Add a comment..."
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
-                />
-                <div className="flex justify-end px-3 py-2 border-t border-zinc-700 bg-zinc-900">
-                    <Button
-                    disabled={!commentText.trim()}
-                    onClick={handleSubmitComment}
-                    className="text-sm font-medium text-white bg-zinc-800 hover:bg-zinc-700 rounded-md px-3 py-1.5 disabled:opacity-50"
-                    >
-                    Comment
-                    </Button>
-                </div>
+            <div className='flex-1 rounded-xl border border-zinc-700 bg-zinc-900 shadow-inner overflow-hidden'>
+              <textarea
+                className='w-full bg-zinc-900 p-3 text-sm text-white placeholder-zinc-400 outline-none resize-none'
+                rows={3}
+                placeholder='Add a comment...'
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+              />
+              <div className='flex justify-end px-3 py-2 border-t border-zinc-700 bg-zinc-900'>
+                <Button
+                  disabled={!commentText.trim()}
+                  onClick={handleSubmitComment}
+                  className='text-sm font-medium text-white bg-zinc-800 hover:bg-zinc-700 rounded-md px-3 py-1.5 disabled:opacity-50'
+                >
+                  Comment
+                </Button>
+              </div>
             </div>
           </div>
         </CardContent>
@@ -112,23 +107,21 @@ const CommentSection = ({ blogId }: CommentSectionProps) => {
 
       {/* Comments */}
       {isLoading ? (
-        <Text className="text-center py-4">Loading comments...</Text>
+        <Text className='text-center py-4'>Loading comments...</Text>
       ) : comments.length === 0 ? (
-        <Text className="text-center py-4">No comments yet. Be the first to comment!</Text>
+        <Text className='text-center py-4'>No comments yet. Be the first to comment!</Text>
       ) : (
-        <div className="space-y-4">
-          {comments.map(comment => (
+        <div className='space-y-4'>
+          {comments.map((comment) => (
             <div key={comment.id}>
               <Comment comment={comment} />
-              {comment.replies?.map(reply => (
-                <Comment key={reply.id} comment={reply} isReply />
-              ))}
+              {comment.replies?.map((reply) => <Comment key={reply.id} comment={reply} isReply />)}
             </div>
           ))}
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default CommentSection;
+export default CommentSection

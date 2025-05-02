@@ -5,7 +5,7 @@ import Login from './pages/Login'
 import NotFound404 from './pages/NotFound404'
 import TestComponent from './pages/TestComponent'
 import BlogPage from './pages/Blog'
-import BlogDetail from './components/BlogDetail'
+import BlogDetail from './pages/BlogDetail'
 
 function App() {
   return (
