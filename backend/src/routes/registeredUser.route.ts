@@ -6,15 +6,21 @@ import { RegisteredUserService } from '~/services/registeredUser.service'
 import { registerUserMiddleware, loginUserMiddleware } from '~/middlewares/registeredUser.middleware'
 import { AuthService } from '~/services/auth.service'
 import { authenticateToken } from '~/middlewares/auth.middleware'
+
 const registeredUserRouter = Router()
 
-// Khởi tạo dependencies
 const registeredUserRepository = new RegisteredUserRepository(AppDataSource)
 const registeredUserService = new RegisteredUserService(registeredUserRepository)
 const authService = new AuthService(registeredUserRepository)
 const registeredUserController = new RegisteredUserController(registeredUserService, authService)
 
-// Định nghĩa routes
+// Forgot password
+registeredUserRouter.post('/forgot-password', (req, res) => registeredUserController.forgotPassword(req, res))
+
+// Reset password
+registeredUserRouter.post('/reset-password', (req, res) => registeredUserController.resetPassword(req, res))
+
+
 registeredUserRouter.post('/register', registerUserMiddleware, (req, res) =>
   registeredUserController.register(req, res),
 )

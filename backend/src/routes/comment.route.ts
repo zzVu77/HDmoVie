@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { AppDataSource } from '~/data-source'
 import { CommentRepository } from '~/repositories/comment.repository'
-import { UserRepository } from '~/repositories/user.repository'
+import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { MovieRepository } from '~/repositories/movie.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
 
@@ -18,7 +18,7 @@ const commentRouter = Router()
 
 // Initialize dependencies
 const commentRepository = new CommentRepository(AppDataSource)
-const userRepository = new UserRepository(AppDataSource)
+const userRepository = new RegisteredUserRepository(AppDataSource)
 const movieRepository = new MovieRepository(AppDataSource)
 const blogRepository = new BlogRepository(AppDataSource)
 const genreRepository = new GenreRepository(AppDataSource)
@@ -36,5 +36,9 @@ const commentController = new CommentController(commentService, movieService)
 commentRouter.post('/movie', createMovieCommentMiddleware, (req, res) => commentController.createMovieComment(req, res))
 commentRouter.post('/blog', createBlogCommentMiddleware, (req, res) => commentController.commentOnBlog(req, res))
 commentRouter.get('/blog/:blogId', (req, res) => commentController.getBlogComments(req, res))
+
+
+// Định nghĩa routes
+commentRouter.post('/movie', createMovieCommentMiddleware, (req, res) => commentController.createMovieComment(req, res))
 
 export default commentRouter

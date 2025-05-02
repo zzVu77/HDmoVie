@@ -1,5 +1,5 @@
 import { CommentRepository } from '~/repositories/comment.repository'
-import { UserRepository } from '~/repositories/user.repository'
+import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { MovieRepository } from '~/repositories/movie.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
 
@@ -9,7 +9,7 @@ import { BlogComment } from '~/models/blogComment.model'
 export class CommentService {
   constructor(
     private commentRepository: CommentRepository,
-    private userRepository: UserRepository,
+    private userRepository: RegisteredUserRepository,
     private movieRepository: MovieRepository,
     private blogRepository: BlogRepository,
   ) {}

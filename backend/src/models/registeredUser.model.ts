@@ -3,6 +3,7 @@ import { Movie } from './movie.model'
 import { Blog } from './blog.model'
 import { MovieComment } from './movieComment.model'
 import { BlogComment } from './blogComment.model'
+import { LikeInteraction } from './likeInteraction.model'
 
 @Entity('registeredUsers')
 @TableInheritance({ column: { type: 'varchar', name: 'role' } })
@@ -92,5 +93,12 @@ export class RegisteredUser {
     }
 
     return age >= 10 && age <= 100
+  }
+  public likeBlog(likeInteraction: LikeInteraction): void {
+    likeInteraction.addLiker(this)
+  }
+
+  public unlikeBlog(likeInteraction: LikeInteraction): void {
+    likeInteraction.removeLiker(this.getId())
   }
 }

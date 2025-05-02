@@ -1,5 +1,5 @@
 import { ReportRepository } from '~/repositories/report.repository'
-import { UserRepository } from '~/repositories/user.repository'
+import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
 import { CommentRepository } from '~/repositories/comment.repository'
 import { BlogReport } from '~/models/blogReport.model'
@@ -10,7 +10,7 @@ import { Comment } from '~/models/comment.model'
 export class ReportService {
   constructor(
     private reportRepository: ReportRepository,
-    private userRepository: UserRepository,
+    private userRepository: RegisteredUserRepository,
     private blogRepository: BlogRepository,
     private commentRepository: CommentRepository,
   ) {}

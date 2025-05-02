@@ -29,4 +29,7 @@ export class Blog {
     this.content = content
     this.tags = tags
   }
+  getId(): string {
+    return this.id
+  }
 }

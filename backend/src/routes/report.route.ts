@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { AppDataSource } from '~/data-source'
 import { ReportRepository } from '~/repositories/report.repository'
-import { UserRepository } from '~/repositories/user.repository'
+import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
 import { CommentRepository } from '~/repositories/comment.repository'
 import { ReportService } from '~/services/report.service'
@@ -11,7 +11,7 @@ const reportRouter = Router()
 
 // Initialize dependencies
 const reportRepository = new ReportRepository(AppDataSource)
-const userRepository = new UserRepository(AppDataSource)
+const userRepository = new RegisteredUserRepository(AppDataSource)
 const blogRepository = new BlogRepository(AppDataSource)
 const commentRepository = new CommentRepository(AppDataSource)
 
