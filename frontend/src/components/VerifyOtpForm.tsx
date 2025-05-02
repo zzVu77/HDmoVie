@@ -42,7 +42,7 @@ export default function VerifyOtpForm() {
 
   return (
     <div className='flex min-h-[40vh] items-center justify-center px-4'>
-      <Card className='mx-auto max-w-sm'>
+      <Card className='mx-auto w-full'>
         <CardHeader>
           <CardTitle className='text-2xl'>Verify OTP</CardTitle>
           <CardDescription>Enter the 6-digit code sent to your email</CardDescription>

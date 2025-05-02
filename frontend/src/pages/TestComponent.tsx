@@ -1,6 +1,13 @@
 import MovieCard from '@/components/MovieCard'
 import MovieComment from '@/components/MovieComment'
+import Header from '@/components/Header'
 import { MovieCardProps } from '@/types'
+import ForgotPasswordForm from '@/components/ForgotPasswordForm'
+import VerifyOtpForm from '@/components/VerifyOtpForm'
+import ResetPasswordForm from '@/components/ResetPasswordForm'
+import ReportModal from '@/components/ReportModal'
+
+import { Footer2 } from '@/components/Footer'
 
 export const dummyMovies: MovieCardProps[] = [
   {
@@ -89,6 +96,12 @@ export const dummyComments = [
 const TestComponent = () => {
   return (
     <>
+      <Header />
+      <ForgotPasswordForm />
+      <VerifyOtpForm />
+      <ResetPasswordForm />
+      <ReportModal />
+
       <div className='flex flex-wrap items-center justify-center gap-10 '>
         {dummyMovies.map((movie, index) => (
           <MovieCard
@@ -112,6 +125,7 @@ const TestComponent = () => {
           />
         ))}
       </div>
+      <Footer2 />
     </>
   )
 }

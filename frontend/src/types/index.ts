@@ -9,3 +9,9 @@ export type MovieCardProps = {
   voteAvg?: number
   genres?: GenreType[]
 }
+export type NotificationItemProps = {
+  id: string
+  message: string
+  time: Date
+  status: 'UNREAD' | 'READ'
+}

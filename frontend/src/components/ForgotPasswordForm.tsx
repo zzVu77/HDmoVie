@@ -22,14 +22,6 @@ export default function ForgotPasswordForm() {
     },
   })
 
-  // async function onSubmit(values: z.infer<typeof formSchema>) {
-  //   try {
-  //     toast.success('OTP sent to your email')
-  //     navigate('/verify-otp') // dùng React Router để chuyển trang
-  //   } catch (error) {
-  //     toast.error('Failed to send OTP. Try again.')
-  //   }
-  // }
   async function onSubmit() {
     try {
       toast.success('OTP sent to your email')
@@ -40,8 +32,8 @@ export default function ForgotPasswordForm() {
   }
 
   return (
-    <div className='flex min-h-[40vh] items-center justify-center px-4'>
-      <Card className='mx-auto max-w-sm'>
+    <div className='flex min-h-[40vh] items-center justify-center px-4 w-full'>
+      <Card className='w-full'>
         <CardHeader>
           <CardTitle className='text-2xl'>Forgot Password</CardTitle>
           <CardDescription>Enter your email to receive an OTP</CardDescription>
@@ -56,7 +48,7 @@ export default function ForgotPasswordForm() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder='johndoe@mail.com' {...field} />
+                      <Input placeholder='johndoe@mail.com' {...field} className='w-full' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

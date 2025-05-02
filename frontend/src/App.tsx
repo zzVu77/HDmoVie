@@ -3,10 +3,7 @@ import About from './pages/About'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import NotFound404 from './pages/NotFound404'
-// import TestComponent from './pages/TestComponent'
-import TestComponent from './pages/TestForgotPasswordComponent'
-import VerifyOtpForm from './pages/VerifyOtpForm'
-import ResetPasswordForm from './pages/ResetPasswordForm'
+import TestComponent from './pages/TestComponent'
 
 function App() {
   return (
@@ -17,8 +14,6 @@ function App() {
         <Route path='*' element={<NotFound404 />} />
         <Route path='/login' element={<Login />} />
         <Route path='/test' element={<TestComponent />} />
-        <Route path='/verify-otp' element={<VerifyOtpForm />} />
-        <Route path='/reset-password' element={<ResetPasswordForm />} />
       </Routes>
     </BrowserRouter>
   )
