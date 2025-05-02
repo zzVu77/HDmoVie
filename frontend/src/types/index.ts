@@ -19,3 +19,20 @@ export type RegisteredUserProps = {
   email?: string
   dateOfBirth?: Date
 }
+export type WatchlistMovieProps = {
+  id?: string
+  title?: string
+  description?: string
+  posterSource?: string
+  backdropSource?: string
+  releaseYear?: string
+  voteAvg?: number
+  voteCount?: number
+  genres?: GenreType[]
+}
+export type WatchlistProps = {
+  title?: string
+  description?: string
+  isPublic?: boolean
+  movies?: WatchlistMovieProps[]
+}

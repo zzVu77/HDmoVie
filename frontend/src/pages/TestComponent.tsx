@@ -1,6 +1,8 @@
 import { EditProfileModal } from '@/components/EditProfileModal'
 import FollowInteractionModal from '@/components/FollowInteractionModal'
+import WatchlistCard from '@/components/WatchlistCard'
 import { FollowPeopleProps, RegisteredUserProps } from '@/types'
+import { WatchlistProps } from '@/types'
 
 const dummyFollowers: FollowPeopleProps[] = []
 
@@ -44,6 +46,137 @@ const dummyUser: RegisteredUserProps = {
   dateOfBirth: new Date('1990-01-01'),
 }
 
+const dummyWatchlist1: WatchlistProps = {
+  title: 'Sci-Fi Favorites',
+  description: 'A collection of the best science fiction movies.',
+  isPublic: true,
+  movies: [
+    {
+      id: '1',
+      title: 'Inception',
+      description: 'A mind-bending thriller about dreams within dreams.',
+      posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
+      backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
+      releaseYear: '2010',
+      voteAvg: 8.8,
+      voteCount: 2000000,
+      genres: [
+        { id: '1', name: 'Sci-Fi' },
+        { id: '2', name: 'Thriller' },
+      ],
+    },
+    {
+      id: '2',
+      title: 'Interstellar',
+      description: 'A journey through space and time to save humanity.',
+      posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
+      backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
+      releaseYear: '2014',
+      voteAvg: 8.6,
+      voteCount: 1500000,
+      genres: [
+        { id: '1', name: 'Sci-Fi' },
+        { id: '3', name: 'Adventure' },
+      ],
+    },
+    {
+      id: '3',
+      title: 'The Matrix',
+      description: 'A hacker discovers the truth about his reality.',
+      posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
+      backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
+      releaseYear: '1999',
+      voteAvg: 8.7,
+      voteCount: 1700000,
+      genres: [
+        { id: '1', name: 'Sci-Fi' },
+        { id: '4', name: 'Action' },
+      ],
+    },
+    {
+      id: '4',
+      title: 'Blade Runner 2049',
+      description: 'A sequel to the classic Blade Runner, exploring AI and humanity.',
+      posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
+      backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
+      releaseYear: '2017',
+      voteAvg: 8.0,
+      voteCount: 1200000,
+      genres: [
+        { id: '1', name: 'Sci-Fi' },
+        { id: '5', name: 'Drama' },
+      ],
+    },
+  ],
+}
+
+const dummyWatchlist2: WatchlistProps = {
+  title: 'Action Blockbusters',
+  description:
+    'An adrenaline-pumping collection of high-octane action movies that will keep you on the edge of your seat. From superhero epics to post-apocalyptic thrillers, this watchlist features some of the most iconic and explosive films in the genre, showcasing unforgettable characters, intense battles, and breathtaking stunts.',
+  isPublic: false,
+  movies: [
+    {
+      id: '5',
+      title: 'The Dark Knight',
+      description: 'A gritty superhero movie featuring Batman.',
+      posterSource: '',
+      backdropSource: '',
+      releaseYear: '2008',
+      voteAvg: 9.0,
+      voteCount: 2500000,
+      genres: [
+        { id: '4', name: 'Action' },
+        { id: '5', name: 'Drama' },
+      ],
+    },
+    {
+      id: '6',
+      title: 'Mad Max: Fury Road',
+      description: 'A post-apocalyptic action-packed thrill ride.',
+      posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
+      backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
+      releaseYear: '2015',
+      voteAvg: 8.1,
+      voteCount: 1300000,
+      genres: [
+        { id: '4', name: 'Action' },
+        { id: '3', name: 'Adventure' },
+      ],
+    },
+    {
+      id: '7',
+      title: 'John Wick',
+      description: 'A retired hitman seeks vengeance for his dog.',
+      posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
+      backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
+      releaseYear: '2014',
+      voteAvg: 7.4,
+      voteCount: 1000000,
+      genres: [
+        { id: '4', name: 'Action' },
+        { id: '6', name: 'Crime' },
+      ],
+    },
+    {
+      id: '8',
+      title: 'Avengers: Endgame',
+      description: 'The epic conclusion to the Avengers saga.',
+      posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
+      backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
+      releaseYear: '2019',
+      voteAvg: 8.4,
+      voteCount: 2200000,
+      genres: [
+        { id: '4', name: 'Action' },
+        { id: '7', name: 'Superhero' },
+      ],
+    },
+  ],
+}
+
+const dummyWatchlists = [dummyWatchlist1, dummyWatchlist2]
+
 const TestComponent = () => {
   return (
     <>
@@ -63,6 +196,19 @@ const TestComponent = () => {
           email={dummyUser.email}
           dateOfBirth={dummyUser.dateOfBirth}
         />
+      </div>
+      <div>
+        <h1>TEST</h1>
+      </div>
+      <div className='flex flex-col items-center justify-center gap-y-5'>
+        {dummyWatchlists.map((watchlist) => (
+          <WatchlistCard
+            title={watchlist.title}
+            description={watchlist.description}
+            isPublic={watchlist.isPublic}
+            movies={watchlist.movies}
+          />
+        ))}
       </div>
     </>
   )
