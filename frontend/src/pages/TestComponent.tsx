@@ -1,9 +1,11 @@
 import Banner from '@/components/Banner'
 import CommentBox from '@/components/CommentBox'
+import ListCastCard from '@/components/ListCastCard'
 import MovieCard from '@/components/MovieCard'
 import MovieComment from '@/components/MovieComment'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import VideoCard from '@/components/VideoCard'
 import { MovieType } from '@/types'
 import { Loader2 } from 'lucide-react'
 
@@ -96,6 +98,8 @@ const TestComponent = () => {
   return (
     <div>
       <Banner></Banner>
+      <ListCastCard></ListCastCard>
+      <VideoCard></VideoCard>
       <div className='flex flex-wrap items-center justify-center gap-10  '>
         {dummyMovies.map((movie, index) => (
           <MovieCard
