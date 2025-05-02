@@ -1,5 +1,6 @@
+import { EditProfileModal } from '@/components/EditProfileModal'
 import FollowInteractionModal from '@/components/FollowInteractionModal'
-import { FollowPeopleProps } from '@/types'
+import { FollowPeopleProps, RegisteredUserProps } from '@/types'
 
 const dummyFollowers: FollowPeopleProps[] = []
 
@@ -36,6 +37,13 @@ const dummyFollowings = [
   { id: '30', fullName: 'Diego Navarro' },
 ]
 
+const dummyUser: RegisteredUserProps = {
+  id: '12345',
+  fullName: 'Delux',
+  email: 'd3lxux@example.com',
+  dateOfBirth: new Date('1990-01-01'),
+}
+
 const TestComponent = () => {
   return (
     <>
@@ -44,6 +52,17 @@ const TestComponent = () => {
       </div>
       <div className='flex items-center justify-center'>
         <FollowInteractionModal followers={dummyFollowers} followings={dummyFollowings} />
+      </div>
+      <div>
+        <h1>TEST</h1>
+      </div>
+      <div className='flex items-center justify-center'>
+        <EditProfileModal
+          id={dummyUser.id}
+          fullName={dummyUser.fullName}
+          email={dummyUser.email}
+          dateOfBirth={dummyUser.dateOfBirth}
+        />
       </div>
     </>
   )

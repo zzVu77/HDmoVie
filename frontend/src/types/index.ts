@@ -13,3 +13,9 @@ export type FollowPeopleProps = {
   id?: string
   fullName?: string
 }
+export type RegisteredUserProps = {
+  id?: string
+  fullName?: string
+  email?: string
+  dateOfBirth?: Date
+}
