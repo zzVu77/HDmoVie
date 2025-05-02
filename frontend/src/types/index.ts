@@ -9,3 +9,7 @@ export type MovieCardProps = {
   voteAvg?: number
   genres?: GenreType[]
 }
+export type FollowPeopleProps = {
+  id?: string
+  fullName?: string
+}
