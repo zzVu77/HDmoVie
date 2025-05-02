@@ -19,7 +19,16 @@ function getColorFromString(str: string) {
     { bg: 'bg-yellow-400', text: 'text-black' },
     { bg: 'bg-purple-500', text: 'text-white' },
     { bg: 'bg-pink-400', text: 'text-white' },
-    { bg: 'bg-orange-500', text: 'text-black' },
+    { bg: 'bg-orange-500', text: 'text-white' },
+    { bg: 'bg-emerald-500', text: 'text-white' },
+    { bg: 'bg-cyan-500', text: 'text-white' },
+    { bg: 'bg-indigo-500', text: 'text-white' },
+    { bg: 'bg-teal-500', text: 'text-white' },
+    { bg: 'bg-amber-500', text: 'text-black' },
+    { bg: 'bg-lime-500', text: 'text-black' },
+    { bg: 'bg-rose-500', text: 'text-white' },
+    { bg: 'bg-fuchsia-500', text: 'text-white' },
+    { bg: 'bg-sky-500', text: 'text-white' },
   ]
   const index = [...str].reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length
   return colors[index]
