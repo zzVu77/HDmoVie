@@ -51,19 +51,19 @@ export default function FollowInteractionModal({ followers, followings }: Follow
         <div key={person.id}>
           <Card className='flex flex-row items-center gap-4 px-2 pt-1 pb-0 bg-transparent border-none shadow-none'>
             <CardHeader className='pl-2'>
-              <Avatar className='w-[35px] h-[35px] lg:w-[40px] lg:h-[40px]'>
+              <Avatar className='w-[35px] h-[35px] lg:w-[40px] lg:h-[40px] cursor-pointer '>
                 <AvatarFallback className={`${color.bg} ${color.text}`}>
                   {person.fullName?.charAt(0) ?? 'U'}
                 </AvatarFallback>
               </Avatar>
             </CardHeader>
             <CardContent className='space-y-1 pl-4'>
-              <Title level={6} className='mt-[-5px]'>
+              <Title level={6} className='mt-[-3px] cursor-pointer '>
                 {person.fullName ?? 'Unknown User'}
               </Title>
             </CardContent>
           </Card>
-          {index < people.length - 1 && <div className='border-t border-tertiary-dark ml-[70px]' />}
+          {index < people.length - 1 && <div className='border-t border-tertiary-dark ml-[70px] my-2' />}
         </div>
       )
     })
@@ -75,13 +75,13 @@ export default function FollowInteractionModal({ followers, followings }: Follow
       <TabsList className='grid w-full grid-cols-2 bg-transparent mb-0 pt-2'>
         <TabsTrigger
           value='followers'
-          className='border text-gray data-[state=active]:text-white data-[state=active]:bg-transparent focus:outline-none'
+          className='border text-gray data-[state=active]:text-white data-[state=active]:bg-transparent focus:outline-none cursor-pointer'
         >
           Followers
         </TabsTrigger>
         <TabsTrigger
           value='followings'
-          className='border text-gray data-[state=active]:text-white data-[state=active]:bg-transparent focus:outline-none'
+          className='border text-gray data-[state=active]:text-white data-[state=active]:bg-transparent focus:outline-none cursor-pointer '
         >
           Followings
         </TabsTrigger>
@@ -93,7 +93,7 @@ export default function FollowInteractionModal({ followers, followings }: Follow
         <ScrollArea className='flex max-h-70 flex-col'> {renderPeopleList(followers)} </ScrollArea>
       </TabsContent>
       <TabsContent value='followings' className='pt-0 pb-2 bg-secondary-dark rounded-lg'>
-        <ScrollArea className='flex max-h-70 flex-col'> {renderPeopleList(followings)} </ScrollArea>
+        <ScrollArea className='flex max-h-70 flex-col gap-5'> {renderPeopleList(followings)} </ScrollArea>
       </TabsContent>
     </Tabs>
   )
