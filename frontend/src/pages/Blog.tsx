@@ -2,6 +2,9 @@ import BlogList from '@/components/BlogList'
 import { Title, Text } from '@/components/ui/typography'
 import { BlogPostProps, RegisteredUser, Tag, Blog } from '@/components/BlogCard'
 import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { PlusCircle } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const sampleUsers: RegisteredUser[] = [
   {
@@ -117,13 +120,21 @@ const BlogPage = () => {
   return (
     <div className='min-h-screen bg-zinc-950 text-white'>
       <div className='container mx-auto py-8 px-4'>
-        <header className='mb-8 text-center'>
-          <Title level={2} className='mb-2'>
-            Our Blog
-          </Title>
-          <Text className='text-muted-foreground max-w-md mx-auto'>
-            Discover the latest trends, recipes, and lifestyle tips from our community.
-          </Text>
+        <header className='mb-8 flex flex-col md:flex-row items-center justify-between gap-4'>
+          <div className='text-center md:text-left'>
+            <Title level={2} className='mb-2'>
+              Our Blog
+            </Title>
+            <Text className='text-muted-foreground max-w-md'>
+              Discover the latest trends, recipes, and lifestyle tips from our community.
+            </Text>
+          </div>
+          <Link to="/test">
+            <Button className='bg-primary-yellow hover:bg-secondary-yellow text-black'>
+              <PlusCircle size={18} className='mr-2' />
+              Create Post
+            </Button>
+          </Link>
         </header>
         <div className='grid grid-cols-1 gap-6'>
           {isLoading ? (
