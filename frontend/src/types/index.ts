@@ -44,3 +44,7 @@ export type WatchlistProps = {
   isPublic?: boolean
   movies?: WatchlistMovieProps[]
 }
+export type TagType = {
+  id?: string
+  name?: string
+}

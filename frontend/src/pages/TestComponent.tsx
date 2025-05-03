@@ -4,7 +4,7 @@ import WatchlistCard from '@/components/WatchlistCard'
 import WatchlistInformationFormModal from '@/components/WatchlistInformationFormModal'
 import WatchlistItem from '@/components/WatchlistItem'
 import WriteBlogTextEditor from '@/components/WriteBlogTextEditor'
-import { FollowPeopleProps, RegisteredUserProps, WatchlistMovieProps } from '@/types'
+import { FollowPeopleProps, RegisteredUserProps, TagType, WatchlistMovieProps } from '@/types'
 import { WatchlistProps } from '@/types'
 
 const dummyFollowers: FollowPeopleProps[] = []
@@ -232,6 +232,14 @@ const dummyWatchlistEdit: WatchlistProps = {
   isPublic: true,
 }
 
+const dummyTags: TagType[] = [
+  { id: '1', name: 'Action' },
+  { id: '2', name: 'Drama' },
+  { id: '3', name: 'Comedy' },
+  { id: '4', name: 'Sci-Fi' },
+  { id: '5', name: 'Thriller' },
+]
+
 const TestComponent = () => {
   return (
     <>
@@ -298,7 +306,7 @@ const TestComponent = () => {
         <h1>TEST</h1>
       </div>
       <div className='flex flex-col items-center justify-center gap-y-5'>
-        <WriteBlogTextEditor />
+        <WriteBlogTextEditor allTags={dummyTags} />
       </div>
     </>
   )
