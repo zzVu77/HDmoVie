@@ -1,5 +1,6 @@
 import { MovieInfoModal } from '@/components/movie-admin/MovieInfoModal'
 import { ConfirmAlertDialog } from '@/components/shared/ConfirmAlertDialog'
+import { ImageDialogCell } from '@/components/shared/ImageDialogCell'
 import { Button } from '@/components/ui/button'
 const data = {
   id: '1',
@@ -28,6 +29,7 @@ const TestComponent = () => {
         cancelText='No, go back'
         confirmText='Yes, proceed'
       />
+      <ImageDialogCell></ImageDialogCell>
     </div>
   )
 }

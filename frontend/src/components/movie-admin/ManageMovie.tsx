@@ -25,6 +25,7 @@ import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { ConfirmAlertDialog } from '../shared/ConfirmAlertDialog'
 import { CastType, GenreType, MovieInfoModal, MovieType } from './MovieInfoModal'
+import { ImageDialogCell } from '../shared/ImageDialogCell'
 
 const data: MovieType[] = [
   {
@@ -164,14 +165,23 @@ export const columns: ColumnDef<MovieType>[] = [
   {
     accessorKey: 'trailerSource',
     header: 'Trailer Source',
-    cell: ({ row }) => <div className='truncate max-w-xs'>{row.getValue('trailerSource') || 'N/A'}</div>,
+    cell: ({ row }) => <div className='truncate w-full'>{row.getValue('trailerSource') || 'N/A'}</div>,
   },
   {
     accessorKey: 'posterSource',
     header: 'Poster',
     cell: ({ row }) => {
       const posterSource = row.getValue('posterSource') as string
-      return posterSource ? <img src={posterSource} alt='Poster' className='h-16 w-12 object-cover rounded' /> : 'N/A'
+      return posterSource ? (
+        <ImageDialogCell
+          src={posterSource}
+          alt='Poster'
+          smallClassName='h-16 w-12'
+          largeClassName='max-w-sm w-full h-auto'
+        />
+      ) : (
+        'N/A'
+      )
     },
     enableSorting: false,
   },
@@ -181,7 +191,12 @@ export const columns: ColumnDef<MovieType>[] = [
     cell: ({ row }) => {
       const backdropSource = row.getValue('backdropSource') as string
       return backdropSource ? (
-        <img src={backdropSource} alt='Backdrop' className='h-16 w-28 object-cover rounded' />
+        <ImageDialogCell
+          src={backdropSource}
+          alt='Poster'
+          smallClassName='h-16 w-12'
+          largeClassName='max-w-sm w-full h-auto'
+        />
       ) : (
         'N/A'
       )
@@ -300,7 +315,7 @@ export function ManageMovie() {
         <Table>
           <TableHeader className='sticky'>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow className='mx-auto' key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead className='text-center' key={header.id}>
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
