@@ -1,7 +1,7 @@
 import { WatchlistProps } from '@/types'
 import { Text } from '@/components/ui/typography'
 import { Title } from '@/components/ui/typography'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { Video, Lock, Globe, Pen } from 'lucide-react'
 
 export default function WatchlistCard({ title, description, isPublic, movies }: WatchlistProps) {
   const backdropUrl =
@@ -14,7 +14,7 @@ export default function WatchlistCard({ title, description, isPublic, movies }: 
       className={`group relative w-full max-h-[144px] overflow-hidden rounded-lg border-none shadow-none p-3 bg-secondary-dark cursor-pointer transition duration-300 hover:shadow-[0_0_20px_1px] hover:shadow-tertiary-dark`}
     >
       <div
-        className='absolute inset-0 bg-cover bg-center blur-[1px] opacity-100'
+        className='absolute inset-0 bg-cover bg-center blur-[10px] opacity-100'
         style={{ backgroundImage: `url(${backdropUrl})` }}
       ></div>
       <div className='relative z-10 flex flex-row items-start '>
@@ -41,33 +41,22 @@ export default function WatchlistCard({ title, description, isPublic, movies }: 
               {title ?? 'Watchlist'}
             </Title>
           </div>
-          <div className='w-full flex flex-col items-start justify-start gap-1 px-2'>
-            <div>
-              <Text body={4} className='text-gray-300 mr-3'>
-                Titles: {movies ? movies.length : 0} 📽️
+          <div className='w-full flex flex-col items-start justify-start gap-1 px-2 mt-1'>
+            <div className='flex items-center gap-4'>
+              <Text body={4} className='text-gray-300 flex items-center gap-1'>
+                Titles: {movies ? movies.length : 0}
+                <Video className='w-4 h-4 ml-2 text-gray-300' />
               </Text>
-              <Text body={4} className='text-gray-300'>
-                {isPublic ? '🌐' : '🔒'}
+              <Text body={4} className='text-gray-300 flex items-center gap-1'>
+                {isPublic ? <Globe className='w-4 h-4 text-gray-300' /> : <Lock className='w-4 h-4 text-gray-300' />}
               </Text>
             </div>
-            <ScrollArea className='flex flex-col max-h-[65px] overflow-hidden'>
-              <Text body={4} className='text-white'>
-                {description?.length !== 0 ? description : 'No description'}
-              </Text>
-            </ScrollArea>
-          </div>
-        </div>
-        <div className='relative'>
-          <div className='absolute top-0 right-0 backdrop-blur-3xl px-2 py-1 rounded'>
-            <Text
-              body={3}
-              className='text-white hover:text-lg'
-              style={{ textShadow: '0 0 3px #000, 0 0 6px #000, 0 0 9px #000' }}
-            >
-              🖉
+            <Text body={4} className='text-white line-clamp-3 mt-1'>
+              {description?.length !== 0 ? description : 'No description'}
             </Text>
           </div>
         </div>
+        <Pen className='text-[10px] text-gray-400 hover:w-7' />
       </div>
     </div>
   )

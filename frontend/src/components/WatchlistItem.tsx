@@ -1,6 +1,7 @@
 import { WatchlistMovieProps } from '@/types'
 import { Star, Minus } from 'lucide-react'
 import { Text, Title } from '@/components/ui/typography'
+import { Badge } from '@/components/ui/badge'
 
 export default function WatchlistItem({
   index,
@@ -11,7 +12,6 @@ export default function WatchlistItem({
   voteAvg,
   voteCount,
   genres,
-  casts,
 }: WatchlistMovieProps) {
   return (
     <div className='w-full flex flex-col bg-secondary-dark rounded-lg p-3'>
@@ -30,7 +30,7 @@ export default function WatchlistItem({
           />
           {/* Movie Title and Info */}
           <div className='flex flex-col ml-4'>
-            <Title level={5} className='font-semibold text-primary-yellow cursor-pointer hover:text-tertiary-yellow'>
+            <Title level={4} className='font-bold text-primary-yellow cursor-pointer hover:text-tertiary-yellow'>
               {index ?? '#'}. {title ?? 'Unknown Title'}
             </Title>
             <div className='flex flex-row flex-wrap items-center mt-1'>
@@ -46,8 +46,7 @@ export default function WatchlistItem({
                       href='https://www.youtube.com/watch?v=E4WlUXrJgy4&themeRefresh=1'
                     >
                       <Text body={4} className='text-gray-300 mr-2 hover:text-white'>
-                        {genre.name}
-                        {index < genres.length - 1 ? ', ' : ''}
+                        <Badge className='bg-gray-600 hover:bg-gray-500'>{genre.name}</Badge>
                       </Text>
                     </a>
                   ))}
@@ -75,32 +74,10 @@ export default function WatchlistItem({
         <Minus className='text-gray-300 w-4 h-4 mr-1 cursor-pointer hover:w-5 hover:h-5' />
       </div>
 
-      {/* Below: Description and Casts */}
-      <div className='flex flex-col mt-3'>
-        <Text body={4} className='text-gray-300'>
-          {description?.length !== 0 ? description : 'No description'}
-        </Text>
-        {casts && casts.length > 0 && (
-          <div className='flex flex-row items-center mt-2 flex-wrap'>
-            <Title level={5} className='font-semibold text-primary-yellow mr-2'>
-              Casts
-            </Title>
-            {casts.map((cast, index) => (
-              <a
-                key={index}
-                className='m-0 p-0'
-                href={cast.profilePath || '#'}
-                target={cast.profilePath ? '_blank' : '_self'}
-                rel={cast.profilePath ? 'noopener noreferrer' : undefined}
-              >
-                <Text body={4} className='text-blue-400 mr-3 hover:underline'>
-                  {cast.name}
-                </Text>
-              </a>
-            ))}
-          </div>
-        )}
-      </div>
+      {/* Below: Description */}
+      <Text body={4} className='text-gray-300 mt-3 line-clamp-3'>
+        {description?.length !== 0 ? description : 'No description'}
+      </Text>
     </div>
   )
 }
