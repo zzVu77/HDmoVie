@@ -31,6 +31,33 @@ export class BlogController {
     }
   }
 
+  async createBlog(req: Request, res: Response): Promise<void> {
+    try {
+      const { content, tags, images } = req.body
+
+      const userId = '2'
+
+      const blog = await this.blogService.createBlog({
+        content,
+        userId,
+        tags,
+        images,
+      })
+
+      res.status(201).json({
+        status: 'success',
+        message: 'Blog created successfully',
+        data: blog,
+      })
+    } catch (error) {
+      console.error('Error creating blog:', error)
+      res.status(500).json({
+        status: 'failed',
+        message: (error as Error).message || 'Internal server error',
+      })
+    }
+  }
+
   async deleteBlog(req: Request, res: Response): Promise<void> {
     try {
       const { blogId } = req.params

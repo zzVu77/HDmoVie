@@ -970,3 +970,200 @@ INSERT INTO watchlists_movies (watchlistId, movieId) VALUES
 ('5', '1197306'),
 ('5', '1244944'),
 ('5', '1249385');
+
+INSERT INTO `registeredUsers` (`id`, `email`, `password`, `fullName`, `dateOfBirth`, `refreshToken`, `refreshTokenExpiresAt`, `role`) VALUES
+('user-001', 'john.doe@example.com', '$2a$12$1234567890abcdefghijkl', 'John Doe', '1990-01-15', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9', '2025-06-01 00:00:00', 'REGISTERED_USER'),
+('user-002', 'jane.smith@example.com', '$2a$12$abcdefghijkl1234567890', 'Jane Smith', '1988-05-20', NULL, NULL, 'REGISTERED_USER'),
+('user-003', 'admin@movieapp.com', '$2a$12$qwertyuiop1234567890abc', 'Admin User', '1985-11-10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9', '2025-06-15 00:00:00', 'ADMIN'),
+('user-004', 'michael.brown@example.com', '$2a$12$zxcvbnmasdfghjkl123456', 'Michael Brown', '1992-09-25', NULL, NULL, 'REGISTERED_USER'),
+('user-005', 'emma.wilson@example.com', '$2a$12$poiuytrewq1234567890lkj', 'Emma Wilson', '1995-03-08', NULL, NULL, 'REGISTERED_USER');
+
+-- Sample data for genres table
+INSERT INTO `genres` (`id`, `name`) VALUES
+('genre-001', 'Action'),
+('genre-002', 'Comedy'),
+('genre-003', 'Drama'),
+('genre-004', 'Science Fiction'),
+('genre-005', 'Horror'),
+('genre-006', 'Romance'),
+('genre-007', 'Thriller'),
+('genre-008', 'Adventure');
+
+-- Sample data for casts table
+INSERT INTO `casts` (`id`, `name`, `profilePath`) VALUES
+('cast-001', 'Tom Hanks', '/profiles/tom_hanks.jpg'),
+('cast-002', 'Scarlett Johansson', '/profiles/scarlett_johansson.jpg'),
+('cast-003', 'Robert Downey Jr.', '/profiles/robert_downey_jr.jpg'),
+('cast-004', 'Jennifer Lawrence', '/profiles/jennifer_lawrence.jpg'),
+('cast-005', 'Leonardo DiCaprio', '/profiles/leonardo_dicaprio.jpg'),
+('cast-006', 'Emma Stone', '/profiles/emma_stone.jpg');
+
+-- Sample data for movies table
+INSERT INTO `movies` (`id`, `title`, `description`, `releaseYear`, `trailerSource`, `posterSource`, `backdropSource`, `voteAvg`, `voteCount`) VALUES
+('movie-001', 'The Avengers', 'Earth\'s mightiest heroes must come together to fight off an alien invasion led by Loki.', '2012-05-04', 'https://www.youtube.com/watch?v=eOrNdBpGMv8', '/posters/avengers.jpg', '/backdrops/avengers.jpg', 8.0, 12500),
+('movie-002', 'Inception', 'A thief who steals corporate secrets through the use of dream-sharing technology is given the task of planting an idea into the mind of a C.E.O.', '2010-07-16', 'https://www.youtube.com/watch?v=YoHD9XEInc0', '/posters/inception.jpg', '/backdrops/inception.jpg', 8.8, 10800),
+('movie-003', 'La La Land', 'A jazz pianist falls for an aspiring actress in Los Angeles.', '2016-12-09', 'https://www.youtube.com/watch?v=0pdqf4P9MB8', '/posters/lalaland.jpg', '/backdrops/lalaland.jpg', 8.0, 9200),
+('movie-004', 'The Shawshank Redemption', 'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.', '1994-09-23', 'https://www.youtube.com/watch?v=6hB3S9bIaco', '/posters/shawshank.jpg', '/backdrops/shawshank.jpg', 9.3, 15300),
+('movie-005', 'Pulp Fiction', 'The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.', '1994-10-14', 'https://www.youtube.com/watch?v=s7EdQ4FqbhY', '/posters/pulpfiction.jpg', '/backdrops/pulpfiction.jpg', 8.9, 11500);
+
+-- Sample data for movies_genres (junction table)
+INSERT INTO `movies_genres` (`movieId`, `genreId`) VALUES
+('movie-001', 'genre-001'), -- Avengers: Action
+('movie-001', 'genre-004'), -- Avengers: Science Fiction
+('movie-002', 'genre-001'), -- Inception: Action
+('movie-002', 'genre-004'), -- Inception: Science Fiction
+('movie-002', 'genre-007'), -- Inception: Thriller
+('movie-003', 'genre-003'), -- La La Land: Drama
+('movie-003', 'genre-006'), -- La La Land: Romance
+('movie-004', 'genre-003'), -- Shawshank: Drama
+('movie-005', 'genre-003'), -- Pulp Fiction: Drama
+('movie-005', 'genre-007'); -- Pulp Fiction: Thriller
+
+-- Sample data for movies_casts (junction table)
+INSERT INTO `movies_casts` (`movieId`, `castId`) VALUES
+('movie-001', 'cast-003'), -- Avengers: Robert Downey Jr.
+('movie-001', 'cast-002'), -- Avengers: Scarlett Johansson
+('movie-002', 'cast-005'), -- Inception: Leonardo DiCaprio
+('movie-003', 'cast-006'), -- La La Land: Emma Stone
+('movie-004', 'cast-001'), -- Shawshank: Tom Hanks (fictional casting)
+('movie-005', 'cast-005'); -- Pulp Fiction: Leonardo DiCaprio (fictional casting)
+
+-- Sample data for rates table
+INSERT INTO `rates` (`id`, `rateScore`, `userId`, `movieId`) VALUES
+('rate-001', 9.0, 'user-001', 'movie-001'),
+('rate-002', 8.5, 'user-002', 'movie-001'),
+('rate-003', 9.5, 'user-001', 'movie-002'),
+('rate-004', 7.0, 'user-003', 'movie-003'),
+('rate-005', 9.8, 'user-004', 'movie-004'),
+('rate-006', 8.7, 'user-005', 'movie-005'),
+('rate-007', 7.5, 'user-002', 'movie-003');
+
+-- Sample data for tags table
+INSERT INTO `tags` (`id`, `name`) VALUES
+('tag-001', 'MovieReview'),
+('tag-002', 'Recommendation'),
+('tag-003', 'Analysis'),
+('tag-004', 'Discussion'),
+('tag-005', 'NewRelease'),
+('tag-006', 'Classics');
+
+-- Sample data for blogs table
+INSERT INTO `blogs` (`id`, `content`, `dateCreated`, `ownerId`) VALUES
+('blog-001', 'Just watched Inception and was blown away by the complexity of the plot. Christopher Nolan has outdone himself with this masterpiece.', '2025-03-15 10:30:00', 'user-001'),
+('blog-002', 'La La Land perfectly captures the bittersweet nature of pursuing dreams in the entertainment industry. The music is exceptional!', '2025-04-02 15:45:00', 'user-002'),
+('blog-003', 'My top 5 movies of all time and why they deserve a spot on your watchlist. Starting with The Shawshank Redemption...', '2025-04-10 09:15:00', 'user-004'),
+('blog-004', 'Analyzing the impact of Marvel movies on modern cinema. The Avengers changed how we view superhero team-ups.', '2025-04-25 14:20:00', 'user-003');
+
+-- Sample data for blog_media table
+INSERT INTO `blog_media` (`id`, `url`, `blogId`) VALUES
+('media-001', '/media/inception_review.jpg', 'blog-001'),
+('media-002', '/media/lalaland_music.jpg', 'blog-002'),
+('media-003', '/media/top5_movies.jpg', 'blog-003'),
+('media-004', '/media/marvel_impact.jpg', 'blog-004'),
+('media-005', '/media/shawshank_scenes.jpg', 'blog-003');
+
+-- Sample data for blogs_tags (junction table)
+INSERT INTO `blogs_tags` (`blogId`, `tagId`) VALUES
+('blog-001', 'tag-001'), -- Inception blog: MovieReview
+('blog-001', 'tag-003'), -- Inception blog: Analysis
+('blog-002', 'tag-001'), -- La La Land blog: MovieReview
+('blog-003', 'tag-002'), -- Top 5 blog: Recommendation
+('blog-003', 'tag-006'), -- Top 5 blog: Classics
+('blog-004', 'tag-003'), -- Marvel impact blog: Analysis
+('blog-004', 'tag-004'); -- Marvel impact blog: Discussion
+
+-- Sample data for like_interactions table
+INSERT INTO `like_interactions` (`id`, `blogId`) VALUES
+('like-001', 'blog-001'),
+('like-002', 'blog-002'),
+('like-003', 'blog-003'),
+('like-004', 'blog-004');
+
+-- Sample data for like_interactions_users (junction table)
+INSERT INTO `like_interactions_users` (`likeInteractionId`, `userId`) VALUES
+('like-001', 'user-002'),
+('like-001', 'user-003'),
+('like-001', 'user-005'),
+('like-002', 'user-001'),
+('like-002', 'user-004'),
+('like-003', 'user-002'),
+('like-003', 'user-003'),
+('like-004', 'user-001'),
+('like-004', 'user-005');
+
+-- Sample data for follow_interactions table
+INSERT INTO `follow_interactions` (`id`, `userId`) VALUES
+('follow-001', 'user-001'),
+('follow-002', 'user-002'),
+('follow-003', 'user-003'),
+('follow-004', 'user-004'),
+('follow-005', 'user-005');
+
+-- Sample data for followers_interactions_users (junction table)
+INSERT INTO `followers_interactions_users` (`followInteractionId`, `userId`) VALUES
+('follow-001', 'user-002'),
+('follow-001', 'user-003'),
+('follow-002', 'user-001'),
+('follow-002', 'user-004'),
+('follow-003', 'user-005'),
+('follow-004', 'user-001'),
+('follow-004', 'user-002'),
+('follow-005', 'user-003');
+
+-- Sample data for following_interactions_users (junction table)
+INSERT INTO `following_interactions_users` (`followInteractionId`, `userId`) VALUES
+('follow-001', 'user-004'),
+('follow-001', 'user-005'),
+('follow-002', 'user-003'),
+('follow-003', 'user-001'),
+('follow-003', 'user-002'),
+('follow-004', 'user-005'),
+('follow-005', 'user-001'),
+('follow-005', 'user-004');
+
+-- Sample data for comments table
+INSERT INTO `comments` (`id`, `content`, `date`, `type`, `userId`, `parentCommentId`, `movieId`, `blogId`) VALUES
+('comment-001', 'The special effects in this movie were groundbreaking!', '2025-03-18 11:20:00', 'MOVIE', 'user-002', NULL, 'movie-001', NULL),
+('comment-002', 'I agree! The battle of New York was spectacular.', '2025-03-18 12:05:00', 'MOVIE', 'user-003', 'comment-001', 'movie-001', NULL),
+('comment-003', 'The dream layers were confusing at first, but brilliantly executed.', '2025-03-20 09:45:00', 'MOVIE', 'user-001', NULL, 'movie-002', NULL),
+('comment-004', 'Great review! I had similar thoughts about Inception.', '2025-03-16 14:30:00', 'BLOG', 'user-004', NULL, NULL, 'blog-001'),
+('comment-005', 'La La Land\'s soundtrack is now on my playlist!', '2025-04-03 10:15:00', 'BLOG', 'user-005', NULL, NULL, 'blog-002'),
+('comment-006', 'I would add The Godfather to your top 5 list.', '2025-04-11 16:40:00', 'BLOG', 'user-003', NULL, NULL, 'blog-003'),
+('comment-007', 'Good point! It was a close contender.', '2025-04-11 17:25:00', 'BLOG', 'user-004', 'comment-006', NULL, 'blog-003');
+
+-- Sample data for watchlists table
+INSERT INTO `watchlists` (`id`, `title`, `description`, `isPublic`, `ownerId`) VALUES
+('watchlist-001', 'My Favorites', 'Collection of my all-time favorite movies', 1, 'user-001'),
+('watchlist-002', 'Weekend Binges', 'Movies to watch on lazy weekends', 1, 'user-002'),
+('watchlist-003', 'Oscar Winners', 'Award-winning films I want to watch', 0, 'user-003'),
+('watchlist-004', 'Sci-Fi Adventures', 'Best science fiction movies', 1, 'user-004'),
+('watchlist-005', 'Classic Films', 'Timeless classics everyone should see', 1, 'user-005');
+
+-- Sample data for watchlists_movies (junction table)
+INSERT INTO `watchlists_movies` (`watchlistId`, `movieId`) VALUES
+('watchlist-001', 'movie-002'),
+('watchlist-001', 'movie-004'),
+('watchlist-002', 'movie-001'),
+('watchlist-002', 'movie-003'),
+('watchlist-002', 'movie-005'),
+('watchlist-003', 'movie-003'),
+('watchlist-003', 'movie-004'),
+('watchlist-004', 'movie-001'),
+('watchlist-004', 'movie-002'),
+('watchlist-005', 'movie-004'),
+('watchlist-005', 'movie-005');
+
+-- Sample data for reports table
+INSERT INTO `reports` (`id`, `reason`, `type`, `reporterId`, `commentId`, `blogId`) VALUES
+('report-001', 'Spam or scams', 'COMMENT', 'user-001', 'comment-002', NULL),
+('report-002', 'Misinformation or false information', 'BLOG', 'user-003', NULL, 'blog-002'),
+('report-003', 'Harassment or bullying', 'COMMENT', 'user-005', 'comment-006', NULL);
+
+-- Sample data for notifications table
+INSERT INTO `notifications` (`id`, `time`, `status`, `type`, `ownerId`, `reportId`, `userId`, `followerId`, `commentId`) VALUES
+('notif-001', '2025-03-18 12:10:00', 'UNREAD', 'COMMENT_REPLY', 'user-002', NULL, NULL, NULL, 'comment-002'),
+('notif-002', '2025-03-16 14:35:00', 'READ', 'BLOG_COMMENT', 'user-001', NULL, 'user-004', NULL, 'comment-004'),
+('notif-003', '2025-04-03 10:20:00', 'UNREAD', 'BLOG_COMMENT', 'user-002', NULL, 'user-005', NULL, 'comment-005'),
+('notif-004', '2025-04-11 16:45:00', 'UNREAD', 'BLOG_COMMENT', 'user-004', NULL, 'user-003', NULL, 'comment-006'),
+('notif-005', '2025-04-20 09:30:00', 'UNREAD', 'NEW_FOLLOWER', 'user-001', NULL, NULL, 'user-002', NULL),
+('notif-006', '2025-04-22 15:15:00', 'UNREAD', 'REPORT_REVIEWED', 'user-003', 'report-002', NULL, NULL, NULL);

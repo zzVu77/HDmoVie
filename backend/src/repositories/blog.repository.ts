@@ -27,6 +27,7 @@ export class BlogRepository {
       )
       .leftJoin('blog.owner', 'owner')
       .leftJoin('blog.tags', 'tags')
+      .leftJoin('blog.imageUrls', 'imageUrls')
       .where('blog.id = :id', { id })
       .getOne()
 
@@ -56,6 +57,8 @@ export class BlogRepository {
       )
       .leftJoin('blog.owner', 'owner')
       .leftJoin('blog.tags', 'tags')
+      .leftJoin('blog.imageUrls', 'imageUrls')
+      .orderBy('blog.dateCreated', 'DESC')
       .getMany()
 
     return blogs
@@ -65,19 +68,25 @@ export class BlogRepository {
     return this.repository.save(blog)
   }
 
+  async update(blog: Blog): Promise<Blog> {
+    return this.repository.save(blog)
+  }
+
   async delete(id: string): Promise<void> {
     await this.repository.delete(id)
   }
-  async findByUserId(userId: string, offset: number, amount: number): Promise<Blog[]> {
+
+  async findByUserId(userId: string, offset: number, limit: number): Promise<Blog[]> {
     try {
       return this.repository.find({
         where: { owner: { id: userId } } as FindOptionsWhere<Blog>,
         skip: offset,
-        take: amount,
-        relations: ['tags'],
+        take: limit,
+        relations: ['tags', 'media'],
+        order: { dateCreated: 'DESC' },
       })
     } catch (error) {
-      throw new Error((error as Error).message)
+      throw new Error(`Failed to find blogs by user ID: ${(error as Error).message}`)
     }
   }
 }

@@ -13,19 +13,20 @@ import { FollowInteractionService } from '~/services/followInteraction.service'
 import { BlogService } from '~/services/blog.service'
 import { WatchlistService } from '~/services/watchlist.service'
 import { MovieRepository } from '~/repositories/movie.repository'
-
+import { TagRepository } from '~/repositories/tag.repository'
 const profileRouter = Router()
 
 // Initilize dependencies
 const registeredUserRepository = new RegisteredUserRepository(AppDataSource)
 const blogRepository = new BlogRepository(AppDataSource)
+const tagRepository = new TagRepository(AppDataSource)
 const followInteractionRepository = new FollowInteractionRepository(AppDataSource)
 const watchlistRepository = new WatchlistRepository(AppDataSource)
 const movieRepository = new MovieRepository(AppDataSource)
 
 const profileService = new ProfileService(registeredUserRepository, followInteractionRepository)
 const registeredUserService = new RegisteredUserService(registeredUserRepository)
-const blogService = new BlogService(blogRepository)
+const blogService = new BlogService(blogRepository, registeredUserRepository, tagRepository)
 const followInteractionService = new FollowInteractionService(followInteractionRepository)
 const watchlistService = new WatchlistService(watchlistRepository, registeredUserRepository, movieRepository)
 

@@ -9,11 +9,11 @@ export class BlogMedia {
   @Column({ type: 'text' })
   url!: string
 
-  @ManyToOne(() => Blog, (blog) => blog.images, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Blog, (blog) => blog.media)
   blog!: Blog
 
-  constructor(url: string, blog: Blog) {
-    this.url = url
-    this.blog = blog
+  constructor(url?: string, blog?: Blog) {
+    this.url = url ?? this.url
+    this.blog = blog ?? this.blog
   }
 }

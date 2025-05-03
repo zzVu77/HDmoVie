@@ -11,6 +11,6 @@ export class BlogComment extends Comment {
   // Constructor gọn hơn, trực tiếp nhận từng tham số
   constructor(user: RegisteredUser, content: string, date: Date, blog: Blog, parentComment?: Comment) {
     super(user, content, date, parentComment) // Gọi constructor của Comment
-    this.blog = blog // Gán movie cho thuộc tính movie
+    this.blog = blog
   }
 }
