@@ -15,8 +15,25 @@ export class RegisteredUserRepository {
     return this.repository.findOne({ where: { refreshToken } as FindOptionsWhere<RegisteredUser> })
   }
 
-  async create(userData: RegisteredUser): Promise<RegisteredUser> {
+  async create(userData: Partial<RegisteredUser>): Promise<RegisteredUser> {
     const user = this.repository.create(userData)
-    return this.repository.save(user)
+    const savedUser = await this.repository.save(user)
+
+    const result = await this.repository.findOne({
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        password: false,
+        dateOfBirth: true,
+      } as FindOptionsWhere<RegisteredUser>,
+      where: { id: savedUser.getId() } as FindOptionsWhere<RegisteredUser>,
+    })
+
+    if (!result) {
+      throw new Error('Failed to retrieve user')
+    }
+
+    return result
   }
 }
