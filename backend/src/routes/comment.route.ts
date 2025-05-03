@@ -28,7 +28,7 @@ const castService = new CastService(castRepository)
 const genreService = new GenreService(genreRepository)
 
 const commentService = new CommentService(commentRepository, userRepository, movieRepository, blogRepository)
-const movieService = new MovieService(movieRepository, castService, genreService)
+const movieService = new MovieService(movieRepository, castService, genreService, commentRepository)
 // Initialize CommentController
 const commentController = new CommentController(commentService, movieService)
 

@@ -42,7 +42,7 @@ export class MovieController {
   async getMovieById(req: Request, res: Response): Promise<void> {
     try {
       const movieId = req.params.id
-      const movie = await this.movieService.getMovieById(movieId)
+      const movie = await this.movieService.getMovieDetail(movieId)
       if (!movie) {
         res.status(404).json({ status: 'failed', message: 'Movie not found' })
         return

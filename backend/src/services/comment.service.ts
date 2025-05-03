@@ -28,7 +28,7 @@ export class CommentService {
     const user = await this.userRepository.findOne(userId)
     if (!user) throw new Error('User not found')
 
-    const movie = await this.movieRepository.findOne(movieId)
+    const movie = await this.movieRepository.findOneById(movieId)
     if (!movie) throw new Error('Movie not found')
 
     // Create a new blog comment
