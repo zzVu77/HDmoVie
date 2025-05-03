@@ -28,13 +28,13 @@ export class Blog {
   tags!: Tag[]
 
   @OneToMany(() => BlogMedia, (blogMedia) => blogMedia.blog, { cascade: true, eager: true })
-  media!: BlogMedia[]
+  imageUrls!: BlogMedia[]
 
-  constructor(owner?: RegisteredUser, content?: string, tags?: Tag[], media?: BlogMedia[]) {
+  constructor(owner?: RegisteredUser, content?: string, tags?: Tag[], imageUrls?: BlogMedia[]) {
     this.owner = owner ?? this.owner
     this.content = content ?? this.content
     this.tags = tags ?? this.tags
-    this.media = media ?? this.media
+    this.imageUrls = imageUrls ?? this.imageUrls
   }
 
   getId(): string {

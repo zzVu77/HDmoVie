@@ -82,7 +82,7 @@ export class BlogRepository {
         where: { owner: { id: userId } } as FindOptionsWhere<Blog>,
         skip: offset,
         take: limit,
-        relations: ['tags', 'media'],
+        relations: ['tags', 'imageUrls'],
         order: { dateCreated: 'DESC' },
       })
     } catch (error) {

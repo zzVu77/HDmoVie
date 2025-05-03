@@ -9,7 +9,7 @@ export class BlogMedia {
   @Column({ type: 'text' })
   url!: string
 
-  @ManyToOne(() => Blog, (blog) => blog.media)
+  @ManyToOne(() => Blog, (blog) => blog.imageUrls)
   blog!: Blog
 
   constructor(url?: string, blog?: Blog) {

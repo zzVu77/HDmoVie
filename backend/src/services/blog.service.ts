@@ -72,10 +72,10 @@ export class BlogService {
     // Create and associate blog media if any
     if (images.length > 0) {
       const mediaEntities = images.map((image) => new BlogMedia(image.url, blog))
-      blog.media = mediaEntities
+      blog.imageUrls = mediaEntities
     }
 
-    // Save blog with associated media (cascade: true in Blog model will save media)
+    // Save blog with associated media (cascade: true in Blog model will save imageUrls)
     const savedBlog = await this.blogRepository.create(blog)
 
     return this.transformToResponseDTO(savedBlog)
@@ -119,10 +119,11 @@ export class BlogService {
         id: tag.id,
         name: tag.name,
       })),
-      imageUrls: blog.media.map((media) => ({
-        id: media.id,
-        url: media.url,
-      })),
+      imageUrls:
+        blog.imageUrls?.map((media) => ({
+          id: media.id,
+          url: media.url,
+        })) ?? [],
       likeCount: (blog as any).likeCount,
       commentCount: (blog as any).commentCount,
     }
