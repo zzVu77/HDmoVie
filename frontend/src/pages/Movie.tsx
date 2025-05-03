@@ -96,7 +96,7 @@ const dummyComments = [
 ]
 const Movie = () => {
   return (
-    <div className='flex flex-col'>
+    <div className=' flex flex-col scroll-smooth '>
       <Banner></Banner>
       <Wrapper className='mt-5'>
         <Title>Top Cast</Title>

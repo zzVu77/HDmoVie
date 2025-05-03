@@ -1,14 +1,16 @@
 export type GenreType = {
   id?: string
-  name?: string
+  name: string
 }
-export type Cast = {
+export type CastType = {
   id?: string
-  name?: string
+  name: string
   profilePath?: string
 }
 
 export interface MovieType {
+  id?: string
+  trailerSource?: string
   posterSource?: string
   release?: string
   title?: string
@@ -16,4 +18,6 @@ export interface MovieType {
   genres?: GenreType[]
   backdropSource?: string
   description?: string
+  casts?: CastType[]
+  voteCount?: number
 }

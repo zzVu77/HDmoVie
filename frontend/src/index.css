@@ -33,12 +33,11 @@
   /* --ease-*	Transition timing function utilities like ease-out */
   /* --animate-*	Animation utilities like animate-spin */
   /* define for color --color-* */
-
   /* define for border radius --border-radius-* */
 }
 
 body {
-  background-color: black;
+  background-color: var(--primary-dark);
 }
 
 :root {
@@ -165,15 +164,6 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
-  /* Hide scrollbar for Chrome, Safari, and Edge */
-  *::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Hide scrollbar for Firefox */
-  * {
-    scrollbar-width: none;
-  }
 
   /* Ensure scrolling still works */
   html,
@@ -187,5 +177,32 @@ body {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  * {
+    scrollbar-width: thin; /* Làm thanh scrollbar mỏng hơn trên Firefox */
+  }
+  *::-webkit-scrollbar {
+    width: 12px; /* Tăng độ rộng của scrollbar để tạo khoảng trống */
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent; /* Nền của track scrollbar */
+    border: 2px solid transparent; /* Tạo hiệu ứng padding bằng border */
+    border-radius: 10px; /* Bo góc cho track */
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--accent-yellow); /* Màu của thanh cuộn */
+    border-radius: 10px; /* Bo góc cho thanh cuộn */
+    border: 2px solid transparent; /* Tạo khoảng cách giữa thumb và track */
   }
 }
