@@ -25,7 +25,7 @@ export default function WatchlistItem({
               'https://www.subtraction.com/wp-content/uploads/2018/01/2018-01-04-2017-movies-watched.jpg'
             }
             alt='Poster'
-            className='w-[90px] h-[120px] object-cover rounded-lg shadow-sm cursor-pointer hover:shadow-[0_0_7px_0px] hover:shadow-primary-yellow transition duration-300 ease-in-out'
+            className='w-[90px] h-[120px] object-cover rounded-lg shadow-sm cursor-pointer hover:shadow-[0_0_15px_0px] hover:shadow-tertiary-yellow transition duration-300 ease-in-out'
             loading='lazy'
           />
           {/* Movie Title and Info */}
@@ -72,7 +72,7 @@ export default function WatchlistItem({
           </div>
         </div>
         {/* Right: Delete Icon */}
-        <Minus className='text-gray-300 w-4 h-4 mr-1' />
+        <Minus className='text-gray-300 w-4 h-4 mr-1 cursor-pointer hover:w-5 hover:h-5' />
       </div>
 
       {/* Below: Description and Casts */}

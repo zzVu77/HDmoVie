@@ -11,7 +11,7 @@ export default function WatchlistCard({ title, description, isPublic, movies }: 
 
   return (
     <div
-      className={`group relative w-full max-h-[144px] overflow-hidden rounded-lg border-none shadow-none p-3 bg-secondary-dark cursor-pointer transition duration-300 hover:shadow-[0_0_7px_0px] hover:shadow-primary-yellow`}
+      className={`group relative w-full max-h-[144px] overflow-hidden rounded-lg border-none shadow-none p-3 bg-secondary-dark cursor-pointer transition duration-300 hover:shadow-[0_0_20px_1px] hover:shadow-tertiary-dark`}
     >
       <div
         className='absolute inset-0 bg-cover bg-center blur-[1px] opacity-100'
