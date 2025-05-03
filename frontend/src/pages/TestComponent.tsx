@@ -1,6 +1,7 @@
 import { EditProfileModal } from '@/components/EditProfileModal'
 import FollowInteractionModal from '@/components/FollowInteractionModal'
 import WatchlistCard from '@/components/WatchlistCard'
+import WatchlistInformationFormModal from '@/components/WatchlistInformationFormModal'
 import WatchlistItem from '@/components/WatchlistItem'
 import { FollowPeopleProps, RegisteredUserProps, WatchlistMovieProps } from '@/types'
 import { WatchlistProps } from '@/types'
@@ -223,6 +224,13 @@ const dummyWatchlistMovies: WatchlistMovieProps[] = [
   },
 ]
 
+const dummyWatchlistEdit: WatchlistProps = {
+  id: '1',
+  title: 'My Favorite Movies',
+  description: 'A collection of my all-time favorite movies.',
+  isPublic: true,
+}
+
 const TestComponent = () => {
   return (
     <>
@@ -274,6 +282,16 @@ const TestComponent = () => {
             casts={movie.casts}
           />
         ))}
+      </div>
+      <div>
+        <h1>TEST</h1>
+      </div>
+      <div className='flex flex-col items-center justify-center gap-y-5'>
+        <WatchlistInformationFormModal watchlist={dummyWatchlistEdit} isAdd={false} />
+        <WatchlistInformationFormModal
+          isAdd={true}
+          watchlist={{ title: '', description: '', isPublic: false, movies: [] }}
+        />
       </div>
     </>
   )

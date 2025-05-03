@@ -9,11 +9,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
-import { RegisteredUserProps } from '@/types' // adjust import path as needed
+import { RegisteredUserProps } from '@/types'
 import { Calendar } from '@/components/ui/calendar'
 import { useEffect, useRef, useState } from 'react'
 

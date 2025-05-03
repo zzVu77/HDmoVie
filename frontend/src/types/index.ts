@@ -38,6 +38,7 @@ export type WatchlistMovieProps = {
   casts?: CastType[]
 }
 export type WatchlistProps = {
+  id?: string
   title?: string
   description?: string
   isPublic?: boolean
