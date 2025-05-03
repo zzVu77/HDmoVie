@@ -10,8 +10,6 @@ const interactionService = new InteractionService(AppDataSource)
 const interactionController = new InteractionController(interactionService)
 
 // Route POST để thực hiện like/unlike blog
-interactionRouter.post('/:id/like', likeOrUnlikeMiddleware, (req, res) =>
-  interactionController.likeOrUnlikeBlog(req, res),
-)
+interactionRouter.post('/', (req, res) => interactionController.likeOrUnlikeBlog(req, res))
 
 export default interactionRouter

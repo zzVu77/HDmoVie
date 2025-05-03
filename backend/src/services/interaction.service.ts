@@ -15,7 +15,14 @@ export class InteractionService {
     this.blogRepo = new BlogRepository(dataSource)
   }
 
-  async likeBlog(blogId: string, userId: string): Promise<LikeInteraction> {
+  async likeBlog(
+    blogId: string,
+    userId: string,
+  ): Promise<{
+    id: string
+    blogId: string
+    likers: { id: string; fullName: string; email: string }[]
+  }> {
     const user = await this.userRepo.findOne(userId)
     const blog = await this.blogRepo.findById(blogId)
 
@@ -23,7 +30,6 @@ export class InteractionService {
       throw new Error('User or Blog not found')
     }
 
-    // Chỉ tìm bằng blogId
     let likeInteraction = await this.likeInteractionRepo.findLikeInteractionByBlogID(blog.getId())
 
     if (!likeInteraction) {
@@ -31,12 +37,10 @@ export class InteractionService {
     }
 
     const likers = likeInteraction.getLikers() || []
-    // Nếu likers không tồn tại hoặc rỗng
     if (!likers || likers.length === 0) {
       user.likeBlog(likeInteraction)
     } else {
       const userHasLiked = likers.some((liker) => liker.getId() === user.getId())
-
       if (userHasLiked) {
         user.unlikeBlog(likeInteraction)
       } else {
@@ -44,6 +48,22 @@ export class InteractionService {
       }
     }
 
-    return this.likeInteractionRepo.save(likeInteraction)
+    await this.likeInteractionRepo.save(likeInteraction)
+
+    // Refetch để đảm bảo `blog` và `likers` được load đầy đủ
+    const saved = await this.likeInteractionRepo.findLikeInteractionByBlogID(blog.getId())
+    if (!saved) throw new Error('LikeInteraction not found after save')
+
+    const sanitizedLikers = (saved.getLikers() || []).map((liker) => ({
+      id: liker.getId(),
+      fullName: liker.getFullName(),
+      email: liker.getEmail(),
+    }))
+
+    return {
+      id: saved.getId(),
+      blogId: blogId,
+      likers: sanitizedLikers,
+    }
   }
 }
