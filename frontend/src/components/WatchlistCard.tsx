@@ -1,7 +1,7 @@
 import { WatchlistProps } from '@/types'
 import { Text } from '@/components/ui/typography'
 import { Title } from '@/components/ui/typography'
-import { Video, Lock, Globe, Pen } from 'lucide-react'
+import { Film, Lock, Globe, Pen } from 'lucide-react'
 
 export default function WatchlistCard({ title, description, isPublic, movies }: WatchlistProps) {
   const backdropUrl =
@@ -45,7 +45,7 @@ export default function WatchlistCard({ title, description, isPublic, movies }: 
             <div className='flex items-center gap-4'>
               <Text body={4} className='text-gray-300 flex items-center gap-1'>
                 Titles: {movies ? movies.length : 0}
-                <Video className='w-4 h-4 ml-2 text-gray-300' />
+                <Film className='w-4 h-4 ml-2 text-gray-300' />
               </Text>
               <Text body={4} className='text-gray-300 flex items-center gap-1'>
                 {isPublic ? <Globe className='w-4 h-4 text-gray-300' /> : <Lock className='w-4 h-4 text-gray-300' />}
