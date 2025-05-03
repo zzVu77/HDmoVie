@@ -80,7 +80,7 @@ const CommentBox: React.FC = () => {
                       ))}
                     </div>
                   </FormControl>
-                  <FormMessage className='text-error-red' />
+                  <FormMessage className='text-red-400' />
                 </FormItem>
               )}
             />
