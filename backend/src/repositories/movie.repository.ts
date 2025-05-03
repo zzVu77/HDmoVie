@@ -66,4 +66,5 @@ export class MovieRepository {
   async findOne(id: number): Promise<Movie | null> {
     return this.repository.findOne({ where: { id } as FindOptionsWhere<Movie> })
   }
+
 }

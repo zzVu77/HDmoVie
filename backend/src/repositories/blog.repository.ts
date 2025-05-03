@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm'
+import { DataSource, FindOptionsWhere, Repository } from 'typeorm'
 import { Blog } from '~/models/blog.model'
 
 export class BlogRepository {
@@ -67,5 +67,17 @@ export class BlogRepository {
 
   async delete(id: string): Promise<void> {
     await this.repository.delete(id)
+  }
+  async findByUserId(userId: string, offset: number, amount: number): Promise<Blog[]> {
+    try {
+      return this.repository.find({
+        where: { owner: { id: userId } } as FindOptionsWhere<Blog>,
+        skip: offset,
+        take: amount,
+        relations: ['tags'],
+      })
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 }

@@ -1,9 +1,9 @@
 import { RegisteredUserRepository } from '../repositories/registeredUser.repository'
-import bcrypt from 'bcrypt'
 import { redisClient } from '~/config/redis'
 import otpGenerator from 'otp-generator'
 import { sendOtpEmail } from './mail.service'
-import { RegisteredUser } from '~/models/registeredUser.model'
+import bcrypt from 'bcryptjs'
+import { RegisteredUser } from '../models/registeredUser.model'
 
 export class RegisteredUserService {
   constructor(private registeredUserRepository: RegisteredUserRepository) {}
@@ -65,5 +65,35 @@ export class RegisteredUserService {
     await redisClient.del(`otp:${email}`)
 
     return { success: true, message: 'Password reset successfully' }
+  }
+
+  async updateInfor(id: string, fullName: string, dob: Date, senderId: string): Promise<RegisteredUser> {
+    if (id !== senderId) {
+      throw new Error('Unauthorized: You can only update your own profile.')
+    }
+
+    const user = await this.registeredUserRepository.findById(id)
+    if (!user) {
+      throw new Error('User not found.')
+    }
+
+    user.setFullName(fullName).setDob(dob)
+
+    return await this.registeredUserRepository.update(user)
+  }
+
+  async changePassword(id: string, oldPassword: string, newPassword: string, senderId: string): Promise<void> {
+    if (id !== senderId) throw new Error('Unauthorized')
+
+    const user = await this.registeredUserRepository.findByIdWithPassword(id)
+    if (!user) throw new Error('User not found')
+
+    const isMatch = await bcrypt.compare(oldPassword, user.getPassword())
+    if (!isMatch) throw new Error('Old password is incorrect')
+
+    const hashedPassword = await bcrypt.hash(newPassword, 8)
+    user.setPassword(hashedPassword)
+
+    await this.registeredUserRepository.update(user)
   }
 }

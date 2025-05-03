@@ -8,7 +8,7 @@ export class FollowInteraction {
 
   @OneToOne(() => RegisteredUser, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
-  private userId!: RegisteredUser
+  private user!: RegisteredUser
 
   @ManyToMany(() => RegisteredUser)
   @JoinTable({
@@ -25,4 +25,20 @@ export class FollowInteraction {
   })
   private following!: RegisteredUser[]
   //Methods
+
+  public getFollowers(): RegisteredUser[] {
+    return this.followers
+  }
+
+  public getFollowings(): RegisteredUser[] {
+    return this.following
+  }
+
+  public getFollowerCount(): number {
+    return this.followers.length
+  }
+
+  public getFollowingCount(): number {
+    return this.following.length
+  }
 }

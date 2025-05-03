@@ -1,8 +1,4 @@
 import { Column, Entity, PrimaryGeneratedColumn, TableInheritance } from 'typeorm'
-import { Movie } from './movie.model'
-import { Blog } from './blog.model'
-import { MovieComment } from './movieComment.model'
-import { BlogComment } from './blogComment.model'
 import { LikeInteraction } from './likeInteraction.model'
 
 @Entity('registeredUsers')
@@ -21,7 +17,7 @@ export class RegisteredUser {
   protected fullName!: string
 
   @Column({ type: 'date' })
-  protected dateOfBirth!: string
+  protected dateOfBirth!: Date
 
   @Column({ type: 'varchar', length: 512, nullable: true })
   protected refreshToken?: string
@@ -32,7 +28,7 @@ export class RegisteredUser {
   @Column({ type: 'varchar', default: 'REGISTERED_USER' })
   protected role: string = 'REGISTERED_USER' //default value is REGISTERED_USER
 
-  constructor(email: string, password: string, fullName: string, dateOfBirth: string) {
+  constructor(email: string, password: string, fullName: string, dateOfBirth: Date) {
     this.email = email
     this.password = password
     this.fullName = fullName
@@ -65,11 +61,12 @@ export class RegisteredUser {
   public getPassword(): string {
     return this.password
   }
+
   public getFullName(): string {
     return this.fullName
   }
 
-  public getDateOfBirth(): string {
+  public getDateOfBirth(): Date {
     return this.dateOfBirth
   }
 
@@ -100,5 +97,14 @@ export class RegisteredUser {
 
   public unlikeBlog(likeInteraction: LikeInteraction): void {
     likeInteraction.removeLiker(this.getId())
+  }
+  public setFullName(fullname: string): this {
+    this.fullName = fullname
+    return this
+  }
+
+  public setDob(dob: Date): this {
+    this.dateOfBirth = dob
+    return this
   }
 }

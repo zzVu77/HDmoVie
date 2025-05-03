@@ -1,6 +1,5 @@
 import { Blog } from '~/models/blog.model'
 import { BlogRepository } from '~/repositories/blog.repository'
-import { In } from 'typeorm'
 
 export class BlogService {
   constructor(private blogRepository: BlogRepository) {}
@@ -25,5 +24,16 @@ export class BlogService {
     }
 
     await this.blogRepository.delete(blogId)
+  }
+
+  // Get user blogs
+  public async getUserBlogs(userId: string, page: number): Promise<Blog[]> {
+    try {
+      const pageSize = 5
+      const offset = page * pageSize
+      return this.blogRepository.findByUserId(userId, offset, pageSize)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 }

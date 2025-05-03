@@ -1,4 +1,4 @@
-import { DataSource, Repository, FindOptionsWhere } from 'typeorm'
+import { DataSource, Repository, FindOptionsSelect, FindOptionsWhere } from 'typeorm'
 import { RegisteredUser } from '~/models/registeredUser.model'
 
 export class RegisteredUserRepository {
@@ -31,5 +31,40 @@ export class RegisteredUserRepository {
   async create(userData: RegisteredUser): Promise<RegisteredUser> {
     const user = this.repository.create(userData)
     return this.repository.save(user)
+  }
+  async findAll(): Promise<RegisteredUser[]> {
+    return this.repository.find()
+  }
+
+  async findById(id: string): Promise<RegisteredUser | null> {
+    return await this.repository.findOne({
+      where: { id: id } as FindOptionsWhere<RegisteredUser>,
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        dateOfBirth: true,
+        role: false,
+      } as FindOptionsSelect<RegisteredUser>,
+    })
+  }
+
+  async findByIdWithPassword(id: string): Promise<RegisteredUser | null> {
+    return await this.repository.findOne({
+      where: { id: id } as FindOptionsWhere<RegisteredUser>,
+      select: ['id', 'email', 'password', 'fullName', 'dateOfBirth'] as FindOptionsSelect<RegisteredUser>,
+    })
+  }
+
+  async update(user: RegisteredUser): Promise<RegisteredUser> {
+    try {
+      return await this.repository.save(user)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.repository.delete(id)
   }
 }
