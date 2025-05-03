@@ -1,7 +1,8 @@
 import { EditProfileModal } from '@/components/EditProfileModal'
 import FollowInteractionModal from '@/components/FollowInteractionModal'
 import WatchlistCard from '@/components/WatchlistCard'
-import { FollowPeopleProps, RegisteredUserProps } from '@/types'
+import WatchlistItem from '@/components/WatchlistItem'
+import { FollowPeopleProps, RegisteredUserProps, WatchlistMovieProps } from '@/types'
 import { WatchlistProps } from '@/types'
 
 const dummyFollowers: FollowPeopleProps[] = []
@@ -177,6 +178,51 @@ const dummyWatchlist2: WatchlistProps = {
 
 const dummyWatchlists = [dummyWatchlist1, dummyWatchlist2]
 
+const dummyWatchlistMovies: WatchlistMovieProps[] = [
+  {
+    id: '1',
+    title: 'Inception',
+    description:
+      'A mind-bending thriller about dreams within dreams, where a skilled thief is given a chance at redemption if he can successfully perform an almost impossible task: planting an idea into someone’s subconscious. The movie explores the boundaries of reality and imagination, with stunning visuals and a gripping narrative.',
+    posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
+    backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
+    releaseYear: '2010',
+    voteAvg: 8.8,
+    voteCount: 2000000,
+    genres: [
+      { id: '1', name: 'Sci-Fi' },
+      { id: '2', name: 'Thriller' },
+    ],
+    casts: [
+      { id: '1', name: 'Leonardo DiCaprio', profilePath: 'https://www.imdb.com/name/nm0000138/' },
+      { id: '2', name: 'Joseph Gordon-Levitt', profilePath: 'https://www.imdb.com/name/nm0330687/' },
+      { id: '3', name: 'Elliot Page', profilePath: 'https://www.imdb.com/name/nm0680983/' },
+      { id: '4', name: 'Tom Hardy', profilePath: 'https://www.imdb.com/name/nm0362766/' },
+    ],
+  },
+  {
+    id: '2',
+    title: 'Interstellar',
+    description:
+      'A journey through space and time to save humanity, where a group of explorers ventures through a wormhole in search of a new home for mankind. The movie delves into themes of love, sacrifice, and the unyielding human spirit, with breathtaking visuals and a powerful emotional core.',
+    posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
+    backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
+    releaseYear: '2014',
+    voteAvg: 8.6,
+    voteCount: 1500000,
+    genres: [
+      { id: '1', name: 'Sci-Fi' },
+      { id: '3', name: 'Adventure' },
+    ],
+    casts: [
+      { id: '1', name: 'Matthew McConaughey', profilePath: 'https://www.imdb.com/name/nm0000190/' },
+      { id: '2', name: 'Anne Hathaway', profilePath: 'https://www.imdb.com/name/nm0004266/' },
+      { id: '3', name: 'Jessica Chastain', profilePath: 'https://www.imdb.com/name/nm1567113/' },
+      { id: '4', name: 'Michael Caine', profilePath: 'https://www.imdb.com/name/nm0000323/' },
+    ],
+  },
+]
+
 const TestComponent = () => {
   return (
     <>
@@ -207,6 +253,25 @@ const TestComponent = () => {
             description={watchlist.description}
             isPublic={watchlist.isPublic}
             movies={watchlist.movies}
+          />
+        ))}
+      </div>
+      <div>
+        <h1>TEST</h1>
+      </div>
+      <div className='flex flex-col items-center justify-center gap-y-5'>
+        {dummyWatchlistMovies.map((movie, index) => (
+          <WatchlistItem
+            index={index + 1}
+            title={movie.title}
+            description={movie.description}
+            posterSource={movie.posterSource}
+            backdropSource={movie.backdropSource}
+            releaseYear={movie.releaseYear}
+            voteAvg={movie.voteAvg}
+            voteCount={movie.voteCount}
+            genres={movie.genres}
+            casts={movie.casts}
           />
         ))}
       </div>

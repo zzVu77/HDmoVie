@@ -2,6 +2,11 @@ export type GenreType = {
   id?: string
   name?: string
 }
+export type CastType = {
+  id?: string
+  name?: string
+  profilePath?: string
+}
 export type MovieCardProps = {
   posterSource?: string
   releaseYear?: string
@@ -20,6 +25,7 @@ export type RegisteredUserProps = {
   dateOfBirth?: Date
 }
 export type WatchlistMovieProps = {
+  index?: number
   id?: string
   title?: string
   description?: string
@@ -29,6 +35,7 @@ export type WatchlistMovieProps = {
   voteAvg?: number
   voteCount?: number
   genres?: GenreType[]
+  casts?: CastType[]
 }
 export type WatchlistProps = {
   title?: string
