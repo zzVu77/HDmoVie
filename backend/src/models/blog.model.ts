@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm'
 import { RegisteredUser } from './registeredUser.model'
 import { Tag } from './tag.model'
+import { BlogMedia } from './blogMedia.model'
 
 @Entity('blogs')
 export class Blog {
@@ -24,6 +25,8 @@ export class Blog {
   })
   tags!: Tag[]
 
+  @OneToMany(() => BlogMedia, (image) => image.blog, { cascade: true })
+  images!: BlogMedia[]
   constructor(owner: RegisteredUser, content: string, tags: Tag[]) {
     this.owner = owner
     this.content = content
