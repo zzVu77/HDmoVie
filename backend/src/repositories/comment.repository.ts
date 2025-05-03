@@ -14,8 +14,17 @@ export class CommentRepository {
     this.blogCommentRepo = dataSource.getRepository(BlogComment)
   }
 
-  async saveMovieComment(comment: MovieComment): Promise<MovieComment> {
-    return this.movieCommentRepo.save(comment)
+  async saveMovieComment(comment: MovieComment): Promise<any> {
+    const saved = await this.movieCommentRepo.save(comment)
+
+    // Sau khi lưu, fetch lại comment kèm các field cần thiết
+    return this.movieCommentRepo
+      .createQueryBuilder('comment')
+      .leftJoinAndSelect('comment.user', 'user')
+      .leftJoinAndSelect('comment.movie', 'movie')
+      .where('comment.id = :id', { id: saved.getId() })
+      .select(['comment.id', 'comment.content', 'comment.date', 'user.id', 'user.fullName', 'movie.id', 'movie.title'])
+      .getOne()
   }
 
   async saveBlogComment(comment: BlogComment): Promise<BlogComment> {
