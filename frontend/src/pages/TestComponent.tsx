@@ -3,6 +3,7 @@ import FollowInteractionModal from '@/components/FollowInteractionModal'
 import WatchlistCard from '@/components/WatchlistCard'
 import WatchlistInformationFormModal from '@/components/WatchlistInformationFormModal'
 import WatchlistItem from '@/components/WatchlistItem'
+import WriteBlogTextEditor from '@/components/WriteBlogTextEditor'
 import { FollowPeopleProps, RegisteredUserProps, WatchlistMovieProps } from '@/types'
 import { WatchlistProps } from '@/types'
 
@@ -292,6 +293,12 @@ const TestComponent = () => {
           isAdd={true}
           watchlist={{ title: '', description: '', isPublic: false, movies: [] }}
         />
+      </div>
+      <div>
+        <h1>TEST</h1>
+      </div>
+      <div className='flex flex-col items-center justify-center gap-y-5'>
+        <WriteBlogTextEditor />
       </div>
     </>
   )
