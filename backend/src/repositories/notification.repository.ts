@@ -8,11 +8,24 @@ export class NotificationRepository {
     this.repo = dataSource.getRepository(Notification)
   }
 
-  async findAllByOwner(ownerId: string): Promise<Notification[]> {
-    return await this.repo.find({
-      where: { owner: { id: ownerId } } as FindOptionsWhere<Notification>,
-      order: { time: 'DESC' } as FindOptionsWhere<Notification>, // Mới nhất trước
-      relations: ['owner'], // Load luôn thông tin owner nếu cần
-    })
+  async findAllByOwner(ownerId: string): Promise<any[]> {
+    return await this.repo
+      .createQueryBuilder('notification')
+      .leftJoinAndSelect('notification.owner', 'owner')
+      .where('owner.id = :ownerId', { ownerId })
+      .orderBy('notification.time', 'DESC')
+      .select([
+        'notification.id',
+        'notification.time',
+        'notification.status',
+        'notification.type',
+        'notification.reportId',
+        'notification.userId',
+        'notification.followerId',
+        'notification.commentId',
+        'owner.id',
+        'owner.fullName',
+      ])
+      .getRawMany()
   }
 }
