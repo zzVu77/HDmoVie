@@ -1,8 +1,9 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Bell, User } from 'lucide-react'
+import { Bell, User, Menu, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Text } from './ui/typography'
-import { SearchBar } from './SearchBar' // điều chỉnh đường dẫn nếu cần
+import logo from '@/assets/brand_logo.png'
+import { SearchBar } from './SearchBar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { NotificationItem } from './NotificationItem'
+
 export type NotificationType = {
   id: string
   message: string
@@ -28,26 +30,67 @@ export type NotificationType = {
 const notifications: NotificationType[] = [
   { id: '1', message: 'New comment on your post', time: new Date(), status: 'UNREAD' },
   { id: '2', message: 'Your profile was updated', time: new Date(), status: 'READ' },
-  { id: '1', message: 'New comment on your post', time: new Date(), status: 'UNREAD' },
-  { id: '1', message: 'New comment on your post', time: new Date(), status: 'UNREAD' },
-  { id: '1', message: 'New comment on your post', time: new Date(), status: 'UNREAD' },
-  { id: '1', message: 'New comment on your post', time: new Date(), status: 'UNREAD' },
+  { id: '3', message: 'New comment on your post', time: new Date(), status: 'UNREAD' },
+  { id: '4', message: 'New comment on your post', time: new Date(), status: 'UNREAD' },
+  { id: '5', message: 'New comment on your post', time: new Date(), status: 'UNREAD' },
+  { id: '6', message: 'New comment on your post', time: new Date(), status: 'UNREAD' },
 ]
+
 export default function Header() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+
+  const toggleSearch = () => {
+    setIsSearchOpen(!isSearchOpen)
+  }
+
   return (
     <div className='container mx-auto px-4 md:px-6 lg:px-8'>
       <header className='flex h-20 w-full shrink-0 items-center justify-between px-4 md:px-6 text-[var(--secondary)] bg-[var(--primary-dark)]'>
-        <Link to='/' className='flex items-center gap-2 '>
-          <Text body={1} className='text-[var(--accent-yellow-dark)]'>
-            HDMovie
-          </Text>
-        </Link>
+        {/* Left Section: Hamburger Menu + Logo */}
+        <div className='flex items-center gap-2'>
+          {/* Hamburger Menu (Mobile Only) */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant='ghost'
+                size='icon'
+                className='md:hidden group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out hover:scale-110'
+              >
+                <Menu className='h-5 w-5 text-[var(--secondary)] group-hover:text-[var(--accent-yellow)]' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='start' className='w-56'>
+              <DropdownMenuGroup>
+                <DropdownMenuItem asChild>
+                  <Link to='/' className='w-full'>
+                    Home
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to='/trending' className='w-full'>
+                    Trending
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to='/blog' className='w-full'>
+                    Blog
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-        {/* Navigation + Icons */}
+          {/* Logo */}
+          <Link to='/' className='flex items-center gap-2'>
+            <img src={logo} alt='HDMovie Logo' className='h-16 md:h-20 w-auto object-contain' />
+          </Link>
+        </div>
+
+        {/* Right Section: Navigation (Desktop) + Search + Icons */}
         <div className='flex items-center gap-4'>
-          {/* Nav Links */}
-          <nav className='flex gap-2'>
-            <div className='hidden md:block'>
+          {/* Navigation Links (Desktop Only) */}
+          <nav className='hidden md:flex gap-2'>
+            <div>
               <SearchBar placeholder='Search movies...' />
             </div>
             <Link
@@ -69,6 +112,15 @@ export default function Header() {
               Blog
             </Link>
           </nav>
+
+          {/* Search Icon (Mobile Only) */}
+          <button
+            className='md:hidden group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out hover:scale-110 rounded-full p-2'
+            onClick={toggleSearch}
+            aria-label='Toggle search'
+          >
+            <Search className='h-5 w-5 text-[var(--secondary)] group-hover:text-[var(--accent-yellow)]' />
+          </button>
 
           {/* Notification Icon */}
           <DropdownMenu>
@@ -150,28 +202,13 @@ export default function Header() {
           </DropdownMenu>
         </div>
       </header>
+
+      {/* Search Bar (Mobile Only, Toggles Below Header) */}
+      {isSearchOpen && (
+        <div className='md:hidden px-4 py-2 bg-[var(--primary-dark)]'>
+          <SearchBar placeholder='Search...' />
+        </div>
+      )}
     </div>
   )
 }
-
-// function CarIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns='http://www.w3.org/2000/svg'
-//       width='24'
-//       height='24'
-//       viewBox='0 0 24 24'
-//       fill='none'
-//       stroke='currentColor'
-//       strokeWidth='2'
-//       strokeLinecap='round'
-//       strokeLinejoin='round'
-//     >
-//       <path d='M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2' />
-//       <circle cx='7' cy='17' r='2' />
-//       <path d='M9 17h6' />
-//       <circle cx='17' cy='17' r='2' />
-//     </svg>
-//   )
-// }
