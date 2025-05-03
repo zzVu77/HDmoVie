@@ -29,7 +29,9 @@ export class AuthService {
       const refreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: '7d' })
 
       user.updateToken(refreshToken)
-
+      if (!(await this.registeredUserRepository.update(user))) {
+        throw new Error('Cannot update RefreshToken')
+      }
       return { accessToken, refreshToken }
     } catch (error) {
       throw new Error(`Failed to get Token  : ${(error as Error).message}`)

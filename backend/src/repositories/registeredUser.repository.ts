@@ -36,4 +36,11 @@ export class RegisteredUserRepository {
 
     return result
   }
+  async update(user: RegisteredUser): Promise<RegisteredUser> {
+    try {
+      return await this.repository.save(user)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
 }
