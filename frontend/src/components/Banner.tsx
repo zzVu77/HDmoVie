@@ -5,15 +5,12 @@ import { Badge } from './ui/badge'
 import { MovieType } from '@/types'
 import { useMediaQuery } from 'usehooks-ts'
 import Desktop from './shared/Desktop'
+import { dummyGenres } from '@/data/dummyData'
 interface BannerProps extends MovieType {
   isDesktop?: boolean
 }
-const dummyGenres = [
-  { id: '1', name: 'Action' },
-  { id: '2', name: 'Adventure' },
-  { id: '3', name: 'Romance' },
-]
-const Banner = ({ description, genres = dummyGenres, release, title, voteAvg }: BannerProps) => {
+
+const Banner = ({ description, backdropSource, genres = dummyGenres, release, title, voteAvg }: BannerProps) => {
   const isDesktopBreakPoint = useMediaQuery('(min-width: 1024px)')
   return (
     <div className='w-full flex flex-col mx-auto relative'>
@@ -21,7 +18,7 @@ const Banner = ({ description, genres = dummyGenres, release, title, voteAvg }: 
         <AspectRatio ratio={isDesktopBreakPoint ? 2 / 1 : 3 / 4}>
           {/* Movie Poster Image */}
           <img
-            src='https://image.tmdb.org/t/p/original/ce3prrjh9ZehEl5JinNqr4jIeaB.jpg'
+            src={backdropSource || 'https://image.tmdb.org/t/p/original/ce3prrjh9ZehEl5JinNqr4jIeaB.jpg'}
             className='rounded-md object-cover w-full h-full'
             alt='Movie poster'
           />

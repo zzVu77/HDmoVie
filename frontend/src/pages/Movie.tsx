@@ -1,103 +1,38 @@
 import Banner from '@/components/Banner'
 import CommentBox from '@/components/CommentBox'
 import ListCastCard from '@/components/ListCastCard'
-import MovieCard from '@/components/MovieCard'
 import MovieComment from '@/components/MovieComment'
+import MovieSlider from '@/components/MovieSlider'
 import Wrapper from '@/components/shared/Wrapper'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Text } from '@/components/ui/typography'
 import VideoCard from '@/components/VideoCard'
+import { dummyComments, dummyMovies } from '@/data/dummyData'
 import { MovieType } from '@/types'
 import { Loader2 } from 'lucide-react'
-const dummyMovies: MovieType[] = [
-  {
-    posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-    release: '2023',
-    title: 'The Great Adventure',
-    voteAvg: 8.5,
-    genres: [
-      { id: '1', name: 'Action' },
-      { id: '2', name: 'Adventure' },
-    ],
-  },
-  {
-    posterSource: 'https://image.tmdb.org/t/p/original/O7REXWPANWXvX2jhQydHjAq2DV.jpg',
-    release: '2022',
-    title: 'Romantic Escape',
-    voteAvg: 7.8,
-    genres: [
-      { id: '3', name: 'Romance' },
-      { id: '4', name: 'Drama' },
-    ],
-  },
-  {
-    posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-    release: '2021',
-    title: 'Sci-Fi Chronicles',
-    voteAvg: 9.0,
-    genres: [
-      { id: '5', name: 'Sci-Fi' },
-      { id: '6', name: 'Thriller' },
-    ],
-  },
-  {
-    posterSource: 'https://image.tmdb.org/t/p/original/O7REXWPANWXvX2jhQydHjAq2DV.jpg',
-    release: '2020',
-    title: 'Mystery of the Lost City',
-    voteAvg: 8.2,
-    genres: [
-      { id: '7', name: 'Mystery' },
-      { id: '8', name: 'Adventure' },
-    ],
-  },
-  {
-    posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-    release: '2019',
-    title: 'Comedy Nights',
-    voteAvg: 7.5,
-    genres: [
-      { id: '9', name: 'Comedy' },
-      { id: '10', name: 'Family' },
-    ],
-  },
-]
-const dummyComments = [
-  {
-    userName: 'John Doe',
-    comment: 'This movie was absolutely amazing! The story was captivating.',
-    rating: 4.8,
-    date: '2025-04-30',
-  },
-  {
-    userName: 'Jane Smith',
-    comment: 'I enjoyed the visuals, but the plot was a bit predictable.',
-    rating: 3.5,
-    date: '2025-04-29',
-  },
-  {
-    userName: 'Michael Johnson',
-    comment: 'A masterpiece! The acting and direction were top-notch .',
-    rating: 5.0,
-    date: '2025-04-28',
-  },
-  {
-    userName: 'Emily Davis',
-    comment: 'Not my cup of tea, but I can see why others might like it.',
-    rating: 2.8,
-    date: '2025-04-27',
-  },
-  {
-    userName: 'Chris Brown',
-    comment: 'Great movie for a family night. Highly recommend it!',
-    rating: 4.2,
-    date: '2025-04-26',
-  },
-]
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 const Movie = () => {
+  const { id } = useParams<{ id: string }>()
+  const [movieData, setMovieData] = useState<MovieType>()
+  useEffect(() => {
+    if (id) {
+      // Giả sử bạn fetch từ API hoặc tìm trong dummyMovies
+      const foundMovie = dummyMovies.find((movie) => movie.id === id)
+      setMovieData(foundMovie)
+    }
+  }, [id])
+
   return (
     <div className=' flex flex-col scroll-smooth '>
-      <Banner></Banner>
+      <Banner
+        backdropSource={movieData?.backdropSource}
+        casts={movieData?.casts}
+        description={movieData?.description}
+        genres={movieData?.genres}
+        posterSource={movieData?.posterSource}
+      ></Banner>
       <Wrapper className='mt-5'>
         <Title>Top Cast</Title>
         <ListCastCard></ListCastCard>
@@ -108,18 +43,7 @@ const Movie = () => {
       </Wrapper>
       <Wrapper>
         <Title>Related Movie</Title>
-        <div className='flex flex-wrap items-center justify-center gap-10  '>
-          {dummyMovies.map((movie, index) => (
-            <MovieCard
-              key={index}
-              posterSource={movie.posterSource}
-              release={movie.release}
-              title={movie.title}
-              voteAvg={movie.voteAvg}
-              genres={movie.genres}
-            />
-          ))}
-        </div>
+        <MovieSlider movies={dummyMovies}></MovieSlider>
       </Wrapper>
       <Wrapper>
         <Title>Review</Title>

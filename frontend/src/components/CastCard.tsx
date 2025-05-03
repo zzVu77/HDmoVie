@@ -1,8 +1,8 @@
-import { Cast } from '@/types'
+import { CastType } from '@/types'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Text } from './ui/typography'
 
-const CastCard = ({ name, profilePath }: Cast) => {
+const CastCard = ({ name, profilePath }: CastType) => {
   return (
     <div className='flex flex-col items-center gap-3 '>
       <Avatar className='w-[250px] h-[300px] rounded-[10px]  hover:scale-105 transition-transform duration-300 ease-in-out'>

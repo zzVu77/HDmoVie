@@ -14,36 +14,12 @@ import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
+import { CastType, GenreType, MovieType } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { Text } from '../ui/typography'
-
-export type GenreType = {
-  id?: string
-  name: string
-}
-
-export type CastType = {
-  id?: string
-  name: string
-  profilePath?: string
-}
-
-export interface MovieType {
-  id?: string
-  trailerSource?: string
-  posterSource?: string
-  release?: string
-  title?: string
-  voteAvg?: number
-  genres?: GenreType[]
-  backdropSource?: string
-  description?: string
-  casts?: CastType[]
-  voteCount?: number
-}
 
 // Sample data for genres and casts (thay bằng API thực tế)
 const availableGenres: GenreType[] = [

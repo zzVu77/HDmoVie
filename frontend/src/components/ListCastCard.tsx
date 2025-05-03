@@ -1,27 +1,12 @@
-import { Cast } from '@/types'
+import { CastType } from '@/types'
 import CastCard from './CastCard'
+import { dummyDataCast } from '@/data/dummyData'
 
 type ListCastCardProps = {
-  casts?: Cast[]
+  casts?: CastType[]
 }
-const dummyData: Cast[] = [
-  {
-    id: '1',
-    name: 'John Doe',
-    profilePath: 'https://image.tmdb.org/t/p/original/a4dRvxh2csK8pnMVz5Xrh8MrE8X.jpg',
-  },
-  {
-    id: '2',
-    name: 'Jane Smith',
-    profilePath: 'https://image.tmdb.org/t/p/original/a4dRvxh2csK8pnMVz5Xrh8MrE8X.jpg',
-  },
-  {
-    id: '3',
-    name: 'Alice Johnson',
-    profilePath: 'https://image.tmdb.org/t/p/original/a4dRvxh2csK8pnMVz5Xrh8MrE8X.jpg',
-  },
-]
-const ListCastCard = ({ casts = dummyData }: ListCastCardProps) => {
+
+const ListCastCard = ({ casts = dummyDataCast }: ListCastCardProps) => {
   return (
     <div className='flex flex-row flex-wrap items-center justify-center gap-20'>
       {casts.map((cast, index) => (
