@@ -1,195 +1,237 @@
-// // import { useState } from 'react';
-// // import { useNavigate } from 'react-router-dom'; // Import useNavigate
-// // import { Input } from '@/components/ui/input';
-// // import { Label } from '@/components/ui/label';
-// // import { Button } from '@/components/ui/button';
-// // import pornhub from '@/assets/pornhub.svg';
-// import { DatePickerDemo } from './Datepicker';
-// // import { Text } from '@/components/ui/typography';
-// // import { FormEvent, ChangeEvent } from 'react';
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Text, Title } from '@/components/ui/typography'
+import pornhub from '@/assets/pornhub.svg' // Replace with appropriate image
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { useState } from 'react'
 
-// // interface FormData {
-// //   fullName: string;
-// //   email: string;
-// //   password: string;
-// //   confirmPassword: string;
-// //   dateOfBirth: Date | null;
-// // }
+// Define schema for form validation
+const registerSchema = z
+  .object({
+    fullName: z.string().min(1, 'Full name is required'),
+    email: z.string().email('Please enter a valid email address'),
+    password: z.string().min(8, 'Password must be at least 8 characters long'),
+    confirmPassword: z.string().min(8, 'Please confirm your password'),
+    dateOfBirth: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, 'Please select a valid date')
+      .refine(
+        (date) => {
+          const parsedDate = new Date(date)
+          return !isNaN(parsedDate.getTime())
+        },
+        { message: 'Invalid date format' },
+      ),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  })
+  .refine(
+    (data) => {
+      const parsedDate = new Date(data.dateOfBirth)
+      const today = new Date()
+      const minAgeDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate())
+      return parsedDate <= minAgeDate
+    },
+    {
+      message: 'You must be at least 13 years old',
+      path: ['dateOfBirth'],
+    },
+  )
 
-// // const RegisterForm = () => {
-// //   const [formData, setFormData] = useState<FormData>({
-// //     fullName: '',
-// //     email: '',
-// //     password: '',
-// //     confirmPassword: '',
-// //     dateOfBirth: null,
-// //   });
-// //   const [error, setError] = useState<string | null>(null);
-// //   const navigate = useNavigate(); // Hook để điều hướng
+type RegisterFormValues = z.infer<typeof registerSchema>
 
-// //   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-// //     const { id, value } = e.target;
-// //     setFormData((prev) => ({
-// //       ...prev,
-// //       [id]: value,
-// //     }));
-// //   };
+const RegisterForm: React.FC = () => {
+  const [isSubmitting] = useState(false)
 
-// //   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-// //     e.preventDefault();
-// //     setError(null);
+  // Initialize form with React Hook Form and Zod
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      fullName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      dateOfBirth: '',
+    },
+  })
 
-// //     if (formData.password !== formData.confirmPassword) {
-// //       setError("Passwords do not match!");
-// //       return;
-// //     }
+  // Handle form submission
+  //   const onSubmit = async (data: RegisterFormValues) => {
+  //     setIsSubmitting(true);
+  //     try {
+  //       // Simulate API call, convert dateOfBirth to Date if needed
+  //       // const submitData = { ...data, dateOfBirth: new Date(data.dateOfBirth) };
+  //       // await registerUser(submitData); // Replace with actual API call
+  //       toast({
+  //         title: 'Registration Successful',
+  //         description: 'Your account has been created!',
+  //       });
+  //       form.reset();
+  //     } catch (error) {
+  //       toast({
+  //         title: 'Error',
+  //         description: 'Failed to register. Please try again.',
+  //         variant: 'destructive',
+  //       });
+  //     } finally {
+  //       setIsSubmitting(false);
+  //     }
+  //   };
+  const onSubmit = () => {
+    form.reset()
+  }
+  return (
+    <div className='flex min-h-screen flex-row items-center justify-center bg-black'>
+      {/* Left Side: Image with Overlay (Hidden on Mobile) */}
+      <div className='hidden lg:block w-full lg:w-1/2 h-screen relative'>
+        <img
+          src={pornhub} // Replace with your hot air balloon image path
+          alt='Hot Air Balloon'
+          className='w-full h-full object-contain'
+        />
+        <div className='absolute inset-0 bg-tertiary-yellow opacity-50 rounded-r-[50px]'></div>
+      </div>
 
-// //     const payload = {
-// //       fullName: formData.fullName,
-// //       email: formData.email,
-// //       password: formData.password,
-// //       dateOfBirth: formData.dateOfBirth?.toISOString() || null,
-// //     };
+      {/* Right Side: Form */}
+      <div className='w-full lg:w-1/2 h-screen flex items-center justify-center p-4 sm:p-8'>
+        <div className='w-full max-w-sm sm:max-w-md space-y-6'>
+          <Title level={2} className='text-center mb-4 text-white'>
+            Register Your Account
+          </Title>
+          {/* Form */}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+              {/* Full Name Field */}
+              <FormField
+                control={form.control}
+                name='fullName'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-white'>Full Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        id='fullName'
+                        placeholder='Enter your full name'
+                        className='w-full bg-white text-black placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-tertiary-yellow'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className='text-red-400' />
+                  </FormItem>
+                )}
+              />
 
-// //     try {
-// //       const response = await fetch('/api/register', {
-// //         method: 'POST',
-// //         headers: {
-// //           'Content-Type': 'application/json',
-// //         },
-// //         body: JSON.stringify(payload),
-// //       });
+              {/* Email Field */}
+              <FormField
+                control={form.control}
+                name='email'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-white'>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        id='email'
+                        type='email'
+                        placeholder='Enter your email'
+                        className='w-full bg-white text-black placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-tertiary-yellow'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className='text-red-400' />
+                  </FormItem>
+                )}
+              />
 
-// //       if (!response.ok) {
-// //         throw new Error('Failed to send data to server');
-// //       }
+              {/* Password Field */}
+              <FormField
+                control={form.control}
+                name='password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-white'>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        id='password'
+                        type='password'
+                        placeholder='Enter your password'
+                        className='w-full bg-white text-black placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-tertiary-yellow'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className='text-red-400' />
+                  </FormItem>
+                )}
+              />
 
-// //       // Reset form
-// //       setFormData({
-// //         fullName: '',
-// //         email: '',
-// //         password: '',
-// //         confirmPassword: '',
-// //         dateOfBirth: null,
-// //       });
+              {/* Confirm Password Field */}
+              <FormField
+                control={form.control}
+                name='confirmPassword'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-white'>Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        id='confirmPassword'
+                        type='password'
+                        placeholder='Confirm your password'
+                        className='w-full bg-white text-black placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-tertiary-yellow'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className='text-red-400' />
+                  </FormItem>
+                )}
+              />
 
-// //       // Điều hướng về trang login
-// //       navigate('/login');
-// //     } catch (err) {
-// //       if (err instanceof Error) {
-// //         setError(err.message || 'Something went wrong');
-// //       } else {
-// //         setError('Something went wrong');
-// //       }
-// //     }
-// //   };
-// export function RegisterForm(){
-//   return (
-//   //   <div className='flex min-h-screen flex-row items-center justify-center bg-black'>
-//   //     <div className='hidden lg:block w-full lg:w-1/2 h-screen relative'>
-//   //       <img
-//   //         src={pornhub}
-//   //         alt='Hot Air Balloon'
-//   //         className='w-full h-full object-contain'
-//   //       />
-//   //       <div className='absolute inset-0 bg-yellow-400 opacity-50 rounded-r-[50px]'></div>
-//   //     </div>
+              {/* Date of Birth Field */}
+              <FormField
+                control={form.control}
+                name='dateOfBirth'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-white'>Date of Birth</FormLabel>
+                    <FormControl>
+                      <Input
+                        id='dateOfBirth'
+                        type='date'
+                        className='w-full bg-white text-black placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-tertiary-yellow'
+                        max={new Date().toISOString().split('T')[0]} // Prevent future dates
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className='text-red-400' />
+                  </FormItem>
+                )}
+              />
 
-//   //     <div className='w-full lg:w-1/2 h-screen flex items-center justify-center p-4 sm:p-8'>
-//   //       <div className='w-full max-w-sm sm:max-w-md space-y-6'>
-//   //         <h2 className='text-xl sm:text-2xl font-bold text-center text-white'>Register Your Account</h2>
+              {/* Submit Button */}
+              <Button
+                type='submit'
+                disabled={isSubmitting}
+                className='w-full bg-tertiary-yellow hover:bg-secondary-yellow text-black'
+              >
+                {isSubmitting ? 'Registering...' : 'Register New Account'}
+              </Button>
+            </form>
+          </Form>
 
-//   //         {error && (
-//   //           <Text className='text-red-500 text-center'>{error}</Text>
-//   //         )}
+          {/* Login Link */}
+          <Text className='text-center py-4 text-white'>
+            Already have an account?{' '}
+            <a href='/login' className='text-tertiary-yellow hover:text-secondary-yellow'>
+              Log in
+            </a>
+          </Text>
+        </div>
+      </div>
+    </div>
+  )
+}
 
-//   //         <form onSubmit={handleSubmit} >
-//   //         <div className='space-y-4'>
-//   //           <div className='space-y-2'>
-//   //             <Label htmlFor='fullName' className='text-white'>
-//   //               Full Name
-//   //             </Label>
-//   //             <Input
-//   //               id='fullName'
-//   //               placeholder='Enter your full name'
-//   //               className='w-full bg-gray-800 text-white placeholder-gray-400'
-//   //               value={formData.fullName}
-//   //               onChange={handleInputChange}
-//   //               required
-//   //             />
-//   //           </div>
-
-//   //           <div className='space-y-2'>
-//   //             <Label htmlFor='email' className='text-white'>
-//   //               Email
-//   //             </Label>
-//   //             <Input
-//   //               id='email'
-//   //               type='email'
-//   //               placeholder='Enter your email'
-//   //               className='w-full bg-gray-800 text-white placeholder-gray-400'
-//   //               value={formData.email}
-//   //               onChange={handleInputChange}
-//   //               required
-//   //             />
-//   //           </div>
-
-//   //           <div className='space-y-2'>
-//   //             <Label htmlFor='password' className='text-white'>
-//   //               Password
-//   //             </Label>
-//   //             <Input
-//   //               id='password'
-//   //               type='password'
-//   //               placeholder='Enter your password'
-//   //               className='w-full bg-gray-800 text-white placeholder-gray-400'
-//   //               value={formData.password}
-//   //               onChange={handleInputChange}
-//   //               required
-//   //             />
-//   //           </div>
-
-//   //           <div className='space-y-2'>
-//   //             <Label htmlFor='confirmPassword' className='text-white'>
-//   //               Confirm Password
-//   //             </Label>
-//   //             <Input
-//   //               id='confirmPassword'
-//   //               type='password'
-//   //               placeholder='Confirm your password'
-//   //               className='w-full bg-gray-800 text-white placeholder-gray-400'
-//   //               value={formData.confirmPassword}
-//   //               onChange={handleInputChange}
-//   //               required
-//   //             />
-//   //           </div>
-
-//   //           <div className='space-y-2'>
-//   //              <Label htmlFor='dateOfBirth' className='text-white'>
-//   //                Date of Birth
-//   //              </Label>
-//   //              <DatePickerDemo />
-//   //            </div>
-//   //            </div>
-//   //           <Button
-//   //             type='submit'
-//   //             className='w-full bg-yellow-400 hover:bg-yellow-500 text-black'
-//   //           >
-//   //             Register New Account
-//   //           </Button>
-//   //         </form>
-
-//   //         <Text className='text-center py-4'>
-//   //           Already have an account?{' '}
-//   //           <a href='/login' className='text-blue-300 hover:text-blue-200'>
-//   //             Log in
-//   //           </a>
-//   //         </Text>
-//   //       </div>
-//   //     </div>
-//   //   </div>
-//   // );
-//   <DatePickerDemo />
-// )}
-
-// export default RegisterForm;
+export default RegisterForm
