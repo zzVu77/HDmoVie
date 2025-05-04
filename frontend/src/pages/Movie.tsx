@@ -18,7 +18,6 @@ const Movie = () => {
   const [movieData, setMovieData] = useState<MovieType>()
   useEffect(() => {
     if (id) {
-      // Giả sử bạn fetch từ API hoặc tìm trong dummyMovies
       const foundMovie = dummyMovies.find((movie) => movie.id === id)
       setMovieData(foundMovie)
     }
@@ -34,19 +33,19 @@ const Movie = () => {
         posterSource={movieData?.posterSource}
       ></Banner>
       <Wrapper className='mt-5'>
-        <Title>Top Cast</Title>
+        <TitleSection>Top Cast</TitleSection>
         <ListCastCard></ListCastCard>
       </Wrapper>
       <Wrapper>
-        <Title>Trailer Video</Title>
+        <TitleSection>Trailer Video</TitleSection>
         <VideoCard></VideoCard>
       </Wrapper>
       <Wrapper>
-        <Title>Related Movie</Title>
+        <TitleSection>Related Movie</TitleSection>
         <MovieSlider movies={dummyMovies}></MovieSlider>
       </Wrapper>
       <Wrapper>
-        <Title>Review</Title>
+        <TitleSection>Review</TitleSection>
         <div className='flex flex-col gap-5 w-[90vw] mx-auto '>
           <div className='w-full'>
             <CommentBox></CommentBox>
@@ -77,7 +76,7 @@ const Movie = () => {
 type TitleProps = {
   children: React.ReactNode
 }
-const Title = ({ children }: TitleProps) => {
+export const TitleSection = ({ children }: TitleProps) => {
   return (
     <div className='w-fit px-3'>
       <Text className='lg:text-[40px] text-[30px] font-extrabold '>{children}</Text>
