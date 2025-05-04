@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { MessageCircle, Heart, MessageSquareWarning } from 'lucide-react'
+import { MessageCircle, Heart, MessageSquareWarning, ArrowRight } from 'lucide-react'
 import { Text } from './ui/typography'
 import { cn } from '@/lib/utils'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
@@ -150,7 +150,7 @@ export default function BlogCard({
               {images!.length > 1 && (
                 <div className='group absolute top-1/2 -translate-y-1/2 right-4 flex justify-end items-center'>
                   <div className='rounded-full opacity-30 bg-secondary-dark text-white w-8 h-8 flex items-center justify-center'>
-                    ...
+                    <ArrowRight size={16} className='text-white' />
                   </div>
                 </div>
               )}
