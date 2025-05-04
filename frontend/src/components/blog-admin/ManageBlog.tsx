@@ -191,7 +191,7 @@ export const columns: ColumnDef<BlogType>[] = [
     cell: ({ row }) => {
       const blog = row.original
       return (
-        <div className='flex items-center justify-between gap-2'>
+        <div className='flex items-center justify-between'>
           <Link to={`/blog/${blog.id}`} className='block'>
             <Eye className='h-4 w-4 text-primary-dark cursor-pointer' />
           </Link>
