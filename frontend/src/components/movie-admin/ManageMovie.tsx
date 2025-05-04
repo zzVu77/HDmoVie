@@ -24,8 +24,9 @@ import { ChevronDown, Eye, PencilLine, Trash2 } from 'lucide-react'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { ConfirmAlertDialog } from '../shared/ConfirmAlertDialog'
-import { CastType, GenreType, MovieInfoModal, MovieType } from './MovieInfoModal'
 import { ImageDialogCell } from '../shared/ImageDialogCell'
+import { CastType, GenreType, MovieType } from '@/types'
+import { MovieInfoModal } from './MovieInfoModal'
 
 const data: MovieType[] = [
   {
