@@ -80,6 +80,47 @@ export class MovieRepository {
       throw new Error((error as Error).message)
     }
   }
+  async findLatestMovies(limit: number): Promise<Movie[]> {
+    try {
+      return this.repository
+        .createQueryBuilder('movie')
+        .leftJoinAndSelect('movie.genres', 'genres')
+        .leftJoinAndSelect('movie.casts', 'casts')
+        .orderBy('movie.releaseYear', 'DESC')
+        .limit(limit)
+        .getMany()
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  async findTopRatedMovies(limit: number): Promise<Movie[]> {
+    try {
+      return this.repository
+        .createQueryBuilder('movie')
+        .leftJoinAndSelect('movie.genres', 'genres')
+        .leftJoinAndSelect('movie.casts', 'casts')
+        .orderBy('movie.voteAvg', 'DESC')
+        .limit(limit)
+        .getMany()
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  async findTrendingMovies(limit: number): Promise<Movie[]> {
+    try {
+      return this.repository
+        .createQueryBuilder('movie')
+        .leftJoinAndSelect('movie.genres', 'genres')
+        .leftJoinAndSelect('movie.casts', 'casts')
+        .orderBy('movie.voteCount', 'DESC')
+        .limit(limit)
+        .getMany()
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
 
   // Đổi tên tránh trùng với method có sẵn trong TypeORM Repository
   async findOneById(id: number): Promise<Movie | null> {

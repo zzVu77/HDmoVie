@@ -41,7 +41,9 @@ export class MovieService {
     try {
       // 1. Lấy thông tin movie cùng với genres và casts
       const movie = await this.movieRepository.findById(movieId)
-      if (!movie) throw new Error('Movie not found')
+      if (!movie) {
+        throw new Error('Movie not found')
+      }
 
       // 2. Lấy danh sách comment cho movie
       const comments = await this.commentRepository.findCommentsByMovieId(movieId)
@@ -54,15 +56,15 @@ export class MovieService {
 
       // 4. Trả về dữ liệu gộp
       return {
-        status: 'success',
-        data: {
-          movie,
-          comments,
-          relatedMovies,
-        },
+        movie,
+        comments,
+        relatedMovies,
       }
     } catch (error) {
-      throw new Error((error as Error).message)
+      if (error instanceof Error && error.message === 'Movie not found') {
+        throw error
+      }
+      throw new Error('Failed to fetch movie details')
     }
   }
 
@@ -103,5 +105,29 @@ export class MovieService {
       casts,
     )
     return this.movieRepository.update(movie)
+  }
+  async getMovieHighlights(): Promise<{
+    latestMovies: Movie[]
+    trendingMovies: Movie[]
+    topRatedMovies: Movie[]
+  }> {
+    try {
+      // Get 10 of each category
+      const limit = 10
+
+      const [latestMovies, trendingMovies, topRatedMovies] = await Promise.all([
+        this.movieRepository.findLatestMovies(limit),
+        this.movieRepository.findTrendingMovies(limit),
+        this.movieRepository.findTopRatedMovies(limit),
+      ])
+
+      return {
+        latestMovies,
+        trendingMovies,
+        topRatedMovies,
+      }
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 }

@@ -25,7 +25,9 @@ const movieController = new MovieController(movieService)
 //GET route
 movieRouter.get('/', (req, res) => movieController.getAllMovies(req, res))
 movieRouter.get('/search', (req, res) => movieController.searchMoviesByTitle(req, res))
-movieRouter.get('/:id', (req, res) => movieController.getMovieById(req, res))
+movieRouter.get('/detail/:id', (req, res) => movieController.getMovieById(req, res))
+movieRouter.get('/highlights', (req, res) => movieController.getMovieHighlights(req, res))
+
 //POST route
 movieRouter.post('/create', createMovieMiddleware, (req, res) => movieController.createMovie(req, res))
 //DELETE route
