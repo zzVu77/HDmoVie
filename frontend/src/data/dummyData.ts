@@ -25,6 +25,7 @@ export const dummyMovies: MovieType[] = [
     release: '2023',
     title: 'The Hidden Treasure',
     voteAvg: 8.1,
+    description: 'A thrilling adventure to uncover a long-lost treasure hidden in the depths of the jungle.',
     genres: [
       { id: '1', name: 'Action' },
       { id: '8', name: 'Adventure' },
@@ -37,6 +38,7 @@ export const dummyMovies: MovieType[] = [
     release: '2022',
     title: 'Love in the Air',
     voteAvg: 7.3,
+    description: 'A heartwarming romance that blossoms amidst unexpected challenges.',
     genres: [
       { id: '3', name: 'Romance' },
       { id: '4', name: 'Drama' },
@@ -49,6 +51,7 @@ export const dummyMovies: MovieType[] = [
     release: '2021',
     title: 'Galactic Wars',
     voteAvg: 9.2,
+    description: 'An epic battle for survival in a galaxy torn apart by war.',
     genres: [
       { id: '5', name: 'Sci-Fi' },
       { id: '6', name: 'Thriller' },
@@ -61,6 +64,7 @@ export const dummyMovies: MovieType[] = [
     release: '2020',
     title: 'The Enigma',
     voteAvg: 8.0,
+    description: 'A mysterious tale of secrets and puzzles that will keep you guessing until the end.',
     genres: [
       { id: '7', name: 'Mystery' },
       { id: '8', name: 'Adventure' },
@@ -73,6 +77,7 @@ export const dummyMovies: MovieType[] = [
     release: '2019',
     title: 'Family Fun Night',
     voteAvg: 7.6,
+    description: 'A delightful comedy that brings the whole family together for laughs and joy.',
     genres: [
       { id: '9', name: 'Comedy' },
       { id: '10', name: 'Family' },
@@ -85,6 +90,7 @@ export const dummyMovies: MovieType[] = [
     release: '2018',
     title: 'The Last Frontier',
     voteAvg: 8.4,
+    description: 'An action-packed journey to the edge of the world, filled with danger and discovery.',
     genres: [
       { id: '1', name: 'Action' },
       { id: '2', name: 'Adventure' },
@@ -97,6 +103,7 @@ export const dummyMovies: MovieType[] = [
     release: '2017',
     title: 'Romantic Getaway',
     voteAvg: 7.9,
+    description: 'A romantic escape to a picturesque destination, where love conquers all.',
     genres: [
       { id: '3', name: 'Romance' },
       { id: '4', name: 'Drama' },
@@ -109,6 +116,7 @@ export const dummyMovies: MovieType[] = [
     release: '2016',
     title: 'Cosmic Voyage',
     voteAvg: 9.1,
+    description: 'A breathtaking journey through the cosmos, exploring the wonders of the universe.',
     genres: [
       { id: '5', name: 'Sci-Fi' },
       { id: '6', name: 'Thriller' },
@@ -121,6 +129,7 @@ export const dummyMovies: MovieType[] = [
     release: '2015',
     title: 'Secrets of the Ancient City',
     voteAvg: 8.3,
+    description: 'An archaeological adventure uncovering the mysteries of an ancient civilization.',
     genres: [
       { id: '7', name: 'Mystery' },
       { id: '8', name: 'Adventure' },
@@ -133,12 +142,12 @@ export const dummyMovies: MovieType[] = [
     release: '2014',
     title: 'Laugh Out Loud',
     voteAvg: 7.7,
+    description: 'A hilarious comedy that will have you laughing from start to finish.',
     genres: [
       { id: '9', name: 'Comedy' },
       { id: '10', name: 'Family' },
     ],
   },
-  // Continue assigning IDs incrementally for the remaining movies
 ]
 export const dummyComments = [
   {

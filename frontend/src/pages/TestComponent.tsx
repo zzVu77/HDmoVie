@@ -1,5 +1,4 @@
-import MovieSlider from '@/components/MovieSlider'
-import { dummyMovies } from '@/data/dummyData'
+import Carousel3D from '@/components/Carousel3D'
 // const data = {
 //   id: '1',
 //   title: 'Inception',
@@ -13,11 +12,12 @@ import { dummyMovies } from '@/data/dummyData'
 //   posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
 //   backdropSource: 'https://image.tmdb.org/t/p/original/ce3prrjh9ZehEl5JinNqr4jIeaB.jpg',
 // }
+import 'react-responsive-3d-carousel/dist/styles.css'
 
 const TestComponent = () => {
   return (
-    <div className=''>
-      <MovieSlider movies={dummyMovies}></MovieSlider>
+    <div>
+      <Carousel3D></Carousel3D>
     </div>
   )
 }

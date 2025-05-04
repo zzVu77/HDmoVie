@@ -8,6 +8,7 @@ import Desktop from './shared/Desktop'
 import { dummyGenres } from '@/data/dummyData'
 interface BannerProps extends MovieType {
   isDesktop?: boolean
+  position?: string
 }
 
 const Banner = ({ description, backdropSource, genres = dummyGenres, release, title, voteAvg }: BannerProps) => {
@@ -43,7 +44,7 @@ const Banner = ({ description, backdropSource, genres = dummyGenres, release, ti
     </div>
   )
 }
-const InformationContainer = ({ description, genres, release, title, voteAvg, isDesktop }: BannerProps) => {
+export const InformationContainer = ({ description, genres, release, title, voteAvg, isDesktop }: BannerProps) => {
   return (
     <div
       className={`${isDesktop ? 'absolute' : ''} bottom-0 left-0 w-full flex items-end justify-start text-white p-4 sm:p-6 lg:p-8 lg:mb-[5%]`}
