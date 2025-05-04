@@ -97,7 +97,7 @@ export default function FollowInteractionModal({ followers, followings }: Follow
       <div className='border-t border-tertiary-dark' />
 
       <TabsContent value='followers' className='pt-0 pb-2 bg-secondary-dark rounded-lg'>
-        <ScrollArea className='flex max-h-70 flex-col'> {renderPeopleList(followers)} </ScrollArea>
+        <ScrollArea className='flex max-h-70 flex-col gap-5'> {renderPeopleList(followers)} </ScrollArea>
       </TabsContent>
       <TabsContent value='followings' className='pt-0 pb-2 bg-secondary-dark rounded-lg'>
         <ScrollArea className='flex max-h-70 flex-col gap-5'> {renderPeopleList(followings)} </ScrollArea>
