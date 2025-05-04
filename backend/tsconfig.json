@@ -2,18 +2,20 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "NodeNext", // Quy định output module được sử dụng
-    "moduleResolution": "NodeNext",
-    "target": "ES2023", // Target output cho code
-    "outDir": "dist", // Đường dẫn output cho thư mục build
+    "module": "CommonJS", // Sử dụng CommonJS để tương thích với Node.js và TypeORM
+    "moduleResolution": "Node", // Phù hợp với CommonJS
+    "target": "ES2020", // Tương thích với Node.js LTS (18.x hoặc 20.x)
+    "outDir": "dist", // Thư mục output
+    "rootDir": "src", // Chỉ định thư mục gốc để giữ cấu trúc dist/src
     "esModuleInterop": true,
-    "strict": true /* Enable all strict type-checking options. */,
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-    "baseUrl": ".", // Đường dẫn base cho các import
+    "strict": true,
+    "skipLibCheck": true,
+    "baseUrl": ".", // Hỗ trợ alias
     "paths": {
-      "~/*": ["src/*"] // Đường dẫn tương đối cho các import (alias)
-    }
+      "~/*": ["src/*"] // Alias cho import
+    },
+    "resolveJsonModule": true // Nếu bạn import file JSON
   },
-  "files": ["src/type.d.ts"], // Các file dùng để defined global type cho dự án
-  "include": ["src/**/*"] // Đường dẫn include cho các file cần build
+  "include": ["src/**/*", "src/type.d.ts"], // Bao gồm tất cả file trong src và type.d.ts
+  "exclude": ["node_modules", "dist"] // Loại bỏ các thư mục không cần biên dịch
 }
