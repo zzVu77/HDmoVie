@@ -1,19 +1,19 @@
-import cors from 'cors'
-import 'reflect-metadata'
-import express from 'express'
-import { AppDataSource } from './data-source'
 import cookieParser from 'cookie-parser'
-import movieRouter from './routes/movie.route'
-import blogRouter from './routes/blog.route'
-import reportRouter from './routes/report.route'
-import genreRouter from './routes/genre.route'
-import tagRouter from './routes/tag.route'
-import commentRouter from './routes/comment.route'
-import likeInteractionRouter from './routes/interaction.router'
-import notificationRouter from './routes/notification.route'
-import registeredUserRouter from './routes/registeredUser.route'
+import cors from 'cors'
 import dotenv from 'dotenv'
+import express from 'express'
+import 'reflect-metadata'
+import { AppDataSource } from './data-source'
+import blogRouter from './routes/blog.route'
+import commentRouter from './routes/comment.route'
+import genreRouter from './routes/genre.route'
+import likeInteractionRouter from './routes/interaction.router'
+import movieRouter from './routes/movie.route'
+import notificationRouter from './routes/notification.route'
 import profileRouter from './routes/profile.route'
+import registeredUserRouter from './routes/registeredUser.route'
+import reportRouter from './routes/report.route'
+import tagRouter from './routes/tag.route'
 import watchlistRouter from './routes/watchlist.route'
 
 dotenv.config()
@@ -47,7 +47,7 @@ AppDataSource.initialize()
   .then(() => {
     console.log('Database connected')
     app.listen(port, () => {
-      console.log(`Server running on http://localhost:${port}`)
+      console.log(`Server running on http://${process.env.MYSQLHOST || 'localhost'}/${process.env.MYSQLPORT || 3001}`)
     })
   })
   .catch((error) => console.log('Error connecting to database:', error))

@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import { boolean } from 'joi'
 import { WatchlistService } from '~/services/watchlist.service'
 
 export class WatchlistController {
