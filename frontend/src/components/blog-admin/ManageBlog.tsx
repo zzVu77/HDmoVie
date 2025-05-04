@@ -266,12 +266,6 @@ export function ManageBlog() {
           onChange={(event) => table.getColumn('tags')?.setFilterValue(event.target.value)}
           className='max-w-sm text-xs'
         />
-        <Input
-          placeholder='Filter by images...'
-          value={(table.getColumn('imageUrls')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('imageUrls')?.setFilterValue(event.target.value)}
-          className='max-w-sm text-xs'
-        />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='outline' className='ml-auto text-xs'>
