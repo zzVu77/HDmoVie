@@ -7,6 +7,7 @@ import { createMovieMiddleware, updateMovieMiddleware } from '~/middlewares/movi
 import { CastRepository } from '~/repositories/cast.repository'
 import { CastService } from '~/services/cast.service'
 import { GenreRepository } from '~/repositories/genre.repository'
+import { CommentRepository } from '~/repositories/comment.repository'
 import { GenreService } from '~/services/genre.service'
 const movieRouter = Router()
 
@@ -16,14 +17,17 @@ const genreRepository = new GenreRepository(AppDataSource)
 const movieRepository = new MovieRepository(AppDataSource)
 const castService = new CastService(castRepository)
 const genreService = new GenreService(genreRepository)
-const movieService = new MovieService(movieRepository, castService, genreService)
+const commentRepository = new CommentRepository(AppDataSource)
+const movieService = new MovieService(movieRepository, castService, genreService, commentRepository)
 const movieController = new MovieController(movieService)
 
 // Define routes
 //GET route
 movieRouter.get('/', (req, res) => movieController.getAllMovies(req, res))
 movieRouter.get('/search', (req, res) => movieController.searchMoviesByTitle(req, res))
-movieRouter.get('/:id', (req, res) => movieController.getMovieById(req, res))
+movieRouter.get('/detail/:id', (req, res) => movieController.getMovieById(req, res))
+movieRouter.get('/highlights', (req, res) => movieController.getMovieHighlights(req, res))
+
 //POST route
 movieRouter.post('/create', createMovieMiddleware, (req, res) => movieController.createMovie(req, res))
 //DELETE route

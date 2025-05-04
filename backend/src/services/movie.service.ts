@@ -1,5 +1,7 @@
 import { Movie } from '~/models/movie.model'
 import { MovieRepository } from '~/repositories/movie.repository'
+import { CommentRepository } from '~/repositories/comment.repository'
+
 import { MovieType } from '~/type'
 import { CastService } from './cast.service'
 import { GenreService } from './genre.service'
@@ -8,6 +10,7 @@ export class MovieService {
     private movieRepository: MovieRepository,
     private castService: CastService,
     private genreService: GenreService,
+    private commentRepository: CommentRepository,
   ) {}
 
   async getAllMovies(): Promise<Movie[]> {
@@ -31,6 +34,37 @@ export class MovieService {
       return this.movieRepository.findById(id)
     } catch (error) {
       throw new Error((error as Error).message)
+    }
+  }
+
+  async getMovieDetail(movieId: string) {
+    try {
+      // 1. Lấy thông tin movie cùng với genres và casts
+      const movie = await this.movieRepository.findById(movieId)
+      if (!movie) {
+        throw new Error('Movie not found')
+      }
+
+      // 2. Lấy danh sách comment cho movie
+      const comments = await this.commentRepository.findCommentsByMovieId(movieId)
+
+      // 3. Lấy tối đa 5 phim có cùng genre (trừ chính nó)
+      const genres = movie.getGenres()
+      const genreIds = genres.map((genre) => genre.getId())
+
+      const relatedMovies = await this.movieRepository.findMoviesByGenreIds(genreIds, movieId, 5)
+
+      // 4. Trả về dữ liệu gộp
+      return {
+        movie,
+        comments,
+        relatedMovies,
+      }
+    } catch (error) {
+      if (error instanceof Error && error.message === 'Movie not found') {
+        throw error
+      }
+      throw new Error('Failed to fetch movie details')
     }
   }
 
@@ -71,5 +105,29 @@ export class MovieService {
       casts,
     )
     return this.movieRepository.update(movie)
+  }
+  async getMovieHighlights(): Promise<{
+    latestMovies: Movie[]
+    trendingMovies: Movie[]
+    topRatedMovies: Movie[]
+  }> {
+    try {
+      // Get 10 of each category
+      const limit = 10
+
+      const [latestMovies, trendingMovies, topRatedMovies] = await Promise.all([
+        this.movieRepository.findLatestMovies(limit),
+        this.movieRepository.findTrendingMovies(limit),
+        this.movieRepository.findTopRatedMovies(limit),
+      ])
+
+      return {
+        latestMovies,
+        trendingMovies,
+        topRatedMovies,
+      }
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 }

@@ -38,9 +38,23 @@ export class MovieRepository {
     }
   }
 
+  async findMoviesByGenreIds(genreIds: string[], excludeMovieId: string, limit: number): Promise<Movie[]> {
+    try {
+      return this.repository
+        .createQueryBuilder('movie')
+        .leftJoinAndSelect('movie.genres', 'genre')
+        .where('genre.id IN (:...genreIds)', { genreIds })
+        .andWhere('movie.id != :excludeMovieId', { excludeMovieId })
+        .limit(limit)
+        .getMany()
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
   async searchByTitle(title: string): Promise<Movie[]> {
     try {
-      return await this.repository
+      return this.repository
         .createQueryBuilder('movie')
         .leftJoinAndSelect('movie.genres', 'genres')
         .leftJoinAndSelect('movie.casts', 'casts')
@@ -58,12 +72,62 @@ export class MovieRepository {
       throw new Error((error as Error).message)
     }
   }
+
   async update(movie: Movie): Promise<Movie> {
-    return this.repository.save(movie)
+    try {
+      return this.repository.save(movie)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+  async findLatestMovies(limit: number): Promise<Movie[]> {
+    try {
+      return this.repository
+        .createQueryBuilder('movie')
+        .leftJoinAndSelect('movie.genres', 'genres')
+        .leftJoinAndSelect('movie.casts', 'casts')
+        .orderBy('movie.releaseYear', 'DESC')
+        .limit(limit)
+        .getMany()
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 
-  // Thêm phương thức findOne để tìm bộ phim theo ID
-  async findOne(id: number): Promise<Movie | null> {
-    return this.repository.findOne({ where: { id } as FindOptionsWhere<Movie> })
+  async findTopRatedMovies(limit: number): Promise<Movie[]> {
+    try {
+      return this.repository
+        .createQueryBuilder('movie')
+        .leftJoinAndSelect('movie.genres', 'genres')
+        .leftJoinAndSelect('movie.casts', 'casts')
+        .orderBy('movie.voteAvg', 'DESC')
+        .limit(limit)
+        .getMany()
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  async findTrendingMovies(limit: number): Promise<Movie[]> {
+    try {
+      return this.repository
+        .createQueryBuilder('movie')
+        .leftJoinAndSelect('movie.genres', 'genres')
+        .leftJoinAndSelect('movie.casts', 'casts')
+        .orderBy('movie.voteCount', 'DESC')
+        .limit(limit)
+        .getMany()
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  // Đổi tên tránh trùng với method có sẵn trong TypeORM Repository
+  async findOneById(id: number): Promise<Movie | null> {
+    try {
+      return this.repository.findOne({ where: { id } as FindOptionsWhere<Movie> })
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
 }
