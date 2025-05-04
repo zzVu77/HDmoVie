@@ -1,11 +1,49 @@
-import { Input } from '@/components/ui/input'
+import { useState, useRef, useEffect } from 'react'
 import { Search } from 'lucide-react'
 
-export function SearchBar({ placeholder = 'Search...' }: { placeholder?: string }) {
+export function SearchBar({
+  placeholder,
+  onExpandChange,
+}: {
+  placeholder: string
+  onExpandChange: (expanded: boolean) => void
+}) {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+        setIsExpanded(false)
+        onExpandChange(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [onExpandChange])
+
+  const handleExpand = () => {
+    setIsExpanded(true)
+    onExpandChange(true)
+  }
+
   return (
-    <div className='relative w-full max-w-sm'>
-      <Input type='text' placeholder={placeholder} className='pr-10 text-white' />
-      <Search className='absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white' />
+    <div
+      className={`flex items-center bg-transparent text-white rounded-md transition-all duration-300 ${
+        isExpanded ? 'w-64 ring-2 ring-offset-2 ring-[var(--accent-yellow)]' : 'w-10'
+      } hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)]`}
+    >
+      <button onClick={handleExpand} className='p-2 focus:outline-none'>
+        <Search className='text-white' />
+      </button>
+      {isExpanded && (
+        <input
+          ref={inputRef}
+          type='text'
+          placeholder={placeholder}
+          className='flex-grow p-2 bg-transparent text-white focus:outline-none transition-all duration-300 w-full'
+        />
+      )}
     </div>
   )
 }
