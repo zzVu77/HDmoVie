@@ -190,8 +190,8 @@ export const columns: ColumnDef<BlogCommentReportType>[] = [
           </Link>
 
           <ConfirmAlertDialog
-            title='Delete Comment Report'
-            description='Are you sure you want to delete this comment report? This action cannot be undone.'
+            title='Delete Comment'
+            description='Are you sure you want to delete this comment? This action cannot be undone.'
             onConfirm={() => {
               // Implement delete functionality here
             }}
