@@ -131,14 +131,14 @@ export default function BlogCard({
           </div>
 
           {hasImages && (
-            <Carousel className='w-full mx-auto'>
+            <Carousel className='w-full mx-auto my-1'>
               <CarouselContent>
                 {images!.map((imageUrl, index) => (
-                  <CarouselItem key={index}>
+                  <CarouselItem key={index} className='flex justify-center'>
                     <img
                       src={imageUrl}
                       alt={`Blog image ${index + 1}`}
-                      className='w-full object-cover rounded-sm'
+                      className='w-full object-cover rounded-sm self-center'
                       onError={(e) => {
                         ;(e.target as HTMLImageElement).src =
                           'https://makerworld.bblmw.com/makerworld/model/US2ab61bb7d3000c/design/2024-01-30_029b2304056c.png?x-oss-process=image/resize,w_1000/format,webp'
@@ -191,7 +191,6 @@ export default function BlogCard({
               e.stopPropagation()
             }}
           >
-            &nbsp;
             <MessageSquareWarning size={18} />
             &nbsp;
           </Button>
