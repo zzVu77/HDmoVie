@@ -57,15 +57,15 @@ export class RegisteredUserController {
       res.status(400).json({ message: (error as Error).message })
     }
   }
-  async forgotPassword(req: Request, res: Response) {
-    const { email } = req.body
-    const result = await this.registeredUserService.forgotPassword(email)
-    res.status(result.success ? 200 : 400).json(result)
-  }
+  // async forgotPassword(req: Request, res: Response) {
+  //   const { email } = req.body
+  //   const result = await this.registeredUserService.forgotPassword(email)
+  //   res.status(result.success ? 200 : 400).json(result)
+  // }
 
-  async resetPassword(req: Request, res: Response) {
-    const { email, otp, password } = req.body
-    const result = await this.registeredUserService.resetPassword(email, otp, password)
-    res.status(result.success ? 200 : 400).json(result)
-  }
+  // async resetPassword(req: Request, res: Response) {
+  //   const { email, otp, password } = req.body
+  //   const result = await this.registeredUserService.resetPassword(email, otp, password)
+  //   res.status(result.success ? 200 : 400).json(result)
+  // }
 }

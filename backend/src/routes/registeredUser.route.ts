@@ -14,11 +14,11 @@ const registeredUserService = new RegisteredUserService(registeredUserRepository
 const authService = new AuthService(registeredUserRepository)
 const registeredUserController = new RegisteredUserController(registeredUserService, authService)
 
-// Forgot password
-registeredUserRouter.post('/forgot-password', (req, res) => registeredUserController.forgotPassword(req, res))
+// // Forgot password
+// registeredUserRouter.post('/forgot-password', (req, res) => registeredUserController.forgotPassword(req, res))
 
-// Reset password
-registeredUserRouter.post('/reset-password', (req, res) => registeredUserController.resetPassword(req, res))
+// // Reset password
+// registeredUserRouter.post('/reset-password', (req, res) => registeredUserController.resetPassword(req, res))
 
 registeredUserRouter.post('/register', registerUserMiddleware, (req, res) =>
   registeredUserController.register(req, res),
