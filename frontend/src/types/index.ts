@@ -9,3 +9,11 @@ export type MovieCardProps = {
   voteAvg?: number
   genres?: GenreType[]
 }
+export type TagType = {
+  id: string
+  name: string
+}
+export type RegisteredUserType = {
+  id: string
+  name: string
+}

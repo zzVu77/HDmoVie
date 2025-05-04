@@ -4,8 +4,6 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import NotFound404 from './pages/NotFound404'
 import TestComponent from './pages/TestComponent'
-import BlogPage from './pages/Blog'
-import BlogDetail from './pages/BlogDetail'
 
 function App() {
   return (
@@ -16,8 +14,6 @@ function App() {
         <Route path='*' element={<NotFound404 />} />
         <Route path='/login' element={<Login />} />
         <Route path='/test' element={<TestComponent />} />
-        <Route path='/blog' element={<BlogPage />} />
-        <Route path='/blog/:blogId' element={<BlogDetail />} />
       </Routes>
     </BrowserRouter>
   )
