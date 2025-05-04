@@ -1,4 +1,4 @@
-# 🚀 Backend Project 
+# 🚀 Backend Project
 
 ![Node.js](https://img.shields.io/badge/Node.js-20.x-green?style=flat&logo=node.js) ![Express](https://img.shields.io/badge/Express-4.21.2-black?style=flat&logo=express) ![TypeScript](https://img.shields.io/badge/TypeScript-5.8.2-blue?style=flat&logo=typescript) ![TypeORM](https://img.shields.io/badge/TypeORM-0.3.22-blue?style=flat&logo=typeorm)
 
@@ -25,6 +25,46 @@ backend/
 ```sh
 npm install
 ```
+
+### 🚀 Start MySQL Container
+
+To start the MySQL database using Docker, run:
+
+```sh
+ npm run mysql:up
+```
+
+This will start the MySQL container and set up the HDmoVie database.
+
+### 📦 Run Migrations
+
+To apply the migrations to the database, run:
+
+```sh
+ npm run migration:run
+```
+
+This will execute all pending migrations and update the database schema.
+
+### 🌱 Seeding the Database
+
+Use this command to insert sample data into your MySQL database:
+
+```sh
+ npm run db:seed
+```
+
+This will execute all pending migrations and update the database schema.
+
+### 🧰 Generate a New Migration
+
+To generate a new migration file after changing your entities, run:
+
+```sh
+ npm run migration:generate src/migrations/<YourMigrationName>
+```
+
+This will create a new migration file for the changes in your entities.
 
 ### 🏃 Run Development Server
 

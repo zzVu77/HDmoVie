@@ -1,19 +1,31 @@
-// // backend/src/index.ts
-// import cors from 'cors'
-// import 'reflect-metadata'
-// import express from 'express'
-// import { AppDataSource } from './data-source'
+// backend/src/index.ts
+import cors from 'cors'
+import 'reflect-metadata'
+import express from 'express'
+import { AppDataSource } from './data-source'
+import cookieParser from 'cookie-parser'
+import movieRouter from './routes/movie.route'
+import registeredUserRouter from './routes/registeredUser.route'
+import genreRouter from './routes/genre.route'
+const app = express()
+app.use(cors())
+app.use(express.json())
+app.use(cookieParser())
+const port = 3001
 
-// const app = express()
-// app.use(cors())
-// app.use(express.json())
-// const port = 3001
+app.use('/api/movies', movieRouter)
 
-// AppDataSource.initialize()
-//   .then(() => {
-//     console.log('Database connected')
-//     app.listen(port, () => {
-//       console.log(`Server running on http://localhost:${port}`)
-//     })
-//   })
-//   .catch((error) => console.log('Error connecting to database:', error))
+app.use('/api/registeredusers', registeredUserRouter)
+
+app.use('/api/genres', genreRouter)
+app.get('/', (req, res) => {
+  res.send('HDmoVie API is running')
+})
+AppDataSource.initialize()
+  .then(() => {
+    console.log('Database connected')
+    app.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}`)
+    })
+  })
+  .catch((error) => console.log('Error connecting to database:', error))
