@@ -195,12 +195,6 @@ const dummyWatchlistMovies: WatchlistMovieProps[] = [
       { id: '1', name: 'Sci-Fi' },
       { id: '2', name: 'Thriller' },
     ],
-    casts: [
-      { id: '1', name: 'Leonardo DiCaprio', profilePath: 'https://www.imdb.com/name/nm0000138/' },
-      { id: '2', name: 'Joseph Gordon-Levitt', profilePath: 'https://www.imdb.com/name/nm0330687/' },
-      { id: '3', name: 'Elliot Page', profilePath: 'https://www.imdb.com/name/nm0680983/' },
-      { id: '4', name: 'Tom Hardy', profilePath: 'https://www.imdb.com/name/nm0362766/' },
-    ],
   },
   {
     id: '2',
@@ -215,12 +209,6 @@ const dummyWatchlistMovies: WatchlistMovieProps[] = [
     genres: [
       { id: '1', name: 'Sci-Fi' },
       { id: '3', name: 'Adventure' },
-    ],
-    casts: [
-      { id: '1', name: 'Matthew McConaughey', profilePath: 'https://www.imdb.com/name/nm0000190/' },
-      { id: '2', name: 'Anne Hathaway', profilePath: 'https://www.imdb.com/name/nm0004266/' },
-      { id: '3', name: 'Jessica Chastain', profilePath: 'https://www.imdb.com/name/nm1567113/' },
-      { id: '4', name: 'Michael Caine', profilePath: 'https://www.imdb.com/name/nm0000323/' },
     ],
   },
 ]
@@ -288,7 +276,6 @@ const TestComponent = () => {
             voteAvg={movie.voteAvg}
             voteCount={movie.voteCount}
             genres={movie.genres}
-            casts={movie.casts}
           />
         ))}
       </div>
@@ -307,6 +294,9 @@ const TestComponent = () => {
       </div>
       <div className='flex flex-col items-center justify-center gap-y-5'>
         <WriteBlogTextEditor allTags={dummyTags} />
+      </div>
+      <div>
+        <h1>TEST</h1>
       </div>
     </>
   )

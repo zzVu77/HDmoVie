@@ -35,7 +35,6 @@ export type WatchlistMovieProps = {
   voteAvg?: number
   voteCount?: number
   genres?: GenreType[]
-  casts?: CastType[]
 }
 export type WatchlistProps = {
   id?: string
