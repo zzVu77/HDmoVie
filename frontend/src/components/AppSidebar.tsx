@@ -25,6 +25,8 @@ import { Title } from '@/components/ui/typography'
 import { ChevronDown, Clapperboard, LogOut, NotebookPen, Settings, User, UsersRound } from 'lucide-react'
 import * as React from 'react'
 import { ManageMovie } from './movie-admin/ManageMovie'
+import ManageCast from './cast-admin/ManageCast'
+import ManageGerne from './genre-admin/ManageGerne'
 
 interface MenuItem {
   title: string
@@ -73,9 +75,9 @@ export default function AppSidebar() {
       case 'movie':
         return <ManageMovie />
       case 'casts':
-        return <div>Casts Dashboard</div>
+        return <ManageCast />
       case 'genres':
-        return <div>🎭 Genres content</div>
+        return <ManageGerne />
       case 'movie_comment_report':
         return <div>💬 Movie Comments Report</div>
       case 'blogs':
