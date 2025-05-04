@@ -145,7 +145,7 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
         {selectedTags.map((tag) => (
           <div
             key={tag.id}
-            className='bg-secondary-yellow text-black px-2 rounded-full text-sm flex items-center gap-1 ml-2'
+            className='bg-secondary-yellow text-tertiary-dark px-2 rounded-full text-sm flex items-center gap-1 ml-2'
           >
             {tag.name}
             <X className='w-3 h-3 cursor-pointer hover:text-gray-600' onClick={() => toggleTag(tag)} />
@@ -181,7 +181,10 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
       </div>
 
       {/* Submit Button */}
-      <Button className='w-full bg-tertiary-yellow text-black mt-3' onClick={handleSubmit}>
+      <Button
+        className='w-full bg-tertiary-yellow cursor-pointer text-black mt-3 hover:[box-shadow:0_0_5px_#fff]'
+        onClick={handleSubmit}
+      >
         Publish Blog
       </Button>
     </div>
