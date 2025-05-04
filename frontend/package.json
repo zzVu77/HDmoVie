@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && npm run copy:redirects",
-    "copy:redirects": "copy public\\_redirects dist\\_redirects",
+    "copy:redirects": "cp public/_redirects dist/_redirects",
     "lint": "eslint .",
     "preview": "vite preview",
     "check:type": "tsc --project tsconfig.json --noEmit",
