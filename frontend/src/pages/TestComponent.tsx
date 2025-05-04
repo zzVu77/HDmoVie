@@ -2,7 +2,7 @@ import { RegisteredUserType, TagType } from '@/types/index'
 import { BlogPostComponentProps } from '@/components/BlogCard'
 import BlogCard from '@/components/BlogCard'
 import { Text } from '@/components/ui/typography'
-import CommentSection from '@/components/BlogCommentList'
+import CommentSection from '@/components/CommentSection'
 
 const sampleUsers: RegisteredUserType[] = [
   {
@@ -134,7 +134,7 @@ const TestComponent = () => {
 
       <h1 className='text-white w-full text-center'>BLOG DETAIL</h1>
       {/*BLOG DETAIL SECTION*/}
-      <div className='flex flex-col p-0 bg-secondary-dark rounded-3xl'>
+      <div className='flex flex-col p-0 bg-secondary-dark rounded-3xl overflow-hidden'>
         <BlogCard
           id='blog-1'
           content='Exploring the best dishes from around the world. From the spicy curries of India to the delicate sushi of Japan, this blog dives into the rich and diverse culinary traditions that make each culture unique. Join us as we embark on a flavorful journey to discover the stories behind these iconic dishes and the people who create them.'
@@ -151,7 +151,7 @@ const TestComponent = () => {
           isLast={false}
           isShowCommentDivider={true}
         />
-        <Text body={4} className='text-bolded text-white py-3 px-6'>
+        <Text body={4} className='text-bolded text-white pt-3 pb-1 px-6'>
           Replies
         </Text>
         <CommentSection />

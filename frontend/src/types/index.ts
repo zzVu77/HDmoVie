@@ -17,3 +17,10 @@ export type RegisteredUserType = {
   id: string
   name: string
 }
+export type BlogCommentType = {
+  id: string
+  content: string
+  dateCreated: string
+  owner: RegisteredUserType
+  replies?: BlogCommentType[]
+}
