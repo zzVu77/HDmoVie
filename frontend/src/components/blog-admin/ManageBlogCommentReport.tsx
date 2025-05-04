@@ -20,66 +20,68 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { ChevronDown, Eye, PencilLine, Trash2 } from 'lucide-react'
+import { ChevronDown, Eye, Trash2 } from 'lucide-react'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { ConfirmAlertDialog } from '../shared/ConfirmAlertDialog'
-import { ImageDialogCell } from '../shared/ImageDialogCell'
-import { BlogInfoModal } from './BlogInfoModal'
 
-// Define Blog Type
-export interface TagType {
-  id: string
-  name: string
-}
-
-export interface BlogOwnerType {
+// Define Comment Report Type
+export interface ReporterType {
   id: string
   fullName: string
 }
 
-export interface ImageUrlType {
+export interface BlogCommentReportType {
   id: string
-  url: string
-}
-
-export interface BlogType {
-  id: string
+  reporter: ReporterType
+  reason: string
+  dateReported: string
   content: string
-  dateCreated: string
-  owner: BlogOwnerType
-  tags: TagType[]
-  imageUrls: Array<string | ImageUrlType>
+  commentId: string
+  blogId: string
 }
 
-// Sample data for blogs
-const data: BlogType[] = [
+// Sample data for comment reports
+const data: BlogCommentReportType[] = [
   {
     id: '1',
-    content: 'Please release new version of Avenger',
-    dateCreated: '2025-05-04T11:18:23.000Z',
-    owner: { id: '1', fullName: 'Alice Wonderland' },
-    tags: [{ id: '1', name: 'Avenger' }],
-    imageUrls: [],
+    reporter: { id: '3', fullName: 'John Smith' },
+    reason: 'Inappropriate comment',
+    dateReported: '2025-05-01T10:15:22.000Z',
+    content: 'This comment contains offensive remarks about Marvel fans',
+    commentId: '101',
+    blogId: '1',
   },
   {
     id: '2',
-    content: 'Wibu never die',
-    dateCreated: '2025-05-04T11:18:23.000Z',
-    owner: { id: '2', fullName: 'Bob Dave Tint' },
-    tags: [{ id: '2', name: 'Anime' }],
-    imageUrls: [{ id: '2', url: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg' }],
+    reporter: { id: '4', fullName: 'Emma Johnson' },
+    reason: 'Spam',
+    dateReported: '2025-05-02T12:30:45.000Z',
+    content: 'Comment is promoting unrelated products',
+    commentId: '102',
+    blogId: '2',
+  },
+  {
+    id: '3',
+    reporter: { id: '5', fullName: 'Michael Brown' },
+    reason: 'Harassment',
+    dateReported: '2025-05-03T09:45:33.000Z',
+    content: 'Comment targets specific user with abusive language',
+    commentId: '103',
+    blogId: '1',
+  },
+  {
+    id: '4',
+    reporter: { id: '6', fullName: 'Sarah Wilson' },
+    reason: 'Off-topic',
+    dateReported: '2025-05-03T16:20:11.000Z',
+    content: 'Comment is irrelevant to the blog post',
+    commentId: '104',
+    blogId: '2',
   },
 ]
 
-// Function to get first image URL for display
-function getFirstImageUrl(imageUrls: Array<string | ImageUrlType>): string | null {
-  if (!imageUrls || imageUrls.length === 0) return null
-  const firstUrl = imageUrls[0]
-  return typeof firstUrl === 'string' ? firstUrl : firstUrl.url
-}
-
-export const columns: ColumnDef<BlogType>[] = [
+export const columns: ColumnDef<BlogCommentReportType>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -109,16 +111,55 @@ export const columns: ColumnDef<BlogType>[] = [
     cell: ({ row }) => <div>{row.getValue('id') || 'N/A'}</div>,
   },
   {
-    accessorKey: 'content',
+    accessorKey: 'reporter',
     header: ({ column }) => (
       <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Content
+        Reporter
       </Button>
     ),
     cell: ({ row }) => {
-      const content = row.getValue('content')
+      const reporter = row.getValue('reporter') as ReporterType
+      return <div>{reporter?.fullName || 'N/A'}</div>
+    },
+    filterFn: (row, id, value) => {
+      const reporter = row.getValue(id) as ReporterType
+      return reporter?.fullName.toLowerCase().includes(value.toLowerCase())
+    },
+  },
+  {
+    accessorKey: 'reason',
+    header: ({ column }) => (
+      <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        Reason
+      </Button>
+    ),
+    cell: ({ row }) => <div>{row.getValue('reason') as string}</div>,
+    filterFn: (row, id, value) => {
+      const reason = row.getValue(id) as string
+      return reason?.toLowerCase().includes(value.toLowerCase())
+    },
+  },
+  {
+    accessorKey: 'dateReported',
+    header: ({ column }) => (
+      <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        Date Reported
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const dateReported = row.getValue('dateReported') as string
+      return <div>{dateReported ? new Date(dateReported).toLocaleDateString() : 'N/A'}</div>
+    },
+  },
+  {
+    accessorKey: 'content',
+    header: 'Comment Content',
+    cell: ({ row }) => {
+      const content = row.getValue('content') as string
       return (
-        <div className='truncate max-w'>{typeof content === 'string' ? content.substring(0, 50) + '...' : 'N/A'}</div>
+        <div className='truncate max-w-xs'>
+          {typeof content === 'string' ? content.substring(0, 50) + '...' : 'N/A'}
+        </div>
       )
     },
     filterFn: (row, id, value) => {
@@ -127,84 +168,30 @@ export const columns: ColumnDef<BlogType>[] = [
     },
   },
   {
-    accessorKey: 'dateCreated',
-    header: 'Date Created',
-    cell: ({ row }) => {
-      const dateCreated = row.getValue('dateCreated') as string
-      return <div>{dateCreated ? new Date(dateCreated).toLocaleDateString() : 'N/Aidad'}</div>
-    },
+    accessorKey: 'commentId',
+    header: 'Comment ID',
+    cell: ({ row }) => <div>{row.getValue('commentId') as string}</div>,
   },
   {
-    accessorKey: 'owner',
-    header: 'Owner',
-    cell: ({ row }) => {
-      const owner = row.getValue('owner') as BlogOwnerType
-      return <div>{owner?.fullName || 'N/A'}</div>
-    },
-    filterFn: (row, id, value) => {
-      const owner = row.getValue(id) as BlogOwnerType
-      return owner?.fullName.toLowerCase().includes(value.toLowerCase())
-    },
-  },
-  {
-    accessorKey: 'tags',
-    header: 'Tags',
-    cell: ({ row }) => {
-      const tags = row.getValue('tags') as TagType[]
-      return <div>{tags?.map((t) => t.name).join(', ') || 'N/A'}</div>
-    },
-    filterFn: (row, id, value) => {
-      const tags = row.getValue(id) as TagType[]
-      return tags?.some((t) => t.name.toLowerCase().includes(value.toLowerCase()))
-    },
-  },
-  {
-    accessorKey: 'imageUrls',
-    header: 'Image',
-    cell: ({ row }) => {
-      const imageUrls = row.getValue('imageUrls') as Array<string | ImageUrlType>
-      const firstImageUrl = getFirstImageUrl(imageUrls)
-      return firstImageUrl ? (
-        <ImageDialogCell
-          src={firstImageUrl}
-          alt='Blog Image'
-          smallClassName='h-16 w-12'
-          largeClassName='max-w-sm w-full h-auto'
-        />
-      ) : (
-        'N/A'
-      )
-    },
-    filterFn: (row, id, value) => {
-      const imageUrls = row.getValue(id) as Array<string | ImageUrlType>
-      if (!imageUrls || imageUrls.length === 0) return false
-      return imageUrls.some((url) => {
-        const urlStr = typeof url === 'string' ? url : url.url
-        return urlStr.toLowerCase().includes(value.toLowerCase())
-      })
-    },
-    enableSorting: false,
+    accessorKey: 'blogId',
+    header: 'Blog ID',
+    cell: ({ row }) => <div>{row.getValue('blogId') as string}</div>,
   },
   {
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const blog = row.original
+      const report = row.original
+
       return (
-        <div className='flex items-center justify-between'>
-          <Link to={`/blog/${blog.id}`} className='block'>
+        <div className='flex items-center justify-center gap-2'>
+          <Link to={`/blog/${report.blogId}/comment/${report.commentId}`} className='block'>
             <Eye className='h-4 w-4 text-primary-dark cursor-pointer' />
           </Link>
-          <BlogInfoModal
-            icon={<PencilLine className='h-4 w-4 text-primary-dark cursor-pointer' />}
-            // onSave={(updatedData) => {
-            //   // Implement save functionality here
-            // }}
-            blog={blog}
-          />
+
           <ConfirmAlertDialog
-            title='Delete Blog'
-            description='Are you sure you want to delete this blog? This action cannot be undone.'
+            title='Delete Comment Report'
+            description='Are you sure you want to delete this comment report? This action cannot be undone.'
             onConfirm={() => {
               // Implement delete functionality here
             }}
@@ -218,12 +205,10 @@ export const columns: ColumnDef<BlogType>[] = [
   },
 ]
 
-export function ManageBlog() {
+export function ManageBlogCommentReport() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-    dateCreated: false,
-  })
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
@@ -247,25 +232,31 @@ export function ManageBlog() {
 
   return (
     <div className='w-full'>
+      <div className='flex items-center justify-between mb-4'>
+        <h2 className='text-2xl font-bold'>Blog Comment Reports</h2>
+      </div>
+
       <div className='flex items-center py-4 gap-2'>
+        <Input
+          placeholder='Filter by reporter...'
+          value={(table.getColumn('reporter')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('reporter')?.setFilterValue(event.target.value)}
+          className='max-w-sm text-xs'
+        />
+        <Input
+          placeholder='Filter by reason...'
+          value={(table.getColumn('reason')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('reason')?.setFilterValue(event.target.value)}
+          className='max-w-sm text-xs'
+        />
         <Input
           placeholder='Filter by content...'
           value={(table.getColumn('content')?.getFilterValue() as string) ?? ''}
           onChange={(event) => table.getColumn('content')?.setFilterValue(event.target.value)}
           className='max-w-sm text-xs'
         />
-        <Input
-          placeholder='Filter by owner...'
-          value={(table.getColumn('owner')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('owner')?.setFilterValue(event.target.value)}
-          className='max-w-sm text-xs'
-        />
-        <Input
-          placeholder='Filter by tags...'
-          value={(table.getColumn('tags')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('tags')?.setFilterValue(event.target.value)}
-          className='max-w-sm text-xs'
-        />
+
+        {/* Column Visibility */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='outline' className='ml-auto text-xs'>
@@ -289,13 +280,14 @@ export function ManageBlog() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
       <div className='rounded-md border'>
         <Table>
-          <TableHeader className='sticky'>
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow className='mx-auto' key={headerGroup.id}>
+              <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead className='text-center' key={header.id}>
+                  <TableHead key={header.id} className='text-center'>
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
@@ -307,7 +299,7 @@ export function ManageBlog() {
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className='text-center' key={cell.id}>
+                    <TableCell key={cell.id} className='text-center'>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -316,13 +308,14 @@ export function ManageBlog() {
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  No results.
+                  No comment reports found.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
+
       <div className='flex items-center justify-end space-x-2 py-4'>
         <div className='flex-1 text-sm text-muted-foreground'>
           {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
@@ -346,4 +339,4 @@ export function ManageBlog() {
   )
 }
 
-export default ManageBlog
+export default ManageBlogCommentReport

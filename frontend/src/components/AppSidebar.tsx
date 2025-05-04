@@ -27,7 +27,8 @@ import * as React from 'react'
 import { ManageBlog } from './blog-admin/ManageBlog'
 import { ManageMovie } from './movie-admin/ManageMovie'
 import ManageTag from './tag-admin/ManageTag'
-
+import ManageBlogReport from './blog-admin/ManageBlogReport'
+import ManageBlogCommentReport from './blog-admin/ManageBlogCommentReport'
 interface MenuItem {
   title: string
   key: string
@@ -83,9 +84,9 @@ export default function AppSidebar() {
       case 'blogs':
         return <ManageBlog />
       case 'blog_report':
-        return <div>📥 Blogs Report Dashboard</div>
+        return <ManageBlogReport />
       case 'conmment_report':
-        return <div>💬 Comments Report</div>
+        return <ManageBlogCommentReport />
       case 'tags':
         return <ManageTag />
       case 'user':
