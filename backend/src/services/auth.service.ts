@@ -1,7 +1,5 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-
-import { RegisteredUser } from '~/models/registeredUser.model'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access_secret'
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'refresh_secret'
@@ -25,7 +23,7 @@ export class AuthService {
         role: user.getRole(),
       }
 
-      const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
+      const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '5s' })
       const refreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: '7d' })
 
       user.updateToken(refreshToken)
@@ -53,7 +51,7 @@ export class AuthService {
         role: decoded.role,
       }
 
-      const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
+      const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '5s' })
 
       return accessToken
     } catch (error) {

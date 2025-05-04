@@ -1,12 +1,16 @@
-import { Input } from '@/components/ui/input'
+import pornhub from '@/assets/pornhub.svg' // Replace with appropriate image
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import pornhub from '@/assets/pornhub.svg' // Replace with appropriate image
+import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import axios from 'axios'
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+import { z } from 'zod'
 import { Text, Title } from '../typography'
+
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters long'),
@@ -15,9 +19,9 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>
 
 const LoginForm: React.FC = () => {
-  const [isSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const navigate = useNavigate()
 
-  // Initialize form with React Hook Form and Zod
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -26,54 +30,47 @@ const LoginForm: React.FC = () => {
     },
   })
 
-  // Handle form submission
-  // const onSubmit = async (data: LoginFormValues) => {
-  //   setIsSubmitting(true);
-  //   try {
-  //     // Simulate API call
-  //     // await loginUser(data); // Replace with actual API call
-  //     toast({
-  //       title: 'Login Successful',
-  //       description: 'You have been logged in!',
-  //     });
-  //     form.reset();
-  //   } catch (error) {
-  //     toast({
-  //       title: 'Error',
-  //       description: 'Failed to log in. Please check your credentials.',
-  //       variant: 'destructive',
-  //     });
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
-  const onSubmit = () => {
-    form.reset()
+  const onSubmit = async (data: LoginFormValues) => {
+    setIsSubmitting(true)
+    try {
+      const response = await axios.post(
+        'http://localhost:3001/api/registeredusers/login',
+        {
+          email: data.email,
+          password: data.password,
+        },
+        { withCredentials: true },
+      )
+
+      const token = response.data.accessToken
+      localStorage.setItem('accessToken', token)
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+      toast.success('Đăng nhập thành công!')
+      form.reset()
+      navigate('/')
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.error || 'Đăng nhập thất bại')
+      } else {
+        toast.error('Đăng nhập thất bại')
+      }
+    }
   }
+
   return (
-    <div className='flex min-h-screen flex-row items-center justify-center '>
-      {/* Left Side: Image with Overlay (Hidden on Mobile) */}
+    <div className='flex min-h-screen flex-row items-center justify-center'>
       <div className='hidden lg:block w-full lg:w-1/2 h-screen relative'>
-        <img
-          src={pornhub} // Replace with your hot air balloon image path
-          alt='Hot Air Balloon'
-          className='w-full h-full object-contain'
-        />
+        <img src={pornhub} alt='Hot Air Balloon' className='w-full h-full object-contain' />
         <div className='absolute inset-0 bg-tertiary-yellow opacity-50 rounded-r-[50px]'></div>
       </div>
-
-      {/* Right Side: Form */}
       <div className='w-full lg:w-1/2 h-screen flex items-center justify-center p-4 sm:p-8'>
         <div className='w-full max-w-sm sm:max-w-md space-y-6'>
-          {/* <h2 className="text-xl sm:text-2xl font-bold text-center text-white">Login</h2> */}
-
           <Title level={2} className='text-center mb-4 text-white'>
             Login
           </Title>
-          {/* Form */}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-              {/* Email Field */}
               <FormField
                 control={form.control}
                 name='email'
@@ -87,7 +84,7 @@ const LoginForm: React.FC = () => {
                         id='email'
                         type='email'
                         placeholder='Enter your email'
-                        className='w-full bg-white text-white placeholder--drop-shadow-white-glow focus-visible:ring-2 focus-visible:ring-yellow-400'
+                        className='w-full bg-white text-black placeholder--drop-shadow-white-glow focus-visible:ring-2 focus-visible:ring-yellow-400'
                         {...field}
                       />
                     </FormControl>
@@ -95,8 +92,6 @@ const LoginForm: React.FC = () => {
                   </FormItem>
                 )}
               />
-
-              {/* Password Field */}
               <FormField
                 control={form.control}
                 name='password'
@@ -110,7 +105,7 @@ const LoginForm: React.FC = () => {
                         id='password'
                         type='password'
                         placeholder='Enter your password'
-                        className='w-full bg-white text-white placeholder--drop-shadow-white-glow focus-visible:ring-2 focus-visible:ring-yellow-400'
+                        className='w-full bg-white text-black placeholder--drop-shadow-white-glow focus-visible:ring-2 focus-visible:ring-yellow-400'
                         {...field}
                       />
                     </FormControl>
@@ -118,8 +113,6 @@ const LoginForm: React.FC = () => {
                   </FormItem>
                 )}
               />
-
-              {/* Submit Button */}
               <Button
                 type='submit'
                 disabled={isSubmitting}
@@ -129,8 +122,6 @@ const LoginForm: React.FC = () => {
               </Button>
             </form>
           </Form>
-
-          {/* Register Link */}
           <Text className='text-center text-sm text-white'>
             Don't have an account?{' '}
             <a href='/register' className='text-secondary-yellow hover:text-tertiary-yellow'>

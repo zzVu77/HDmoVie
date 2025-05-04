@@ -5,7 +5,7 @@ import { RegisteredUserRepository } from '~/repositories/registeredUser.reposito
 import { RegisteredUserService } from '~/services/registeredUser.service'
 import { registerUserMiddleware, loginUserMiddleware } from '~/middlewares/registeredUser.middleware'
 import { AuthService } from '~/services/auth.service'
-import { authenticateToken } from '~/middlewares/auth.middleware'
+import { authenticateToken, isRegisteredUser, isAdmin } from '~/middlewares/auth.middleware'
 const registeredUserRouter = Router()
 
 // Khởi tạo dependencies
@@ -20,6 +20,8 @@ registeredUserRouter.post('/register', registerUserMiddleware, (req, res) =>
 )
 
 registeredUserRouter.post('/login', loginUserMiddleware, (req, res) => registeredUserController.login(req, res))
-registeredUserRouter.get('/me', authenticateToken, (req, res) => registeredUserController.getProfile(req, res))
+registeredUserRouter.get('/me', authenticateToken, isRegisteredUser, (req, res) =>
+  registeredUserController.getProfile(req, res),
+)
 
 export default registeredUserRouter

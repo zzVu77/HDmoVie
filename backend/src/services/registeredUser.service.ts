@@ -16,6 +16,7 @@ export class RegisteredUserService {
       }
       // hash password
       userData.setPassword(await bcrypt.hash(userData.getPassword(), 8))
+      // console.log(userData)
       // Save user
       return await this.registeredUserRepository.create(userData)
     } catch (error) {

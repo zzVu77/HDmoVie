@@ -8,7 +8,12 @@ import movieRouter from './routes/movie.route'
 import registeredUserRouter from './routes/registeredUser.route'
 import genreRouter from './routes/genre.route'
 const app = express()
-app.use(cors())
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true, // Cho phép gửi và nhận cookie
+  }),
+)
 app.use(express.json())
 app.use(cookieParser())
 const port = 3001
