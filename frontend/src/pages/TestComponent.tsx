@@ -144,8 +144,8 @@ const TestComponent = () => {
           likes={Math.floor(Math.random() * 100)}
           comments={Math.floor(Math.random() * 50)}
           images={[
-            'https://fastly.picsum.photos/id/866/536/354.jpg?hmac=tGofDTV7tl2rprappPzKFiZ9vDh5MKj39oa2D--gqhA',
             'https://fastly.picsum.photos.photos/id/866/536/354.jpg?hmac=tGofDTV7tl2rprappPzKFiZ9vDh5MKj39oa2D--gqhA',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3bKXtNBpnM9jpz9tsxgjmmItf4NmP7DC-vQ&s',
           ]}
           isFirst={true}
           isLast={false}

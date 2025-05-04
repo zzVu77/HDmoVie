@@ -58,7 +58,7 @@ export default function BlogCard({
       const maxHeight = lineHeight * 3
       setIsClamped(el.scrollHeight > maxHeight)
     }
-  }, [content])
+  }, [])
 
   const hasImages = images && images.length > 0
 
@@ -140,7 +140,8 @@ export default function BlogCard({
                       alt={`Blog image ${index + 1}`}
                       className='w-full object-cover rounded-sm'
                       onError={(e) => {
-                        ;(e.target as HTMLImageElement).src = '/api/placeholder/400/400'
+                        ;(e.target as HTMLImageElement).src =
+                          'https://makerworld.bblmw.com/makerworld/model/US2ab61bb7d3000c/design/2024-01-30_029b2304056c.png?x-oss-process=image/resize,w_1000/format,webp'
                       }}
                     />
                   </CarouselItem>
