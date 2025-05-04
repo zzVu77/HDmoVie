@@ -2,15 +2,13 @@ import nodemailer from 'nodemailer'
 import dotenv from 'dotenv'
 dotenv.config()
 
-// Sử dụng process.env để lấy giá trị từ file .env
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
+  service: 'gmail',
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: process.env.Email_User,
+    pass: process.env.Email_Password,
   },
-})
+} as nodemailer.TransportOptions)
 
 export async function sendOtpEmail(to: string, otp: string) {
   const mailOptions = {
