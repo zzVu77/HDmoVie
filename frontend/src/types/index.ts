@@ -14,6 +14,7 @@ export type MovieCardProps = {
   voteAvg?: number
   genres?: GenreType[]
 }
+
 export type FollowPeopleProps = {
   id?: string
   fullName?: string
@@ -58,4 +59,15 @@ export type NotificationItemProps = {
   message: string
   time: Date
   status: 'UNREAD' | 'READ'
+}
+export type RegisteredUserType = {
+  id: string
+  name: string
+}
+export type BlogCommentType = {
+  id: string
+  content: string
+  dateCreated: string
+  owner: RegisteredUserType
+  replies?: BlogCommentType[]
 }
