@@ -6,6 +6,12 @@ import WatchlistItem from '@/components/WatchlistItem'
 import WriteBlogTextEditor from '@/components/WriteBlogTextEditor'
 import { FollowPeopleProps, RegisteredUserProps, TagType, WatchlistMovieProps } from '@/types'
 import { WatchlistProps } from '@/types'
+import Header from '@/components/Header'
+import ForgotPasswordForm from '@/components/ForgotPasswordForm'
+import VerifyOtpForm from '@/components/VerifyOtpForm'
+import ResetPasswordForm from '@/components/ResetPasswordForm'
+import ReportModal from '@/components/ReportModal'
+import { Footer2 } from '@/components/Footer'
 
 const dummyFollowers: FollowPeopleProps[] = []
 
@@ -298,6 +304,21 @@ const TestComponent = () => {
       <div>
         <h1>TEST</h1>
       </div>
+
+      <div
+        className='bg-cover bg-center p-5'
+        style={{
+          backgroundImage: "url('https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg')",
+        }}
+      >
+        <Header />
+      </div>
+      <ForgotPasswordForm />
+      <VerifyOtpForm />
+      <ResetPasswordForm />
+      <ReportModal />
+
+      <Footer2 />
     </>
   )
 }

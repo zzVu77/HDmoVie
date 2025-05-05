@@ -53,3 +53,9 @@ export type MediaItem = {
   type: 'image' | 'video'
   url: string
 }
+export type NotificationItemProps = {
+  id: string
+  message: string
+  time: Date
+  status: 'UNREAD' | 'READ'
+}
