@@ -79,7 +79,9 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
 
     const newBlog = {
       content,
-      images: mediaCloudUrls,
+      images: mediaCloudUrls.map((url) => {
+        return { url: url }
+      }),
       tags: selectedTags,
     }
     // Send newBlog to the server or handle it as needed
