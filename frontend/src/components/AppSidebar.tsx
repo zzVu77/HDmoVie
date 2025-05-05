@@ -24,9 +24,14 @@ import {
 import { Title } from '@/components/ui/typography'
 import { ChevronDown, Clapperboard, LogOut, NotebookPen, Settings, User, UsersRound } from 'lucide-react'
 import * as React from 'react'
+import { ManageBlog } from './blog-admin/ManageBlog'
 import { ManageMovie } from './movie-admin/ManageMovie'
+
+import ManageBlogCommentReport from './blog-admin/ManageBlogCommentReport'
+import ManageBlogReport from './blog-admin/ManageBlogReport'
 import ManageCast from './cast-admin/ManageCast'
 import ManageGerne from './genre-admin/ManageGerne'
+import ManageTag from './tag-admin/ManageTag'
 
 interface MenuItem {
   title: string
@@ -81,13 +86,13 @@ export default function AppSidebar() {
       case 'movie_comment_report':
         return <div>💬 Movie Comments Report</div>
       case 'blogs':
-        return <div>📥 Blogs Dashboard</div>
+        return <ManageBlog />
       case 'blog_report':
-        return <div>📥 Blogs Report Dashboard</div>
+        return <ManageBlogReport />
       case 'conmment_report':
-        return <div>💬 Comments Report</div>
+        return <ManageBlogCommentReport />
       case 'tags':
-        return <div>💬 Tags Dashboard</div>
+        return <ManageTag />
       case 'user':
         return <div>📅User Dashboard</div>
       case 'settings':

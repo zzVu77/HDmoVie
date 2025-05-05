@@ -25,52 +25,61 @@ import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { ConfirmAlertDialog } from '../shared/ConfirmAlertDialog'
 import { ImageDialogCell } from '../shared/ImageDialogCell'
-import { MovieInfoModal } from './MovieInfoModal'
-import { CastType, GenreType, MovieType } from '@/types'
+import { BlogInfoModal } from './BlogInfoModal'
 
-const data: MovieType[] = [
+// Define Blog Type
+export interface TagType {
+  id: string
+  name: string
+}
+
+export interface BlogOwnerType {
+  id: string
+  fullName: string
+}
+
+export interface ImageUrlType {
+  id: string
+  url: string
+}
+
+export interface BlogType {
+  id: string
+  content: string
+  dateCreated: string
+  owner: BlogOwnerType
+  tags: TagType[]
+  imageUrls: Array<string | ImageUrlType>
+}
+
+// Sample data for blogs
+const data: BlogType[] = [
   {
     id: '1',
-    title: 'Inception',
-    release: '2010-07-16',
-    voteAvg: 8.8,
-    voteCount: 35000,
-    genres: [{ name: 'Sci-Fi' }, { name: 'Action' }],
-    casts: [{ name: 'Leonardo DiCaprio' }, { name: 'Joseph Gordon-Levitt' }],
-    description: 'A thief who steals corporate secrets through dream infiltration technology.',
-    trailerSource: 'https://www.youtube.com/watch?v=YoHD9XEInc0',
-    posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-    backdropSource: 'https://image.tmdb.org/t/p/original/ce3prrjh9ZehEl5JinNqr4jIeaB.jpg',
+    content: 'Please release new version of Avenger',
+    dateCreated: '2025-05-04T11:18:23.000Z',
+    owner: { id: '1', fullName: 'Alice Wonderland' },
+    tags: [{ id: '1', name: 'Avenger' }],
+    imageUrls: [],
   },
   {
     id: '2',
-    title: 'The Matrix',
-    release: '1999-03-31',
-    voteAvg: 8.7,
-    voteCount: 28000,
-    genres: [{ name: 'Sci-Fi' }, { name: 'Action' }],
-    casts: [{ name: 'Keanu Reeves' }, { name: 'Laurence Fishburne' }],
-    description: 'A hacker discovers a mysterious truth about his reality.',
-    trailerSource: 'https://www.youtube.com/watch?v=m8e-FF8MsqU',
-    posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-    backdropSource: 'https://image.tmdb.org/t/p/original/ce3prrjh9ZehEl5JinNqr4jIeaB.jpg',
-  },
-  {
-    id: '3',
-    title: 'Interstellar',
-    release: '2014-11-07',
-    voteAvg: 8.6,
-    voteCount: 32000,
-    genres: [{ name: 'Sci-Fi' }, { name: 'Adventure' }],
-    casts: [{ name: 'Matthew McConaughey' }, { name: 'Anne Hathaway' }],
-    description: 'A team of explorers travel through a wormhole in space.',
-    trailerSource: 'https://www.youtube.com/watch?v=zSWdZVtXT7E',
-    posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-    backdropSource: 'https://image.tmdb.org/t/p/original/ce3prrjh9ZehEl5JinNqr4jIeaB.jpg',
+    content: 'Wibu never die',
+    dateCreated: '2025-05-04T11:18:23.000Z',
+    owner: { id: '2', fullName: 'Bob Dave Tint' },
+    tags: [{ id: '2', name: 'Anime' }],
+    imageUrls: [{ id: '2', url: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg' }],
   },
 ]
 
-export const columns: ColumnDef<MovieType>[] = [
+// Function to get first image URL for display
+function getFirstImageUrl(imageUrls: Array<string | ImageUrlType>): string | null {
+  if (!imageUrls || imageUrls.length === 0) return null
+  const firstUrl = imageUrls[0]
+  return typeof firstUrl === 'string' ? firstUrl : firstUrl.url
+}
+
+export const columns: ColumnDef<BlogType>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -95,88 +104,70 @@ export const columns: ColumnDef<MovieType>[] = [
     header: ({ column }) => (
       <Button variant='ghost' className='w-fit' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         ID
-        {/* <ArrowUpDown className='ml-2 h-4 w-4' /> */}
       </Button>
     ),
     cell: ({ row }) => <div>{row.getValue('id') || 'N/A'}</div>,
   },
   {
-    accessorKey: 'title',
+    accessorKey: 'content',
     header: ({ column }) => (
       <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Title
-        {/* <ArrowUpDown className='ml-2 h-4 w-4' /> */}
-      </Button>
-    ),
-    cell: ({ row }) => <div>{row.getValue('title') || 'N/A'}</div>,
-  },
-  {
-    accessorKey: 'release',
-    header: 'Release Date',
-    cell: ({ row }) => {
-      const releaseDate = row.getValue('release') as string
-      return <div>{releaseDate ? new Date(releaseDate).toLocaleDateString() : 'N/A'}</div>
-    },
-  },
-  {
-    accessorKey: 'genres',
-    header: 'Genres',
-    cell: ({ row }) => {
-      const genres = row.getValue('genres') as GenreType[]
-      return <div>{genres?.map((g) => g.name).join(', ') || 'N/A'}</div>
-    },
-    filterFn: (row, id, value) => {
-      const genres = row.getValue(id) as GenreType[]
-      return genres?.some((g) => g.name.toLowerCase().includes(value.toLowerCase()))
-    },
-  },
-  {
-    accessorKey: 'voteAvg',
-    header: ({ column }) => (
-      <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Vote Average
-        {/* <ArrowUpDown className='ml-2 h-4 w-4' /> */}
+        Content
       </Button>
     ),
     cell: ({ row }) => {
-      const voteAvg = row.getValue('voteAvg') as number
-      return <div>{voteAvg ? voteAvg.toFixed(1) : 'N/A'}</div>
-    },
-  },
-  {
-    accessorKey: 'voteCount',
-    header: 'Vote Count',
-    cell: ({ row }) => {
-      const voteCount = row.getValue('voteCount') as number
-      return <div>{voteCount ? voteCount.toLocaleString() : 'N/A'}</div>
-    },
-  },
-  {
-    accessorKey: 'casts',
-    header: 'Casts',
-    cell: ({ row }) => {
-      const casts = row.getValue('casts') as CastType[]
-      return <div>{casts?.map((c) => c.name).join(', ') || 'N/A'}</div>
+      const content = row.getValue('content')
+      return (
+        <div className='truncate max-w'>{typeof content === 'string' ? content.substring(0, 50) + '...' : 'N/A'}</div>
+      )
     },
     filterFn: (row, id, value) => {
-      const casts = row.getValue(id) as CastType[]
-      return casts?.some((c) => c.name.toLowerCase().includes(value.toLowerCase()))
+      const content = row.getValue(id) as string
+      return content?.toLowerCase().includes(value.toLowerCase())
     },
   },
   {
-    accessorKey: 'trailerSource',
-    header: 'Trailer Source',
-    cell: ({ row }) => <div className='truncate w-full'>{row.getValue('trailerSource') || 'N/A'}</div>,
+    accessorKey: 'dateCreated',
+    header: 'Date Created',
+    cell: ({ row }) => {
+      const dateCreated = row.getValue('dateCreated') as string
+      return <div>{dateCreated ? new Date(dateCreated).toLocaleDateString() : 'N/Aidad'}</div>
+    },
   },
   {
-    accessorKey: 'posterSource',
-    header: 'Poster',
+    accessorKey: 'owner',
+    header: 'Owner',
     cell: ({ row }) => {
-      const posterSource = row.getValue('posterSource') as string
-      return posterSource ? (
+      const owner = row.getValue('owner') as BlogOwnerType
+      return <div>{owner?.fullName || 'N/A'}</div>
+    },
+    filterFn: (row, id, value) => {
+      const owner = row.getValue(id) as BlogOwnerType
+      return owner?.fullName.toLowerCase().includes(value.toLowerCase())
+    },
+  },
+  {
+    accessorKey: 'tags',
+    header: 'Tags',
+    cell: ({ row }) => {
+      const tags = row.getValue('tags') as TagType[]
+      return <div>{tags?.map((t) => t.name).join(', ') || 'N/A'}</div>
+    },
+    filterFn: (row, id, value) => {
+      const tags = row.getValue(id) as TagType[]
+      return tags?.some((t) => t.name.toLowerCase().includes(value.toLowerCase()))
+    },
+  },
+  {
+    accessorKey: 'imageUrls',
+    header: 'Image',
+    cell: ({ row }) => {
+      const imageUrls = row.getValue('imageUrls') as Array<string | ImageUrlType>
+      const firstImageUrl = getFirstImageUrl(imageUrls)
+      return firstImageUrl ? (
         <ImageDialogCell
-          src={posterSource}
-          alt='Poster'
+          src={firstImageUrl}
+          alt='Blog Image'
           smallClassName='h-16 w-12'
           largeClassName='max-w-sm w-full h-auto'
         />
@@ -184,23 +175,13 @@ export const columns: ColumnDef<MovieType>[] = [
         'N/A'
       )
     },
-    enableSorting: false,
-  },
-  {
-    accessorKey: 'backdropSource',
-    header: 'Backdrop',
-    cell: ({ row }) => {
-      const backdropSource = row.getValue('backdropSource') as string
-      return backdropSource ? (
-        <ImageDialogCell
-          src={backdropSource}
-          alt='Poster'
-          smallClassName='h-16 w-12'
-          largeClassName='max-w-sm w-full h-auto'
-        />
-      ) : (
-        'N/A'
-      )
+    filterFn: (row, id, value) => {
+      const imageUrls = row.getValue(id) as Array<string | ImageUrlType>
+      if (!imageUrls || imageUrls.length === 0) return false
+      return imageUrls.some((url) => {
+        const urlStr = typeof url === 'string' ? url : url.url
+        return urlStr.toLowerCase().includes(value.toLowerCase())
+      })
     },
     enableSorting: false,
   },
@@ -208,31 +189,28 @@ export const columns: ColumnDef<MovieType>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const movieId = row.getValue('id') as number
+      const blog = row.original
       return (
-        <div className='flex items-center justify-between gap-2 '>
-          <Link to='/movie' className='block'>
+        <div className='flex items-center justify-between'>
+          <Link to={`/blog/${blog.id}`} className='block'>
             <Eye className='h-4 w-4 text-primary-dark cursor-pointer' />
           </Link>
-
-          <MovieInfoModal
+          <BlogInfoModal
             icon={<PencilLine className='h-4 w-4 text-primary-dark cursor-pointer' />}
-            onSave={() => {}}
-            movie={data[movieId - 1]}
-          ></MovieInfoModal>
-
-          {/* <MovieInfoModal
-            icon={<BadgePlus className='h-4 w-4 text-primary-dark cursor-pointer' />}
-            onSave={() => {}}
-          ></MovieInfoModal> */}
-
+            // onSave={(updatedData) => {
+            //   // Implement save functionality here
+            // }}
+            blog={blog}
+          />
           <ConfirmAlertDialog
-            title=''
-            description='Are you sure you want to delete this movie? This action cannot be undone.'
-            onConfirm={() => {}}
+            title='Delete Blog'
+            description='Are you sure you want to delete this blog? This action cannot be undone.'
+            onConfirm={() => {
+              // Implement delete functionality here
+            }}
             trigger={<Trash2 className='h-4 w-4 text-primary-dark cursor-pointer' />}
             cancelText='No, go back'
-            confirmText='Yes, proceed'
+            confirmText='Yes, delete'
           />
         </div>
       )
@@ -240,12 +218,11 @@ export const columns: ColumnDef<MovieType>[] = [
   },
 ]
 
-export function ManageMovie() {
+export function ManageBlog() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-    voteAvg: false,
-    voteCount: false,
+    dateCreated: false,
   })
   const [rowSelection, setRowSelection] = React.useState({})
 
@@ -272,21 +249,21 @@ export function ManageMovie() {
     <div className='w-full'>
       <div className='flex items-center py-4 gap-2'>
         <Input
-          placeholder='Filter by titles...'
-          value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('title')?.setFilterValue(event.target.value)}
+          placeholder='Filter by content...'
+          value={(table.getColumn('content')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('content')?.setFilterValue(event.target.value)}
           className='max-w-sm text-xs'
         />
         <Input
-          placeholder='Filter by genres...'
-          value={(table.getColumn('genres')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('genres')?.setFilterValue(event.target.value)}
+          placeholder='Filter by owner...'
+          value={(table.getColumn('owner')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('owner')?.setFilterValue(event.target.value)}
           className='max-w-sm text-xs'
         />
         <Input
-          placeholder='Filter by casts...'
-          value={(table.getColumn('casts')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('casts')?.setFilterValue(event.target.value)}
+          placeholder='Filter by tags...'
+          value={(table.getColumn('tags')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('tags')?.setFilterValue(event.target.value)}
           className='max-w-sm text-xs'
         />
         <DropdownMenu>
@@ -368,4 +345,5 @@ export function ManageMovie() {
     </div>
   )
 }
-export default ManageMovie
+
+export default ManageBlog
