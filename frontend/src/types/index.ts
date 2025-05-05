@@ -47,3 +47,9 @@ export type TagType = {
   id?: string
   name?: string
 }
+export type MediaItem = {
+  index: number
+  file: File
+  type: 'image' | 'video'
+  url: string
+}
