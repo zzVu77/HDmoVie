@@ -5,41 +5,51 @@ export async function uploadMediasToCloud(mediaItems: MediaItem[]): Promise<stri
     return []
   }
 
-  try {
-    // Check if Cloudinary configuration is available
-    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
-    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
+  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
 
-    if (!cloudName || !uploadPreset) {
-      throw new Error('Cloudinary configuration is missing')
-    }
+  if (!cloudName || !uploadPreset) {
+    throw new Error('Cloudinary configuration is missing')
+  }
 
-    // Upload images to Cloudinary
-    // Create an array of promises for each image upload
-    const uploadPromises = mediaItems.map(async (img) => {
-      // Create a FormData object to send the image file
-      const formData = new FormData()
-      formData.append('file', img.file)
-      formData.append('upload_preset', uploadPreset)
+  const uploadPromises = mediaItems.map(async (item) => {
+    const formData = new FormData()
+    formData.append('file', item.file)
+    formData.append('upload_preset', uploadPreset)
 
-      // Send the image file to Cloudinary
-      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-        method: 'POST',
-        body: formData,
-      })
+    const isVideo = item.file.type.startsWith('video/')
+    const endpoint = isVideo ? 'video/upload' : 'image/upload'
 
-      // Check if the response is OK and parse the JSON data
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(`Upload failed for image: ${data.error?.message || 'Unknown error'}`)
-      }
-
-      // Return the URL of the uploaded image
-      return data.secure_url as string
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${endpoint}`, {
+      method: 'POST',
+      body: formData,
     })
 
-    return await Promise.all(uploadPromises)
-  } catch (error) {
-    throw new Error(`Error uploading images to cloud ${(error as Error).message}`)
+    const data = await response.json()
+    if (!response.ok) {
+      throw new Error(`Upload failed for ${item.file.name}: ${data.error?.message || 'Unknown error'}`)
+    }
+
+    return data.secure_url as string
+  })
+
+  const results = await Promise.allSettled(uploadPromises)
+
+  const successfulUrls: string[] = []
+  const errors: string[] = []
+
+  results.forEach((result, index) => {
+    if (result.status === 'fulfilled') {
+      successfulUrls.push(result.value)
+    } else {
+      const fileName = mediaItems[index]?.file.name || 'unknown file'
+      errors.push(`${fileName}: ${result.reason.message}`)
+    }
+  })
+
+  if (errors.length > 0) {
+    throw new Error(errors.join(' '))
   }
+
+  return successfulUrls
 }
