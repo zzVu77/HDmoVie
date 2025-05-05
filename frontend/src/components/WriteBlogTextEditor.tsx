@@ -5,13 +5,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Text } from '@/components/ui/typography'
 import { Button } from '@/components/ui/button'
 import { X, Image } from 'lucide-react'
-import { TagType } from '@/types'
-
-type MediaItem = {
-  index: number
-  type: 'image' | 'video'
-  url: string
-}
+import { TagType, MediaItem } from '@/types'
+import { uploadMediasToCloud } from '@/services/cloudService'
 
 export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] }) {
   const [availableTags, setAvailableTags] = useState<TagType[]>(allTags)
@@ -20,6 +15,7 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
   const [selectedTags, setSelectedTags] = useState<TagType[]>([])
   const [showTagInput, setShowTagInput] = useState(false)
   const [tagQuery, setTagQuery] = useState('')
+  // Ref for tag input to handle click outside
   const tagInputRef = useRef<HTMLDivElement>(null)
 
   // Handle click outside to close tag input
@@ -41,25 +37,30 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
   // Handle media upload
   const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-    if (!files) return
-    const newMedia: MediaItem[] = Array.from(files).map((file) => ({
+    if (!files || files.length === 0) return
+    const newMedias: MediaItem[] = Array.from(files).map((file) => ({
       index: Date.now() + Math.random(),
+      file,
       type: file.type.startsWith('video') ? 'video' : 'image',
       url: URL.createObjectURL(file),
     }))
-    setMedia((prev) => [...prev, ...newMedia])
+    setMedia((prev) => [...prev, ...newMedias])
   }
 
   const toggleTag = (tag: TagType) => {
+    // Check if the tag is already selected
+    // If selected, remove it from selectedTags and add it back to availableTags
     if (selectedTags.some((t) => t.id === tag.id)) {
-      setAvailableTags((prev) => [...prev, tag]) // Add back to available tags
+      setAvailableTags((prev) => [...prev, tag])
       setSelectedTags((prev) => prev.filter((t) => t.id !== tag.id))
     } else {
-      setAvailableTags((prev) => prev.filter((t) => t.id !== tag.id)) // Remove from available tags
+      // If not selected, remove it from availableTags and add it to selectedTagsSD
+      setAvailableTags((prev) => prev.filter((t) => t.id !== tag.id))
       setSelectedTags((prev) => [...prev, tag])
     }
   }
 
+  // Function to create a new tag
   const createNewTag = async (name: string) => {
     return { id: (Date.now() + Math.random()).toString(), name: name.trim() }
     // const res = await fetch('/api/tags/create', {
@@ -71,8 +72,25 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
     // return await res.json()
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Submit logic here
+    // Upload media to cloud
+    const mediaCloudUrls = await uploadMediasToCloud(media)
+
+    const newBlog = {
+      content,
+      images: mediaCloudUrls,
+      tags: selectedTags,
+    }
+    // Send newBlog to the server or handle it as needed
+    fetch('/api/blogs/createee', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newBlog),
+    }).then((res) => {
+      if (!res.ok) throw new Error('Failed to create blog')
+      return res.json()
+    })
   }
 
   const filteredTags = availableTags.filter(
@@ -99,6 +117,7 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
             onChange={(e) => setTagQuery(e.target.value)}
             onFocus={() => setShowTagInput(true)}
           />
+
           {/* Dropdown for tag suggestions or new tag creation */}
           {showTagInput && (
             <div className='absolute mt-1 w-full bg-secondary-dark border border-tertiary-dark rounded-lg shadow z-10 max-h-40'>
@@ -155,7 +174,7 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
 
       {/* Blog Content Textarea */}
       <Textarea
-        className='resize-none min-h-0 text-white border-none focus:outline-none focus-visible:ring-0 mt-1 mb-0 '
+        className='resize-none min-h-0 text-white border-none focus:outline-none focus-visible:ring-0 mt-1 mb-0'
         placeholder="What's new?"
         value={content}
         onChange={(e) => setContent(e.target.value)}
