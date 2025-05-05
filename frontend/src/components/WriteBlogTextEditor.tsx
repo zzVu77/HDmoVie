@@ -82,7 +82,7 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
   return (
     <div className='w-full p-4 space-y-6 bg-secondary-dark rounded-lg border border-tertiary-dark shadow-lg'>
       {/* Header Section */}
-      <div className='flex flex-row flex-wrap items-center mb-4 gap-y-2'>
+      <div className='flex flex-row flex-wrap items-center mb-0 gap-y-2'>
         {/* Upload Input */}
         <label className='flex items-center gap-2 cursor-pointer text-gray-300 hover:text-white ml-2'>
           <Image className='w-5 h-5' />
@@ -155,7 +155,7 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
 
       {/* Blog Content Textarea */}
       <Textarea
-        className='resize-none text-white bg-transparent border-none outline-none focus:outline-none focus:ring-0 focus:shadow-none focus:border-none mt-2 mb-0'
+        className='resize-none min-h-0 text-white border-none focus:outline-none focus-visible:ring-0 mt-1 mb-0 '
         placeholder="What's new?"
         value={content}
         onChange={(e) => setContent(e.target.value)}
