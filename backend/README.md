@@ -90,6 +90,12 @@ npm start
 npm run check:all
 ```
 
+### 🧹 Run Redis
+
+```sh
+docker run --name redis -p 6379:6379 -d redis
+```
+
 ## 📦 Dependencies
 
 ### 🔹 Main Dependencies

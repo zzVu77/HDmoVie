@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 @Entity('genres')
 export class Genre {
   @PrimaryGeneratedColumn('uuid')
-  public id!: string
+  private id!: string
 
   @Column({ type: 'varchar', length: 100 })
   private name!: string

@@ -8,7 +8,7 @@ export class FollowInteraction {
 
   @OneToOne(() => RegisteredUser, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
-  private userId!: RegisteredUser
+  private user!: RegisteredUser
 
   @ManyToMany(() => RegisteredUser)
   @JoinTable({
@@ -25,16 +25,20 @@ export class FollowInteraction {
   })
   private following!: RegisteredUser[]
   //Methods
+
+  public getFollowers(): RegisteredUser[] {
+    return this.followers
+  }
+
+  public getFollowings(): RegisteredUser[] {
+    return this.following
+  }
+
+  public getFollowerCount(): number {
+    return this.followers.length
+  }
+
+  public getFollowingCount(): number {
+    return this.following.length
+  }
 }
-//Usage example
-// async function addUserToLikeInteraction(blogId: string, user: RegisteredUser) {
-//   const likeInteractionRepo = getRepository(LikeInteraction);
-//   const likeInteraction = await likeInteractionRepo.findOne({
-//     where: { blog: { id: blogId } },
-//     relations: ['likers'],
-//   });
-//   if (likeInteraction) {
-//     likeInteraction.addLiker(user); // this.likers.push(user) bên trong
-//     await likeInteractionRepo.save(likeInteraction); // Lưu vào cơ sở dữ liệu
-//   }
-// }

@@ -1,6 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm'
+import { IsNotEmpty } from 'class-validator'
 import { RegisteredUser } from './registeredUser.model'
 import { Tag } from './tag.model'
+import { BlogMedia } from './blogMedia.model'
 
 @Entity('blogs')
 export class Blog {
@@ -8,6 +10,7 @@ export class Blog {
   id!: string
 
   @Column({ type: 'text' })
+  @IsNotEmpty()
   content!: string
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
@@ -16,7 +19,7 @@ export class Blog {
   @ManyToOne(() => RegisteredUser, { nullable: false })
   owner!: RegisteredUser
 
-  @ManyToMany(() => Tag)
+  @ManyToMany(() => Tag, { eager: true })
   @JoinTable({
     name: 'blogs_tags',
     joinColumn: { name: 'blogId', referencedColumnName: 'id' },
@@ -24,9 +27,17 @@ export class Blog {
   })
   tags!: Tag[]
 
-  constructor(data?: Partial<Blog>) {
-    if (data) {
-      Object.assign(this, data)
-    }
+  @OneToMany(() => BlogMedia, (blogMedia) => blogMedia.blog, { cascade: true, eager: true })
+  imageUrls!: BlogMedia[]
+
+  constructor(owner?: RegisteredUser, content?: string, tags?: Tag[], imageUrls?: BlogMedia[]) {
+    this.owner = owner ?? this.owner
+    this.content = content ?? this.content
+    this.tags = tags ?? this.tags
+    this.imageUrls = imageUrls ?? this.imageUrls
+  }
+
+  getId(): string {
+    return this.id
   }
 }

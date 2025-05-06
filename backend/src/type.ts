@@ -21,3 +21,49 @@ export type MovieType = {
   genres: GenreType[]
   casts: CastType[]
 }
+export type BaseNotification = {
+  id: string
+  time: Date
+  status: 'READ' | 'UNREAD'
+  type: 'COMMENT' | 'FOLLOW' | 'LIKE' | 'REPORT'
+  owner: {
+    id: string
+    fullName: string
+  }
+}
+
+// Từng loại notification có các trường bổ sung
+export type CommentNotification = BaseNotification & {
+  type: 'COMMENT'
+  commentId: string
+}
+
+export type FollowNotification = BaseNotification & {
+  type: 'FOLLOW'
+  followerId: string
+}
+
+export type LikeNotification = BaseNotification & {
+  type: 'LIKE'
+  userId: string
+}
+
+export type ReportNotification = BaseNotification & {
+  type: 'REPORT'
+  reportId: string
+}
+
+export type NotificationResponse = {
+  id: string
+  time: Date
+  status: 'READ' | 'UNREAD'
+  type: 'COMMENT' | 'FOLLOW' | 'LIKE' | 'REPORT'
+  owner: {
+    id: string
+    fullName: string
+  }
+  commentId?: string
+  followerId?: string
+  userId?: string
+  reportId?: string
+}

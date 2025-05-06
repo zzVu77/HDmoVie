@@ -6,7 +6,7 @@ export class Cast {
   private id!: string
   @Column({ type: 'varchar', length: 255 })
   private name!: string
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text', nullable: true })
   private profilePath!: string
 
   constructor(id: string, name: string, profilePath: string) {
