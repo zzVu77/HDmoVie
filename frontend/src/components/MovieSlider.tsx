@@ -12,7 +12,9 @@ const MovieSlider: React.FC<MovieSliderProps> = ({ movies }) => {
     <Carousel
       opts={{
         align: 'start',
-        dragFree: true,
+        slidesToScroll: 1,
+        watchDrag: true,
+        skipSnaps: true,
       }}
       className='w-full'
     >
