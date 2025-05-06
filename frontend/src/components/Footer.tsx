@@ -22,7 +22,7 @@ interface Footer2Props {
   }[]
 }
 
-const Footer2 = ({
+const Footer = ({
   logo = {
     src: 'https://shadcnblocks.com/images/block/block-1.svg',
     alt: 'blocks for shadcn/ui',
@@ -130,4 +130,4 @@ const Footer2 = ({
   )
 }
 
-export { Footer2 }
+export { Footer }

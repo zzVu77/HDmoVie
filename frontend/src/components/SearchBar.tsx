@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react'
-import { Search } from 'lucide-react'
+import { SearchNormal1 } from 'iconsax-reactjs'
+import { useEffect, useRef, useState } from 'react'
 
 export function SearchBar({
   placeholder,
@@ -34,7 +34,7 @@ export function SearchBar({
       } hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)]`}
     >
       <button onClick={handleExpand} className='p-2 focus:outline-none'>
-        <Search className='text-white' />
+        <SearchNormal1 size='32' color='#fff' className='h-5 w-5' variant='Outline' />
       </button>
       {isExpanded && (
         <input

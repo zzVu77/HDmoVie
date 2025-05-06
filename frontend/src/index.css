@@ -17,6 +17,7 @@
   --radius-large: 1rem; /* 16px */
   /* --drop-shadow-*	Drop shadow filter utilities like drop-shadow-md */
   --drop-shadow-white-glow: 0 8px 10px rgba(255, 255, 255, 0.2);
+  --drop-shadow-yellow-glow: 0 0 30px rgba(255, 193, 7, 0.7);
   /* --font-*	Font family utilities like font-sans */
   /* --text-*	Font size utilities like text-xl */
   /* --font-weight-*	Font weight utilities like font-bold */
@@ -33,11 +34,39 @@
   /* --ease-*	Transition timing function utilities like ease-out */
   /* --animate-*	Animation utilities like animate-spin */
   /* define for color --color-* */
-
   /* define for border radius --border-radius-* */
 }
+
 body {
-  background-color: black;
+  background-color: var(--primary-dark);
+}
+.carousel-3d-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.carousel-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.5s ease;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.carousel-item h3 {
+  margin: 10px 0;
+  font-size: 1.2rem;
+  color: #333;
 }
 :root {
   font-family: 'Nunito Sans', sans-serif;
@@ -163,8 +192,46 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+
+  /* Ensure scrolling still works */
+  html,
+  body {
+    overflow: auto;
+  }
+}
+@layer utilities {
+  .text-gradient-yellow {
+    background: linear-gradient(90deg, #ffa000, #ffc107, #ffd54f);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
   body {
     @apply bg-background text-foreground;
+  }
+  * {
+    scrollbar-width: thin; /* Làm thanh scrollbar mỏng hơn trên Firefox */
+  }
+  *::-webkit-scrollbar {
+    width: 12px; /* Tăng độ rộng của scrollbar để tạo khoảng trống */
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent; /* Nền của track scrollbar */
+    border: 2px solid transparent; /* Tạo hiệu ứng padding bằng border */
+    border-radius: 10px; /* Bo góc cho track */
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--accent-yellow); /* Màu của thanh cuộn */
+    border-radius: 10px; /* Bo góc cho thanh cuộn */
+    border: 2px solid transparent; /* Tạo khoảng cách giữa thumb và track */
   }
 }
 

@@ -16,13 +16,13 @@ const titleVariants = cva('scroll-m-20 font-extrabold', {
       7: 'text-xs leading-[18px]',
       8: 'text-[10px] leading-[16px]',
     },
-    color: {
+    textColor: {
       true: 'text-white',
     },
   },
   defaultVariants: {
     level: 1,
-    color: true,
+    textColor: true,
   },
 })
 
@@ -80,9 +80,6 @@ const textVariants = cva('scroll-m-20', {
     blockquote: {
       true: 'mt-6 border-l-2 pl-6 italic text-gray-500',
     },
-    color: {
-      true: 'text-white',
-    },
     body: {
       1: 'text-xl',
       2: 'text-lg leading-[26px]',
@@ -90,6 +87,9 @@ const textVariants = cva('scroll-m-20', {
       4: 'text-sm',
       5: 'text-xs leading-[18px]',
       6: 'text-[10px] leading-[16px]', // This is the smallest text size
+    },
+    textColor: {
+      true: 'text-white',
     },
   },
   defaultVariants: {
@@ -102,7 +102,7 @@ const textVariants = cva('scroll-m-20', {
     ellipsis: false,
     blockquote: false,
     body: 4,
-    color: true,
+    textColor: true,
   },
 })
 

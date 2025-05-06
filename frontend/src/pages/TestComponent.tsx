@@ -11,7 +11,7 @@ import ForgotPasswordForm from '@/components/ForgotPasswordForm'
 import VerifyOtpForm from '@/components/VerifyOtpForm'
 import ResetPasswordForm from '@/components/ResetPasswordForm'
 import ReportModal from '@/components/ReportModal'
-import { Footer2 } from '@/components/Footer'
+import { Footer } from '@/components/Footer'
 import { RegisteredUserType, TagType } from '@/types/index'
 import { BlogPostComponentProps } from '@/components/BlogCard'
 import BlogCard from '@/components/BlogCard'
@@ -500,7 +500,7 @@ const TestComponent = () => {
         </Text>
         <CommentSection />
       </div>
-      <Footer2 />
+      <Footer />
     </>
   )
 }

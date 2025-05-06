@@ -1,9 +1,6 @@
-import { useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Bell, User, Menu } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import logo from '@/assets/brand_logo.png'
-import { SearchBar } from './SearchBar'
+import { NotificationItem } from '@/components/NotificationItem'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { NotificationItem } from '@/components/NotificationItem'
+import { Notification, Profile } from 'iconsax-reactjs'
+import { Menu } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { SearchBar } from './SearchBar'
 
 export type NotificationType = {
   id: string
@@ -21,6 +22,11 @@ export type NotificationType = {
   time: Date
   status: 'UNREAD' | 'READ'
 }
+const menuItems = [
+  { label: 'Home', path: '/' },
+  { label: 'Explore', path: '/explore' },
+  { label: 'Blogs', path: '/' },
+]
 
 const notifications: NotificationType[] = [
   { id: '1', message: 'New comment on your post', time: new Date(), status: 'UNREAD' },
@@ -33,7 +39,7 @@ export default function Header() {
   const searchRef = useRef<HTMLDivElement>(null)
 
   return (
-    <header className='flex h-20 w-full shrink-0 items-center justify-between px-4 md:px-6 text-white bg-secondary-dark/50 rounded-lg shadow-md relative backdrop-blur-[2px]'>
+    <header className='flex h-20 w-[90vw] shrink-0 items-center justify-between px-4 md:px-6 text-white bg-tertiary-dark/55 drop-shadow-white-glow rounded-3xl shadow-md fixed backdrop-blur-[2px] z-[999] top-0 left-1/2 -translate-x-1/2 mt-1 '>
       {/* Left Section: Hamburger Menu + Logo */}
       <div className='flex items-center gap-2'>
         <DropdownMenu>
@@ -60,20 +66,20 @@ export default function Header() {
         </DropdownMenu>
 
         {/* Logo */}
-        <Link to='#' className={`flex items-center gap-2 ${isSearchOpen ? 'hidden md:flex' : 'flex'}`}>
+        <Link to='/' className={`flex items-center gap-2 ${isSearchOpen ? 'hidden md:flex' : 'flex'}`}>
           {/* Logo Image */}
           <img src={logo} alt='HDMovie Logo' className='h-16 md:h-20 w-auto object-contain' />
         </Link>
 
         {/* Navigation Links (Desktop Only) */}
         <nav className='hidden md:flex gap-2'>
-          {['Home', 'Genre', 'Blog'].map((label) => (
+          {menuItems.map((item, index) => (
             <Link
-              key={label}
-              to='#'
+              key={index}
+              to={item.path}
               className='inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-md font-medium hover:text-tertiary-yellow transition'
             >
-              {label}
+              {item.label}
             </Link>
           ))}
         </nav>
@@ -92,7 +98,7 @@ export default function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
-                <Bell className='h-5 w-5 text-white group-hover:text-accent-yellow' />
+                <Notification size='32' className='h-5 w-5 text-white group-hover:text-accent-yellow ' variant='Bold' />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -110,13 +116,9 @@ export default function Header() {
           {/* Profile Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant='ghost'
-                size='icon'
-                className='hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'
-              >
-                <User className='h-5 w-5 text-white group-hover:text-accent-yellow' />
-              </Button>
+              <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
+                <Profile size='32' className='h-5 w-5 text-white group-hover:text-accent-yellow' variant='Bold' />
+              </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-56 bg-secondary-dark border-tertiary-dark text-white'>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
