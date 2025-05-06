@@ -49,7 +49,10 @@ export default function Header() {
               <Menu className='h-5 w-5 text-[var(--secondary)]' />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align='start' className='w-56 bg-secondary-dark border-tertiary-dark text-white'>
+          <DropdownMenuContent
+            align='start'
+            className='w-56 bg-secondary-dark border-tertiary-dark text-white z-[1000]'
+          >
             <DropdownMenuGroup>
               {['Home', 'Genre', 'Blog'].map((label) => (
                 <>
@@ -103,7 +106,7 @@ export default function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align='end'
-              className='w-80 max-h-96 overflow-auto p-2 space-y-2 bg-secondary-dark border-tertiary-dark text-white'
+              className='w-80 max-h-96 overflow-auto p-2 space-y-2 bg-secondary-dark border-tertiary-dark text-white z-[1000]'
             >
               {notifications.length > 0 ? (
                 notifications.map((n) => <NotificationItem key={n.id} {...n} />)
@@ -120,7 +123,10 @@ export default function Header() {
                 <Profile size='32' className='h-5 w-5 text-white group-hover:text-accent-yellow' variant='Bold' />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align='end' className='w-56 bg-secondary-dark border-tertiary-dark text-white'>
+            <DropdownMenuContent
+              align='end'
+              className='w-56 bg-secondary-dark border-tertiary-dark text-white z-[1000]'
+            >
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator className='bg-tertiary-dark' />
               <DropdownMenuGroup>
