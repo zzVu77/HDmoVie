@@ -18,7 +18,6 @@ const userRepository = new RegisteredUserRepository(AppDataSource)
 const movieRepository = new MovieRepository(AppDataSource)
 const blogRepository = new BlogRepository(AppDataSource)
 
-
 const commentService = new CommentService(commentRepository, userRepository, movieRepository, blogRepository)
 // Initialize CommentController
 const commentController = new CommentController(commentService)

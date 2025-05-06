@@ -9,15 +9,17 @@ import { CastService } from '~/services/cast.service'
 import { GenreRepository } from '~/repositories/genre.repository'
 import { CommentRepository } from '~/repositories/comment.repository'
 import { GenreService } from '~/services/genre.service'
+
 const movieRouter = Router()
 
 // Initial dependencies
 const castRepository = new CastRepository(AppDataSource)
 const genreRepository = new GenreRepository(AppDataSource)
 const movieRepository = new MovieRepository(AppDataSource)
+const commentRepository = new CommentRepository(AppDataSource)
+
 const castService = new CastService(castRepository)
 const genreService = new GenreService(genreRepository)
-const commentRepository = new CommentRepository(AppDataSource)
 const movieService = new MovieService(movieRepository, castService, genreService, commentRepository)
 const movieController = new MovieController(movieService)
 

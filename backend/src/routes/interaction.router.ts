@@ -2,7 +2,6 @@ import { Router } from 'express'
 import { InteractionController } from '~/controllers/interaction.controller'
 import { AppDataSource } from '~/data-source'
 import { InteractionService } from '~/services/interaction.service'
-import { likeOrUnlikeMiddleware } from '~/middlewares/likeInteraction.middleware'
 
 const interactionRouter = Router()
 

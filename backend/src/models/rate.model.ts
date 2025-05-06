@@ -29,4 +29,7 @@ export class Rate {
       Object.assign(this, data)
     }
   }
+  public getId(): string {
+    return this.id
+  }
 }
