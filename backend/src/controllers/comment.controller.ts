@@ -1,12 +1,8 @@
 import { Request, Response } from 'express'
 import { CommentService } from '~/services/comment.service'
-import { MovieService } from '~/services/movie.service'
 
 export class CommentController {
-  constructor(
-    private commentService: CommentService,
-    private movieService: MovieService,
-  ) {}
+  constructor(private commentService: CommentService) {}
 
   async createMovieComment(req: Request, res: Response): Promise<void> {
     try {
