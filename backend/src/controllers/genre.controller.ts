@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import { GenreService } from '~/services/genre.service'
 import { Genre } from '~/models/genre.model'
-import { GenreType } from '~/type'
 
 export class GenreController {
   constructor(private genreService: GenreService) {}
