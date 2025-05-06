@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import About from './pages/About'
 import Admin from './pages/Admin'
 import Home from './pages/Home'
@@ -7,17 +7,24 @@ import Movie from './pages/MovieDetail'
 import NotFound404 from './pages/NotFound404'
 import TestComponent from './pages/TestComponent'
 import Explore from './pages/Explore'
+import MainLayout from './components/shared/MainLayout'
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/movie/:id' element={<Movie />} />
-        <Route path='/test' element={<TestComponent />} />
+        {/* Routes with Header */}
+        <Route element={<MainLayout />}>
+          <Route path='/' element={<Home />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/movie/:id' element={<Movie />} />
+          <Route path='/test' element={<TestComponent />} />
+          <Route path='/explore' element={<Explore />} />
+          <Route path='/login' element={<Login />} />
+        </Route>
+
+        {/* Admin route WITHOUT header */}
         <Route path='/admin' element={<Admin />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/explore' element={<Explore />} />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
     </BrowserRouter>
