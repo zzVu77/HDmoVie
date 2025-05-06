@@ -2,7 +2,7 @@ import Carousel3D from '@/components/Carousel3D'
 import MovieSlider from '@/components/MovieSlider'
 import Wrapper from '@/components/shared/Wrapper'
 import { dummyMovies } from '@/data/dummyData'
-import { TitleSection } from './Movie'
+import { TitleSection } from './MovieDetail'
 
 const Home = () => {
   return (

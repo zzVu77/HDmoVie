@@ -13,7 +13,7 @@ import { MovieType } from '@/types'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-const Movie = () => {
+const MovieDetail = () => {
   const { id } = useParams<{ id: string }>()
   const [movieData, setMovieData] = useState<MovieType>()
   useEffect(() => {
@@ -85,4 +85,4 @@ export const TitleSection = ({ children }: TitleProps) => {
   )
 }
 
-export default Movie
+export default MovieDetail

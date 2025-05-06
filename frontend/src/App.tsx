@@ -3,9 +3,10 @@ import About from './pages/About'
 import Admin from './pages/Admin'
 import Home from './pages/Home'
 import Login from './pages/Login'
-import Movie from './pages/Movie'
+import Movie from './pages/MovieDetail'
 import NotFound404 from './pages/NotFound404'
 import TestComponent from './pages/TestComponent'
+import Explore from './pages/Explore'
 function App() {
   return (
     <BrowserRouter>
@@ -16,6 +17,7 @@ function App() {
         <Route path='/test' element={<TestComponent />} />
         <Route path='/admin' element={<Admin />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/explore' element={<Explore />} />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
     </BrowserRouter>
