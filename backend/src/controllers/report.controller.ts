@@ -15,7 +15,41 @@ export class ReportController {
       console.error('Error reporting blog:', error)
 
       const message = (error as Error).message
-      if (message === 'Reporter not found' || message === 'Blog not found') {
+      if (message === 'Blog not found') {
+        res.status(404).json({ status: 'failed', message })
+      } else {
+        res.status(400).json({ status: 'failed', message })
+      }
+    }
+  }
+  async getReportCommentBlog(req: Request, res: Response): Promise<void> {
+    try {
+      const { blogId } = req.params
+      const reports = await this.reportService.getReportCommentBlog(blogId)
+      //console.log(reports)
+      res.status(201).json({ status: 'success', data: reports })
+    } catch (error) {
+      console.error('Error reporting blog:', error)
+
+      const message = (error as Error).message
+      if (message === 'Blog not found') {
+        res.status(404).json({ status: 'failed', message })
+      } else {
+        res.status(400).json({ status: 'failed', message })
+      }
+    }
+  }
+  async getReportCommentMovie(req: Request, res: Response): Promise<void> {
+    try {
+      const { movieId } = req.params
+      const reports = await this.reportService.getReportCommentMovie(movieId)
+      //console.log(reports)
+      res.status(201).json({ status: 'success', data: reports })
+    } catch (error) {
+      console.error('Error reporting blog:', error)
+
+      const message = (error as Error).message
+      if (message === 'Blog not found') {
         res.status(404).json({ status: 'failed', message })
       } else {
         res.status(400).json({ status: 'failed', message })

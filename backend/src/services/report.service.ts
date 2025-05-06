@@ -6,13 +6,14 @@ import { BlogReport } from '~/models/blogReport.model'
 import { CommentReport } from '~/models/commentReport.model'
 import { ReportReason } from '~/models/report.model'
 import { Comment } from '~/models/comment.model'
-
+import { MovieRepository } from '~/repositories/movie.repository'
 export class ReportService {
   constructor(
     private reportRepository: ReportRepository,
     private userRepository: RegisteredUserRepository,
     private blogRepository: BlogRepository,
     private commentRepository: CommentRepository,
+    private movieRepository: MovieRepository,
   ) {}
 
   async getReportBlog(blogId: string): Promise<BlogReport[]> {
@@ -20,6 +21,24 @@ export class ReportService {
       const blog = await this.blogRepository.findById(blogId)
       if (!blog) throw new Error('Blog not found')
       return this.reportRepository.findReportBlogAll(blogId)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+  async getReportCommentBlog(blogId: string): Promise<CommentReport[]> {
+    try {
+      const blog = await this.blogRepository.findById(blogId)
+      if (!blog) throw new Error('Blog not found')
+      return this.reportRepository.findReportCommentBlogAll(blogId)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+  async getReportCommentMovie(movieId: string): Promise<CommentReport[]> {
+    try {
+      const blog = await this.movieRepository.findById(movieId)
+      if (!blog) throw new Error('Movie not found')
+      return this.reportRepository.findReportCommentMovieAll(movieId)
     } catch (error) {
       throw new Error((error as Error).message)
     }

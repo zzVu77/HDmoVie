@@ -22,6 +22,20 @@ export class ReportRepository {
       } as FindOptionsWhere<BlogReport>,
     })
   }
+  async findReportCommentBlogAll(blogId: string): Promise<CommentReport[]> {
+    return this.commentReportRepo
+      .createQueryBuilder('report')
+      .leftJoinAndSelect('report.comment', 'comment')
+      .where('comment.blogId = :blogId', { blogId })
+      .getMany()
+  }
+  async findReportCommentMovieAll(movieId: string): Promise<CommentReport[]> {
+    return this.commentReportRepo
+      .createQueryBuilder('report')
+      .leftJoinAndSelect('report.comment', 'comment')
+      .where('comment.movieId = :movieId', { movieId })
+      .getMany()
+  }
   async createBlogReport(report: BlogReport): Promise<BlogReport> {
     return this.blogReportRepo.save(report)
   }
