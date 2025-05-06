@@ -15,6 +15,15 @@ export class ReportService {
     private commentRepository: CommentRepository,
   ) {}
 
+  async getReportBlog(blogId: string): Promise<BlogReport[]> {
+    try {
+      const blog = await this.blogRepository.findById(blogId)
+      if (!blog) throw new Error('Blog not found')
+      return this.reportRepository.findReportBlogAll(blogId)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
   async reportBlog(reporterId: string, blogId: string, reason: ReportReason): Promise<BlogReport> {
     // Find the reporter
     const reporter = await this.userRepository.findOne(reporterId)

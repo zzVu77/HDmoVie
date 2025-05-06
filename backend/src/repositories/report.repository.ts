@@ -1,7 +1,8 @@
-import { DataSource, Repository, FindOptionsWhere } from 'typeorm'
-import { Report } from '~/models/report.model'
+import { DataSource, FindOptionsWhere, Repository } from 'typeorm'
+import { Blog } from '~/models/blog.model'
 import { BlogReport } from '~/models/blogReport.model'
 import { CommentReport } from '~/models/commentReport.model'
+import { Report } from '~/models/report.model'
 
 export class ReportRepository {
   private reportRepo: Repository<Report>
@@ -14,6 +15,13 @@ export class ReportRepository {
     this.commentReportRepo = dataSource.getRepository(CommentReport)
   }
 
+  async findReportBlogAll(blogId: string): Promise<BlogReport[]> {
+    return this.blogReportRepo.find({
+      where: {
+        blog: { id: blogId },
+      } as FindOptionsWhere<BlogReport>,
+    })
+  }
   async createBlogReport(report: BlogReport): Promise<BlogReport> {
     return this.blogReportRepo.save(report)
   }

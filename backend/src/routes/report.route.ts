@@ -19,6 +19,10 @@ const reportService = new ReportService(reportRepository, userRepository, blogRe
 const reportController = new ReportController(reportService)
 
 // Define routes
+
+reportRouter.get('/blog/:blogId', (req, res) => reportController.getReportBlog(req, res))
+//reportRouter.post('/comment', (req, res) => reportController.getReportComment(req, res))
+
 reportRouter.post('/blog', (req, res) => reportController.reportBlog(req, res))
 reportRouter.post('/comment', (req, res) => reportController.reportComment(req, res))
 
