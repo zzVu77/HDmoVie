@@ -1155,9 +1155,9 @@ INSERT INTO `watchlists_movies` (`watchlistId`, `movieId`) VALUES
 
 -- Sample data for reports table
 INSERT INTO `reports` (`id`, `reason`, `type`, `reporterId`, `commentId`, `blogId`) VALUES
-('report-001', 'Spam or scams', 'COMMENT', 'user-001', 'comment-002', NULL),
-('report-002', 'Misinformation or false information', 'BLOG', 'user-003', NULL, 'blog-002'),
-('report-003', 'Harassment or bullying', 'COMMENT', 'user-005', 'comment-006', NULL);
+('report-001', 'Spam or scams', 'COMMENT_REPORT', 'user-001', 'comment-002', NULL),
+('report-002', 'Misinformation or false information', 'BLOG_REPORT', 'user-003', NULL, 'blog-002'),
+('report-003', 'Harassment or bullying', 'COMMENT_REPORT', 'user-005', 'comment-006', NULL);
 
 -- Sample data for notifications table
 INSERT INTO `notifications` (`id`, `time`, `status`, `type`, `ownerId`, `reportId`, `userId`, `followerId`, `commentId`) VALUES
