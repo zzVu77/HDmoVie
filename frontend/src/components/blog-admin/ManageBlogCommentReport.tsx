@@ -24,22 +24,7 @@ import { ChevronDown, Eye, Trash2 } from 'lucide-react'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { ConfirmAlertDialog } from '../shared/ConfirmAlertDialog'
-
-// Define Comment Report Type
-export interface ReporterType {
-  id: string
-  fullName: string
-}
-
-export interface BlogCommentReportType {
-  id: string
-  reporter: ReporterType
-  reason: string
-  dateReported: string
-  content: string
-  commentId: string
-  blogId: string
-}
+import { BlogCommentReportType, ReporterType } from '@/types'
 
 // Sample data for comment reports
 const data: BlogCommentReportType[] = [

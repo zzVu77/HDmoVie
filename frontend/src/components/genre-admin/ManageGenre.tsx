@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -8,8 +7,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { GenreType } from '@/types'
 import {
-  ColumnDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
@@ -20,12 +19,9 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { ChevronDown, PencilLine, Trash2 } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import * as React from 'react'
-import { ConfirmAlertDialog } from '../shared/ConfirmAlertDialog'
-import { GenreType } from '@/types'
-import { GenreInfoModal } from './GenreInfoModal'
-
+import { columns } from './genre-columns'
 const data: GenreType[] = [
   {
     id: '1',
@@ -38,70 +34,6 @@ const data: GenreType[] = [
   {
     id: '3',
     name: 'Adventure',
-  },
-]
-
-export const columns: ColumnDef<GenreType>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Select all'
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Select row'
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'id',
-    header: ({ column }) => (
-      <Button variant='ghost' className='w-fit' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        ID
-      </Button>
-    ),
-    cell: ({ row }) => <div>{row.getValue('id') || 'N/A'}</div>,
-  },
-  {
-    accessorKey: 'name',
-    header: ({ column }) => (
-      <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Name
-      </Button>
-    ),
-    cell: ({ row }) => <div>{row.getValue('name') || 'N/A'}</div>,
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      const genreId = row.getValue('id') as number
-      return (
-        <div className='flex items-center justify-end gap-2'>
-          <GenreInfoModal
-            icon={<PencilLine className='h-4 w-4 text-primary-dark cursor-pointer' />}
-            onSave={() => {}}
-            genre={data[genreId - 1]}
-          />
-          <ConfirmAlertDialog
-            title=''
-            description='Are you sure you want to delete this genre? This action cannot be undone.'
-            onConfirm={() => {}}
-            trigger={<Trash2 className='h-4 w-4 text-primary-dark cursor-pointer' />}
-            cancelText='No, go back'
-            confirmText='Yes, proceed'
-          />
-        </div>
-      )
-    },
   },
 ]
 

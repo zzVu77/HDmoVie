@@ -21,3 +21,18 @@ export interface MovieType {
   casts?: CastType[]
   voteCount?: number
 }
+// Define Comment Report Type
+export type ReporterType = {
+  id: string
+  fullName: string
+}
+
+export type BlogCommentReportType = {
+  id: string
+  reporter: ReporterType
+  reason: string
+  dateReported: string
+  content: string
+  commentId: string
+  blogId: string
+}

@@ -30,8 +30,8 @@ import { ManageMovie } from './movie-admin/ManageMovie'
 import ManageBlogCommentReport from './blog-admin/ManageBlogCommentReport'
 import ManageBlogReport from './blog-admin/ManageBlogReport'
 import ManageCast from './cast-admin/ManageCast'
-import ManageGerne from './genre-admin/ManageGerne'
 import ManageTag from './tag-admin/ManageTag'
+import ManageGenre from './genre-admin/ManageGenre'
 
 interface MenuItem {
   title: string
@@ -82,7 +82,7 @@ export default function AppSidebar() {
       case 'casts':
         return <ManageCast />
       case 'genres':
-        return <ManageGerne />
+        return <ManageGenre />
       case 'movie_comment_report':
         return <div>💬 Movie Comments Report</div>
       case 'blogs':
