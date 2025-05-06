@@ -15,6 +15,8 @@ import { Menu } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SearchBar } from './SearchBar'
+import { useEffect } from 'react'
+import { observeBodyChanges } from '@/utils/mutationObserver'
 
 export type NotificationType = {
   id: string
@@ -37,6 +39,14 @@ const notifications: NotificationType[] = [
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = observeBodyChanges()
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   return (
     <header className='flex h-20 w-[90vw] shrink-0 items-center justify-between px-4 md:px-6 text-white bg-tertiary-dark/55 drop-shadow-white-glow rounded-3xl shadow-md fixed backdrop-blur-[2px] z-[999] top-0 left-1/2 -translate-x-1/2 mt-1 '>
