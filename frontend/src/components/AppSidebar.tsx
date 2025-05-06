@@ -28,6 +28,8 @@ import { ManageBlog } from './blog-admin/ManageBlog'
 import { ManageMovie } from './movie-admin/ManageMovie'
 
 import ManageBlogCommentReport from './blog-admin/ManageBlogCommentReport'
+import ManageMovieCommentReport from './movie-admin/ManageMovieCommentReport'
+
 import ManageBlogReport from './blog-admin/ManageBlogReport'
 import ManageCast from './cast-admin/ManageCast'
 import ManageTag from './tag-admin/ManageTag'
@@ -84,7 +86,7 @@ export default function AppSidebar() {
       case 'genres':
         return <ManageGenre />
       case 'movie_comment_report':
-        return <div>💬 Movie Comments Report</div>
+        return <ManageMovieCommentReport />
       case 'blogs':
         return <ManageBlog />
       case 'blog_report':
