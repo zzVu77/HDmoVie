@@ -7,7 +7,7 @@ export class FollowInteractionController {
   async followUser(req: Request, res: Response): Promise<void> {
     try {
       const { targetUserId } = req.params
-      // const followerId = req.user.id
+      // const followerId = req.locals.user.id
       const followerId = '2'
 
       await this.followInteractionService.followUser(followerId, targetUserId)
