@@ -1,6 +1,5 @@
 import { Genre } from '~/models/genre.model'
 import { GenreRepository } from '~/repositories/genre.repository'
-import { GenreType } from '~/type'
 
 export class GenreService {
   constructor(private genreRepository: GenreRepository) {}

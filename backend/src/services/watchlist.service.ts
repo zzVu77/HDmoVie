@@ -1,4 +1,3 @@
-import { RegisteredUser } from '~/models/registeredUser.model'
 import { Watchlist } from '~/models/watchlist.model'
 import { MovieRepository } from '~/repositories/movie.repository'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'

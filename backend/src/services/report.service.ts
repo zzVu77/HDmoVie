@@ -5,7 +5,6 @@ import { CommentRepository } from '~/repositories/comment.repository'
 import { BlogReport } from '~/models/blogReport.model'
 import { CommentReport } from '~/models/commentReport.model'
 import { ReportReason } from '~/models/report.model'
-import { Comment } from '~/models/comment.model'
 import { MovieRepository } from '~/repositories/movie.repository'
 export class ReportService {
   constructor(

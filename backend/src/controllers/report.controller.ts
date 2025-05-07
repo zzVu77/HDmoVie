@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { ReportService } from '~/services/report.service'
-import { ReportReason } from '~/models/report.model'
 
 export class ReportController {
   constructor(private reportService: ReportService) {}
@@ -60,11 +59,6 @@ export class ReportController {
     try {
       const { reporterId, blogId, reason } = req.body
 
-      if (!Object.values(ReportReason).includes(reason)) {
-        res.status(400).json({ status: 'failed', message: 'Invalid report reason' })
-        return
-      }
-
       const report = await this.reportService.reportBlog(reporterId, blogId, reason)
       res.status(201).json({ status: 'success', data: report })
     } catch (error) {
@@ -82,11 +76,6 @@ export class ReportController {
   async reportComment(req: Request, res: Response): Promise<void> {
     try {
       const { reporterId, commentId, reason } = req.body
-
-      if (!Object.values(ReportReason).includes(reason)) {
-        res.status(400).json({ status: 'failed', message: 'Invalid report reason' })
-        return
-      }
 
       const report = await this.reportService.reportComment(reporterId, commentId, reason)
       res.status(201).json({ status: 'success', data: report })

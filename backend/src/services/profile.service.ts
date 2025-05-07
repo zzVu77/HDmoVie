@@ -1,13 +1,7 @@
-import { RegisteredUser } from '~/models/registeredUser.model'
-import { FollowInteraction } from '~/models/followInteraction.model'
-import { Blog } from '~/models/blog.model'
 // import { Watchlist } from "~/models/watchlist.model";
 
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { FollowInteractionRepository } from '~/repositories/followInteraction.repository'
-import { BlogRepository } from '~/repositories/blog.repository'
-import { WatchlistRepository } from '~/repositories/watchlist.repository'
-import { Watchlist } from '~/models/watchlist.model'
 
 export class ProfileService {
   constructor(
