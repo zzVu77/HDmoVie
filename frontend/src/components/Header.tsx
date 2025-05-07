@@ -1,6 +1,4 @@
-import logo from '@/assets/brand_logo.png'
 import { NotificationItem } from '@/components/NotificationItem'
-import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,12 +8,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Text } from '@/components/ui/typography'
+
 import { Notification, Profile } from 'iconsax-reactjs'
-import { Menu } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { Menu, Home, FileText, Telescope } from 'lucide-react'
+import { useRef, useState, useEffect } from 'react'
+import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import { SearchBar } from './SearchBar'
-import { useEffect } from 'react'
 import { observeBodyChanges } from '@/utils/mutationObserver'
 
 export type NotificationType = {
@@ -40,48 +41,98 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
 
+  // Track location of current page
+  const location = useLocation()
+  const navValue = ['Home', 'Explore', 'Blog']
+  // We store the nav value like Home, Explore,...
+  // So to track the route THROUGH the value, using a dict like below
+  const pathMap: Record<string, string> = {
+    Home: '/',
+    Explore: '/explore',
+    Blog: '/blogs',
+  }
+
+  // Handle current time display
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString())
+
+  // Observe the change of body tag
+  // Due to the radix effect applies on the body to prevent screen from being scrolled
   useEffect(() => {
+    // Observe body changes
     const observer = observeBodyChanges()
 
+    // Update time every second
+    const timer = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString())
+    }, 1000)
+
+    // Cleanup both on unmount
     return () => {
       observer.disconnect()
+      clearInterval(timer)
     }
   }, [])
 
   return (
     <header className='flex h-20 w-[90vw] shrink-0 items-center justify-between px-4 md:px-6 text-white bg-tertiary-dark/55 drop-shadow-white-glow rounded-3xl shadow-md fixed backdrop-blur-[2px] z-[999] top-0 left-1/2 -translate-x-1/2 mt-1 '>
       {/* Left Section: Hamburger Menu + Logo */}
-      <div className='flex items-center gap-2'>
-        <DropdownMenu>
-          {/* Hamburger Menu Icon (Mobile Only) */}
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' size='icon' className='md:hidden'>
-              <Menu className='h-5 w-5 text-[var(--secondary)]' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align='start'
-            className='w-56 bg-secondary-dark border-tertiary-dark text-white z-[1000]'
-          >
-            <DropdownMenuGroup>
-              {['Home', 'Genre', 'Blog'].map((label) => (
-                <>
-                  <DropdownMenuItem asChild key={label}>
-                    <Link to='#' className='active:text-primary-yellow transition-colors rounded-md px-2 py-1'>
-                      {label}
-                    </Link>
-                  </DropdownMenuItem>
-                  {label !== 'Blog' && <DropdownMenuSeparator className='bg-tertiary-dark' />}
-                </>
-              ))}
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className='flex items-center'>
+        <Sheet>
+          <SheetTrigger asChild className='ml-2 md:hidden'>
+            <Menu></Menu>
+          </SheetTrigger>
+          <SheetContent side='left' className='z-[1001] bg-secondary-dark border-tertiary-dark custom-sheet'>
+            <div className='text-lg font-bold mt-3 px-3 pb-3 text-secondary-yellow flex items-center border-b border-tertiary-dark shadow-md shadow-tertiary-dark'>
+              <img src={'/public/brand_logo.png'} alt='HDMovie Logo' className='h-6 w-auto object-contain mr-2' />
+              <Text body={4} className='text-secondary-yellow my-1'>
+                {currentTime}
+              </Text>
+            </div>
+
+            {/* The nav bar move to here on mobie device */}
+            <div className='flex flex-col gap-2 pl-2'>
+              {navValue.map((value) => {
+                const isActive = location.pathname === pathMap[value]
+                let icon
+                switch (value) {
+                  case 'Home':
+                    icon = <Home className='mr-3' />
+                    break
+                  case 'Explore':
+                    icon = <Telescope className='mr-3' />
+                    break
+                  case 'Blog':
+                    icon = <FileText className='mr-3' />
+                    break
+                  default:
+                    icon = null
+                }
+
+                return (
+                  <a
+                    key={value}
+                    href={pathMap[value]}
+                    className={`flex items-end space-x-3 p-3 ${
+                      isActive
+                        ? 'bg-secondary-light text-primary-yellow border-l-4 border-primary-yellow'
+                        : 'text-white'
+                    }`}
+                  >
+                    {icon}
+                    <Text body={4} className='text-inherit'>
+                      {value}
+                    </Text>
+                  </a>
+                )
+              })}
+            </div>
+          </SheetContent>
+        </Sheet>
 
         {/* Logo */}
         <Link to='/' className={`flex items-center gap-2 ${isSearchOpen ? 'hidden md:flex' : 'flex'}`}>
           {/* Logo Image */}
-          <img src={logo} alt='HDMovie Logo' className='h-16 md:h-20 w-auto object-contain' />
+          <img src={'/public/brand_logo.png'} alt='HDMovie Logo' className='h-15 md:h-16 w-auto object-contain p-4' />
         </Link>
 
         {/* Navigation Links (Desktop Only) */}
@@ -99,13 +150,13 @@ export default function Header() {
       </div>
 
       {/* Right Section */}
-      <div className='flex items-center gap-4 relative' ref={searchRef}>
+      <div className='flex items-center gap-1 md:gap-4 relative' ref={searchRef}>
         {/* Search Icon */}
         <SearchBar placeholder='Search...' onExpandChange={(expanded) => setIsSearchOpen(expanded)} />
 
         {/* Notification & Profile (hidden on mobile when search is open) */}
         <div
-          className={`items-center gap-4 transition-all duration-200 ease-in-out ${isSearchOpen ? 'hidden sm:flex' : 'flex'}`}
+          className={`items-center gap-1 md:gap-4 transition-all duration-200 ease-in-out ${isSearchOpen ? 'hidden sm:flex' : 'flex'}`}
         >
           {/* Notification Icon */}
           <DropdownMenu>
