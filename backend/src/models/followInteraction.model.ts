@@ -41,4 +41,7 @@ export class FollowInteraction {
   public getFollowingCount(): number {
     return this.following.length
   }
+  public getId(): string {
+    return this.id
+  }
 }

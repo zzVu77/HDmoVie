@@ -27,7 +27,7 @@ const movieRepository = new MovieRepository(AppDataSource)
 const profileService = new ProfileService(registeredUserRepository, followInteractionRepository)
 const registeredUserService = new RegisteredUserService(registeredUserRepository)
 const blogService = new BlogService(blogRepository, registeredUserRepository, tagRepository)
-const followInteractionService = new FollowInteractionService(followInteractionRepository)
+const followInteractionService = new FollowInteractionService(followInteractionRepository, registeredUserRepository)
 const watchlistService = new WatchlistService(watchlistRepository, registeredUserRepository, movieRepository)
 
 const profileController = new ProfileController(

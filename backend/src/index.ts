@@ -15,7 +15,8 @@ import registeredUserRouter from './routes/registeredUser.route'
 import dotenv from 'dotenv'
 import profileRouter from './routes/profile.route'
 import watchlistRouter from './routes/watchlist.route'
-
+import followRouter from './routes/followInteraction.route'
+import rateRouter from './routes/rate.route'
 dotenv.config()
 
 const app = express()
@@ -38,6 +39,8 @@ app.use('/api/notifications', notificationRouter)
 app.use('/api/registeredUser', registeredUserRouter)
 app.use('/api/profiles', profileRouter)
 app.use('/api/watchlists', watchlistRouter)
+app.use('/api/follow', followRouter)
+app.use('/api/rates', rateRouter)
 
 app.get('/', (req, res) => {
   res.send('HDmoVie API is running')

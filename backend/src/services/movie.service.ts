@@ -1,16 +1,18 @@
 import { Movie } from '~/models/movie.model'
 import { MovieRepository } from '~/repositories/movie.repository'
 import { CommentRepository } from '~/repositories/comment.repository'
-
 import { MovieType } from '~/type'
 import { CastService } from './cast.service'
 import { GenreService } from './genre.service'
+// import { RateService } from './rate.service'
+
 export class MovieService {
   constructor(
     private movieRepository: MovieRepository,
     private castService: CastService,
     private genreService: GenreService,
     private commentRepository: CommentRepository,
+    // private rateService: RateService,
   ) {}
 
   async getAllMovies(): Promise<Movie[]> {
@@ -39,26 +41,30 @@ export class MovieService {
 
   async getMovieDetail(movieId: string) {
     try {
-      // 1. Lấy thông tin movie cùng với genres và casts
+      // 1. Get movie info with genres and casts
       const movie = await this.movieRepository.findById(movieId)
       if (!movie) {
         throw new Error('Movie not found')
       }
 
-      // 2. Lấy danh sách comment cho movie
+      // 2. Get comments for movie
       const comments = await this.commentRepository.findCommentsByMovieId(movieId)
 
-      // 3. Lấy tối đa 5 phim có cùng genre (trừ chính nó)
+      // 3. Get up to 5 movies with same genres (excluding itself)
       const genres = movie.getGenres()
       const genreIds = genres.map((genre) => genre.getId())
 
       const relatedMovies = await this.movieRepository.findMoviesByGenreIds(genreIds, movieId, 5)
 
-      // 4. Trả về dữ liệu gộp
+      // // 4. Get rates for movie
+      // const rates = await this.rateService.getMovieRates(movieId)
+
+      // 5. Return combined data
       return {
         movie,
         comments,
         relatedMovies,
+        // rates,
       }
     } catch (error) {
       if (error instanceof Error && error.message === 'Movie not found') {
