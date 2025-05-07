@@ -274,7 +274,7 @@ const sampleTags: TagType[] = [
   { id: 'tag-5', name: 'Recipe' },
 ]
 
-const sampleBlogs = [
+export const sampleBlogs = [
   {
     id: 'blog-1',
     content:
@@ -331,7 +331,7 @@ const sampleBlogs = [
   },
 ]
 
-const blogPosts: BlogPostComponentProps[] = sampleBlogs.map((blog, index) => ({
+export const blogPosts: BlogPostComponentProps[] = sampleBlogs.map((blog, index) => ({
   id: blog.id,
   content: blog.content,
   dateCreated: new Date(blog.dateCreated),
