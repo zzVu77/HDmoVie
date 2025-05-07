@@ -1,5 +1,4 @@
 import { DataSource, FindOptionsWhere, Repository } from 'typeorm'
-import { Blog } from '~/models/blog.model'
 import { BlogReport } from '~/models/blogReport.model'
 import { CommentReport } from '~/models/commentReport.model'
 import { Report } from '~/models/report.model'
