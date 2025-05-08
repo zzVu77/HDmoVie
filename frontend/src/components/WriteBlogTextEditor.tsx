@@ -1,38 +1,55 @@
 import { useState } from 'react'
-import { useEffect, useRef } from 'react'
-import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Text } from '@/components/ui/typography'
 import { Button } from '@/components/ui/button'
 import { X, Image } from 'lucide-react'
 import { TagType, MediaItem } from '@/types'
 import { uploadMediasToCloud } from '@/services/cloudService'
+import { WithContext as ReactTags, SEPARATORS } from 'react-tag-input'
 
-export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] }) {
-  const [availableTags, setAvailableTags] = useState<TagType[]>(allTags)
+export default function WriteBlogTextEditor() {
+  const [tags, setTags] = useState<TagType[]>([])
   const [content, setContent] = useState('')
   const [media, setMedia] = useState<MediaItem[]>([])
-  const [selectedTags, setSelectedTags] = useState<TagType[]>([])
-  const [showTagInput, setShowTagInput] = useState(false)
-  const [tagQuery, setTagQuery] = useState('')
-  // Ref for tag input to handle click outside
-  const tagInputRef = useRef<HTMLDivElement>(null)
 
-  // Handle click outside to close tag input
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (tagInputRef.current && !tagInputRef.current.contains(e.target as Node)) {
-        setShowTagInput(false)
-      }
-    }
+  // Handle events for tag selection
+  // Delete a tag
+  const handleDelete = (index: number) => {
+    setTags(tags.filter((_, i) => i !== index))
+  }
 
-    // Add event listener to document
-    document.addEventListener('mousedown', handleClickOutside)
-    // Cleanup function to remove event listener
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
+  // Update a tag
+  const onTagUpdate = (index: number, newTag: TagType) => {
+    const updatedTags = [...tags]
+    // Remove old tag and insert new one
+    updatedTags.splice(index, 1, newTag)
+    setTags(updatedTags)
+  }
+
+  // Add a tag
+  const handleAddition = (tag: TagType) => {
+    setTags((prevTags) => {
+      return [...prevTags, tag]
+    })
+  }
+
+  // Drag tag on the selector
+  const handleDrag = (tag: TagType, currPos: number, newPos: number) => {
+    const newTags = tags.slice()
+
+    newTags.splice(currPos, 1)
+    newTags.splice(newPos, 0, tag)
+
+    // re-render
+    setTags(newTags)
+  }
+
+  const handleTagClick = (index: number) => {
+    alert('Haha ' + index)
+  }
+
+  const onClearAll = () => {
+    setTags([])
+  }
 
   // Handle media upload
   const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,31 +64,6 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
     setMedia((prev) => [...prev, ...newMedias])
   }
 
-  const toggleTag = (tag: TagType) => {
-    // Check if the tag is already selected
-    // If selected, remove it from selectedTags and add it back to availableTags
-    if (selectedTags.some((t) => t.id === tag.id)) {
-      setAvailableTags((prev) => [...prev, tag])
-      setSelectedTags((prev) => prev.filter((t) => t.id !== tag.id))
-    } else {
-      // If not selected, remove it from availableTags and add it to selectedTagsSD
-      setAvailableTags((prev) => prev.filter((t) => t.id !== tag.id))
-      setSelectedTags((prev) => [...prev, tag])
-    }
-  }
-
-  // Function to create a new tag
-  const createNewTag = async (name: string) => {
-    return { id: (Date.now() + Math.random()).toString(), name: name.trim() }
-    // const res = await fetch('/api/tags/create', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ name }),
-    // })
-    // if (!res.ok) throw new Error('Failed to create tag')
-    // return await res.json()
-  }
-
   const handleSubmit = async () => {
     // Submit logic here
     // Upload media to cloud
@@ -82,7 +74,7 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
       images: mediaCloudUrls.map((url) => {
         return { url: url }
       }),
-      tags: selectedTags,
+      tags: [],
     }
     // Send newBlog to the server or handle it as needed
     fetch('/api/blogs/createee', {
@@ -95,10 +87,6 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
     })
   }
 
-  const filteredTags = availableTags.filter(
-    (tag) => tag.name && tag.name.toLowerCase().includes(tagQuery.toLowerCase()),
-  )
-
   return (
     <div className='w-full p-4 space-y-6 bg-secondary-dark rounded-lg border border-tertiary-dark shadow-lg'>
       {/* Header Section */}
@@ -110,68 +98,19 @@ export default function WriteBlogTextEditor({ allTags }: { allTags: TagType[] })
         </label>
 
         {/* Tag Selector */}
-        {/* Tag Input & Dropdown */}
-        <div ref={tagInputRef} className='relative ml-3'>
-          <Input
-            className='bg-transparent text-white h-5 p-4 border border-tertiary-dark'
-            placeholder='Add hashtags...'
-            value={tagQuery}
-            onChange={(e) => setTagQuery(e.target.value)}
-            onFocus={() => setShowTagInput(true)}
-          />
-
-          {/* Dropdown for tag suggestions or new tag creation */}
-          {showTagInput && (
-            <div className='absolute mt-1 w-full bg-secondary-dark border border-tertiary-dark rounded-lg shadow z-10 max-h-40'>
-              <div className='max-h-40 overflow-y-auto custom-scroll'>
-                {/* Always show 'Add new tag' if query is non-empty and not an exact match */}
-                {tagQuery.trim() &&
-                  !allTags.some((tag) => (tag.name ?? '').toLowerCase() === tagQuery.trim().toLowerCase()) && (
-                    <div
-                      className='px-2 py-2 text-white hover:bg-tertiary-dark rounded-lg cursor-pointer'
-                      onClick={async () => {
-                        const newTagObj = await createNewTag(tagQuery.trim())
-                        allTags.push(newTagObj)
-                        toggleTag(newTagObj)
-                        setTagQuery('')
-                        setShowTagInput(false)
-                      }}
-                    >
-                      {tagQuery.trim()}
-                      <br />
-                      <Text body={5} className='text-gray-400'>
-                        Add new topic
-                      </Text>
-                    </div>
-                  )}
-                {filteredTags.map((tag) => (
-                  <div
-                    key={tag.id}
-                    onClick={() => {
-                      toggleTag(tag)
-                      setTagQuery('')
-                      setShowTagInput(false)
-                    }}
-                    className='px-2 py-2 hover:bg-tertiary-dark text-white cursor-pointer rounded-lg'
-                  >
-                    {tag.name}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Selected Tags */}
-        {selectedTags.map((tag) => (
-          <div
-            key={tag.id}
-            className='bg-secondary-yellow text-tertiary-dark px-2 rounded-full text-sm flex items-center gap-1 ml-2'
-          >
-            {tag.name}
-            <X className='w-3 h-3 cursor-pointer hover:text-gray-600' onClick={() => toggleTag(tag)} />
-          </div>
-        ))}
+        <ReactTags
+          separators={[SEPARATORS.ENTER, SEPARATORS.COMMA]}
+          handleDelete={handleDelete}
+          handleAddition={handleAddition}
+          handleDrag={handleDrag}
+          handleTagClick={handleTagClick}
+          onTagUpdate={onTagUpdate}
+          inputFieldPosition='bottom'
+          editable
+          clearAll
+          onClearAll={onClearAll}
+          maxTags={7}
+        />
       </div>
 
       {/* Blog Content Textarea */}
