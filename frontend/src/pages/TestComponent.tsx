@@ -417,14 +417,6 @@ const TestComponent = () => {
         <h1>TEST</h1>
       </div>
 
-      <div className='flex flex-col items-center justify-center gap-y-5'>
-        <WriteBlogTextEditor allTags={dummyTags} />
-      </div>
-
-      <div>
-        <h1>TEST</h1>
-      </div>
-
       <ForgotPasswordForm />
 
       <div>
@@ -446,6 +438,8 @@ const TestComponent = () => {
       <ReportModal />
 
       <div>
+        <WriteBlogTextEditor userFullName='Bien Xuan Huy' allTags={dummyTags} />
+
         {blogPosts.map((post, index) => (
           <BlogCard
             key={post.id}
@@ -457,7 +451,7 @@ const TestComponent = () => {
             likes={post.likes}
             comments={post.comments}
             images={post.images}
-            isFirst={index === 0}
+            isFirst={false}
             isLast={index === blogPosts.length - 1}
             isShowCommentDivider={false}
           />
