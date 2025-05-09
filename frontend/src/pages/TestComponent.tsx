@@ -438,7 +438,7 @@ const TestComponent = () => {
       <ReportModal />
 
       <div>
-        <WriteBlogTextEditor userFullName='Bien Xuan Huy' allTags={dummyTags} />
+        <WriteBlogTextEditor userFullName='Bien Xuan Huy' dbTags={dummyTags} />
 
         {blogPosts.map((post, index) => (
           <BlogCard

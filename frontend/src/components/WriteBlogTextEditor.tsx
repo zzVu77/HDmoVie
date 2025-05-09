@@ -13,10 +13,10 @@ import { format } from 'date-fns'
 
 type WriteBlogTextEditorProps = {
   userFullName: string
-  allTags: TagType[]
+  dbTags: TagType[]
 }
 
-export default function WriteBlogTextEditor({ userFullName, allTags }: WriteBlogTextEditorProps) {
+export default function WriteBlogTextEditor({ userFullName, dbTags }: WriteBlogTextEditorProps) {
   const [content, setContent] = useState('')
   const [media, setMedia] = useState<MediaItem[]>([])
 
@@ -95,16 +95,17 @@ export default function WriteBlogTextEditor({ userFullName, allTags }: WriteBlog
               </div>
             </div>
 
-            <div className='flex flex-row items-center mb-0 gap-y-2'>
+            <div className='flex flex-row items-center mt-1 mb-0 gap-y-2'>
               {/* Tag Selector */}
-              <TagInput allTags={allTags} />
+              <TagInput dbTags={dbTags} />
             </div>
 
             {/* Blog Content Textarea */}
             <Textarea
-              className='resize-none min-h-15 text-white border-1 border-tertiary-dark focus:outline-none focus-visible:ring-0 mt-1 mb-0'
+              className='resize-none min-h-15 text-white border-1 border-tertiary-dark focus:outline-none focus-visible:ring-0 mt-2 mb-0'
               placeholder="What's new?"
               value={content}
+              autoFocus={true}
               onChange={(e) => setContent(e.target.value)}
             />
 
