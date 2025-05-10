@@ -1,7 +1,9 @@
+import { Text, Title } from '@/components/ui/typography'
+import { dummyWatchlist1 } from '@/pages/TestComponent'
 import { WatchlistProps } from '@/types'
-import { Text } from '@/components/ui/typography'
-import { Title } from '@/components/ui/typography'
-import { Film, Lock, Globe, Pen } from 'lucide-react'
+import { Film, Globe, Lock } from 'lucide-react'
+import WatchlistInformationFormModal from './WatchlistInformationFormModal'
+import ListWatchlistDialog from './ListWatchlistDialog'
 
 export default function WatchlistCard({ title, description, isPublic, movies }: WatchlistProps) {
   const backdropUrl =
@@ -18,20 +20,22 @@ export default function WatchlistCard({ title, description, isPublic, movies }: 
         style={{ backgroundImage: `url(${backdropUrl})` }}
       ></div>
       <div className='relative z-10 flex flex-row items-start '>
-        <div className='min-w-[90px] min-h-[120px] flex items-center justify-center'>
-          {movies && movies.length > 0 && (
-            <img
-              src={
-                movies?.[0]?.posterSource?.trim() !== ''
-                  ? movies[0].posterSource
-                  : 'https://www.subtraction.com/wp-content/uploads/2018/01/2018-01-04-2017-movies-watched.jpg'
-              }
-              alt={movies[0].title}
-              className='w-[90px] h-[120px] object-cover rounded-lg shadow-sm cursor-pointer transition duration-300 ease-in-out'
-              loading='lazy'
-            />
-          )}
-        </div>
+        <ListWatchlistDialog>
+          <div className='min-w-[90px] min-h-[120px] flex items-center justify-center'>
+            {movies && movies.length > 0 && (
+              <img
+                src={
+                  movies?.[0]?.posterSource?.trim() !== ''
+                    ? movies[0].posterSource
+                    : 'https://www.subtraction.com/wp-content/uploads/2018/01/2018-01-04-2017-movies-watched.jpg'
+                }
+                alt={movies[0].title}
+                className='w-[90px] h-[120px] object-cover rounded-lg shadow-sm cursor-pointer transition duration-300 ease-in-out'
+                loading='lazy'
+              />
+            )}
+          </div>
+        </ListWatchlistDialog>
         <div
           className='w-full flex flex-col items-start justify-start bg-transparent border-none gap-0 px-0 py-0 ml-2'
           style={{ textShadow: '0 0 3px #000, 0 0 6px #000, 0 0 9px #000' }}
@@ -51,12 +55,14 @@ export default function WatchlistCard({ title, description, isPublic, movies }: 
                 {isPublic ? <Globe className='w-4 h-4 text-gray-300' /> : <Lock className='w-4 h-4 text-gray-300' />}
               </Text>
             </div>
-            <Text body={4} className='text-white line-clamp-3 mt-1'>
+            <Text body={4} className='text-white lg:line-clamp-3 line-clamp-2 mt-1'>
               {description?.length !== 0 ? description : 'No description'}
             </Text>
           </div>
         </div>
-        <Pen className='text-[10px] text-gray-400 hover:w-7' />
+        <div className='flex flex-row items-center justify-between gap-2'>
+          <WatchlistInformationFormModal isAdd={false} watchlist={dummyWatchlist1}></WatchlistInformationFormModal>
+        </div>
       </div>
     </div>
   )

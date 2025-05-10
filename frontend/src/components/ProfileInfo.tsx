@@ -14,10 +14,6 @@ type Props = {
   dateOfBirth: Date
   countNum?: string
 }
-
-// Dummy data for Props
-
-// Dummy data for FollowPeopleProps
 const dummyFollowPeopleData: FollowPeopleProps[] = [
   { id: '1', fullName: 'John Doe' },
   { id: '2', fullName: 'Jane Smith' },

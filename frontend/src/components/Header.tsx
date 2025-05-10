@@ -15,6 +15,8 @@ import { Menu } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SearchBar } from './SearchBar'
+import { useLocation } from 'react-router'
+import { cn } from '@/lib/utils'
 
 export type NotificationType = {
   id: string
@@ -25,7 +27,7 @@ export type NotificationType = {
 const menuItems = [
   { label: 'Home', path: '/' },
   { label: 'Explore', path: '/explore' },
-  { label: 'Blogs', path: '/' },
+  { label: 'Blogs', path: '/blog' },
 ]
 
 const notifications: NotificationType[] = [
@@ -37,9 +39,9 @@ const notifications: NotificationType[] = [
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
-
+  const pathName = useLocation()
   return (
-    <header className='flex h-20 w-[90vw] shrink-0 items-center justify-between px-4 md:px-6 text-white bg-tertiary-dark/55 drop-shadow-white-glow rounded-3xl shadow-md fixed backdrop-blur-[2px] z-[999] top-0 left-1/2 -translate-x-1/2 mt-1 '>
+    <header className='flex h-20 w-[90vw] shrink-0 items-center justify-between px-4 md:px-6 text-white bg-tertiary-dark/55 drop-shadow-white-glow rounded-3xl shadow-md fixed backdrop-blur-[2px] z-[50] top-0 left-1/2 -translate-x-1/2 mt-1 '>
       {/* Left Section: Hamburger Menu + Logo */}
       <div className='flex items-center gap-2'>
         <DropdownMenu>
@@ -77,7 +79,10 @@ export default function Header() {
             <Link
               key={index}
               to={item.path}
-              className='inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-md font-medium hover:text-tertiary-yellow transition'
+              className={cn(
+                `inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-md font-bold hover:text-secondary-yellow transition`,
+                item.path === pathName.pathname ? 'text-secondary-yellow' : 'text-white',
+              )}
             >
               {item.label}
             </Link>
