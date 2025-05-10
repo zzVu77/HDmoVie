@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { MessageCircle, Heart, MessageSquareWarning, ArrowRight } from 'lucide-react'
+import { MessageCircle, Heart, MessageSquareWarning } from 'lucide-react'
 import { Text } from './ui/typography'
 import { cn } from '@/lib/utils'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
@@ -132,29 +132,24 @@ export default function BlogCard({
           </div>
 
           {hasImages && (
-            <Carousel className='w-full mx-auto my-1'>
-              <CarouselContent>
+            <Carousel opts={{ dragFree: true }} className='w-full mx-auto my-1'>
+              <CarouselContent className='px-1'>
                 {images!.map((imageUrl, index) => (
-                  <CarouselItem key={index} className='flex justify-center'>
-                    <img
-                      src={imageUrl}
-                      alt={`Blog image ${index + 1}`}
-                      className='w-full object-cover rounded-sm self-center'
-                      onError={(e) => {
-                        ;(e.target as HTMLImageElement).src =
-                          'https://makerworld.bblmw.com/makerworld/model/US2ab61bb7d3000c/design/2024-01-30_029b2304056c.png?x-oss-process=image/resize,w_1000/format,webp'
-                      }}
-                    />
+                  <CarouselItem key={index} className='basis-auto pl-1'>
+                    <div className='aspect-video rounded-sm overflow-hidden'>
+                      <img
+                        src={imageUrl}
+                        alt={`Blog image ${index + 1}`}
+                        className='object-cover h-50 md:h-70 w-auto'
+                        onError={(e) => {
+                          ;(e.target as HTMLImageElement).src =
+                            'https://makerworld.bblmw.com/makerworld/model/US2ab61bb7d3000c/design/2024-01-30_029b2304056c.png?x-oss-process=image/resize,w_1000/format,webp'
+                        }}
+                      />
+                    </div>
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              {images!.length > 1 && (
-                <div className='group absolute top-1/2 -translate-y-1/2 right-4 flex justify-end items-center'>
-                  <div className='rounded-full opacity-30 bg-secondary-dark text-white w-8 h-8 flex items-center justify-center'>
-                    <ArrowRight size={16} className='text-white' />
-                  </div>
-                </div>
-              )}
             </Carousel>
           )}
         </CardContent>
