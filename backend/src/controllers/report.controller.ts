@@ -75,7 +75,8 @@ export class ReportController {
   }
   async reportBlog(req: Request, res: Response): Promise<void> {
     try {
-      const { reporterId, blogId, reason } = req.body
+      const { blogId, reason } = req.body
+      const reporterId = res.locals.user?.id
 
       const report = await this.reportService.reportBlog(reporterId, blogId, reason)
       res.status(201).json({ status: 'success', data: report })
@@ -93,8 +94,8 @@ export class ReportController {
 
   async reportComment(req: Request, res: Response): Promise<void> {
     try {
-      const { reporterId, commentId, reason } = req.body
-
+      const { commentId, reason } = req.body
+      const reporterId = res.locals.user?.id
       const report = await this.reportService.reportComment(reporterId, commentId, reason)
       res.status(201).json({ status: 'success', data: report })
     } catch (error) {

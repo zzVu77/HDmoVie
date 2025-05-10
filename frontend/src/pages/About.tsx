@@ -1,5 +1,7 @@
+import { Text } from '@/components/ui/typography'
+
 const About = () => {
-  return <div>About Page</div>
+  return <Text>About Page</Text>
 }
 
 export default About
