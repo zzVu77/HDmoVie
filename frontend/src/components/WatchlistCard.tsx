@@ -1,39 +1,36 @@
 import { Text, Title } from '@/components/ui/typography'
-import { dummyWatchlist1 } from '@/pages/TestComponent'
 import { WatchlistProps } from '@/types'
 import { Film, Globe, Lock } from 'lucide-react'
 import WatchlistInformationFormModal from './WatchlistInformationFormModal'
 import ListWatchlistDialog from './ListWatchlistDialog'
 
-export default function WatchlistCard({ title, description, isPublic, movies }: WatchlistProps) {
+export default function WatchlistCard({ id, title, description, isPublic, movies }: WatchlistProps) {
   const backdropUrl =
-    (movies ?? [])[0]?.backdropSource?.trim() !== ''
-      ? (movies ?? [])[0].backdropSource
+    typeof movies?.[0]?.backdropSource === 'string' && movies[0].backdropSource.trim() !== ''
+      ? movies[0].backdropSource
       : 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Hubble_ultra_deep_field.jpg/1200px-Hubble_ultra_deep_field.jpg'
 
   return (
     <div
-      className={`group relative w-full max-h-[144px] overflow-hidden rounded-lg border-none shadow-none p-3 bg-secondary-dark cursor-pointer transition duration-300 hover:shadow-[0_0_20px_1px] hover:shadow-tertiary-dark`}
+      className={`group relative w-full max-h-[144px] overflow-hidden rounded-lg border-none shadow-none p-3 bg-secondary-dark`}
     >
       <div
         className='absolute inset-0 bg-cover bg-center blur-[10px] opacity-100'
         style={{ backgroundImage: `url(${backdropUrl})` }}
       ></div>
       <div className='relative z-10 flex flex-row items-start '>
-        <ListWatchlistDialog>
+        <ListWatchlistDialog watchlist={{ id, title, description, isPublic, movies }}>
           <div className='min-w-[90px] min-h-[120px] flex items-center justify-center'>
-            {movies && movies.length > 0 && (
-              <img
-                src={
-                  movies?.[0]?.posterSource?.trim() !== ''
-                    ? movies[0].posterSource
-                    : 'https://www.subtraction.com/wp-content/uploads/2018/01/2018-01-04-2017-movies-watched.jpg'
-                }
-                alt={movies[0].title}
-                className='w-[90px] h-[120px] object-cover rounded-lg shadow-sm cursor-pointer transition duration-300 ease-in-out'
-                loading='lazy'
-              />
-            )}
+            <img
+              src={
+                typeof movies?.[0]?.posterSource === 'string' && movies[0].posterSource.trim() !== ''
+                  ? movies[0].posterSource
+                  : 'https://www.subtraction.com/wp-content/uploads/2018/01/2018-01-04-2017-movies-watched.jpg'
+              }
+              alt={movies?.[0]?.title || 'Movie poster'}
+              className='w-[90px] h-[120px] object-cover rounded-lg shadow-sm cursor-pointer ease-in-out transition duration-300 hover:shadow-[0_0_15px_0px] hover:shadow-tertiary-yellow'
+              loading='lazy'
+            />
           </div>
         </ListWatchlistDialog>
         <div
@@ -41,7 +38,7 @@ export default function WatchlistCard({ title, description, isPublic, movies }: 
           style={{ textShadow: '0 0 3px #000, 0 0 6px #000, 0 0 9px #000' }}
         >
           <div className='w-full px-2'>
-            <Title level={5} className='font-semibold text-tertiary-yellow cursor-pointer'>
+            <Title level={5} className='font-semibold text-tertiary-yellow'>
               {title ?? 'Watchlist'}
             </Title>
           </div>
@@ -56,12 +53,15 @@ export default function WatchlistCard({ title, description, isPublic, movies }: 
               </Text>
             </div>
             <Text body={4} className='text-white lg:line-clamp-3 line-clamp-2 mt-1'>
-              {description?.length !== 0 ? description : 'No description'}
+              {description?.trim() ? description : 'No description'}
             </Text>
           </div>
         </div>
         <div className='flex flex-row items-center justify-between gap-2'>
-          <WatchlistInformationFormModal isAdd={false} watchlist={dummyWatchlist1}></WatchlistInformationFormModal>
+          <WatchlistInformationFormModal
+            isAdd={false}
+            watchlist={{ id, title, description, isPublic }}
+          ></WatchlistInformationFormModal>
         </div>
       </div>
     </div>
