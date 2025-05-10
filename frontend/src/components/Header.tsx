@@ -18,6 +18,7 @@ import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import { SearchBar } from './SearchBar'
 import { observeBodyChanges } from '@/utils/mutationObserver'
+import { cn } from '@/lib/utils'
 
 export type NotificationType = {
   id: string
@@ -28,7 +29,7 @@ export type NotificationType = {
 const menuItems = [
   { label: 'Home', path: '/' },
   { label: 'Explore', path: '/explore' },
-  { label: 'Blogs', path: '/' },
+  { label: 'Blogs', path: '/blog' },
 ]
 
 const notifications: NotificationType[] = [
@@ -95,6 +96,7 @@ export default function Header() {
       clearInterval(timer)
     }
   }, [])
+  const pathName = useLocation()
 
   return (
     <header
@@ -110,7 +112,7 @@ export default function Header() {
           </SheetTrigger>
           <SheetContent side='left' className='z-[1001] bg-secondary-dark border-tertiary-dark custom-sheet'>
             <div className='text-lg font-bold mt-3 px-3 pb-3 text-secondary-yellow flex items-center border-b border-tertiary-dark shadow-md shadow-tertiary-dark'>
-              <img src={'/public/brand_logo.png'} alt='HDMovie Logo' className='h-6 w-auto object-contain mr-2' />
+              <img src={'/brand_logo.png'} alt='HDMovie Logo' className='h-6 w-auto object-contain mr-2' />
               <Text body={4} className='text-secondary-yellow my-1'>
                 {currentTime}
               </Text>
@@ -159,7 +161,7 @@ export default function Header() {
         {/* Logo */}
         <Link to='/' className={`flex items-center gap-2 ${isSearchOpen ? 'hidden md:flex' : 'flex'}`}>
           {/* Logo Image */}
-          <img src={'/public/brand_logo.png'} alt='HDMovie Logo' className='h-15 md:h-16 w-auto object-contain p-4' />
+          <img src={'/brand_logo.png'} alt='HDMovie Logo' className='h-15 md:h-16 w-auto object-contain p-4' />
         </Link>
 
         {/* Navigation Links (Desktop Only) */}
@@ -168,7 +170,10 @@ export default function Header() {
             <Link
               key={index}
               to={item.path}
-              className='inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-md font-medium hover:text-tertiary-yellow transition'
+              className={cn(
+                `inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-md font-bold hover:text-secondary-yellow transition`,
+                item.path === pathName.pathname ? 'text-secondary-yellow' : 'text-white',
+              )}
             >
               {item.label}
             </Link>

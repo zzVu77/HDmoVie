@@ -8,6 +8,7 @@ import { MessageCircle, Flag, Send } from 'lucide-react'
 import { BlogCommentType } from '@/types'
 import { cn } from '@/lib/utils'
 import { Textarea } from './ui/textarea'
+import ReportDialog from './ReportModal'
 
 export default function BlogCommentCard({ comment, isReply = false }: { comment: BlogCommentType; isReply?: boolean }) {
   const [showReplyInput, setShowReplyInput] = useState(false)
@@ -70,13 +71,11 @@ export default function BlogCommentCard({ comment, isReply = false }: { comment:
           <Button
             variant='ghost'
             size='lg'
-            className='p-1 h-auto flex items-center gap-1 text-primary-yellow hover:text-red-400 transition-colors'
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-            }}
+            className='p-1 h-auto flex items-center gap-1 text-primary-yellow hover:text-yellow-300 hover:bg-tertiary-dark transition-colors'
           >
-            <Flag size={18} />
+            <ReportDialog>
+              <Flag size={18} />
+            </ReportDialog>
           </Button>
         </CardFooter>
       </Card>

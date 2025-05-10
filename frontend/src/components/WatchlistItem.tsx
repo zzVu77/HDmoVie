@@ -14,6 +14,7 @@ export default function WatchlistItem({
   genres,
 }: WatchlistMovieProps) {
   return (
+    //Todo: Add onClick to open movie details
     <div className='w-full flex flex-col bg-secondary-dark rounded-lg p-3'>
       {/* Above: Movie Poster and Info */}
       <div className='flex flex-row items-start justify-between w-full'>

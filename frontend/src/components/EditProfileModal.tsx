@@ -72,7 +72,7 @@ export function EditProfileModal({ id, fullName, email, dateOfBirth }: Registere
         <Button
           className='bg-secondary-dark text-white cursor-pointer border border-tertiary-dark 
              hover:[box-shadow:0_0_8px_#ffa000] hover:[text-shadow:0_0_6px_#fff] 
-             transition duration-200'
+             transition duration-200 data-[scroll-locked="1"]:mr-0'
         >
           Edit Profile
         </Button>

@@ -9,6 +9,7 @@ import { Text } from './ui/typography'
 import { cn } from '@/lib/utils'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import { RegisteredUserType, TagType } from '@/types'
+import ReportDialog from './ReportModal'
 
 export interface BlogPostComponentProps {
   id: string
@@ -191,8 +192,9 @@ export default function BlogCard({
               e.stopPropagation()
             }}
           >
-            <MessageSquareWarning size={18} />
-            &nbsp;
+            <ReportDialog>
+              <MessageSquareWarning size={18} />
+            </ReportDialog>
           </Button>
         </CardFooter>
 

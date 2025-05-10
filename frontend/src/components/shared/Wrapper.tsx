@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils'
 import React from 'react'
 
 interface WrapperProps {
@@ -6,7 +7,7 @@ interface WrapperProps {
 }
 
 const Wrapper: React.FC<WrapperProps> = ({ children, className }) => {
-  return <div className={`w-full h-full mb-10 px-[54px] flex flex-col gap-5 mt-20  ${className}`}>{children}</div>
+  return <div className={cn(`w-full h-full mb-10 px-[54px] flex flex-col gap-5 mt-20,  ${className}`)}>{children}</div>
 }
 
 export default Wrapper

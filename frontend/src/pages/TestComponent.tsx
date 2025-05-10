@@ -58,7 +58,7 @@ const dummyUser: RegisteredUserProps = {
   dateOfBirth: new Date('1990-01-01'),
 }
 
-const dummyWatchlist1: WatchlistProps = {
+export const dummyWatchlist1: WatchlistProps = {
   title: 'Sci-Fi Favorites',
   description: 'A collection of the best science fiction movies.',
   isPublic: true,
@@ -187,9 +187,39 @@ const dummyWatchlist2: WatchlistProps = {
   ],
 }
 
-const dummyWatchlists = [dummyWatchlist1, dummyWatchlist2]
+export const dummyWatchlists = [dummyWatchlist1, dummyWatchlist2, dummyWatchlist2, dummyWatchlist2]
 
-const dummyWatchlistMovies: WatchlistMovieProps[] = [
+export const dummyWatchlistMovies: WatchlistMovieProps[] = [
+  {
+    id: '1',
+    title: 'Inception',
+    description:
+      'A mind-bending thriller about dreams within dreams, where a skilled thief is given a chance at redemption if he can successfully perform an almost impossible task: planting an idea into someone’s subconscious. The movie explores the boundaries of reality and imagination, with stunning visuals and a gripping narrative.',
+    posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
+    backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
+    releaseYear: '2010',
+    voteAvg: 8.8,
+    voteCount: 2000000,
+    genres: [
+      { id: '1', name: 'Sci-Fi' },
+      { id: '2', name: 'Thriller' },
+    ],
+  },
+  {
+    id: '2',
+    title: 'Interstellar',
+    description:
+      'A journey through space and time to save humanity, where a group of explorers ventures through a wormhole in search of a new home for mankind. The movie delves into themes of love, sacrifice, and the unyielding human spirit, with breathtaking visuals and a powerful emotional core.',
+    posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
+    backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
+    releaseYear: '2014',
+    voteAvg: 8.6,
+    voteCount: 1500000,
+    genres: [
+      { id: '1', name: 'Sci-Fi' },
+      { id: '3', name: 'Adventure' },
+    ],
+  },
   {
     id: '1',
     title: 'Inception',
@@ -272,7 +302,7 @@ const sampleTags: TagType[] = [
   { id: 'tag-5', name: 'Recipe' },
 ]
 
-const sampleBlogs = [
+export const sampleBlogs = [
   {
     id: 'blog-1',
     content:
@@ -329,7 +359,7 @@ const sampleBlogs = [
   },
 ]
 
-const blogPosts: BlogPostComponentProps[] = sampleBlogs.map((blog, index) => ({
+export const blogPosts: BlogPostComponentProps[] = sampleBlogs.map((blog, index) => ({
   id: blog.id,
   content: blog.content,
   dateCreated: new Date(blog.dateCreated),

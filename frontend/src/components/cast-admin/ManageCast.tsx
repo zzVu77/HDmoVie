@@ -1,33 +1,29 @@
+import * as React from 'react'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
   DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import {
-  ColumnDef,
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  getPaginationRowModel,
+  getFilteredRowModel,
+  flexRender,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
 } from '@tanstack/react-table'
-import { ChevronDown, PencilLine, Trash2 } from 'lucide-react'
-import * as React from 'react'
-import { ConfirmAlertDialog } from '../shared/ConfirmAlertDialog'
-import { ImageDialogCell } from '../shared/ImageDialogCell'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { ChevronDown } from 'lucide-react'
+import { castColumns } from './cast-columns'
 import { CastType } from '@/types'
-import { CastInfoModal } from './CastInfoModal'
 
-const data: CastType[] = [
+const castData: CastType[] = [
   {
     id: '1',
     name: 'Leonardo DiCaprio',
@@ -45,88 +41,6 @@ const data: CastType[] = [
   },
 ]
 
-export const columns: ColumnDef<CastType>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Select all'
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Select row'
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'id',
-    header: ({ column }) => (
-      <Button variant='ghost' className='w-fit' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        ID
-      </Button>
-    ),
-    cell: ({ row }) => <div>{row.getValue('id') || 'N/A'}</div>,
-  },
-  {
-    accessorKey: 'name',
-    header: ({ column }) => (
-      <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Name
-      </Button>
-    ),
-    cell: ({ row }) => <div>{row.getValue('name') || 'N/A'}</div>,
-  },
-  {
-    accessorKey: 'profilePath',
-    header: 'Profile Image',
-    cell: ({ row }) => {
-      const profilePath = row.getValue('profilePath') as string
-      return profilePath ? (
-        <ImageDialogCell
-          src={profilePath}
-          alt='Profile'
-          smallClassName='h-16 w-12'
-          largeClassName='max-w-sm w-full h-auto'
-        />
-      ) : (
-        'N/A'
-      )
-    },
-    enableSorting: false,
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      const castId = row.getValue('id') as number
-      return (
-        <div className='flex items-center justify-end gap-2'>
-          <CastInfoModal
-            icon={<PencilLine className='h-4 w-4 text-primary-dark cursor-pointer' />}
-            onSave={() => {}}
-            cast={data[castId - 1]}
-          />
-          <ConfirmAlertDialog
-            title=''
-            description='Are you sure you want to delete this cast? This action cannot be undone.'
-            onConfirm={() => {}}
-            trigger={<Trash2 className='h-4 w-4 text-primary-dark cursor-pointer' />}
-            cancelText='No, go back'
-            confirmText='Yes, proceed'
-          />
-        </div>
-      )
-    },
-  },
-]
-
 export function ManageCast() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -134,8 +48,8 @@ export function ManageCast() {
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
-    data,
-    columns,
+    data: castData,
+    columns: castColumns(castData),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -184,13 +98,14 @@ export function ManageCast() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
       <div className='rounded-md border'>
         <Table>
-          <TableHeader className='sticky'>
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow className='mx-auto' key={headerGroup.id}>
+              <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead className='text-center' key={header.id}>
+                  <TableHead key={header.id} className='text-center'>
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
@@ -198,11 +113,11 @@ export function ManageCast() {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className='text-center' key={cell.id}>
+                    <TableCell key={cell.id} className='text-center'>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -210,7 +125,7 @@ export function ManageCast() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className='h-24 text-center'>
+                <TableCell colSpan={table.getAllColumns().length} className='h-24 text-center'>
                   No results.
                 </TableCell>
               </TableRow>
@@ -218,6 +133,7 @@ export function ManageCast() {
           </TableBody>
         </Table>
       </div>
+
       <div className='flex items-center justify-end space-x-2 py-4'>
         <div className='flex-1 text-sm text-muted-foreground'>
           {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)

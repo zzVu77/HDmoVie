@@ -40,12 +40,10 @@ export default function FollowInteractionModal({ followers, followings }: Follow
     if (people.length === 0) {
       return <div className='text-tertiary-dark text-center py-4'>No users found.</div>
     }
-
     // Loop through list
     return people.map((person, index) => {
       // Get color based on first char
       const color = getColorFromString(person.fullName ?? 'U')
-
       // For each person --> Return a card
       return (
         <div key={person.id}>

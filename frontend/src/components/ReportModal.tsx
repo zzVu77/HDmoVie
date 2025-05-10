@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -40,8 +40,10 @@ const reportSchema = z.object({
   ]),
   comment: z.string().optional(),
 })
-
-export function ReportDialog() {
+type Props = {
+  children?: React.ReactNode
+}
+export function ReportDialog({ children }: Props) {
   const [open, setOpen] = useState(false)
 
   const form = useForm({
@@ -71,9 +73,14 @@ export function ReportDialog() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog modal={true} open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant='outline'>Report</Button>
+        <Button
+          variant='outline'
+          className='w-fit h-fit bg-transparent hover:bg-transparent hover:text-primary-yellow border-none shadow-none'
+        >
+          {children || 'Report'}
+        </Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>

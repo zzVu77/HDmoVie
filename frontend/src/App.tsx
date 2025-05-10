@@ -8,6 +8,9 @@ import NotFound404 from './pages/NotFound404'
 import TestComponent from './pages/TestComponent'
 import Explore from './pages/Explore'
 import MainLayout from './components/shared/MainLayout'
+import Blogs from './pages/Blogs'
+import BlogDetail from './pages/BlogDetail'
+import Profile from './pages/Profile'
 
 function App() {
   return (
@@ -21,6 +24,9 @@ function App() {
           <Route path='/test' element={<TestComponent />} />
           <Route path='/explore' element={<Explore />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/blog/:id' element={<BlogDetail />} />
+          <Route path='/blog' element={<Blogs />} />
+          <Route path='/profile/:id' element={<Profile />} />
         </Route>
 
         {/* Admin route WITHOUT header */}
