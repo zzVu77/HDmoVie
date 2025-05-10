@@ -5,6 +5,7 @@ const axiosInstance: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // để gửi cookie (refresh token)
   timeout: 10000,
 })
 

@@ -96,6 +96,22 @@ export default function Header() {
     }
   }, [])
   const pathName = useLocation()
+  const [isLogin, setIsLogin] = useState(false)
+
+  useEffect(() => {
+    const token = localStorage.getItem('access-token')
+    setIsLogin(!!token) // Converts token to true/false
+  }, [])
+
+  // useEffect(() => {
+  //   apiPost('/comments/blog', {
+  //     blogId: '3',
+  //     content: 'This blog post was really insightful!',
+  //     parentCommentId: null,
+  //   })
+  //     .then((res) => console.log(res.data))
+  //     .catch((err) => console.error(err))
+  // }, [])
 
   return (
     <header
@@ -213,7 +229,7 @@ export default function Header() {
           </DropdownMenu>
 
           {/* Profile Dropdown */}
-          <div className='hidden'>
+          <div className={cn(`hidden`, isLogin && `flex`)}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
@@ -233,15 +249,17 @@ export default function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <Link to='/login'>
-            <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
-              <LoginCurve
-                variant='Bold'
-                size='32'
-                className='h-5 w-5 text-white group-hover:text-accent-yellow cursor-pointer'
-              />
-            </button>
-          </Link>
+          <div className={cn(`flex`, isLogin && `hidden`)}>
+            <Link to='/login'>
+              <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
+                <LoginCurve
+                  variant='Bold'
+                  size='32'
+                  className='h-5 w-5 text-white group-hover:text-accent-yellow cursor-pointer'
+                />
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </header>
