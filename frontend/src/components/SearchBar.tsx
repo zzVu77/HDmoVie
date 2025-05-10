@@ -34,7 +34,7 @@ export function SearchBar({
       } hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)]`}
     >
       <button onClick={handleExpand} className='p-2 focus:outline-none'>
-        <SearchNormal1 size='32' color='#fff' className='h-5 w-5' variant='Outline' />
+        <SearchNormal1 size='32' color='#fff' className='h-5 w-5 cursor-pointer' variant='Outline' />
       </button>
       {isExpanded && (
         <input

@@ -11,14 +11,14 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Text } from '@/components/ui/typography'
 
-import { Notification, Profile } from 'iconsax-reactjs'
-import { Menu, Home, FileText, Telescope } from 'lucide-react'
-import { useRef, useState, useEffect } from 'react'
+import { cn } from '@/lib/utils'
+import { observeBodyChanges } from '@/utils/mutationObserver'
+import { LoginCurve, Notification, Profile } from 'iconsax-reactjs'
+import { FileText, Home, Menu, Telescope } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import { SearchBar } from './SearchBar'
-import { observeBodyChanges } from '@/utils/mutationObserver'
-import { cn } from '@/lib/utils'
 
 export type NotificationType = {
   id: string
@@ -194,7 +194,11 @@ export default function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
-                <Notification size='32' className='h-5 w-5 text-white group-hover:text-accent-yellow ' variant='Bold' />
+                <Notification
+                  size='32'
+                  className='h-5 w-5 text-white group-hover:text-accent-yellow cursor-pointer'
+                  variant='Bold'
+                />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -210,24 +214,33 @@ export default function Header() {
           </DropdownMenu>
 
           {/* Profile Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
-                <Profile size='32' className='h-5 w-5 text-white group-hover:text-accent-yellow' variant='Bold' />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align='end'
-              className='w-56 bg-secondary-dark border-tertiary-dark text-white z-[1000]'
-            >
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator className='bg-tertiary-dark' />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Log out</DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className='hidden'>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
+                  <Profile size='32' className='h-5 w-5 text-white group-hover:text-accent-yellow' variant='Bold' />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align='end'
+                className='w-56 bg-secondary-dark border-tertiary-dark text-white z-[1000]'
+              >
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator className='bg-tertiary-dark' />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Log out</DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
+            <LoginCurve
+              variant='Bold'
+              size='32'
+              className='h-5 w-5 text-white group-hover:text-accent-yellow cursor-pointer'
+            />
+          </button>
         </div>
       </div>
     </header>
