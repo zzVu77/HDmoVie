@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Text } from '@/components/ui/typography'
-
 import { cn } from '@/lib/utils'
 import { observeBodyChanges } from '@/utils/mutationObserver'
 import { LoginCurve, Notification, Profile } from 'iconsax-reactjs'
@@ -234,13 +233,15 @@ export default function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
-            <LoginCurve
-              variant='Bold'
-              size='32'
-              className='h-5 w-5 text-white group-hover:text-accent-yellow cursor-pointer'
-            />
-          </button>
+          <Link to='/login'>
+            <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
+              <LoginCurve
+                variant='Bold'
+                size='32'
+                className='h-5 w-5 text-white group-hover:text-accent-yellow cursor-pointer'
+              />
+            </button>
+          </Link>
         </div>
       </div>
     </header>
