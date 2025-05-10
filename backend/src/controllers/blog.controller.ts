@@ -61,10 +61,8 @@ export class BlogController {
   async deleteBlog(req: Request, res: Response): Promise<void> {
     try {
       const { blogId } = req.params
-      const user = res.locals.user
-      const isAdmin = user?.role === 'ADMIN'
 
-      await this.blogService.deleteBlog(blogId, isAdmin)
+      await this.blogService.deleteBlog(blogId)
       res.status(200).json({ status: 'success', message: 'Blog deleted successfully' })
     } catch (error) {
       console.error('Error deleting blog:', error)

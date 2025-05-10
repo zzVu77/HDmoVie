@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { CommentService } from '~/services/comment.service'
-import { authenticateToken } from '~/middlewares/auth.middleware'
 
 export class CommentController {
   constructor(private commentService: CommentService) {}

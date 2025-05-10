@@ -9,7 +9,7 @@ import { CastService } from '~/services/cast.service'
 import { GenreRepository } from '~/repositories/genre.repository'
 import { CommentRepository } from '~/repositories/comment.repository'
 import { GenreService } from '~/services/genre.service'
-import { authenticateToken } from '~/middlewares/auth.middleware'
+import { authenticateToken, isAdmin } from '~/middlewares/auth.middleware'
 
 const movieRouter = Router()
 
@@ -32,13 +32,13 @@ movieRouter.get('/detail/:id', (req, res) => movieController.getMovieById(req, r
 movieRouter.get('/highlights', (req, res) => movieController.getMovieHighlights(req, res))
 
 //POST route
-movieRouter.post('/create', authenticateToken, createMovieMiddleware, (req, res) =>
+movieRouter.post('/create', authenticateToken, isAdmin, createMovieMiddleware, (req, res) =>
   movieController.createMovie(req, res),
 )
 //DELETE route
-movieRouter.delete('/delete/:id', authenticateToken, (req, res) => movieController.deleteMovie(req, res))
+movieRouter.delete('/delete/:id', authenticateToken, isAdmin, (req, res) => movieController.deleteMovie(req, res))
 //PUT route
-movieRouter.put('/update/:id', authenticateToken, updateMovieMiddleware, (req, res) =>
+movieRouter.put('/update/:id', authenticateToken, isAdmin, updateMovieMiddleware, (req, res) =>
   movieController.updateMovie(req, res),
 )
 
