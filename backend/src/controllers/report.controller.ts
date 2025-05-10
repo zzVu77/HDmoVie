@@ -6,12 +6,6 @@ export class ReportController {
 
   async getReportBlog(req: Request, res: Response): Promise<void> {
     try {
-      // Check if user is admin
-      if (res.locals.user.role !== 'ADMIN') {
-        res.status(403).json({ status: 'failed', message: 'Only administrators can view reports' })
-        return
-      }
-
       const { blogId } = req.params
       const reports = await this.reportService.getReportBlog(blogId)
       //console.log(reports)
@@ -29,12 +23,6 @@ export class ReportController {
   }
   async getReportCommentBlog(req: Request, res: Response): Promise<void> {
     try {
-      // Check if user is admin
-      if (res.locals.user.role !== 'ADMIN') {
-        res.status(403).json({ status: 'failed', message: 'Only administrators can view reports' })
-        return
-      }
-
       const { blogId } = req.params
       const reports = await this.reportService.getReportCommentBlog(blogId)
       //console.log(reports)
@@ -52,12 +40,6 @@ export class ReportController {
   }
   async getReportCommentMovie(req: Request, res: Response): Promise<void> {
     try {
-      // Check if user is admin
-      if (res.locals.user.role !== 'ADMIN') {
-        res.status(403).json({ status: 'failed', message: 'Only administrators can view reports' })
-        return
-      }
-
       const { movieId } = req.params
       const reports = await this.reportService.getReportCommentMovie(movieId)
       //console.log(reports)

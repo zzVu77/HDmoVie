@@ -26,9 +26,6 @@ export class RegisteredUserController {
   async login(req: Request, res: Response): Promise<void> {
     try {
       const data = req.body
-      // Create instance RegisterUser
-      //console.log(data)
-      // move to service
       const { accessToken, refreshToken } = await this.authService.authenticate(data.email, data.password)
 
       res.cookie('refreshToken', refreshToken, {
@@ -37,11 +34,7 @@ export class RegisteredUserController {
         sameSite: 'strict',
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày
       })
-
-      //localStorage.setItem('accessToken', accessToken)
-
-      res.cookie('accessToken', accessToken)
-
+      console.log('Login SUcceess')
       res.status(200).json({ accessToken })
     } catch (error) {
       console.error('Error login user:', error)

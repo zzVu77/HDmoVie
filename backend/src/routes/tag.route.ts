@@ -4,7 +4,7 @@ import { AppDataSource } from '~/data-source'
 import { TagRepository } from '~/repositories/tag.repository'
 import { TagService } from '~/services/tag.service'
 import { createTagMiddleware } from '~/middlewares/tag.middleware'
-import { authenticateToken } from '~/middlewares/auth.middleware'
+import { authenticateToken, isAdmin } from '~/middlewares/auth.middleware'
 
 const tagRouter = Router()
 
@@ -21,6 +21,6 @@ tagRouter.get('/:id', (req, res) => tagController.getTagById(req, res))
 tagRouter.post('/create', authenticateToken, createTagMiddleware, (req, res) => tagController.createTag(req, res))
 
 // Delete tag - requires authentication (only admin can delete)
-tagRouter.delete('/:id', authenticateToken, (req, res) => tagController.deleteTag(req, res))
+tagRouter.delete('/:id', authenticateToken, isAdmin, (req, res) => tagController.deleteTag(req, res))
 
 export default tagRouter

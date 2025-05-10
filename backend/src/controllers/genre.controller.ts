@@ -16,13 +16,6 @@ export class GenreController {
   }
   async createGenre(req: Request, res: Response): Promise<void> {
     try {
-      const user = res.locals.user
-      const isAdmin = user?.role === 'ADMIN'
-      if (!isAdmin) {
-        res.status(403).json({ message: 'Forbidden: Admins only' })
-        return
-      }
-
       const data = req.body
       const genreData = new Genre(data.name)
       const newGenre = await this.genreService.createGenre(genreData)
@@ -35,13 +28,6 @@ export class GenreController {
 
   async deleteGenre(req: Request, res: Response): Promise<void> {
     try {
-      const user = res.locals.user
-      const isAdmin = user?.role === 'ADMIN'
-      if (!isAdmin) {
-        res.status(403).json({ message: 'Forbidden: Admins only' })
-        return
-      }
-
       const genreId = req.params.id
       const genre = await this.genreService.getGenreById(genreId)
       if (!genre) {
@@ -58,13 +44,6 @@ export class GenreController {
 
   async updateGenre(req: Request, res: Response): Promise<void> {
     try {
-      const user = res.locals.user
-      const isAdmin = user?.role === 'ADMIN'
-      if (!isAdmin) {
-        res.status(403).json({ message: 'Forbidden: Admins only' })
-        return
-      }
-
       const genreId = req.params.id
       const updatedGenre = await this.genreService.updateGenre(genreId, req.body.name)
       if (!updatedGenre) {

@@ -81,15 +81,11 @@ export class BlogService {
     return this.transformToResponseDTO(savedBlog)
   }
 
-  async deleteBlog(blogId: string, isAdmin: boolean = false): Promise<void> {
+  async deleteBlog(blogId: string): Promise<void> {
     const blog = await this.blogRepository.findById(blogId)
 
     if (!blog) {
       throw new Error('Blog not found')
-    }
-
-    if (!isAdmin) {
-      throw new Error('You do not have permission to delete this blog')
     }
 
     await this.blogRepository.delete(blogId)
