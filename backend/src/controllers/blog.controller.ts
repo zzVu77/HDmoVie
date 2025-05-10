@@ -34,8 +34,8 @@ export class BlogController {
   async createBlog(req: Request, res: Response): Promise<void> {
     try {
       const { content, tags, images } = req.body
-
-      const userId = '2'
+      const user = res.locals.user
+      const userId = user.id
 
       const blog = await this.blogService.createBlog({
         content,
@@ -61,9 +61,8 @@ export class BlogController {
   async deleteBlog(req: Request, res: Response): Promise<void> {
     try {
       const { blogId } = req.params
-      // const userId = req.user?.id
-      // const isAdmin = req.user?.role === 'ADMIN'
-      const isAdmin = true
+      const user = res.locals.user
+      const isAdmin = user?.role === 'ADMIN'
 
       await this.blogService.deleteBlog(blogId, isAdmin)
       res.status(200).json({ status: 'success', message: 'Blog deleted successfully' })

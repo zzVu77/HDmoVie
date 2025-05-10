@@ -8,7 +8,8 @@ export class FollowInteractionController {
     try {
       const { targetUserId } = req.params
       // const followerId = req.locals.user.id
-      const followerId = '2'
+      const user = res.locals.user
+      const followerId = user.id
 
       await this.followInteractionService.followUser(followerId, targetUserId)
 
@@ -39,9 +40,8 @@ export class FollowInteractionController {
     try {
       const { targetUserId } = req.params
 
-      // const followerId = req.user.id
-      const followerId = '2'
-
+      const user = res.locals.user
+      const followerId = user.id
       await this.followInteractionService.unfollowUser(followerId, targetUserId)
 
       res.status(200).json({

@@ -4,7 +4,7 @@ import { AppDataSource } from '~/data-source'
 import { FollowInteractionRepository } from '~/repositories/followInteraction.repository'
 import { FollowInteractionService } from '~/services/followInteraction.service'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
-// import { authMiddleware } from '~/middlewares/auth.middleware'
+import { authenticateToken } from '~/middlewares/auth.middleware'
 
 const followRouter = Router()
 
@@ -15,7 +15,11 @@ const followInteractionService = new FollowInteractionService(followInteractionR
 const followInteractionController = new FollowInteractionController(followInteractionService)
 
 // Follow and unfollow endpoints
-followRouter.post('/follow/:targetUserId', (req, res) => followInteractionController.followUser(req, res))
-followRouter.delete('/unfollow/:targetUserId', (req, res) => followInteractionController.unfollowUser(req, res))
+followRouter.post('/follow/:targetUserId', authenticateToken, (req, res) =>
+  followInteractionController.followUser(req, res),
+)
+followRouter.delete('/unfollow/:targetUserId', authenticateToken, (req, res) =>
+  followInteractionController.unfollowUser(req, res),
+)
 
 export default followRouter

@@ -8,9 +8,9 @@ interface ValidationStrategy {
 
 // Base schema
 const baseLikeInteractionSchema = {
-  userId: Joi.string().required().messages({
-    'string.base': 'User ID must be a string',
-    'any.required': 'User ID is required',
+  blogId: Joi.string().required().messages({
+    'string.base': 'blog ID must be a string',
+    'any.required': 'blog ID is required',
   }),
 }
 
