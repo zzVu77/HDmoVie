@@ -1,20 +1,18 @@
+import BlogCard, { BlogPostComponentProps } from '@/components/BlogCard'
+import CommentSection from '@/components/CommentSection'
 import { EditProfileModal } from '@/components/EditProfileModal'
 import FollowInteractionModal from '@/components/FollowInteractionModal'
+import ForgotPasswordForm from '@/components/ForgotPasswordForm'
+import ReportModal from '@/components/ReportModal'
+import ResetPasswordForm from '@/components/ResetPasswordForm'
+import { Text } from '@/components/ui/typography'
+import VerifyOtpForm from '@/components/VerifyOtpForm'
 import WatchlistCard from '@/components/WatchlistCard'
 import WatchlistInformationFormModal from '@/components/WatchlistInformationFormModal'
 import WatchlistItem from '@/components/WatchlistItem'
 import WriteBlogTextEditor from '@/components/WriteBlogTextEditor'
-import { FollowPeopleProps, RegisteredUserProps, WatchlistMovieProps } from '@/types'
-import { WatchlistProps } from '@/types'
-import ForgotPasswordForm from '@/components/ForgotPasswordForm'
-import VerifyOtpForm from '@/components/VerifyOtpForm'
-import ResetPasswordForm from '@/components/ResetPasswordForm'
-import ReportModal from '@/components/ReportModal'
+import { FollowPeopleProps, RegisteredUserProps, WatchlistMovieProps, WatchlistProps } from '@/types'
 import { RegisteredUserType, TagType } from '@/types/index'
-import { BlogPostComponentProps } from '@/components/BlogCard'
-import BlogCard from '@/components/BlogCard'
-import { Text } from '@/components/ui/typography'
-import CommentSection from '@/components/CommentSection'
 
 const dummyFollowers: FollowPeopleProps[] = []
 
@@ -374,6 +372,9 @@ export const blogPosts: BlogPostComponentProps[] = sampleBlogs.map((blog, index)
 }))
 
 const TestComponent = () => {
+  // apiGet('/movies').then((res) => {
+  //   console.log(res.data)
+  // })
   return (
     <>
       <div className='h-[40vw]'></div>

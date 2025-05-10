@@ -5,9 +5,6 @@ import { dummyMovies } from '@/data/dummyData'
 import { TitleSection } from './MovieDetail'
 
 const Home = () => {
-  // apiGet('/movies').then((res) => {
-  //   console.log(res.data)
-  // })
   return (
     <div className=' flex flex-col scroll-smooth '>
       <Carousel3D></Carousel3D>
