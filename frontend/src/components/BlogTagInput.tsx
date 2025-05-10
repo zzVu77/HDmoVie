@@ -1,13 +1,23 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { TagType } from '@/types'
 import { Text } from './ui/typography'
 
-export default function TagInput({ dbTags }: { dbTags: TagType[] }) {
+type TagInputProps = {
+  dbTags: TagType[]
+  onChange?: (tags: TagType[]) => void
+}
+
+export default function TagInput({ dbTags, onChange }: TagInputProps) {
   const [tagQuery, setTagQuery] = useState('')
   const [selectedTags, setSelectedTags] = useState<TagType[]>([])
   const [allTags, setAllTags] = useState<TagType[]>(dbTags)
   const [isShowingTagSuggest, setIsShowingTagSuggest] = useState(false)
   const tagInputRef = useRef<HTMLDivElement>(null)
+
+  // Use call back function to notify selected tag to parent
+  useEffect(() => {
+    onChange?.(selectedTags)
+  }, [selectedTags, onChange])
 
   // Click outside will hide the tag suggestion
   useEffect(() => {
@@ -16,23 +26,19 @@ export default function TagInput({ dbTags }: { dbTags: TagType[] }) {
         setIsShowingTagSuggest(false)
       }
     }
-
     // Add event listener to document
     document.addEventListener('mousedown', handleClickOutside)
     // Cleanup function to remove event listener
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  })
+  }, [])
 
   // Remove or add tag into selected tag
-  // Also update the allTags
   const toggleTag = (tag: TagType) => {
     if (selectedTags.some((t) => t.id === tag.id)) {
-      setAllTags((prev) => [...prev, tag]) // Add back to available tags
       setSelectedTags((prev) => prev.filter((t) => t.id !== tag.id))
     } else {
-      setAllTags((prev) => prev.filter((t) => t.id !== tag.id)) // Remove from available tags
       setSelectedTags((prev) => [...prev, tag])
     }
   }
@@ -49,10 +55,13 @@ export default function TagInput({ dbTags }: { dbTags: TagType[] }) {
   }
 
   // Filter tags to display on tag suggestion
-  const filteredTags = allTags.filter((tag) => tag.name && tag.name.toLowerCase().includes(tagQuery.toLowerCase()))
+  const filteredTags = useMemo(() => {
+    return allTags.filter((tag) => tag.name && tag.name.toLowerCase().includes(tagQuery.toLowerCase()))
+  }, [tagQuery, allTags])
 
   return (
-    <div className='w-full'>
+    <div className='w-full relative'>
+      {/* Set relative here */}
       <div className='flex flex-wrap gap-2 bg-secondary-dark px-2 py-1 rounded-md border border-none'>
         {selectedTags.map((tag) => (
           <div
@@ -63,29 +72,25 @@ export default function TagInput({ dbTags }: { dbTags: TagType[] }) {
             {tag.name}
           </div>
         ))}
-      </div>
-      <div ref={tagInputRef} className='pr-2 py-1 relative'>
-        <input
-          type='text'
-          className='bg-transparent text-sm ml-2 outline-none text-white flex-1 w-full min-h-[22px]'
-          placeholder='#'
-          value={tagQuery}
-          autoFocus={false}
-          onChange={(e) => setTagQuery(e.target.value)}
-          onFocus={() => setIsShowingTagSuggest(true)}
-        />
-        {isShowingTagSuggest && tagQuery.trim() !== '' && (
-          <>
-            <div className='absolute mt-1 w-full bg-secondary-dark border border-tertiary-dark rounded-lg shadow z-10 max-h-40'>
+        <div ref={tagInputRef} className='relative min-w-[0.75rem] max-w-full flex-grow'>
+          <input
+            type='text'
+            className='bg-transparent text-sm outline-none text-white'
+            placeholder='#'
+            value={tagQuery}
+            onChange={(e) => setTagQuery(e.target.value)}
+            onFocus={() => setIsShowingTagSuggest(true)}
+          />
+          {isShowingTagSuggest && tagQuery.trim() !== '' && (
+            <div className='absolute top-full left-0 mt-1 w-full bg-secondary-dark border border-tertiary-dark rounded-lg shadow z-10 max-h-40 overflow-hidden'>
               <div className='max-h-40 overflow-y-auto custom-scroll'>
-                {/* Always show 'Add new tag' if query is non-empty and not an exact match */}
                 {tagQuery.trim() &&
                   !allTags.some((tag) => (tag.name ?? '').toLowerCase() === tagQuery.trim().toLowerCase()) && (
                     <div
                       className='px-2 py-2 text-white hover:bg-tertiary-dark rounded-lg cursor-pointer'
                       onClick={async () => {
                         const newTagObj = await createNewTag(tagQuery.trim())
-                        allTags.push(newTagObj)
+                        setAllTags((prev) => [...prev, newTagObj])
                         toggleTag(newTagObj)
                         setTagQuery('')
                         setIsShowingTagSuggest(false)
@@ -113,8 +118,8 @@ export default function TagInput({ dbTags }: { dbTags: TagType[] }) {
                 ))}
               </div>
             </div>
-          </>
-        )}
+          )}
+        </div>
       </div>
     </div>
   )
