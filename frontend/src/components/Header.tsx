@@ -55,6 +55,29 @@ export default function Header() {
   // Handle current time display
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString())
 
+  // Handle header visibility based on scroll movement
+  // Down -> hide, up -> show
+  const [prevScrollPos, setPrevScrollPos] = useState(window.scrollY)
+  const [isVisible, setIsVisible] = useState(true)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Take current scroll POS on the page
+      const currentScrollPos = window.scrollY
+      // Check for visibility
+      // If pre pos > current pos --> scroll up --> show
+      // Other wise, hide
+      // Additional, current scroll pos is less than 10 will also show the header
+      const visible = prevScrollPos > currentScrollPos || currentScrollPos < 10
+
+      setIsVisible(visible)
+      setPrevScrollPos(currentScrollPos)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [prevScrollPos])
+
   // Observe the change of body tag
   // Due to the radix effect applies on the body to prevent screen from being scrolled
   useEffect(() => {
@@ -74,7 +97,11 @@ export default function Header() {
   }, [])
 
   return (
-    <header className='flex h-20 w-[90vw] shrink-0 items-center justify-between px-4 md:px-6 text-white bg-tertiary-dark/55 drop-shadow-white-glow rounded-3xl shadow-md fixed backdrop-blur-[2px] z-[999] top-0 left-1/2 -translate-x-1/2 mt-1 '>
+    <header
+      className={`transition-transform duration-300 ease-in-out transform ${
+        isVisible ? 'translate-y-0 drop-shadow-white-glow mt-1' : '-translate-y-full drop-shadow-none mt-0'
+      } flex h-20 w-[90vw] shrink-0 items-center justify-between px-4 md:px-6 text-white bg-tertiary-dark/55 rounded-3xl shadow-md fixed backdrop-blur-[2px] z-[999] top-0 left-1/2 -translate-x-1/2`}
+    >
       {/* Left Section: Hamburger Menu + Logo */}
       <div className='flex items-center'>
         <Sheet>
