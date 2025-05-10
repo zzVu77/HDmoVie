@@ -1,133 +1,74 @@
-interface MenuItem {
-  title: string
-  links: {
-    text: string
-    url: string
-  }[]
-}
+import { Text } from './ui/typography'
+import { Github, Youtube, Facebook } from 'lucide-react'
 
-interface Footer2Props {
-  logo?: {
-    url: string
-    src: string
-    alt: string
-    title: string
-  }
-  tagline?: string
-  menuItems?: MenuItem[]
-  copyright?: string
-  bottomLinks?: {
-    text: string
-    url: string
-  }[]
-}
-
-const Footer = ({
-  logo = {
-    src: 'https://shadcnblocks.com/images/block/block-1.svg',
-    alt: 'blocks for shadcn/ui',
-    title: 'Shadcnblocks.com',
-    url: 'https://www.shadcnblocks.com',
+const navLinks = [
+  {
+    label: 'Home',
+    link: '/',
   },
-  // tagline = 'Components made easy.',
-  menuItems = [
-    {
-      title: 'Product',
-      links: [
-        { text: 'Overview', url: '#' },
-        { text: 'Pricing', url: '#' },
-        { text: 'Marketplace', url: '#' },
-        { text: 'Features', url: '#' },
-        { text: 'Integrations', url: '#' },
-        { text: 'Pricing', url: '#' },
-      ],
-    },
-    {
-      title: 'Company',
-      links: [
-        { text: 'About', url: '#' },
-        { text: 'Team', url: '#' },
-        { text: 'Blog', url: '#' },
-        { text: 'Careers', url: '#' },
-        { text: 'Contact', url: '#' },
-        { text: 'Privacy', url: '#' },
-      ],
-    },
-    {
-      title: 'Resources',
-      links: [
-        { text: 'Help', url: '#' },
-        { text: 'Sales', url: '#' },
-        { text: 'Advertise', url: '#' },
-      ],
-    },
-    {
-      title: 'Social',
-      links: [
-        { text: 'Twitter', url: '#' },
-        { text: 'Instagram', url: '#' },
-        { text: 'LinkedIn', url: '#' },
-      ],
-    },
-  ],
-  copyright = '© 2024 Shadcnblocks.com. All rights reserved.',
-  bottomLinks = [
-    { text: 'Terms and Conditions', url: '#' },
-    { text: 'Privacy Policy', url: '#' },
-  ],
-}: Footer2Props) => {
-  return (
-    <section className='py-32 bg-black text-white'>
-      <div className='container'>
-        <footer>
-          <div className='grid grid-cols-2 gap-8 lg:grid-cols-6'>
-            <div className='col-span-2 mb-8 lg:mb-0'>
-              <div className='flex items-center gap-2 lg:justify-start'>
-                <a href={logo.url}>
-                  <img src={logo.src} alt={logo.alt} title={logo.title} className='h-10' />
-                </a>
-                <p className='text-xl font-semibold'>{logo.title}</p>
-              </div>
-              {/* <p className='mt-4 font-bold'>{tagline}</p> */}
-            </div>
-            {menuItems.map((section, sectionIdx) => (
-              <div key={sectionIdx}>
-                <h3 className='mb-4 font-bold'>{section.title}</h3>
-                <ul className='space-y-4 text-gray-400'>
-                  {section.links.map((link, linkIdx) => (
-                    <li key={linkIdx} className='font-medium'>
-                      <a
-                        href={link.url}
-                        className='transition-colors duration-300 hover:text-[color:var(--color-primary-yellow)]'
-                      >
-                        {link.text}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+  {
+    label: 'Forum',
+    link: '/blogs',
+  },
+  {
+    label: 'About',
+    link: '/about',
+  },
+  {
+    label: 'Contact Us',
+    link: '/contact',
+  },
+  {
+    label: 'Our Team',
+    link: '/team',
+  },
+]
 
-          <div className='mt-24 flex flex-col justify-between gap-4 border-t border-gray-700 pt-8 text-sm font-medium text-gray-400 md:flex-row md:items-center'>
-            <p>{copyright}</p>
-            <ul className='flex gap-4'>
-              {bottomLinks.map((link, linkIdx) => (
-                <li key={linkIdx}>
-                  <a
-                    href={link.url}
-                    className='underline transition-colors duration-300 hover:text-[color:var(--color-secondary-yellow)]'
-                  >
-                    {link.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </footer>
+export default function Footer() {
+  return (
+    <footer className='bg-gradient-to-b from-primary-dark to-gray-900 mt-5 pt-10'>
+      <div className='mx-auto w-full max-w-screen-xl p-5 py-6 lg:py-8'>
+        <div className='flex flex-row justify-center gap-x-6'>
+          <a
+            href='https://github.com/zzVu77/HDmoVie'
+            className='bg-tertiary-dark text-white p-2 rounded-2xl transition-all duration-300 hover:scale-120 hover:bg-gray-100 hover:text-black'
+          >
+            <Github className='w-6 h-5' />
+          </a>
+          <a
+            href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+            className='bg-tertiary-dark text-white p-2 rounded-2xl transition-all duration-300 hover:scale-120 hover:bg-gray-100 hover:text-red-600'
+          >
+            <Youtube className='w-6 h-5' />
+          </a>
+          <a
+            href='https://www.facebook.com/dhspkt.hcmute'
+            className='bg-tertiary-dark text-white p-2 rounded-2xl transition-all duration-300 hover:scale-120 hover:bg-gray-100 hover:text-blue-600'
+          >
+            <Facebook className='w-6 h-5' />
+          </a>
+        </div>
+
+        <div className='flex flex-row flex-wrap justify-center gap-x-4 md:gap-x-6 mt-5'>
+          {navLinks.map((nav) => (
+            <a key={nav.link} href={nav.link}>
+              <Text body={4} className='text-gray-400 hover:text-gray-300'>
+                {nav.label}
+              </Text>
+            </a>
+          ))}
+        </div>
+
+        <div className='flex justify-center w-full mt-4'>
+          <Text className='text-sm text-gray-500 text-center'>F5 - UTE</Text>
+        </div>
+
+        <hr className='my-5 sm:mx-auto lg:my-8 border-gray-200' />
+
+        <div className='flex justify-center w-full'>
+          <Text className='text-sm text-gray-500 text-center'>© 2025 HDmoVie. All Rights Reserved.</Text>
+        </div>
       </div>
-    </section>
+    </footer>
   )
 }
-
-export { Footer }

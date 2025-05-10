@@ -6,12 +6,10 @@ import WatchlistItem from '@/components/WatchlistItem'
 import WriteBlogTextEditor from '@/components/WriteBlogTextEditor'
 import { FollowPeopleProps, RegisteredUserProps, WatchlistMovieProps } from '@/types'
 import { WatchlistProps } from '@/types'
-import Header from '@/components/Header'
 import ForgotPasswordForm from '@/components/ForgotPasswordForm'
 import VerifyOtpForm from '@/components/VerifyOtpForm'
 import ResetPasswordForm from '@/components/ResetPasswordForm'
 import ReportModal from '@/components/ReportModal'
-import { Footer } from '@/components/Footer'
 import { RegisteredUserType, TagType } from '@/types/index'
 import { BlogPostComponentProps } from '@/components/BlogCard'
 import BlogCard from '@/components/BlogCard'
@@ -348,18 +346,7 @@ const blogPosts: BlogPostComponentProps[] = sampleBlogs.map((blog, index) => ({
 const TestComponent = () => {
   return (
     <>
-      <div
-        className='bg-cover bg-center p-5'
-        style={{
-          backgroundImage: "url('https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg')",
-        }}
-      >
-        <Header />
-      </div>
-
-      <div>
-        <h1>TEST</h1>
-      </div>
+      <div className='h-[40vw]'></div>
 
       <div className='flex items-center justify-center'>
         <FollowInteractionModal followers={dummyFollowers} followings={dummyFollowings} />
@@ -429,14 +416,6 @@ const TestComponent = () => {
         <h1>TEST</h1>
       </div>
 
-      <div className='flex flex-col items-center justify-center gap-y-5'>
-        <WriteBlogTextEditor allTags={dummyTags} />
-      </div>
-
-      <div>
-        <h1>TEST</h1>
-      </div>
-
       <ForgotPasswordForm />
 
       <div>
@@ -458,6 +437,8 @@ const TestComponent = () => {
       <ReportModal />
 
       <div>
+        <WriteBlogTextEditor userFullName='Bien Xuan Huy' dbTags={dummyTags} />
+
         {blogPosts.map((post, index) => (
           <BlogCard
             key={post.id}
@@ -469,7 +450,7 @@ const TestComponent = () => {
             likes={post.likes}
             comments={post.comments}
             images={post.images}
-            isFirst={index === 0}
+            isFirst={false}
             isLast={index === blogPosts.length - 1}
             isShowCommentDivider={false}
           />
@@ -500,7 +481,6 @@ const TestComponent = () => {
         </Text>
         <CommentSection />
       </div>
-      <Footer />
     </>
   )
 }

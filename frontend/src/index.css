@@ -258,3 +258,12 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--tertiary-dark) var(--secondary-dark);
 }
+
+/* Custom sheet close for header sheet*/
+.custom-sheet > button.absolute {
+  color: white; /* changes icon stroke */
+}
+
+.custom-sheet > button.absolute:hover {
+  color: #facc15; /* Tailwind yellow-400 */
+}

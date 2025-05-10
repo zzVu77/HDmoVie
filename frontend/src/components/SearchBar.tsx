@@ -30,7 +30,7 @@ export function SearchBar({
   return (
     <div
       className={`flex items-center bg-transparent text-white rounded-md transition-all duration-300 ${
-        isExpanded ? 'w-64 ring-2 ring-offset-2 ring-[var(--accent-yellow)]' : 'w-10'
+        isExpanded ? 'w-64 ring-2' : 'w-10'
       } hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)]`}
     >
       <button onClick={handleExpand} className='p-2 focus:outline-none'>
