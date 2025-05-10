@@ -9,6 +9,7 @@ import { CommentController } from '~/controllers/comment.controller'
 import { CommentService } from '~/services/comment.service'
 
 import { createMovieCommentMiddleware, createBlogCommentMiddleware } from '~/middlewares/comment.middleware'
+import { authenticateToken } from '~/middlewares/auth.middleware'
 
 const commentRouter = Router()
 
@@ -23,8 +24,12 @@ const commentService = new CommentService(commentRepository, userRepository, mov
 const commentController = new CommentController(commentService)
 
 // Define routes
-commentRouter.post('/movie', createMovieCommentMiddleware, (req, res) => commentController.createMovieComment(req, res))
-commentRouter.post('/blog', createBlogCommentMiddleware, (req, res) => commentController.commentOnBlog(req, res))
+commentRouter.post('/movie', authenticateToken, createMovieCommentMiddleware, (req, res) =>
+  commentController.createMovieComment(req, res),
+)
+commentRouter.post('/blog', authenticateToken, createBlogCommentMiddleware, (req, res) =>
+  commentController.commentOnBlog(req, res),
+)
 commentRouter.get('/blog/:blogId', (req, res) => commentController.getBlogComments(req, res))
 commentRouter.get('/movie/:movieId', (req, res) => commentController.getMovieComments(req, res))
 

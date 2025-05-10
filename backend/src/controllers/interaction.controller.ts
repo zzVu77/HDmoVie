@@ -7,8 +7,8 @@ export class InteractionController {
   async likeOrUnlikeBlog(req: Request, res: Response): Promise<void> {
     try {
       const blogId = req.body.blogId
-      const userId = req.body.userId
-
+      const user = res.locals.user
+      const userId = user.id
       // Gọi service để xử lý like hoặc unlike
       const likeInteraction = await this.interactionService.likeBlog(blogId, userId)
 

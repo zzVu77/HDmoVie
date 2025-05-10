@@ -8,10 +8,6 @@ interface ValidationStrategy {
 
 // Base schema for Comment
 const baseCommentSchema = {
-  userId: Joi.string().required().messages({
-    'string.base': 'User ID must be a string',
-    'any.required': 'User ID is required',
-  }),
   content: Joi.string().trim().min(1).required().messages({
     'string.base': 'Content must be a string',
     'string.empty': 'Content cannot be empty',

@@ -1,12 +1,15 @@
 import { Request, Response } from 'express'
 import { CommentService } from '~/services/comment.service'
+import { authenticateToken } from '~/middlewares/auth.middleware'
 
 export class CommentController {
   constructor(private commentService: CommentService) {}
 
   async createMovieComment(req: Request, res: Response): Promise<void> {
     try {
-      const { userId, movieId, content, parentCommentId } = req.body
+      const user = res.locals.user
+      const userId = user.id
+      const { movieId, content, parentCommentId } = req.body
 
       const comment = await this.commentService.commentOnMovie({
         userId,
@@ -40,7 +43,9 @@ export class CommentController {
 
   async commentOnBlog(req: Request, res: Response): Promise<void> {
     try {
-      const { userId, blogId, content, parentCommentId } = req.body
+      const { blogId, content, parentCommentId } = req.body
+      const user = res.locals.user
+      const userId = user.id
       const comment = await this.commentService.commentOnBlog(userId, blogId, content, parentCommentId)
       res.status(201).json({ status: 'success', data: comment })
     } catch (error) {
