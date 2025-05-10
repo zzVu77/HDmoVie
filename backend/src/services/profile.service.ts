@@ -10,7 +10,7 @@ export class ProfileService {
   ) {}
 
   // Get user basic profile information: user information + follow information
-  public async getProfile(userId: string) {
+  public async getProfile(userId: string, senderId: string) {
     try {
       const user = await this.registeredUserRepository.findById(userId)
 
@@ -33,6 +33,7 @@ export class ProfileService {
         user,
         followersCount: followerCount,
         followingCount: followingCount,
+        isOwner: userId === senderId,
       }
     } catch (error) {
       throw new Error((error as Error).message)

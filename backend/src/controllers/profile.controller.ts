@@ -19,7 +19,8 @@ export class ProfileController {
   async get(req: Request, res: Response): Promise<void> {
     try {
       const userId = req.params.id
-      const profile = await this.profileService.getProfile(userId)
+      const senderId = res.locals.user?.id
+      const profile = await this.profileService.getProfile(userId, senderId)
 
       // In case profile is null
       if (!profile) {
