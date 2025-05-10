@@ -7,7 +7,7 @@ import { CommentRepository } from '~/repositories/comment.repository'
 import { ReportService } from '~/services/report.service'
 import { ReportController } from '~/controllers/report.controller'
 import { MovieRepository } from '~/repositories/movie.repository'
-import { authenticateToken } from '~/middlewares/auth.middleware'
+import { authenticateToken, isAdmin } from '~/middlewares/auth.middleware'
 
 const reportRouter = Router()
 
@@ -28,11 +28,11 @@ const reportService = new ReportService(
 const reportController = new ReportController(reportService)
 
 // GET routes - require authentication (role check in controller)
-reportRouter.get('/blog/:blogId', authenticateToken, (req, res) => reportController.getReportBlog(req, res))
-reportRouter.get('/comment/blog/:blogId', authenticateToken, (req, res) =>
+reportRouter.get('/blog/:blogId', authenticateToken, isAdmin, (req, res) => reportController.getReportBlog(req, res))
+reportRouter.get('/comment/blog/:blogId', authenticateToken, isAdmin, (req, res) =>
   reportController.getReportCommentBlog(req, res),
 )
-reportRouter.get('/comment/movie/:movieId', authenticateToken, (req, res) =>
+reportRouter.get('/comment/movie/:movieId', authenticateToken, isAdmin, (req, res) =>
   reportController.getReportCommentMovie(req, res),
 )
 

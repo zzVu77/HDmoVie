@@ -18,12 +18,6 @@ export class MovieController {
 
   async createMovie(req: Request, res: Response): Promise<void> {
     try {
-      const user = res.locals.user
-
-      if (user?.role !== 'admin') {
-        res.status(403).json({ status: 'failed', message: 'Forbidden: Admins only' })
-        return
-      }
       const data = req.body
       const movieData = new Movie(
         data.title,
@@ -85,12 +79,6 @@ export class MovieController {
 
   async deleteMovie(req: Request, res: Response): Promise<void> {
     try {
-      const user = res.locals.user
-
-      if (user?.role !== 'admin') {
-        res.status(403).json({ status: 'failed', message: 'Forbidden: Admins only' })
-        return
-      }
       const movieId = req.params.id
       const movie = await this.movieService.getMovieById(movieId)
       if (!movie) {
@@ -107,12 +95,6 @@ export class MovieController {
 
   async updateMovie(req: Request, res: Response): Promise<void> {
     try {
-      const user = res.locals.user
-
-      if (user?.role !== 'admin') {
-        res.status(403).json({ status: 'failed', message: 'Forbidden: Admins only' })
-        return
-      }
       const movieId = req.params.id
       const updatedMovie = await this.movieService.updateMovie(movieId, req.body as MovieType)
       if (!updatedMovie) {
