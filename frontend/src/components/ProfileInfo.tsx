@@ -78,7 +78,7 @@ const ProfileInfo = ({ dateOfBirth, email, fullName, id, countNum }: Props) => {
           <DialogTrigger asChild>
             <Text className='cursor-pointer text-center'>{countNum || 100} Followers</Text>
           </DialogTrigger>
-          <DialogContent className='px-0 py-0 border-none'>
+          <DialogContent className='px-0 py-0 border-none w-fit min-w-lg'>
             <FollowInteractionModal followers={dummyFollowPeopleData} followings={dummyFollowings} />
           </DialogContent>
         </Dialog>

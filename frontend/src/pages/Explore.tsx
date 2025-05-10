@@ -7,7 +7,7 @@ import { Loader2 } from 'lucide-react'
 const Explore = () => {
   return (
     <div>
-      <div className='flex flex-col gap-5 items-center justify-center pb-5'>
+      <div className='flex flex-col gap-5 items-center justify-center pb-5 pt-28'>
         <Wrapper>
           <ListMovie movies={dummyMovies}></ListMovie>
           <Button

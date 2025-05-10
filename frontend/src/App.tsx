@@ -11,6 +11,7 @@ import MainLayout from './components/shared/MainLayout'
 import Blogs from './pages/Blogs'
 import BlogDetail from './pages/BlogDetail'
 import Profile from './pages/Profile'
+import RegisterForm from './pages/Register'
 
 function App() {
   return (
@@ -23,7 +24,6 @@ function App() {
           <Route path='/movie/:id' element={<Movie />} />
           <Route path='/test' element={<TestComponent />} />
           <Route path='/explore' element={<Explore />} />
-          <Route path='/login' element={<Login />} />
           <Route path='/blog/:id' element={<BlogDetail />} />
           <Route path='/blog' element={<Blogs />} />
           <Route path='/profile/:id' element={<Profile />} />
@@ -31,6 +31,8 @@ function App() {
 
         {/* Admin route WITHOUT header */}
         <Route path='/admin' element={<Admin />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<RegisterForm />} />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
     </BrowserRouter>
