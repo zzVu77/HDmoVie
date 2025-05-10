@@ -14,17 +14,21 @@ const registeredUserService = new RegisteredUserService(registeredUserRepository
 const authService = new AuthService(registeredUserRepository)
 const registeredUserController = new RegisteredUserController(registeredUserService, authService)
 
-// Forgot password
-registeredUserRouter.post('/forgot-password', (req, res) => registeredUserController.forgotPassword(req, res))
-
-// Reset password
-registeredUserRouter.post('/reset-password', (req, res) => registeredUserController.resetPassword(req, res))
-
+// Public routes - no authentication required
 registeredUserRouter.post('/register', registerUserMiddleware, (req, res) =>
   registeredUserController.register(req, res),
 )
 
 registeredUserRouter.post('/login', loginUserMiddleware, (req, res) => registeredUserController.login(req, res))
+
+// Password recovery routes
+registeredUserRouter.post('/forgot-password', (req, res) => registeredUserController.forgotPassword(req, res))
+
+registeredUserRouter.post('/reset-password', (req, res) => registeredUserController.resetPassword(req, res))
+
+// Protected routes - authentication required
 registeredUserRouter.get('/me', authenticateToken, (req, res) => registeredUserController.getProfile(req, res))
+
+registeredUserRouter.post('/logout', authenticateToken, (req, res) => registeredUserController.logout(req, res))
 
 export default registeredUserRouter

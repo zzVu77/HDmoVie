@@ -7,6 +7,7 @@ import { CommentRepository } from '~/repositories/comment.repository'
 import { ReportService } from '~/services/report.service'
 import { ReportController } from '~/controllers/report.controller'
 import { MovieRepository } from '~/repositories/movie.repository'
+import { authenticateToken } from '~/middlewares/auth.middleware'
 
 const reportRouter = Router()
 
@@ -26,13 +27,17 @@ const reportService = new ReportService(
 )
 const reportController = new ReportController(reportService)
 
-// Define routes
+// GET routes - require authentication (role check in controller)
+reportRouter.get('/blog/:blogId', authenticateToken, (req, res) => reportController.getReportBlog(req, res))
+reportRouter.get('/comment/blog/:blogId', authenticateToken, (req, res) =>
+  reportController.getReportCommentBlog(req, res),
+)
+reportRouter.get('/comment/movie/:movieId', authenticateToken, (req, res) =>
+  reportController.getReportCommentMovie(req, res),
+)
 
-reportRouter.get('/blog/:blogId', (req, res) => reportController.getReportBlog(req, res))
-reportRouter.get('/comment/blog/:blogId', (req, res) => reportController.getReportCommentBlog(req, res))
-reportRouter.get('/comment/movie/:movieId', (req, res) => reportController.getReportCommentMovie(req, res))
-
-reportRouter.post('/blog', (req, res) => reportController.reportBlog(req, res))
-reportRouter.post('/comment', (req, res) => reportController.reportComment(req, res))
+// POST routes - require authentication (any registered user can report)
+reportRouter.post('/blog', authenticateToken, (req, res) => reportController.reportBlog(req, res))
+reportRouter.post('/comment', authenticateToken, (req, res) => reportController.reportComment(req, res))
 
 export default reportRouter

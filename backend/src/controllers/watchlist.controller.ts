@@ -7,9 +7,13 @@ export class WatchlistController {
   // POST: /watchlists/create
   async createWatchlist(req: Request, res: Response): Promise<void> {
     try {
-      const { title, description, isPublic, ownerId } = req.body
+      const { title, description, isPublic } = req.body
+
+      // Use user ID from auth middleware
+      const ownerId = res.locals.user.id
+
       const createdMovie = await this.watchlistService.createWatchlist(title, description, isPublic, ownerId)
-      res.status(200).json(createdMovie)
+      res.status(201).json(createdMovie)
     } catch (error) {
       console.error('Error creating watchlist: ', error)
       res.status(400).json({ message: (error as Error).message })
@@ -19,9 +23,13 @@ export class WatchlistController {
   // POST: /watchlists/create-fast
   async createWatchlistFast(req: Request, res: Response): Promise<void> {
     try {
-      const { title, ownerId } = req.body
+      const { title } = req.body
+
+      // Use user ID from auth middleware
+      const ownerId = res.locals.user.id
+
       const createdMovie = await this.watchlistService.createWatchlistFast(title, ownerId)
-      res.status(200).json(createdMovie)
+      res.status(201).json(createdMovie)
     } catch (error) {
       console.error('Error creating watchlist: ', error)
       res.status(400).json({ message: (error as Error).message })
@@ -32,7 +40,11 @@ export class WatchlistController {
   async updateWatchlist(req: Request, res: Response): Promise<void> {
     try {
       const watchlistId = req.params.wid
-      const { title, description, isPublic, senderId } = req.body
+      const { title, description, isPublic } = req.body
+
+      // Use user ID from auth middleware
+      const senderId = res.locals.user.id
+
       const updatedWatchlist = await this.watchlistService.updateWatchlist(
         watchlistId,
         title,
@@ -57,12 +69,15 @@ export class WatchlistController {
   async deleteWatchlist(req: Request, res: Response): Promise<void> {
     try {
       const wid = req.params.wid
-      const senderId = req.body.senderId
+
+      // Use user ID from auth middleware
+      const senderId = res.locals.user.id
+
       const isDeleted = await this.watchlistService.deleteWatchlist(wid, senderId)
       if (!isDeleted) {
-        res.status(400).json({ message: 'Watchlist have not been deleted' })
+        res.status(404).json({ message: 'Watchlist not found or you do not have permission to delete it' })
       } else {
-        res.status(200).json({ message: 'Watchlist have been deleted' })
+        res.status(200).json({ message: 'Watchlist has been deleted successfully' })
       }
     } catch (error) {
       console.error('Error deleting watchlist: ', error)
@@ -75,7 +90,9 @@ export class WatchlistController {
     try {
       const watchlistId = req.params.wid
       const movieId = req.params.mid
-      const senderId = req.body.senderId
+
+      // Use user ID from auth middleware
+      const senderId = res.locals.user.id
 
       const updatedWatchlist = await this.watchlistService.deleteMovie(movieId, watchlistId, senderId)
 
@@ -85,10 +102,12 @@ export class WatchlistController {
           watchlist: updatedWatchlist,
         })
       } else {
-        res.status(400).json({ message: 'Movie was not removed from the watchlist' })
+        res
+          .status(404)
+          .json({ message: 'Movie not found in watchlist or you do not have permission to modify this watchlist' })
       }
     } catch (error) {
-      console.error('Error deleting watchlist: ', error)
+      console.error('Error removing movie from watchlist: ', error)
       res.status(400).json({ message: (error as Error).message })
     }
   }
@@ -98,7 +117,9 @@ export class WatchlistController {
     try {
       const watchlistId = req.params.wid
       const movieId = req.params.mid
-      const senderId = req.body.senderId
+
+      // Use user ID from auth middleware
+      const senderId = res.locals.user.id
 
       const updatedWatchlist = await this.watchlistService.addMovie(movieId, watchlistId, senderId)
 
@@ -108,7 +129,9 @@ export class WatchlistController {
           watchlist: updatedWatchlist,
         })
       } else {
-        res.status(400).json({ message: 'Movie already exists in the watchlist' })
+        res.status(400).json({
+          message: 'Movie already exists in the watchlist or you do not have permission to modify this watchlist',
+        })
       }
     } catch (error) {
       console.error('Error adding movie to watchlist:', error)

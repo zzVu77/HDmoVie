@@ -6,9 +6,10 @@ export class RateController {
 
   async rateMovie(req: Request, res: Response): Promise<void> {
     try {
-      const { userId, movieId, score } = req.body
+      const { movieId, score } = req.body
+      const userId = res.locals.user.id // Get user ID from authenticated user
 
-      if (!userId || !movieId || score === undefined) {
+      if (!movieId || score === undefined) {
         res.status(400).json({ status: 'failed', message: 'Missing required fields' })
         return
       }
@@ -34,10 +35,10 @@ export class RateController {
   async deleteRate(req: Request, res: Response): Promise<void> {
     try {
       const { movieId } = req.params
-      const { userId } = req.body
+      const userId = res.locals.user.id // Get user ID from authenticated user
 
-      if (!movieId || !userId) {
-        res.status(400).json({ status: 'failed', message: 'Movie ID and User ID are required' })
+      if (!movieId) {
+        res.status(400).json({ status: 'failed', message: 'Movie ID is required' })
         return
       }
 

@@ -21,7 +21,11 @@ export class TagController {
       res.status(201).json(newTag)
     } catch (error) {
       console.error('Error creating tag:', error)
-      res.status(400).json({ message: (error as Error).message })
+      if ((error as Error).message.includes('duplicate')) {
+        res.status(409).json({ message: 'Tag with this name already exists' })
+      } else {
+        res.status(400).json({ message: (error as Error).message })
+      }
     }
   }
 
@@ -42,6 +46,12 @@ export class TagController {
 
   async deleteTag(req: Request, res: Response): Promise<void> {
     try {
+      // Check if user is admin
+      if (res.locals.user.role !== 'ADMIN') {
+        res.status(403).json({ message: 'Only administrators can delete tags' })
+        return
+      }
+
       const tagId = req.params.id
       await this.tagService.deleteTag(tagId)
       res.status(200).json({ message: 'Tag deleted successfully' })

@@ -99,7 +99,7 @@ export class ProfileController {
   async getWatchlistDetail(req: Request, res: Response): Promise<void> {
     try {
       const watchlistId = req.params.wid
-      const senderId = req.body.senderId
+      const senderId = req.params.id
 
       const watchlist = await this.watchlistService.getWatchlistDetail(watchlistId, senderId)
 
@@ -120,8 +120,8 @@ export class ProfileController {
   async updateInfor(req: Request, res: Response): Promise<void> {
     try {
       const userId = req.params.id
-      const { fullName, dateOfBirth, senderId } = req.body
-
+      const { fullName, dateOfBirth } = req.body
+      const senderId = res.locals.user?.id
       const updatedUser = await this.registeredUserService.updateInfor(
         userId,
         fullName,
@@ -138,8 +138,8 @@ export class ProfileController {
   async changePassword(req: Request, res: Response): Promise<void> {
     try {
       const userId = req.params.id
-      const { oldPassword, newPassword, senderId } = req.body
-
+      const { oldPassword, newPassword } = req.body
+      const senderId = res.locals.user?.id
       const result = await this.registeredUserService.changePassword(userId, oldPassword, newPassword, senderId)
       res.status(200).json({ message: 'Password changed successfully' })
     } catch (error) {

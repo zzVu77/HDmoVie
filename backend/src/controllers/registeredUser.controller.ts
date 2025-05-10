@@ -57,6 +57,21 @@ export class RegisteredUserController {
       res.status(400).json({ message: (error as Error).message })
     }
   }
+  async logout(req: Request, res: Response): Promise<void> {
+    try {
+      // Clear refresh token cookie
+      res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+      })
+
+      res.status(200).json({ status: 'success', message: 'Logged out successfully' })
+    } catch (error) {
+      console.error('Error during logout:', error)
+      res.status(500).json({ status: 'failed', message: 'Internal server error' })
+    }
+  }
   async forgotPassword(req: Request, res: Response) {
     const { email } = req.body
     const result = await this.registeredUserService.forgotPassword(email)

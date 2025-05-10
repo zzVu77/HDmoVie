@@ -10,7 +10,6 @@ const baseWatchlistSchema = {
   title: Joi.string(),
   description: Joi.string(),
   isPublic: Joi.boolean(),
-  ownerId: Joi.string(),
 }
 
 //CREATING
@@ -31,11 +30,6 @@ class CreateWatchlistValidationStrategy implements ValidationStrategy {
     isPublic: baseWatchlistSchema.isPublic.required().messages({
       'any.required': 'Privacy is required',
     }),
-
-    // Make sure ownerId is required
-    ownerId: baseWatchlistSchema.ownerId.required().messages({
-      'any.required': 'Owner ID is required',
-    }),
   })
   validate(req: Request, res: Response, next: NextFunction): void {
     const { error } = this.schema.validate(req.body, { abortEarly: false })
@@ -54,11 +48,6 @@ class CreateWatchlistFastValidationStrategy implements ValidationStrategy {
     title: Joi.string().trim().required().messages({
       'string.empty': 'Title cannot be empty',
       'any.required': 'Title is required',
-    }),
-
-    // Make sure ownerId is required
-    ownerId: baseWatchlistSchema.ownerId.required().messages({
-      'any.required': 'Owner ID is required',
     }),
   })
 
@@ -89,16 +78,6 @@ class UpdateWatchlistValidationStrategy implements ValidationStrategy {
     // Required boolean
     isPublic: baseWatchlistSchema.isPublic.required().messages({
       'any.required': 'Privacy is required',
-    }),
-
-    // senderId is required (for authorization, not update)
-    senderId: baseWatchlistSchema.ownerId.required().messages({
-      'any.required': 'Sender ID is required',
-    }),
-
-    // Forbid this field
-    ownerId: Joi.forbidden().messages({
-      'any.unknown': 'Cannot modify the owner of a watchlist',
     }),
   })
 

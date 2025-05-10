@@ -93,10 +93,6 @@ class UpdateUserInfoValidationStrategy implements ValidationStrategy {
     dateOfBirth: baseUserSchema.dateOfBirth.required().messages({
       'any.required': 'Date of Birth is required',
     }),
-    // Make sure ownerId is required
-    senderId: Joi.string().required().messages({
-      'any.required': 'Owner ID is required',
-    }),
   })
 
   validate(req: Request, res: Response, next: NextFunction): void {
@@ -130,7 +126,6 @@ class ChangePasswordValidationStrategy implements ValidationStrategy {
       'any.only': 'Passwords do not match',
       'any.required': 'Repassword is required',
     }),
-    senderId: Joi.string().required(),
   })
 
   validate(req: Request, res: Response, next: NextFunction): void {

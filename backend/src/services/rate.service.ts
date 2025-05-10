@@ -36,6 +36,10 @@ export class RateService {
     return this.rateRepository.findByMovieId(movieId)
   }
 
+  async getRate(userId: string, movieId: string): Promise<Rate | null> {
+    return this.rateRepository.findByUserIdAndMovieId(userId, movieId)
+  }
+
   async deleteRate(movieId: string, userId: string): Promise<boolean> {
     const rate = await this.rateRepository.findByUserIdAndMovieId(userId, movieId)
     if (!rate) throw new Error('Rate not found')
