@@ -1,15 +1,20 @@
+// ~/config/redis.ts
 import { createClient } from 'redis'
+import dotenv from 'dotenv'
+dotenv.config()
 
 export const redisClient = createClient({
+  username: 'default',
+  password: process.env.REDIS_PASSWORD,
   socket: {
-    host: 'localhost',
-    port: 6379,
+    host: process.env.REDIS_HOST,
+    port: Number(process.env.REDIS_PORT),
   },
 })
 
-redisClient.on('error', (err) => console.error('Redis Client Error', err))
-
-// Connect immediately
+redisClient.on('error', (err) => console.error('Redis Client Error:', err))
 ;(async () => {
-  await redisClient.connect()
+  if (!redisClient.isOpen) {
+    await redisClient.connect()
+  }
 })()
