@@ -28,7 +28,7 @@ app.use(
 )
 app.use(express.json())
 app.use(cookieParser())
-const port = process.env.PORT || 3002
+const port = process.env.PORT || 3001
 
 // API routes
 app.use('/api/movies', movieRouter)
