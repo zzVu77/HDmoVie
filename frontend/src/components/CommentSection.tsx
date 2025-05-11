@@ -26,6 +26,7 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
         const response = await CommentService.getBlogComments(blogId)
         setComments(response.data.data)
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching comments:', err)
         setError('Failed to load comments. Please try again later.')
       } finally {

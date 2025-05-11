@@ -9,7 +9,7 @@ const BlogDetail = () => {
 
   return (
     <Wrapper className='lg:px-[200px] px-5 pt-28 flex flex-col bg-secondary-dark rounded-3xl overflow-hidden'>
-      <BlogCard id={id || '1'} isFirst={true} isShowCommentDivider={true} />
+      <BlogCard id={id || '1'} isFirst={true} isShowCommentDivider={true} isDetailView={true} />
       <Text body={4} className='text-bolded text-white pt-3 pb-1 px-6'>
         Replies
       </Text>
