@@ -4,22 +4,15 @@ import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { MessageCircle, Heart, MessageSquareWarning, ArrowRight } from 'lucide-react'
+import { MessageCircle, Heart, MessageSquareWarning, ArrowRight, Loader2 } from 'lucide-react'
 import { Text } from './ui/typography'
 import { cn } from '@/lib/utils'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
-import { RegisteredUserType, TagType } from '@/types'
 import ReportDialog from './ReportModal'
+import BlogService, { BlogPost } from '@/services/blogService'
 
-export interface BlogPostComponentProps {
+export interface BlogCardProps {
   id: string
-  content: string
-  dateCreated: Date
-  owner: RegisteredUserType
-  tags: TagType[]
-  likes: number
-  comments: number
-  images?: string[]
   className?: string
   isFirst?: boolean
   isLast?: boolean
@@ -27,23 +20,42 @@ export interface BlogPostComponentProps {
 }
 
 export default function BlogCard({
-  content,
-  dateCreated,
-  owner,
-  tags,
-  likes,
-  comments,
-  images,
+  id,
   className,
   isFirst = false,
   isLast = false,
   isShowCommentDivider = false,
-}: BlogPostComponentProps) {
+}: BlogCardProps) {
+  const [blog, setBlog] = useState<BlogPost | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [isLiked, setIsLiked] = useState(false)
-  const [likeCount, setLikeCount] = useState(likes)
+  const [likeCount, setLikeCount] = useState(0)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isClamped, setIsClamped] = useState(false)
   const contentRef = useRef<HTMLParagraphElement>(null)
+
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const response = await BlogService.getBlogById(id)
+        if (response.data?.data) {
+          setBlog(response.data.data)
+          setLikeCount(response.data.data.likes)
+        } else {
+          setError('Invalid response format from server')
+        }
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error('Error fetching blog:', err instanceof Error ? err.message : 'Unknown error')
+        setError('Failed to load blog')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchBlog()
+  }, [id])
 
   const handleLike = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -59,12 +71,32 @@ export default function BlogCard({
       const maxHeight = lineHeight * 3
       setIsClamped(el.scrollHeight > maxHeight)
     }
-  }, [])
+  }, [blog?.content])
 
-  const hasImages = images && images.length > 0
+  if (loading) {
+    return (
+      <Card className={cn('w-full overflow-hidden bg-secondary-dark border-tertiary-dark py-4', className)}>
+        <div className='flex justify-center items-center'>
+          <Loader2 className='h-8 w-8 text-primary-yellow animate-spin' />
+        </div>
+      </Card>
+    )
+  }
+
+  if (error || !blog) {
+    return (
+      <Card className={cn('w-full overflow-hidden bg-secondary-dark border-tertiary-dark py-4', className)}>
+        <div className='flex justify-center items-center'>
+          <Text className='text-red-400'>{error || 'Blog not found'}</Text>
+        </div>
+      </Card>
+    )
+  }
+
+  const hasImages = blog.images && blog.images.length > 0
 
   return (
-    <Link to={`#`}>
+    <Link to={`${id}`}>
       <Card
         className={cn(
           'w-full overflow-hidden bg-secondary-dark border-tertiary-dark hover:shadow-md py-0 px-2 gap-0',
@@ -80,13 +112,13 @@ export default function BlogCard({
             <div className='flex items-center gap-2'>
               <Avatar className='h-8 w-8'>
                 <AvatarImage src={`/api/placeholder/50/50`} />
-                <AvatarFallback>{owner.name.slice(0, 2)}</AvatarFallback>
+                <AvatarFallback>{blog.owner.fullName.slice(0, 2)}</AvatarFallback>
               </Avatar>
               <div className='flex flex-col ml-2'>
                 <div className='flex items-center gap-1'>
-                  <Text className='text-sm text-white'>{owner.name}</Text>
+                  <Text className='text-sm text-white'>{blog.owner.fullName}</Text>
                 </div>
-                <Text className='text-muted-foreground text-xs'>{new Date(dateCreated).toLocaleString()}</Text>
+                <Text className='text-muted-foreground text-xs'>{new Date(blog.dateCreated).toLocaleString()}</Text>
               </div>
             </div>
           </div>
@@ -99,7 +131,7 @@ export default function BlogCard({
               ref={contentRef}
               className={`transition-all duration-300', ${!isExpanded && 'line-clamp-3'}`}
             >
-              {content}
+              {blog.content}
             </Text>
             {isClamped && (
               <button
@@ -116,7 +148,7 @@ export default function BlogCard({
           </div>
 
           <div className='flex items-center gap-2 mb-3 flex-wrap'>
-            {tags.map((tag) => (
+            {blog.tags.map((tag) => (
               <Badge
                 key={tag.id}
                 variant='outline'
@@ -134,7 +166,7 @@ export default function BlogCard({
           {hasImages && (
             <Carousel className='w-full mx-auto my-1'>
               <CarouselContent>
-                {images!.map((imageUrl, index) => (
+                {blog.images!.map((imageUrl, index) => (
                   <CarouselItem key={index} className='flex justify-center'>
                     <img
                       src={imageUrl}
@@ -148,7 +180,7 @@ export default function BlogCard({
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              {images!.length > 1 && (
+              {blog.images!.length > 1 && (
                 <div className='group absolute top-1/2 -translate-y-1/2 right-4 flex justify-end items-center'>
                   <div className='rounded-full opacity-30 bg-secondary-dark text-white w-8 h-8 flex items-center justify-center'>
                     <ArrowRight size={16} className='text-white' />
@@ -181,7 +213,7 @@ export default function BlogCard({
             }}
           >
             <MessageCircle size={18} />
-            <Text>{comments}</Text>
+            <Text>{blog.comments}</Text>
           </Button>
           <Button
             variant='ghost'

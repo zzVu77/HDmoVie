@@ -86,7 +86,7 @@ export type NotificationItemProps = {
 }
 export type RegisteredUserType = {
   id: string
-  name: string
+  fullName: string
 }
 export type BlogCommentType = {
   id: string
