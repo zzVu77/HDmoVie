@@ -13,4 +13,8 @@ export class CommentReport extends Report {
     super(reporter, reason)
     this.comment = comment
   }
+
+  getComment(): Comment {
+    return this.comment
+  }
 }

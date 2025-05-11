@@ -18,27 +18,33 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import { SearchBar } from './SearchBar'
+import { apiGet } from '@/utils/axiosConfig'
+// import { toast } from 'sonner'
+import { NotificationType } from '@/types'
 
-export type NotificationType = {
-  id: string
-  message: string
-  time: Date
-  status: 'UNREAD' | 'READ'
-}
+// export type NotificationType = {
+//   id: string
+//   message: string
+//   time: Date
+//   status: 'UNREAD' | 'READ'
+// }
 const menuItems = [
   { label: 'Home', path: '/' },
   { label: 'Explore', path: '/explore' },
   { label: 'Blogs', path: '/blog' },
 ]
 
-const notifications: NotificationType[] = [
-  { id: '1', message: 'New comment on your post', time: new Date(), status: 'UNREAD' },
-  { id: '2', message: 'Your profile was updated', time: new Date(), status: 'READ' },
-  { id: '3', message: 'You are banned', time: new Date(), status: 'READ' },
-]
+// const notifications: NotificationType[] = [
+//   { id: '1', message: 'New comment on your post', time: new Date(), status: 'UNREAD' },
+//   { id: '2', message: 'Your profile was updated', time: new Date(), status: 'READ' },
+//   { id: '3', message: 'You are banned', time: new Date(), status: 'READ' },
+// ]
 
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [notifications, setNotifications] = useState<NotificationType[]>([])
+  const [isLoadingNotifications, setIsLoadingNotifications] = useState(false)
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
 
   // Track location of current page
@@ -103,15 +109,26 @@ export default function Header() {
     setIsLogin(!!token) // Converts token to true/false
   }, [])
 
-  // useEffect(() => {
-  //   apiPost('/comments/blog', {
-  //     blogId: '3',
-  //     content: 'This blog post was really insightful!',
-  //     parentCommentId: null,
-  //   })
-  //     .then((res) => console.log(res.data))
-  //     .catch((err) => console.error(err))
-  // }, [])
+  const fetchNotifications = async () => {
+    if (isLoadingNotifications) return
+
+    try {
+      setIsLoadingNotifications(true)
+      const response = await apiGet<NotificationType[]>('/notifications')
+      setNotifications(response.data)
+      // } catch (error) {
+      //   // Handle error silently or show a toast
+    } finally {
+      setIsLoadingNotifications(false)
+    }
+  }
+
+  // Fetch notifications when dropdown is opened
+  useEffect(() => {
+    if (isNotificationOpen) {
+      fetchNotifications()
+    }
+  }, [isNotificationOpen])
 
   return (
     <header
@@ -206,7 +223,7 @@ export default function Header() {
           className={`items-center gap-1 md:gap-4 transition-all duration-200 ease-in-out ${isSearchOpen ? 'hidden sm:flex' : 'flex'}`}
         >
           {/* Notification Icon */}
-          <DropdownMenu>
+          <DropdownMenu onOpenChange={setIsNotificationOpen}>
             <DropdownMenuTrigger asChild>
               <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
                 <Notification
@@ -214,13 +231,18 @@ export default function Header() {
                   className='h-5 w-5 text-white group-hover:text-accent-yellow cursor-pointer'
                   variant='Bold'
                 />
+                {notifications.some((n) => n.status === 'UNREAD') && (
+                  <span className='absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full' />
+                )}
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align='end'
               className='w-80 max-h-96 overflow-auto p-2 space-y-2 bg-secondary-dark border-tertiary-dark text-white z-[1000]'
             >
-              {notifications.length > 0 ? (
+              {isLoadingNotifications ? (
+                <div className='text-sm text-muted-foreground px-2 py-4'>Loading notifications...</div>
+              ) : notifications.length > 0 ? (
                 notifications.map((n) => <NotificationItem key={n.id} {...n} />)
               ) : (
                 <div className='text-sm text-muted-foreground px-2 py-4'>No notifications</div>

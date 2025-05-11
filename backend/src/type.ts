@@ -55,15 +55,12 @@ export type ReportNotification = BaseNotification & {
 
 export type NotificationResponse = {
   id: string
-  time: Date
-  status: 'READ' | 'UNREAD'
-  type: 'COMMENT' | 'FOLLOW' | 'LIKE' | 'REPORT'
-  owner: {
-    id: string
-    fullName: string
-  }
-  commentId?: string
+  time: string
+  status: 'UNREAD' | 'READ'
+  type: 'FOLLOW' | 'LIKE' | 'COMMENT' | 'REPORT'
+  userName: string
   followerId?: string
   userId?: string
+  commentId?: string
   reportId?: string
 }

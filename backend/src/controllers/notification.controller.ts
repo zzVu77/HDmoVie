@@ -6,14 +6,15 @@ export class NotificationController {
 
   async viewAllNotifications(req: Request, res: Response): Promise<void> {
     try {
-      const userId = res.locals.user.id
+      // const userId = res.locals.user.id
+      const userId = '1'
 
       const notifications = await this.notificationService.getAllNotificationsForUser(userId)
 
-      res.status(200).json({ status: 'success', data: notifications })
+      res.status(200).json(notifications)
     } catch (error) {
       console.error('View all notifications failed ==>', error)
-      res.status(500).json({ status: 'failed', message: 'Internal server error' })
+      res.status(500).json({ message: 'Internal server error' })
     }
   }
 }

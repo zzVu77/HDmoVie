@@ -40,4 +40,8 @@ export class Blog {
   getId(): string {
     return this.id
   }
+
+  getUser(): RegisteredUser {
+    return this.owner
+  }
 }

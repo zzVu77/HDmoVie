@@ -48,11 +48,17 @@ export class ReportRepository {
   }
 
   async findBlogReportById(id: string): Promise<BlogReport | null> {
-    return this.blogReportRepo.findOne({ where: { id } as FindOptionsWhere<BlogReport> })
+    return this.blogReportRepo.findOne({
+      where: { id } as FindOptionsWhere<BlogReport>,
+      relations: ['blog', 'reporter', 'blog.owner'],
+    })
   }
 
   async findCommentReportById(id: string): Promise<CommentReport | null> {
-    return this.commentReportRepo.findOne({ where: { id } as FindOptionsWhere<CommentReport> })
+    return this.commentReportRepo.findOne({
+      where: { id } as FindOptionsWhere<CommentReport>,
+      relations: ['comment', 'reporter', 'comment.user'],
+    })
   }
 
   async getAllReports(): Promise<Report[]> {

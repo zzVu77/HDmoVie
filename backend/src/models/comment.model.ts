@@ -37,4 +37,8 @@ export abstract class Comment {
   getParentComment(): Comment | undefined {
     return this.parentComment
   }
+
+  getUser(): RegisteredUser {
+    return this.user
+  }
 }

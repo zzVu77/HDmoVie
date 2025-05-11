@@ -13,4 +13,8 @@ export class BlogReport extends Report {
     super(reporter, reason)
     this.blog = blog
   }
+
+  getBlog(): Blog {
+    return this.blog
+  }
 }

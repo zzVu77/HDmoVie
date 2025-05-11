@@ -95,3 +95,20 @@ export type BlogCommentType = {
   owner: RegisteredUserType
   replies?: BlogCommentType[]
 }
+
+export type NotificationOwnerType = {
+  id: string
+  fullName: string
+}
+
+export type NotificationType = {
+  id: string
+  time: string
+  status: 'UNREAD' | 'READ'
+  type: 'FOLLOW' | 'LIKE' | 'COMMENT' | 'REPORT'
+  userName: string
+  followerId?: string
+  userId?: string
+  commentId?: string
+  reportId?: string
+}
