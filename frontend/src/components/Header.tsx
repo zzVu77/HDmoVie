@@ -18,6 +18,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import { SearchBar } from './SearchBar'
+import { apiGet } from '@/utils/axiosConfig'
+import { useNavigate } from 'react-router-dom'
 
 export type NotificationType = {
   id: string
@@ -40,6 +42,7 @@ const notifications: NotificationType[] = [
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
+  const navigate = useNavigate()
 
   // Track location of current page
   const location = useLocation()
@@ -59,7 +62,12 @@ export default function Header() {
   // Down -> hide, up -> show
   const [prevScrollPos, setPrevScrollPos] = useState(window.scrollY)
   const [isVisible, setIsVisible] = useState(true)
-
+  const handleLogout = async () => {
+    await apiGet('/registeredusers/logout')
+    localStorage.removeItem('access-token')
+    setIsLogin(false)
+    navigate('/')
+  }
   useEffect(() => {
     const handleScroll = () => {
       // Take current scroll POS on the page
@@ -244,7 +252,7 @@ export default function Header() {
                 <DropdownMenuSeparator className='bg-tertiary-dark' />
                 <DropdownMenuGroup>
                   <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Log out</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={handleLogout}>Log out</DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
