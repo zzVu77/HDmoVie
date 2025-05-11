@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Text } from './ui/typography'
 import { Textarea } from './ui/textarea'
 import { Send } from 'lucide-react'
+import { apiPost } from '@/utils/axiosConfig'
 
 // interface CommentSectionProps {
 //   blogId: string
@@ -88,6 +89,7 @@ export default function CommentSection() {
   const [comments, setComments] = useState<BlogCommentType[]>([])
   const [commentText, setCommentText] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -98,20 +100,26 @@ export default function CommentSection() {
     return () => clearTimeout(timer)
   }, [])
 
-  const handleSubmitComment = () => {
-    if (!commentText.trim()) return
+  const handleSubmitComment = async () => {
+    if (!commentText.trim() || isSubmitting) return
 
-    const newComment: BlogCommentType = {
-      id: `new-${Date.now()}`,
-      content: commentText,
-      dateCreated: new Date().toISOString(),
-      owner: {
-        id: 'current-user',
-        name: 'current_user',
-      },
+    try {
+      setIsSubmitting(true)
+      const response = await apiPost<BlogCommentType>('/comments/blog', {
+        blogId: '3', // You might want to make this dynamic based on the current blog
+        content: commentText.trim(),
+        parentCommentId: null,
+      })
+
+      // Add the new comment to the list
+      setComments((prevComments) => [...prevComments, response.data])
+      setCommentText('')
+      // } catch (error) {
+      //   console.error('Failed to post comment:', error)
+      //   // You might want to show an error message to the user here
+    } finally {
+      setIsSubmitting(false)
     }
-    setComments([...comments, newComment])
-    setCommentText('')
   }
 
   return (
@@ -124,6 +132,7 @@ export default function CommentSection() {
             placeholder='Share your thoughts...'
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
+            disabled={isSubmitting}
           />
         </div>
         <div
@@ -133,11 +142,11 @@ export default function CommentSection() {
         >
           <Button
             className='text-sm font-medium text-primary-dark cursor-pointer bg-tertiary-yellow rounded-md px-3 py-1.5 disabled:opacity-50'
-            disabled={!commentText.trim()}
+            disabled={!commentText.trim() || isSubmitting}
             onClick={handleSubmitComment}
           >
             <Send size={16} className='mr-1' />
-            Reply
+            {isSubmitting ? 'Posting...' : 'Reply'}
           </Button>
         </div>
       </div>

@@ -28,6 +28,7 @@ function App() {
           <Route path='/blog/:id' element={<BlogDetail />} />
           <Route path='/blog' element={<Blogs />} />
           <Route path='/profile/:id' element={<Profile />} />
+          <Route path='/test' element={<TestComponent />} />
         </Route>
 
         {/* Admin route WITHOUT header */}
