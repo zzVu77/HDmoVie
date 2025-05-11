@@ -314,7 +314,7 @@ export const sampleBlogs = [
     ],
   },
   {
-    id: 'blog-2',
+    id: '2',
     content:
       'Lifestyle tips for a healthier and happier life. In this blog, we share practical advice on how to maintain a balanced lifestyle, including tips on nutrition, exercise, mindfulness, and self-care. Whether you are looking to improve your physical health or find inner peace, these tips are designed to help you live your best life.',
     dateCreated: '2025-04-28',

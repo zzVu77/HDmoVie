@@ -10,6 +10,8 @@ import { cn } from '@/lib/utils'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import { RegisteredUserType, TagType } from '@/types'
 import ReportDialog from './ReportModal'
+import { apiPost } from '@/utils/axiosConfig'
+// import { toast } from 'sonner'
 
 export interface BlogPostComponentProps {
   id: string
@@ -27,6 +29,7 @@ export interface BlogPostComponentProps {
 }
 
 export default function BlogCard({
+  id,
   content,
   dateCreated,
   owner,
@@ -43,13 +46,28 @@ export default function BlogCard({
   const [likeCount, setLikeCount] = useState(likes)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isClamped, setIsClamped] = useState(false)
+  const [isLiking, setIsLiking] = useState(false)
   const contentRef = useRef<HTMLParagraphElement>(null)
 
-  const handleLike = (e: React.MouseEvent) => {
+  const handleLike = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    setIsLiked(!isLiked)
-    setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
+
+    if (isLiking) return
+
+    try {
+      setIsLiking(true)
+      await apiPost('/like', {
+        blogId: id,
+      })
+
+      setIsLiked(!isLiked)
+      setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
+      // } catch (error) {
+      //   toast.error('Failed to update like. Please try again.')
+    } finally {
+      setIsLiking(false)
+    }
   }
 
   useEffect(() => {
@@ -163,9 +181,10 @@ export default function BlogCard({
           <Button
             variant='ghost'
             size='lg'
+            disabled={isLiking}
             className={`p-1 h-auto flex items-center gap-1 hover:bg-tertiary-dark transition-colors ${
               isLiked ? 'text-red-500 hover:text-red-400' : 'text-primary-yellow hover:text-yellow-300'
-            }`}
+            } ${isLiking ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={handleLike}
           >
             <Heart size={18} fill={isLiked ? 'currentColor' : 'none'} />
