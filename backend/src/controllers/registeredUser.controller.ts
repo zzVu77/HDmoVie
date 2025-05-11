@@ -34,7 +34,7 @@ export class RegisteredUserController {
         sameSite: 'strict',
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày
       })
-      console.log('Login SUcceess')
+      console.log('Login Succeess')
       res.status(200).json({ accessToken })
     } catch (error) {
       console.error('Error login user:', error)

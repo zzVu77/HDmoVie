@@ -12,6 +12,7 @@ import Profile from './pages/Profile'
 import RegisterForm from './pages/Register'
 import TestComponent from './pages/TestComponent'
 import Home from './pages/Home'
+import PublicRoute from './components/PublicRoute'
 
 function App() {
   return (
@@ -31,8 +32,25 @@ function App() {
 
         {/* Admin route WITHOUT header */}
         <Route path='/admin' element={<Admin />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<RegisterForm />} />
+
+        {/* Public routes - only for users not logged in */}
+        <Route
+          path='/login'
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path='/register'
+          element={
+            <PublicRoute>
+              <RegisterForm />
+            </PublicRoute>
+          }
+        />
+
         <Route path='*' element={<NotFound404 />} />
       </Routes>
     </BrowserRouter>

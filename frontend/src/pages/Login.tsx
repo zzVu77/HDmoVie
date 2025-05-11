@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
-
+import { apiPost } from '@/utils/axiosConfig'
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters long'),
@@ -32,17 +32,13 @@ const Login: React.FC = () => {
   const onSubmit = async (data: LoginFormValues) => {
     setIsSubmitting(true)
     try {
-      const response = await axios.post(
-        'http://localhost:3001/api/registeredusers/login',
-        {
-          email: data.email,
-          password: data.password,
-        },
-        { withCredentials: true },
+      const response = await apiPost<{ accessToken: string }>(
+        '/registeredusers/login',
+        data,
+        { withCredentials: true }, // cần thiết nếu dùng refresh token qua cookie
       )
-
       const token = response.data.accessToken
-      localStorage.setItem('accessToken', token)
+      localStorage.setItem('access-token', token)
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
       toast.success('Đăng nhập thành công!')
@@ -54,6 +50,8 @@ const Login: React.FC = () => {
       } else {
         toast.error('Đăng nhập thất bại')
       }
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
