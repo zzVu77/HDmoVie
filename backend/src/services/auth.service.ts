@@ -24,7 +24,7 @@ export class AuthService {
         role: user.getRole(),
       }
 
-      const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
+      const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '20m' })
       const refreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: '7d' })
 
       user.updateToken(refreshToken)
@@ -52,7 +52,7 @@ export class AuthService {
         role: decoded.role,
       }
 
-      const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
+      const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '20m' })
 
       return accessToken
     } catch (error) {

@@ -29,6 +29,6 @@ registeredUserRouter.post('/reset-password', (req, res) => registeredUserControl
 // Protected routes - authentication required
 registeredUserRouter.get('/me', authenticateToken, (req, res) => registeredUserController.getProfile(req, res))
 
-registeredUserRouter.post('/logout', authenticateToken, (req, res) => registeredUserController.logout(req, res))
+registeredUserRouter.get('/logout', authenticateToken, (req, res) => registeredUserController.logout(req, res))
 
 export default registeredUserRouter

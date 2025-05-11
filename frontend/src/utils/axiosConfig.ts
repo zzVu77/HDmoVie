@@ -5,6 +5,7 @@ const axiosInstance: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // để gửi cookie (refresh token)
   timeout: 10000,
 })
 
@@ -19,6 +20,15 @@ axiosInstance.interceptors.request.use(
   },
   (error) => Promise.reject(error),
 )
+
+axiosInstance.interceptors.response.use((response: AxiosResponse) => {
+  // Nếu server trả về access-token mới qua header
+  const newAccessToken = response.headers['x-access-token']
+  if (newAccessToken) {
+    localStorage.setItem('access-token', newAccessToken)
+  }
+  return response
+})
 
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
