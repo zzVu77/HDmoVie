@@ -30,7 +30,7 @@ commentRouter.post('/movie', authenticateToken, createMovieCommentMiddleware, (r
 commentRouter.post('/blog', authenticateToken, createBlogCommentMiddleware, (req, res) =>
   commentController.commentOnBlog(req, res),
 )
-commentRouter.get('/blog/:blogId', (req, res) => commentController.getBlogComments(req, res))
+commentRouter.get('/blog/:blogId', authenticateToken, (req, res) => commentController.getBlogComments(req, res))
 commentRouter.get('/movie/:movieId', (req, res) => commentController.getMovieComments(req, res))
 
 export default commentRouter
