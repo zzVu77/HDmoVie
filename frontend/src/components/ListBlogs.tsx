@@ -33,12 +33,8 @@ const ListBlogs = ({ blogs: propBlogs }: ListBlogsProps) => {
           throw new Error('Invalid response format from server')
         }
         setBlogs(response.data.data)
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message)
-        } else {
-          setError('Failed to load blogs. Please try again later.')
-        }
+      } catch (err: unknown) {
+        alert((err as Error).message)
       } finally {
         setLoading(false)
       }

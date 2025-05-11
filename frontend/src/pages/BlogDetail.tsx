@@ -24,12 +24,8 @@ const BlogDetail = () => {
       try {
         const response = await BlogService.getBlogById(id)
         setBlog(response.data.data)
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message)
-        } else {
-          setError('Failed to load blog')
-        }
+      } catch (err: unknown) {
+        alert((err as Error).message)
       } finally {
         setLoading(false)
       }

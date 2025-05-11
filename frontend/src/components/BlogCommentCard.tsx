@@ -40,8 +40,7 @@ export default function BlogCommentCard({ comment, isReply = false, blogId, onCo
       setReplyText('')
       setShowReplyInput(false)
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error('Error submitting reply:', err)
+      alert((err as Error).message)
     } finally {
       setIsSubmitting(false)
     }

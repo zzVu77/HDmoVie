@@ -28,12 +28,8 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
           throw new Error('Invalid response format from server')
         }
         setComments(response.data.data)
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message)
-        } else {
-          setError('Failed to load comments. Please try again later.')
-        }
+      } catch (err: unknown) {
+        alert((err as Error).message)
       } finally {
         setIsLoading(false)
       }
@@ -55,12 +51,8 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
       }
       setComments([...comments, response.data.data])
       setCommentText('')
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message)
-      } else {
-        setError('Failed to create comment. Please try again.')
-      }
+    } catch (err: unknown) {
+      alert((err as Error).message)
     }
   }
 
