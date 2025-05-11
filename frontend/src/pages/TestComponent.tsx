@@ -1,5 +1,6 @@
 import BlogCard, { BlogPostComponentProps } from '@/components/BlogCard'
-import CommentSection from '@/components/CommentSection'
+// import CommentSection from '@/components/CommentSection'
+import CommentBox from '@/components/CommentBox'
 import { EditProfileModal } from '@/components/EditProfileModal'
 import FollowInteractionModal from '@/components/FollowInteractionModal'
 import ForgotPasswordForm from '@/components/ForgotPasswordForm'
@@ -510,7 +511,8 @@ const TestComponent = () => {
         <Text body={4} className='text-bolded text-white pt-3 pb-1 px-6'>
           Replies
         </Text>
-        <CommentSection />
+        {/* <CommentSection /> */}
+        <CommentBox />
       </div>
     </>
   )
