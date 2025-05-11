@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { MessageCircle, Heart, MessageSquareWarning } from 'lucide-react'
 import { Text } from './ui/typography'
 import { cn } from '@/lib/utils'
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import { RegisteredUserType, TagType } from '@/types'
 import ReportDialog from './ReportModal'
 
@@ -132,15 +132,15 @@ export default function BlogCard({
           </div>
 
           {hasImages && (
-            <Carousel opts={{ dragFree: true }} className='w-full mx-auto my-1'>
+            <Carousel opts={{ dragFree: true }} className='w-[90%] flex justify-center mx-auto my-1 px-1'>
               <CarouselContent className='px-1'>
                 {images!.map((imageUrl, index) => (
-                  <CarouselItem key={index} className='basis-auto pl-1'>
-                    <div className='aspect-video rounded-sm overflow-hidden'>
+                  <CarouselItem key={index} className='basis-auto pl-1 w-auto'>
+                    <div className=' rounded-sm overflow-hidden h-auto  '>
                       <img
                         src={imageUrl}
                         alt={`Blog image ${index + 1}`}
-                        className='object-cover h-50 md:h-70 w-auto'
+                        className='object-cover object-center h-[280px]  w-[30api0px]'
                         onError={(e) => {
                           ;(e.target as HTMLImageElement).src =
                             'https://makerworld.bblmw.com/makerworld/model/US2ab61bb7d3000c/design/2024-01-30_029b2304056c.png?x-oss-process=image/resize,w_1000/format,webp'
@@ -150,6 +150,8 @@ export default function BlogCard({
                   </CarouselItem>
                 ))}
               </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
             </Carousel>
           )}
         </CardContent>
