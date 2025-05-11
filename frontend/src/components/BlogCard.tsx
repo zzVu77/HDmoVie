@@ -1,18 +1,18 @@
-import { useState, useRef, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { MessageCircle, Heart, MessageSquareWarning, ArrowRight, Loader2 } from 'lucide-react'
+import { MessageCircle, Heart, MessageSquareWarning, ArrowRight } from 'lucide-react'
 import { Text } from './ui/typography'
 import { cn } from '@/lib/utils'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import ReportDialog from './ReportModal'
-import BlogService, { BlogPost } from '@/services/blogService'
+import { BlogPost } from '@/services/blogService'
 
 export interface BlogCardProps {
-  id: string
+  blog: BlogPost
   className?: string
   isFirst?: boolean
   isLast?: boolean
@@ -21,43 +21,18 @@ export interface BlogCardProps {
 }
 
 export default function BlogCard({
-  id,
+  blog,
   className,
   isFirst = false,
   isLast = false,
   isShowCommentDivider = false,
   isDetailView = false,
 }: BlogCardProps) {
-  const [blog, setBlog] = useState<BlogPost | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [isLiked, setIsLiked] = useState(false)
-  const [likeCount, setLikeCount] = useState(0)
+  const [likeCount, setLikeCount] = useState(blog.likes)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isClamped, setIsClamped] = useState(false)
   const contentRef = useRef<HTMLParagraphElement>(null)
-
-  useEffect(() => {
-    const fetchBlog = async () => {
-      try {
-        const response = await BlogService.getBlogById(id)
-        if (response.data?.data) {
-          setBlog(response.data.data)
-          setLikeCount(response.data.data.likes)
-        } else {
-          setError('Invalid response format from server')
-        }
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error('Error fetching blog:', err instanceof Error ? err.message : 'Unknown error')
-        setError('Failed to load blog')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchBlog()
-  }, [id])
 
   const handleLike = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -73,27 +48,7 @@ export default function BlogCard({
       const maxHeight = lineHeight * 3
       setIsClamped(el.scrollHeight > maxHeight)
     }
-  }, [blog?.content])
-
-  if (loading) {
-    return (
-      <Card className={cn('w-full overflow-hidden bg-secondary-dark border-tertiary-dark py-4', className)}>
-        <div className='flex justify-center items-center'>
-          <Loader2 className='h-8 w-8 text-primary-yellow animate-spin' />
-        </div>
-      </Card>
-    )
-  }
-
-  if (error || !blog) {
-    return (
-      <Card className={cn('w-full overflow-hidden bg-secondary-dark border-tertiary-dark py-4', className)}>
-        <div className='flex justify-center items-center'>
-          <Text className='text-red-400'>{error || 'Blog not found'}</Text>
-        </div>
-      </Card>
-    )
-  }
+  }, [blog.content])
 
   const hasImages = blog.images && blog.images.length > 0
 
@@ -236,7 +191,7 @@ export default function BlogCard({
   }
 
   return (
-    <Link to={`/blog/${id}`} className='w-full'>
+    <Link to={`/blog/${blog.id}`} className='w-full'>
       {cardContent}
     </Link>
   )

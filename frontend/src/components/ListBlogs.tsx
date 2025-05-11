@@ -1,15 +1,27 @@
 import { useState, useEffect } from 'react'
 import BlogCard from './BlogCard'
-import BlogService from '@/services/blogService'
+import BlogService, { BlogPost } from '@/services/blogService'
 import { Text } from './ui/typography'
 import { Loader2 } from 'lucide-react'
 
-const ListBlogs = () => {
-  const [blogIds, setBlogIds] = useState<string[]>([])
+interface ListBlogsProps {
+  blogs?: BlogPost[]
+}
+
+const ListBlogs = ({ blogs: propBlogs }: ListBlogsProps) => {
+  const [blogs, setBlogs] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    // If blogs are provided as props, use them directly
+    if (propBlogs) {
+      setBlogs(propBlogs)
+      setLoading(false)
+      return
+    }
+
+    // Otherwise fetch blogs from API
     const fetchBlogs = async () => {
       setLoading(true)
       setError(null)
@@ -17,23 +29,23 @@ const ListBlogs = () => {
       try {
         const response = await BlogService.getAllBlogs()
         if (response.data?.data) {
-          setBlogIds(response.data.data.map((blog) => blog.id))
+          setBlogs(response.data.data)
         } else {
           setError('Invalid response format from server')
-          setBlogIds([])
+          setBlogs([])
         }
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error('Error fetching blogs:', err)
         setError('Failed to load blogs. Please try again later.')
-        setBlogIds([])
+        setBlogs([])
       } finally {
         setLoading(false)
       }
     }
 
     fetchBlogs()
-  }, [])
+  }, [propBlogs])
 
   if (loading) {
     return (
@@ -51,7 +63,7 @@ const ListBlogs = () => {
     )
   }
 
-  if (blogIds.length === 0) {
+  if (blogs.length === 0) {
     return (
       <div className='flex justify-center items-center py-12'>
         <Text className='text-muted-foreground'>No blogs found</Text>
@@ -61,12 +73,12 @@ const ListBlogs = () => {
 
   return (
     <div className='flex flex-col items-center justify-center w-full'>
-      {blogIds.map((id, index) => (
+      {blogs.map((blog, index) => (
         <BlogCard
-          key={id}
-          id={id}
+          key={blog.id}
+          blog={blog}
           isFirst={index === 0}
-          isLast={index === blogIds.length - 1}
+          isLast={index === blogs.length - 1}
           isShowCommentDivider={false}
         />
       ))}
