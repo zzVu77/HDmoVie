@@ -9,8 +9,7 @@ import { Text } from './ui/typography'
 import { cn } from '@/lib/utils'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import ReportDialog from './ReportModal'
-import { BlogPost } from '@/services/blogService'
-
+import { BlogPost } from '@/types'
 export interface BlogCardProps {
   blog: BlogPost
   className?: string
@@ -29,7 +28,7 @@ export default function BlogCard({
   isDetailView = false,
 }: BlogCardProps) {
   const [isLiked, setIsLiked] = useState(false)
-  const [likeCount, setLikeCount] = useState(blog.likes)
+  const [likeCount, setLikeCount] = useState(blog.likeCount)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isClamped, setIsClamped] = useState(false)
   const contentRef = useRef<HTMLParagraphElement>(null)
@@ -51,7 +50,6 @@ export default function BlogCard({
   }, [blog.content])
 
   const hasImages = blog.images && blog.images.length > 0
-
   const cardContent = (
     <Card
       className={cn(
@@ -165,7 +163,7 @@ export default function BlogCard({
           }}
         >
           <MessageCircle size={18} />
-          <Text>{blog.comments}</Text>
+          <Text>{blog.commentCount}</Text>
         </Button>
         <Button
           variant='ghost'

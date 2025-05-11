@@ -1,39 +1,10 @@
 import { apiGet, apiPost } from '@/utils/axiosConfig'
-import { RegisteredUserType, TagType } from '@/types'
-
-export interface BlogPost {
-  id: string
-  content: string
-  dateCreated: Date
-  owner: RegisteredUserType
-  tags: TagType[]
-  likes: number
-  comments: number
-  images?: string[]
-}
+import { BlogPost } from '@/types'
 
 export interface CreateBlogPostRequest {
   content: string
   tags: string[]
   images?: string[]
-}
-
-export interface UpdateBlogPostRequest {
-  content?: string
-  tags?: string[]
-  images?: string[]
-}
-
-export interface BlogCommentRequest {
-  content: string
-  blogId: string
-  parentCommentId?: string
-}
-
-export interface CreateCommentReportRequest {
-  reason: string
-  commentId: string
-  blogId: string
 }
 
 export interface ApiResponse<T> {

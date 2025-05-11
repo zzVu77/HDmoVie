@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import BlogCard from './BlogCard'
-import BlogService, { BlogPost } from '@/services/blogService'
 import { Text } from './ui/typography'
 import { Loader2 } from 'lucide-react'
+import { BlogPost } from '@/types'
+import BlogService from '@/services/blogService'
 
 interface ListBlogsProps {
   blogs?: BlogPost[]
@@ -28,17 +29,16 @@ const ListBlogs = ({ blogs: propBlogs }: ListBlogsProps) => {
 
       try {
         const response = await BlogService.getAllBlogs()
-        if (response.data?.data) {
-          setBlogs(response.data.data)
-        } else {
-          setError('Invalid response format from server')
-          setBlogs([])
+        if (!response.data || !Array.isArray(response.data.data)) {
+          throw new Error('Invalid response format from server')
         }
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error('Error fetching blogs:', err)
-        setError('Failed to load blogs. Please try again later.')
-        setBlogs([])
+        setBlogs(response.data.data)
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message)
+        } else {
+          setError('Failed to load blogs. Please try again later.')
+        }
       } finally {
         setLoading(false)
       }

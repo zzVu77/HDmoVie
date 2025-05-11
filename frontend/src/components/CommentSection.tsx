@@ -24,11 +24,16 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
         setIsLoading(true)
         setError(null)
         const response = await CommentService.getBlogComments(blogId)
+        if (!response.data || !Array.isArray(response.data.data)) {
+          throw new Error('Invalid response format from server')
+        }
         setComments(response.data.data)
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error('Error fetching comments:', err)
-        setError('Failed to load comments. Please try again later.')
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message)
+        } else {
+          setError('Failed to load comments. Please try again later.')
+        }
       } finally {
         setIsLoading(false)
       }
@@ -45,13 +50,17 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
         content: commentText,
         blogId: blogId,
       })
-
+      if (!response.data || !response.data.data) {
+        throw new Error('Invalid response format from server')
+      }
       setComments([...comments, response.data.data])
       setCommentText('')
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error('Error creating comment:', err)
-      setError('Failed to create comment. Please try again.')
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError('Failed to create comment. Please try again.')
+      }
     }
   }
 

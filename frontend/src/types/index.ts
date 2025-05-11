@@ -95,3 +95,13 @@ export type BlogCommentType = {
   owner: RegisteredUserType
   replies?: BlogCommentType[]
 }
+export type BlogPost = {
+  id: string
+  content: string
+  dateCreated: Date
+  owner: RegisteredUserType
+  tags: TagType[]
+  likeCount: number
+  commentCount: number
+  images?: string[]
+}

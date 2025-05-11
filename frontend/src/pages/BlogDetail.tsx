@@ -4,8 +4,9 @@ import CommentSection from '@/components/CommentSection'
 import Wrapper from '@/components/shared/Wrapper'
 import { Text } from '@/components/ui/typography'
 import { useParams } from 'react-router-dom'
-import BlogService, { BlogPost } from '@/services/blogService'
+import BlogService from '@/services/blogService'
 import { Loader2 } from 'lucide-react'
+import { BlogPost } from '@/types'
 
 const BlogDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -22,15 +23,13 @@ const BlogDetail = () => {
 
       try {
         const response = await BlogService.getBlogById(id)
-        if (response.data?.data) {
-          setBlog(response.data.data)
+        setBlog(response.data.data)
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message)
         } else {
-          setError('Invalid response format from server')
+          setError('Failed to load blog')
         }
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error('Error fetching blog:', err instanceof Error ? err.message : 'Unknown error')
-        setError('Failed to load blog')
       } finally {
         setLoading(false)
       }

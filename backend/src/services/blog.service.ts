@@ -102,26 +102,27 @@ export class BlogService {
     }
   }
 
-  private transformToResponseDTO(blog: Blog): BlogResponseDTO {
+  private transformToResponseDTO(blog: any): BlogResponseDTO {
     return {
-      id: blog.id,
-      content: blog.content,
-      dateCreated: blog.dateCreated,
+      id: blog.blog_id ?? blog.id,
+      content: blog.blog_content ?? blog.content,
+      dateCreated: blog.blog_dateCreated ?? blog.dateCreated,
       owner: {
-        id: blog.owner.getId(),
-        fullName: blog.owner.getFullName(),
+        id: blog.owner_id ?? blog.owner?.id ?? '', // fallback chain
+        fullName: blog.owner_fullName ?? blog.owner?.fullName ?? '',
       },
-      tags: blog.tags.map((tag) => ({
-        id: tag.id,
-        name: tag.name,
-      })),
+      tags:
+        blog.tags?.map((tag: any) => ({
+          id: tag.id,
+          name: tag.name,
+        })) ?? [],
       imageUrls:
-        blog.imageUrls?.map((media) => ({
+        blog.imageUrls?.map((media: any) => ({
           id: media.id,
           url: media.url,
         })) ?? [],
-      likeCount: (blog as any).likeCount,
-      commentCount: (blog as any).commentCount,
+      likeCount: parseInt(blog.likeCount ?? '0'),
+      commentCount: parseInt(blog.commentCount ?? '0'),
     }
   }
 }
