@@ -38,6 +38,36 @@ export class BlogRepository {
     return blog
   }
 
+  async findBlogById(id: string): Promise<Blog | null> {
+    const blog = await this.repository
+      .createQueryBuilder('blog')
+      .select(['blog.id', 'blog.content', 'blog.dateCreated', 'owner.id', 'owner.fullName', 'tags.id', 'tags.name'])
+      .addSelect(
+        `(SELECT COUNT(*) 
+          FROM like_interactions_users liu 
+          JOIN like_interactions li ON liu.likeInteractionId = li.id 
+          WHERE li.blogId = blog.id)`,
+        'likeCount',
+      )
+      .addSelect(
+        `(SELECT COUNT(*) 
+          FROM comments c 
+          WHERE c.blogId = blog.id AND c.type = 'BLOG')`,
+        'commentCount',
+      )
+      .leftJoin('blog.owner', 'owner')
+      .leftJoin('blog.tags', 'tags')
+      .leftJoin('blog.imageUrls', 'imageUrls')
+      .where('blog.id = :id', { id })
+      .getOne()
+
+    if (!blog) {
+      return null
+    }
+
+    return blog
+  }
+
   async findAll(): Promise<any[]> {
     const blogs = await this.repository
       .createQueryBuilder('blog')

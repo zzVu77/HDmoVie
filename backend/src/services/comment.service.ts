@@ -58,7 +58,7 @@ export class CommentService {
     if (!user) throw new Error('User not found')
 
     // Get the blog
-    const blog = await this.blogRepository.findById(blogId)
+    const blog = await this.blogRepository.findBlogById(blogId)
     if (!blog) throw new Error('Blog not found')
 
     // Create a new blog comment
