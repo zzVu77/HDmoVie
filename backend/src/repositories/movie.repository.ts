@@ -86,7 +86,7 @@ export class MovieRepository {
         .createQueryBuilder('movie')
         .leftJoinAndSelect('movie.genres', 'genres')
         .leftJoinAndSelect('movie.casts', 'casts')
-        .orderBy('movie.releaseYear', 'DESC')
+        .orderBy('movie.releaseYear', 'ASC')
         .limit(limit)
         .getMany()
     } catch (error) {

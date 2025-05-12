@@ -11,7 +11,7 @@ interface BannerProps extends MovieType {
   position?: string
 }
 
-const Banner = ({ description, backdropSource, genres = dummyGenres, release, title, voteAvg }: BannerProps) => {
+const Banner = ({ description, backdropSource, genres = dummyGenres, releaseYear, title, voteAvg }: BannerProps) => {
   const isDesktopBreakPoint = useMediaQuery('(min-width: 1024px)')
   return (
     <div className='w-full flex flex-col mx-auto relative'>
@@ -31,7 +31,7 @@ const Banner = ({ description, backdropSource, genres = dummyGenres, release, ti
               isDesktop={isDesktopBreakPoint}
               description={description}
               genres={genres}
-              release={release}
+              releaseYear={releaseYear}
               title={title}
               voteAvg={voteAvg}
             ></InformationContainer>
@@ -44,7 +44,7 @@ const Banner = ({ description, backdropSource, genres = dummyGenres, release, ti
     </div>
   )
 }
-export const InformationContainer = ({ description, genres, release, title, voteAvg, isDesktop }: BannerProps) => {
+export const InformationContainer = ({ description, genres, releaseYear, title, voteAvg, isDesktop }: BannerProps) => {
   return (
     <div
       className={`${isDesktop ? 'absolute' : ''} bottom-0 left-0 w-full flex items-end justify-start text-white p-4 sm:p-6 lg:p-8 lg:mb-[5%]`}
@@ -57,7 +57,7 @@ export const InformationContainer = ({ description, genres, release, title, vote
         {/* Release Date and Rating */}
         <div className='flex flex-row items-start justify-center lg:justify-between gap-12 text-xs lg:w-fit w-full  '>
           <Text body={4} className='font-light lg:text-start text-center'>
-            Release:{release || ' March 31, 1999'}
+            Release:{releaseYear || ' March 31, 1999'}
           </Text>
           <div className='flex flex-row items-center gap-1'>
             <Text body={4} className='font-light'>

@@ -9,7 +9,8 @@ export class MovieController {
   async getAllMovies(req: Request, res: Response): Promise<void> {
     try {
       const movies = await this.movieService.getAllMovies()
-      res.status(200).json({ status: 'success', data: movies })
+      // res.status(200).json({ status: 'success', data: movies })
+      res.status(200).json(movies)
     } catch (error) {
       console.error('Error fetching movies:', error)
       res.status(500).json({ status: 'failed', message: 'Internal server error' })
@@ -47,7 +48,8 @@ export class MovieController {
         return
       }
       const movie = await this.movieService.getMovieDetail(movieId)
-      res.status(200).json({ status: 'success', data: movie })
+      // res.status(200).json({ status: 'success', data: movie })
+      res.status(200).json(movie)
     } catch (error) {
       console.error('Error fetching movie:', error)
       if (error instanceof Error) {
@@ -110,7 +112,8 @@ export class MovieController {
   async getMovieHighlights(req: Request, res: Response): Promise<void> {
     try {
       const highlights = await this.movieService.getMovieHighlights()
-      res.status(200).json({ status: 'success', data: highlights })
+      // res.status(200).json({ status: 'success', data: highlights })
+      res.status(200).json(highlights)
     } catch (error) {
       console.error('Error fetching movie highlights:', error)
       res.status(500).json({ status: 'failed', message: 'Internal server error' })

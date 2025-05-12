@@ -13,7 +13,7 @@ export type MovieType = {
   trailerSource?: string
 
   posterSource?: string
-  release?: string
+  releaseYear?: string
   title?: string
   voteAvg?: number
   genres?: GenreType[]

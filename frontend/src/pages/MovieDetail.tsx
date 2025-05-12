@@ -9,6 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Text } from '@/components/ui/typography'
 import VideoCard from '@/components/VideoCard'
 import { dummyComments, dummyMovies } from '@/data/dummyData'
+import { getMovieById } from '@/services/movieService'
 import { MovieType } from '@/types'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -16,13 +17,46 @@ import { useParams } from 'react-router-dom'
 const MovieDetail = () => {
   const { id } = useParams<{ id: string }>()
   const [movieData, setMovieData] = useState<MovieType>()
-  useEffect(() => {
-    if (id) {
-      const foundMovie = dummyMovies.find((movie) => movie.id === id)
-      setMovieData(foundMovie)
-    }
-  }, [id])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
 
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const data = await getMovieById(id as string)
+        setMovieData(data)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Không thể tải danh sách phim')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchMovies()
+  }, [id])
+  if (loading) {
+    return (
+      <Wrapper className='mt-[100px]'>
+        <p className='text-center'>Đang tải...</p>
+      </Wrapper>
+    )
+  }
+
+  if (error) {
+    return (
+      <Wrapper className='mt-[100px]'>
+        <p className='text-red-500 text-center'>{error}</p>
+      </Wrapper>
+    )
+  }
+
+  if (!movieData) {
+    return (
+      <Wrapper className='mt-[100px]'>
+        <p className='text-center'>Không tìm thấy phim</p>
+      </Wrapper>
+    )
+  }
   return (
     <div className=' flex flex-col scroll-smooth '>
       <Banner
