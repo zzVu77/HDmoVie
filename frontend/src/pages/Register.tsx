@@ -4,12 +4,17 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Text, Title } from '@/components/ui/typography'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import axios from 'axios'
 import { z } from 'zod'
 import { useState } from 'react'
 import { apiPost } from '@/utils/axiosConfig'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 // Define schema for form validation
+
+interface ApiErrorResponse {
+  message?: string
+}
 const registerSchema = z
   .object({
     fullName: z.string().min(1, 'Full name is required'),
@@ -74,11 +79,24 @@ const RegisterForm: React.FC = () => {
     try {
       setIsSubmitting(true)
       await apiPost('/registeredusers/register', data)
+
       toast.success('Register Successfully!!')
       form.reset()
       navigate('/login')
+    } catch (error: unknown) {
+      let errorMessage = 'Register Fail:'
+
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        if (error.response?.data?.message) {
+          errorMessage = error.response.data.message
+        } else if (error.response?.status === 500) {
+          errorMessage = 'Error Server'
+        }
+      }
+      toast.error(errorMessage, {
+        description: 'Please check your information or try again',
+      })
     } finally {
-      toast.error('Register Fail!!')
       setIsSubmitting(false)
     }
   }
