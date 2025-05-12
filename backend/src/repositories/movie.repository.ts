@@ -82,13 +82,16 @@ export class MovieRepository {
   }
   async findLatestMovies(limit: number): Promise<Movie[]> {
     try {
-      return this.repository
+      // Get all movies ordered by release year
+      const allMovies = await this.repository
         .createQueryBuilder('movie')
         .leftJoinAndSelect('movie.genres', 'genres')
         .leftJoinAndSelect('movie.casts', 'casts')
-        .orderBy('movie.releaseYear', 'ASC')
-        .limit(limit)
+        .orderBy('movie.releaseYear', 'DESC')
         .getMany()
+
+      // Return only the requested limit
+      return allMovies.slice(0, limit)
     } catch (error) {
       throw new Error((error as Error).message)
     }
@@ -96,27 +99,37 @@ export class MovieRepository {
 
   async findTopRatedMovies(limit: number): Promise<Movie[]> {
     try {
-      return this.repository
+      // Get all movies ordered by vote average
+      const allMovies = await this.repository
         .createQueryBuilder('movie')
         .leftJoinAndSelect('movie.genres', 'genres')
         .leftJoinAndSelect('movie.casts', 'casts')
         .orderBy('movie.voteAvg', 'DESC')
-        .limit(limit)
         .getMany()
+
+      // Return only the requested limit
+      return allMovies.slice(0, limit)
     } catch (error) {
       throw new Error((error as Error).message)
     }
   }
-
   async findTrendingMovies(limit: number): Promise<Movie[]> {
     try {
-      return this.repository
+      // Get all movies with their vote counts and comment counts
+      const allMovies = await this.repository
         .createQueryBuilder('movie')
         .leftJoinAndSelect('movie.genres', 'genres')
         .leftJoinAndSelect('movie.casts', 'casts')
-        .orderBy('movie.voteCount', 'DESC')
-        .limit(limit)
+        .leftJoin('Comment', 'comments', 'comments.movieId = movie.id')
+        .addSelect('COUNT(DISTINCT comments.id)', 'commentCount')
+        .groupBy('movie.id')
+        .addGroupBy('genres.id')
+        .addGroupBy('casts.id')
+        .orderBy('(movie.voteCount + COUNT(DISTINCT comments.id))', 'DESC')
         .getMany()
+
+      // Return only the requested limit
+      return allMovies.slice(0, limit)
     } catch (error) {
       throw new Error((error as Error).message)
     }
