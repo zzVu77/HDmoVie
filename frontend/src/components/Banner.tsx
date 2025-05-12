@@ -33,7 +33,7 @@ const Banner = ({
           {/* Movie Poster Image */}
           <img
             src={backdropSource || 'https://image.tmdb.org/t/p/original/ce3prrjh9ZehEl5JinNqr4jIeaB.jpg'}
-            className='rounded-md object-cover w-full h-full'
+            className='rounded-md object-cover object-top w-full h-full'
             alt='Movie poster'
           />
           {/* Dark Overlay */}
@@ -48,12 +48,22 @@ const Banner = ({
               title={title}
               voteAvg={voteAvg}
               exploreNow={exploreNow}
+              id={id}
             ></InformationContainer>
           </Desktop.Show>
         </AspectRatio>
       </div>
       <Desktop.Hide>
-        <InformationContainer id={id} isDesktop={isDesktopBreakPoint} genres={dummyGenres}></InformationContainer>
+        <InformationContainer
+          isDesktop={isDesktopBreakPoint}
+          description={description}
+          genres={genres}
+          releaseYear={releaseYear}
+          title={title}
+          voteAvg={voteAvg}
+          exploreNow={exploreNow}
+          id={id}
+        ></InformationContainer>
       </Desktop.Hide>
     </div>
   )

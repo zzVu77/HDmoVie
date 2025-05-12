@@ -1,4 +1,4 @@
-import { MovieType } from '@/types'
+import { MovieCommentProps, MovieType } from '@/types'
 import { apiGet } from '@/utils/axiosConfig'
 
 // Define specific response types
@@ -6,6 +6,11 @@ export interface MoviesHighlightResponse {
   latestMovies: MovieType[]
   trendingMovies: MovieType[]
   topRatedMovies: MovieType[]
+}
+export interface MovieDetailResponse {
+  movie: MovieType
+  relatedMovies: MovieType[]
+  comments: MovieCommentProps[]
 }
 
 const handleApiError = (error: unknown, context: string): never => {
@@ -46,5 +51,5 @@ export const getHighlightMovies = async (): Promise<MoviesHighlightResponse> =>
   getFromApi<MoviesHighlightResponse>('/movies/highlights', 'fetching highlight movies')
 
 // Fetch movie by ID
-export const getMovieById = async (id: string): Promise<MovieType> =>
-  getFromApi<MovieType>(`/movies/detail/${id}`, `fetching movie with id ${id}`)
+export const getMovieById = async (id: string): Promise<MovieDetailResponse> =>
+  getFromApi<MovieDetailResponse>(`/movies/detail/${id}`, `fetching movie`)

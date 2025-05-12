@@ -23,7 +23,7 @@ const MovieCard = ({ posterSource = '', releaseYear = '', title = '', voteAvg = 
               <div className='flex items-center justify-between '></div>
             </CardTitle>
           </CardHeader>
-          <CardContent className='flex flex-row justify-between items-center w-full gap-4 px-2 '>
+          <CardContent className='flex flex-row justify-between items-center w-full gap-4 px-2 my-2 '>
             <Text body={4}>{releaseYear || '2018'}</Text>
             <Text body={4} className='flex items-center gap-2'>
               {voteAvg || 4.5}
@@ -32,7 +32,7 @@ const MovieCard = ({ posterSource = '', releaseYear = '', title = '', voteAvg = 
           </CardContent>
         </Link>
 
-        <CardFooter className='gap-2 flex-col px-2'>
+        <CardFooter className='gap-4 flex-col px-2'>
           <div className='flex flex-row gap-2'>
             {genres?.map((genre) => (
               <Badge key={genre.id} className='bg-tertiary-dark'>

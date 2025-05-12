@@ -11,7 +11,6 @@ export type CastType = {
 export type MovieType = {
   id?: string
   trailerSource?: string
-
   posterSource?: string
   releaseYear?: string
   title?: string
@@ -94,4 +93,10 @@ export type BlogCommentType = {
   dateCreated: string
   owner: RegisteredUserType
   replies?: BlogCommentType[]
+}
+export type MovieCommentProps = {
+  userName: string
+  comment: string
+  rating: number
+  date: string
 }
