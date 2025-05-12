@@ -1,20 +1,22 @@
 import { InformationContainer } from '@/components/Banner'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { dummyMovies } from '@/data/dummyData'
 import { MovieType } from '@/types'
 import { useEffect, useState } from 'react'
 import { Carousel } from 'react-responsive-3d-carousel'
 import 'react-responsive-3d-carousel/dist/styles.css'
 import { useMediaQuery } from 'usehooks-ts'
 import Desktop from './shared/Desktop'
-const Carousel3D = () => {
+type Carousel3DProps = {
+  movies: MovieType[]
+}
+const Carousel3D = ({ movies }: Carousel3DProps) => {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [currentMovie, setCurrentMovie] = useState<MovieType>(dummyMovies[0])
-  const items = dummyMovies.map((movie) => <img src={movie.backdropSource} alt={movie.title} key={movie.id} />)
+  const [currentMovie, setCurrentMovie] = useState<MovieType>(movies[0])
+  const items = movies.map((movie) => <img src={movie.backdropSource} alt={movie.title} key={movie.id} />)
   const isDesktopBreakPoint = useMediaQuery('(min-width: 1024px)')
   useEffect(() => {
-    setCurrentMovie(dummyMovies[currentIndex])
-  }, [currentIndex])
+    setCurrentMovie(movies[currentIndex])
+  }, [currentIndex, movies])
   return (
     <div>
       <Desktop.Show>
@@ -28,7 +30,7 @@ const Carousel3D = () => {
             <div className='absolute top-0 left-0 w-full h-full bg-black opacity-55 rounded-md shadow-2xl drop-shadow-white-glow'></div>
           </AspectRatio>
           <div className='w-full h-auto absolute'>
-            <InformationContainer />
+            <InformationContainer {...currentMovie} />
             <Carousel
               boxShadow='0 0.1rem 0.5rem rgba(0, 0, 0, 0.5)'
               width='300px'

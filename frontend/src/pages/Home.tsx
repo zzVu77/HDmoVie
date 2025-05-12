@@ -50,7 +50,7 @@ const Home = () => {
 
   return (
     <div className='flex flex-col scroll-smooth'>
-      <Carousel3D />
+      <Carousel3D movies={movies.latestMovies} />
       <Wrapper className='mt-5'>
         <TitleSection>Newest</TitleSection>
         <MovieSlider movies={movies.latestMovies} />
