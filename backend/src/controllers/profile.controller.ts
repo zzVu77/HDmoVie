@@ -19,7 +19,8 @@ export class ProfileController {
   async get(req: Request, res: Response): Promise<void> {
     try {
       const userId = req.params.id
-      const profile = await this.profileService.getProfile(userId)
+      const senderId = res.locals.user?.id
+      const profile = await this.profileService.getProfile(userId, senderId)
 
       // In case profile is null
       if (!profile) {
@@ -83,9 +84,10 @@ export class ProfileController {
   async getWatchlists(req: Request, res: Response): Promise<void> {
     try {
       const userId = req.params.id
+      const senderId = res.locals.user?.id
       const page = parseInt(req.query.page as string) || 0 // Default page = 0
 
-      const watchlists = await this.watchlistService.getUserWatchlists(userId, page)
+      const watchlists = await this.watchlistService.getUserWatchlists(userId, senderId, page)
 
       res.json(watchlists)
     } catch (error) {
@@ -99,7 +101,7 @@ export class ProfileController {
   async getWatchlistDetail(req: Request, res: Response): Promise<void> {
     try {
       const watchlistId = req.params.wid
-      const senderId = req.params.id
+      const senderId = res.locals.user?.id
 
       const watchlist = await this.watchlistService.getWatchlistDetail(watchlistId, senderId)
 
@@ -140,7 +142,7 @@ export class ProfileController {
       const userId = req.params.id
       const { oldPassword, newPassword } = req.body
       const senderId = res.locals.user?.id
-      const result = await this.registeredUserService.changePassword(userId, oldPassword, newPassword, senderId)
+      await this.registeredUserService.changePassword(userId, oldPassword, newPassword, senderId)
       res.status(200).json({ message: 'Password changed successfully' })
     } catch (error) {
       res.status(400).json({ message: (error as Error).message })

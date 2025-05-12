@@ -12,11 +12,15 @@ export class WatchlistService {
     private movieRepository: MovieRepository,
   ) {}
 
-  public async getUserWatchlists(userId: string, page: number): Promise<Watchlist[]> {
+  public async getUserWatchlists(userId: string, senderId: string, page: number): Promise<Watchlist[]> {
     try {
       const pageSize = 10
       const offset = page * pageSize
-      return await this.watchlistRepository.findByUserId(userId, offset, pageSize)
+      const watchlists = await this.watchlistRepository.findByUserId(userId, offset, pageSize)
+      if (userId !== senderId) {
+        return watchlists.filter((watchlist) => !watchlist.isPrivate())
+      }
+      return watchlists
     } catch (error) {
       throw new Error((error as Error).message)
     }
