@@ -31,11 +31,11 @@ const Carousel3D = ({ movies }: Carousel3DProps) => {
             />
             <div className='absolute top-0 left-0 w-full h-full bg-black opacity-55 rounded-md shadow-2xl drop-shadow-white-glow'></div>
           </AspectRatio>
-          <div className='w-full h-auto absolute pt-20'>
-            <InformationContainer {...currentMovie} />
+          <div className='w-full h-auto absolute pt-[100px]'>
+            <InformationContainer {...currentMovie} exploreNow />
             <Carousel
               boxShadow='0 0.1rem 0.5rem rgba(0, 0, 0, 0.5)'
-              width='250px'
+              width='280px'
               height='150px'
               perspective='auto'
               showStatus={false}
@@ -81,8 +81,8 @@ const Carousel3D = ({ movies }: Carousel3DProps) => {
               pauseOnHover={true}
             />
           </div>
-          <div className='mt-2'>
-            <InformationContainer {...currentMovie} isDesktop={isDesktopBreakPoint} />
+          <div className='mt-12 sm:mt-10 md:mt-8'>
+            <InformationContainer exploreNow {...currentMovie} isDesktop={isDesktopBreakPoint} />
           </div>
         </div>
       </Desktop.Hide>

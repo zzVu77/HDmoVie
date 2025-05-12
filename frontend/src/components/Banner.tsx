@@ -1,17 +1,30 @@
-import { Star1 } from 'iconsax-reactjs'
-import { AspectRatio } from './ui/aspect-ratio'
-import { Text, Title } from './ui/typography'
-import { Badge } from './ui/badge'
+import { dummyGenres } from '@/data/dummyData'
+import { cn } from '@/lib/utils'
 import { MovieType } from '@/types'
+import { Star1 } from 'iconsax-reactjs'
 import { useMediaQuery } from 'usehooks-ts'
 import Desktop from './shared/Desktop'
-import { dummyGenres } from '@/data/dummyData'
+import { AspectRatio } from './ui/aspect-ratio'
+import { Badge } from './ui/badge'
+import { Button } from './ui/button'
+import { Text, Title } from './ui/typography'
+import { Link } from 'react-router-dom'
 interface BannerProps extends MovieType {
   isDesktop?: boolean
   position?: string
+  exploreNow?: boolean
 }
 
-const Banner = ({ description, backdropSource, genres = dummyGenres, releaseYear, title, voteAvg }: BannerProps) => {
+const Banner = ({
+  id,
+  description,
+  backdropSource,
+  genres = dummyGenres,
+  releaseYear,
+  title,
+  voteAvg,
+  exploreNow = false,
+}: BannerProps) => {
   const isDesktopBreakPoint = useMediaQuery('(min-width: 1024px)')
   return (
     <div className='w-full flex flex-col mx-auto relative'>
@@ -34,22 +47,32 @@ const Banner = ({ description, backdropSource, genres = dummyGenres, releaseYear
               releaseYear={releaseYear}
               title={title}
               voteAvg={voteAvg}
+              exploreNow={exploreNow}
             ></InformationContainer>
           </Desktop.Show>
         </AspectRatio>
       </div>
       <Desktop.Hide>
-        <InformationContainer isDesktop={isDesktopBreakPoint} genres={dummyGenres}></InformationContainer>
+        <InformationContainer id={id} isDesktop={isDesktopBreakPoint} genres={dummyGenres}></InformationContainer>
       </Desktop.Hide>
     </div>
   )
 }
-export const InformationContainer = ({ description, genres, releaseYear, title, voteAvg, isDesktop }: BannerProps) => {
+export const InformationContainer = ({
+  id,
+  description,
+  genres,
+  releaseYear,
+  title,
+  voteAvg,
+  isDesktop,
+  exploreNow = false,
+}: BannerProps) => {
   return (
     <div
       className={`${isDesktop ? 'absolute' : ''} bottom-0 left-0 w-full flex items-end justify-start text-white p-4 sm:p-6 lg:pt-8 `}
     >
-      <div className='flex flex-col gap-4 w-fit max-w-[100vw] lg:max-w-[70vw] '>
+      <div className='flex flex-col lg:items-start  items-center  justify-center gap-4 w-fit max-w-[100vw] lg:max-w-[70vw] '>
         {/* Movie Title */}
         <Title className='lg:text-[60px] text-[40px] font-extrabold text-gradient-yellow w-full py-  lg:text-start text-center'>
           {title || 'The Matrix Avengers'}
@@ -67,7 +90,7 @@ export const InformationContainer = ({ description, genres, releaseYear, title, 
           </div>
         </div>
         {/* Movie Overview/Description */}
-        <Text body={3} className='line-clamp-3 font-normal text-center lg:text-start'>
+        <Text body={3} className='line-clamp-2 font-normal text-center lg:text-start w-[80%]'>
           {description ||
             `  A fearless knight braves a deadly realm to save the Chosen One’s soul. Facing witches, demons, and brutal foes,
       he discovers her return could ignite chaos and doom humanity.`}
@@ -83,6 +106,17 @@ export const InformationContainer = ({ description, genres, releaseYear, title, 
             </Badge>
           ))}
         </div>
+        <Link to={`/movie/${id}`}>
+          <Button
+            type='button'
+            className={cn(
+              `bg-primary-yellow text-primary-dark font-bold shadow-white-glow-down  gap-2 lg:text-lg p-3 `,
+              exploreNow ? 'flex' : 'hidden',
+            )}
+          >
+            Explore Now
+          </Button>
+        </Link>
       </div>
     </div>
   )
