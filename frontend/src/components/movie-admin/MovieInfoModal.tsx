@@ -69,7 +69,7 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
     defaultValues: {
       id: movie?.id || '',
       title: movie?.title || '',
-      release: movie?.release || '',
+      release: movie?.releaseYear || '',
       voteAvg: movie?.voteAvg,
       voteCount: movie?.voteCount,
       description: movie?.description || '',

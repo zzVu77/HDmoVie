@@ -21,26 +21,29 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error),
 )
 
-axiosInstance.interceptors.response.use((response: AxiosResponse) => {
-  // Nếu server trả về access-token mới qua header
-  const newAccessToken = response.headers['x-access-token']
-  if (newAccessToken) {
-    localStorage.setItem('access-token', newAccessToken)
-  }
-  return response
-})
-
 axiosInstance.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  (error) => Promise.reject(error),
+  (response: AxiosResponse) => {
+    const newAccessToken = response.headers['x-access-token']
+    if (newAccessToken) {
+      localStorage.setItem('access-token', newAccessToken)
+    }
+    return response
+  },
+  (error) => {
+    if (error.response) {
+      return Promise.resolve(error.response)
+    }
+    return Promise.reject(error)
+  },
 )
 
-export const apiGet = <T>(url: string, config?: AxiosRequestConfig) => axiosInstance.get<T>(url, config)
+export const apiGet = <T>(url: string, config?: AxiosRequestConfig) =>
+  axiosInstance.get<T>(url, config).then((response) => ({ data: response.data }))
 
 export const apiPost = <T, D = unknown>(url: string, data: D, config?: AxiosRequestConfig) =>
-  axiosInstance.post<T>(url, data, config)
+  axiosInstance.post<T>(url, data, config).then((response) => ({ data: response.data }))
 
 export const apiPut = <T, D = unknown>(url: string, data: D, config?: AxiosRequestConfig) =>
-  axiosInstance.put<T>(url, data, config)
+  axiosInstance.post<T>(url, data, config).then((response) => ({ data: response.data }))
 
 export default axiosInstance
