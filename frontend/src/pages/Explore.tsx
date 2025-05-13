@@ -1,9 +1,9 @@
+// Explore.tsx
 import ListMovie from '@/components/ListMovie'
+import SearchBar from '@/components/shared/SearchBar'
 import Wrapper from '@/components/shared/Wrapper'
-import { Button } from '@/components/ui/button'
 import { getMovies } from '@/services/movieService'
 import { MovieType } from '@/types'
-import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const Explore = () => {
@@ -25,6 +25,13 @@ const Explore = () => {
 
     fetchMovies()
   }, [])
+
+  const handleSearch = (value: string | MovieType[]) => {
+    if (Array.isArray(value)) {
+      setMovies(value)
+    }
+  }
+
   if (loading) {
     return (
       <Wrapper className='mt-[100px]'>
@@ -41,25 +48,27 @@ const Explore = () => {
     )
   }
 
-  if (!movies) {
+  if (!movies || movies.length === 0) {
     return (
-      <Wrapper className='mt-[100px]'>
-        <p className='text-center'>Không tìm thấy phim</p>
+      <Wrapper className='mt-[150px] '>
+        <p className='text-center text-3xl text-primary-yellow font-bold tracking-widest'>Movie not found...</p>
       </Wrapper>
     )
   }
+
   return (
     <div>
       <div className='flex flex-col gap-5 items-center justify-center pb-5 pt-28'>
         <Wrapper>
+          <SearchBar searchType='movies' onSearch={handleSearch}></SearchBar>
           <ListMovie movies={movies}></ListMovie>
-          <Button
+          {/* <Button
             disabled
-            className='w-fit mx-auto bg-tertiary-dark/70 text-primary-yellow font-bold drop-shadow-yellow-glow'
+            className='w-fittec mx-auto bg-tertiary-dark/70 text-primary-yellow font-bold drop-shadow-yellow-glow'
           >
             <Loader2 className='animate-spin' />
             Load more
-          </Button>
+          </Button> */}
         </Wrapper>
       </div>
     </div>

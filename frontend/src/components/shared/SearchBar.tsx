@@ -1,20 +1,60 @@
-import { Search } from 'lucide-react'
-import { Input } from '../ui/input'
-import type { InputHTMLAttributes } from 'react'
+// SearchBar.tsx
 import { cn } from '@/lib/utils'
+import { getMovies, searchMoviesByTitle } from '@/services/movieService'
+import { MovieType } from '@/types'
+import { Search } from 'lucide-react'
+import { useState } from 'react'
+import { Input } from '../ui/input'
 
-interface SearchBarProps extends InputHTMLAttributes<HTMLInputElement> {
-  iconColor?: string
+interface SearchBarProps {
+  placeholder?: string
+  onSearch?: (value: string | MovieType[]) => void
+  className?: string
+  searchType: 'movies' | 'blogs'
 }
 
-const SearchBar = ({ iconColor = 'text-primary-dark', className, ...props }: SearchBarProps) => {
+const SearchBar = ({ placeholder, onSearch, className, searchType = 'movies', ...props }: SearchBarProps) => {
+  const [searchValue, setSearchValue] = useState('')
+
+  const handleSearch = async () => {
+    if (searchType === 'movies') {
+      try {
+        if (searchValue.trim()) {
+          const response = await searchMoviesByTitle(searchValue)
+          if (onSearch) {
+            onSearch(response)
+          }
+        } else {
+          const response = await getMovies()
+          if (onSearch) {
+            onSearch(response)
+          }
+        }
+      } catch {
+        throw new Error('Error fetching data from API')
+      }
+    }
+  }
+
   return (
-    <div className='relative w-full flex items-center justify-center '>
-      <Search className={cn('absolute left-3 top-1/2 h-[20px] w-[20px] -translate-y-1/2 text-red-600', iconColor)} />
+    <div className='relative w-full max-w-[80vw] mx-auto flex items-center justify-center'>
+      <Search
+        className={cn('absolute font-bold left-3 top-1/2 h-[20px] w-[20px] -translate-y-1/2')}
+        color='var(--accent-yellow)'
+      />
       <Input
-        className={cn('w-full pl-10 bg-white text-[ 5px]', className)}
-        placeholder='Search...'
-        type='search'
+        className={cn(
+          'w-full pl-10 bg-primary-dark/80 text-[5px] h-12 text-primary-yellow shadow-none border-[3px] border-tertiary-dark/80 focus-within:border-none text-xl',
+          className,
+        )}
+        placeholder={placeholder || 'Search...'}
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleSearch()
+          }
+        }}
         {...props}
       />
     </div>

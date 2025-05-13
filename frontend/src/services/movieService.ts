@@ -1,13 +1,13 @@
 import { MovieCommentProps, MovieType } from '@/types'
 import { apiGet } from '@/utils/axiosConfig'
 
-// Định nghĩa kiểu cho response lỗi
+// =Define the structure of the error response
 export interface ErrorResponse {
   status: 'failed'
   message: string
 }
 
-// Định nghĩa kiểu cho response thành công
+// Define the structure of the response for highlight movies
 export interface MoviesHighlightResponse {
   latestMovies: MovieType[]
   trendingMovies: MovieType[]
@@ -20,7 +20,7 @@ export interface MovieDetailResponse {
   comments: MovieCommentProps[]
 }
 
-// Hàm xử lý lỗi
+// Function to handle API errors
 const handleApiError = (error: unknown, context: string): never => {
   let errorMessage = `Error in ${context}: Unknown error`
 
@@ -32,7 +32,6 @@ const handleApiError = (error: unknown, context: string): never => {
   }
   throw new Error(errorMessage)
 }
-
 // Transform raw movie data to MovieType
 export const transformToMovieType = (data: MovieType): MovieType => ({
   id: data.id,
@@ -47,7 +46,6 @@ export const transformToMovieType = (data: MovieType): MovieType => ({
   genres: data.genres,
   casts: data.casts,
 })
-
 // Generic API fetch function
 const getFromApi = async <T>(endpoint: string, context: string): Promise<T> => {
   try {
@@ -61,20 +59,19 @@ const getFromApi = async <T>(endpoint: string, context: string): Promise<T> => {
     ) {
       throw response.data
     }
-
     return response.data as T
   } catch (error) {
     return handleApiError(error, context)
   }
 }
-
 // Fetch all movies
 export const getMovies = async (): Promise<MovieType[]> => getFromApi<MovieType[]>('/movies', 'fetching movies')
-
 // Fetch highlight movies
 export const getHighlightMovies = async (): Promise<MoviesHighlightResponse> =>
   getFromApi<MoviesHighlightResponse>('/movies/highlights', 'fetching highlight movies')
-
 // Fetch movie by ID
 export const getMovieById = async (id: string): Promise<MovieDetailResponse> =>
   getFromApi<MovieDetailResponse>(`/movies/detail/${id}`, `fetching movie `)
+// Fetch movie by Title
+export const searchMoviesByTitle = async (title: string): Promise<MovieType[]> =>
+  getFromApi<MovieType[]>(`/movies/search?title=${encodeURIComponent(title)}`, 'searching movies by title')

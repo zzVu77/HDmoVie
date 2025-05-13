@@ -72,7 +72,8 @@ export class MovieController {
         return
       }
       const movies = await this.movieService.searchMoviesByTitle(title)
-      res.status(200).json({ status: 'success', data: movies })
+      // res.status(200).json({ status: 'success', data: movies })
+      res.status(200).json(movies)
     } catch (error) {
       console.error('Error searching movies:', error)
       res.status(500).json({ status: 'failed', message: 'Internal server error' })

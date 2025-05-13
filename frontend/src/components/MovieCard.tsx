@@ -1,6 +1,5 @@
 import { MovieType } from '@/types'
 import { SaveAdd, Star1 } from 'iconsax-reactjs'
-import { Link } from 'react-router-dom'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
@@ -9,7 +8,7 @@ const MovieCard = ({ posterSource = '', releaseYear = '', title = '', voteAvg = 
   return (
     <div className='mx-auto'>
       <Card className='w-[250px]  flex flex-col rounded-none bg-transparent border-none shadow-none hover:scale-100 transition-all duration-300 gap-1 cursor-pointer '>
-        <Link to={`/movie/${id}`} className='w-fit'>
+        <a href={`/movie/${id}`} className='w-fit'>
           <CardHeader className='flex flex-col items-center p-0 gap-7 w-[250px] '>
             <img
               className='object-cover w-[full] h-[350px] object-center rounded-lg filter hover:drop-shadow-[0_4px_50px_rgba(255,255,255,0.5)] hover:scale-105 transition-all duration-300 drop-shadow-white-glow'
@@ -30,7 +29,7 @@ const MovieCard = ({ posterSource = '', releaseYear = '', title = '', voteAvg = 
               <Star1 size='18' variant='Bold' color='var(--accent-yellow)' />
             </Text>
           </CardContent>
-        </Link>
+        </a>
 
         <CardFooter className='gap-4 flex-col px-2'>
           <div className='flex flex-row gap-2'>
