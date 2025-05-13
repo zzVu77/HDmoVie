@@ -4,7 +4,7 @@ import { BlogPost } from '@/types'
 export interface CreateBlogPostRequest {
   content: string
   tags: string[]
-  images?: string[]
+  imageUrls?: { url: string }[]
 }
 
 export interface ApiResponse<T> {

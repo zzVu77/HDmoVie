@@ -49,7 +49,7 @@ export default function BlogCard({
     }
   }, [blog.content])
 
-  const hasImages = blog.images && blog.images.length > 0
+  const hasImages = blog.imageUrls && blog.imageUrls.length > 0
   const cardContent = (
     <Card
       className={cn(
@@ -116,11 +116,11 @@ export default function BlogCard({
         {hasImages && (
           <Carousel className='w-full mx-auto my-1'>
             <CarouselContent>
-              {blog.images!.map((imageUrl, index) => (
-                <CarouselItem key={index} className='flex justify-center'>
+              {blog.imageUrls.map((image) => (
+                <CarouselItem key={image.id} className='flex justify-center'>
                   <img
-                    src={imageUrl}
-                    alt={`Blog image ${index + 1}`}
+                    src={image.url}
+                    alt={`Blog image ${image.id}`}
                     className='w-full object-cover rounded-sm self-center'
                     onError={(e) => {
                       ;(e.target as HTMLImageElement).src =
@@ -130,7 +130,7 @@ export default function BlogCard({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            {blog.images!.length > 1 && (
+            {blog.imageUrls.length > 1 && (
               <div className='group absolute top-1/2 -translate-y-1/2 right-4 flex justify-end items-center'>
                 <div className='rounded-full opacity-30 bg-secondary-dark text-white w-8 h-8 flex items-center justify-center'>
                   <ArrowRight size={16} className='text-white' />

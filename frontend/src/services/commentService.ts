@@ -24,7 +24,7 @@ export const CommentService = {
    * Create a new comment
    */
   createComment: (commentData: CreateCommentRequest) => {
-    return apiPost<ApiResponse<BlogCommentType>, CreateCommentRequest>('/api/comments', commentData)
+    return apiPost<ApiResponse<BlogCommentType>, CreateCommentRequest>('/comments', commentData)
   },
 }
 

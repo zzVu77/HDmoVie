@@ -104,23 +104,21 @@ export class BlogService {
 
   private transformToResponseDTO(blog: any): BlogResponseDTO {
     return {
-      id: blog.blog_id ?? blog.id,
-      content: blog.blog_content ?? blog.content,
-      dateCreated: blog.blog_dateCreated ?? blog.dateCreated,
+      id: blog.blog_id,
+      content: blog.blog_content,
+      dateCreated: blog.blog_dateCreated,
       owner: {
-        id: blog.owner_id ?? blog.owner?.id ?? '', // fallback chain
-        fullName: blog.owner_fullName ?? blog.owner?.fullName ?? '',
+        id: blog.owner_id,
+        fullName: blog.owner_fullName,
       },
-      tags:
-        blog.tags?.map((tag: any) => ({
-          id: tag.id,
-          name: tag.name,
-        })) ?? [],
-      imageUrls:
-        blog.imageUrls?.map((media: any) => ({
-          id: media.id,
-          url: media.url,
-        })) ?? [],
+      tags: blog.tags_id ? [{
+        id: blog.tags_id,
+        name: blog.tags_name
+      }] : [],
+      imageUrls: blog.imageUrls_id ? [{
+        id: blog.imageUrls_id,
+        url: blog.imageUrls_url
+      }] : [],
       likeCount: parseInt(blog.likeCount ?? '0'),
       commentCount: parseInt(blog.commentCount ?? '0'),
     }

@@ -11,7 +11,17 @@ export class BlogRepository {
   async findById(id: string): Promise<any> {
     const blog = await this.repository
       .createQueryBuilder('blog')
-      .select(['blog.id', 'blog.content', 'blog.dateCreated', 'owner.id', 'owner.fullName', 'tags.id', 'tags.name'])
+      .select([
+        'blog.id',
+        'blog.content',
+        'blog.dateCreated',
+        'owner.id',
+        'owner.fullName',
+        'tags.id',
+        'tags.name',
+        'imageUrls.id',
+        'imageUrls.url'
+      ])
       .addSelect(
         `(SELECT COUNT(*) 
         FROM like_interactions_users liu 
@@ -41,7 +51,17 @@ export class BlogRepository {
   async findAll(): Promise<any[]> {
     const blogs = await this.repository
       .createQueryBuilder('blog')
-      .select(['blog.id', 'blog.content', 'blog.dateCreated', 'owner.id', 'owner.fullName', 'tags.id', 'tags.name'])
+      .select([
+        'blog.id',
+        'blog.content',
+        'blog.dateCreated',
+        'owner.id',
+        'owner.fullName',
+        'tags.id',
+        'tags.name',
+        'imageUrls.id',
+        'imageUrls.url'
+      ])
       .addSelect(
         `(SELECT COUNT(*) 
         FROM like_interactions_users liu 
