@@ -72,6 +72,20 @@ export class ProfileController {
     }
   }
 
+  // Return the follow interaction of user
+  // get/:id/followers
+  async getFollowInteraction(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = req.params.id
+      const followInteraction = await this.followInteractionService.getUserFollowInteraction(userId)
+
+      res.json(followInteraction)
+    } catch (error) {
+      console.error('Error fetching followers:', error)
+      res.status(500).json({ message: 'Internal server error' })
+    }
+  }
+
   // Return the follower lists of user
   // get/:id/followers
   async getFollowers(req: Request, res: Response): Promise<void> {

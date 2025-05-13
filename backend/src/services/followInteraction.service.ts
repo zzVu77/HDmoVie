@@ -8,6 +8,21 @@ export class FollowInteractionService {
     private userRepository: RegisteredUserRepository,
   ) {}
 
+  // Get user follow interaction
+  public async getUserFollowInteraction(userId: string) {
+    try {
+      const followInteraction = await this.followInteractionRepository.findByUserId(userId)
+
+      if (!followInteraction) {
+        return []
+      }
+
+      return followInteraction
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
   // Get user follower list
   public async getUserFollowers(userId: string): Promise<RegisteredUser[]> {
     try {

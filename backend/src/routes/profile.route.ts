@@ -43,8 +43,9 @@ const profileController = new ProfileController(
 profileRouter.get('/', (req, res) => profileController.getSelf(req, res))
 profileRouter.get('/:id', (req, res) => profileController.get(req, res))
 profileRouter.get('/:id/blogs', (req, res) => profileController.getBlogs(req, res))
-profileRouter.get('/:id/followers', (req, res) => profileController.getFollowers(req, res))
-profileRouter.get('/:id/followings', (req, res) => profileController.getFollowings(req, res))
+profileRouter.get('/:id/follow-interaction', (req, res) => profileController.getFollowInteraction(req, res))
+profileRouter.get('/:id/follow-interaction/followers', (req, res) => profileController.getFollowers(req, res))
+profileRouter.get('/:id/follow-interaction/followings', (req, res) => profileController.getFollowings(req, res))
 profileRouter.get('/:id/watchlists', (req, res) => profileController.getWatchlists(req, res))
 profileRouter.get('/:id/watchlists/:wid', (req, res) => profileController.getWatchlistDetail(req, res))
 
