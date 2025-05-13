@@ -22,7 +22,7 @@ export class RegisteredUserService {
       // Save user
       return await this.registeredUserRepository.create(userData)
     } catch (error) {
-      throw new Error(`Failed to create user  : ${(error as Error).message}`)
+      throw new Error(`${(error as Error).message}`)
     }
   }
   async forgotPassword(email: string) {

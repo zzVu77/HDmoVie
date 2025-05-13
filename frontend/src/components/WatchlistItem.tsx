@@ -1,10 +1,12 @@
 import { WatchlistMovieProps } from '@/types'
-import { Star, Minus } from 'lucide-react'
+import { Star, X } from 'lucide-react'
 import { Text, Title } from '@/components/ui/typography'
 import { Badge } from '@/components/ui/badge'
+import { useNavigate } from 'react-router'
 
 export default function WatchlistItem({
   index,
+  id,
   title,
   description,
   posterSource,
@@ -13,6 +15,12 @@ export default function WatchlistItem({
   voteCount,
   genres,
 }: WatchlistMovieProps) {
+  const navigation = useNavigate()
+
+  const navigateToMovie = () => {
+    navigation(`/movie/${id}`)
+  }
+
   return (
     //Todo: Add onClick to open movie details
     <div className='w-full flex flex-col bg-secondary-dark rounded-lg p-3'>
@@ -28,10 +36,15 @@ export default function WatchlistItem({
             alt='Poster'
             className='w-[90px] h-[120px] object-cover rounded-lg shadow-sm cursor-pointer hover:shadow-[0_0_15px_0px] hover:shadow-tertiary-yellow transition duration-300 ease-in-out'
             loading='lazy'
+            onClick={navigateToMovie}
           />
           {/* Movie Title and Info */}
           <div className='flex flex-col ml-4'>
-            <Title level={4} className='font-bold text-primary-yellow cursor-pointer hover:text-tertiary-yellow'>
+            <Title
+              level={4}
+              className='font-bold text-primary-yellow cursor-pointer hover:text-tertiary-yellow'
+              onClick={navigateToMovie}
+            >
               {index ?? '#'}. {title ?? 'Unknown Title'}
             </Title>
             <div className='flex flex-row flex-wrap items-center mt-1'>
@@ -72,7 +85,7 @@ export default function WatchlistItem({
           </div>
         </div>
         {/* Right: Delete Icon */}
-        <Minus className='text-gray-300 w-4 h-4 mr-1 cursor-pointer hover:w-5 hover:h-5' />
+        <X className='text-gray-300 w-4 h-4 mr-1 cursor-pointer hover:text-red-400' />
       </div>
 
       {/* Below: Description */}

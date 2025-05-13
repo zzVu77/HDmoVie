@@ -13,10 +13,17 @@ import RegisterForm from './pages/Register'
 import TestComponent from './pages/TestComponent'
 import Home from './pages/Home'
 import PublicRoute from './components/PublicRoute'
+import { Toaster } from '@/components/ui/sonner' // hoặc từ "sonner" nếu dùng trực tiếp
 
 function App() {
   return (
     <BrowserRouter>
+      <Toaster
+        richColors
+        position='top-right'
+        closeButton
+        duration={4000} // thời gian toast hiển thị, tính bằng mili-giây
+      />
       <Routes>
         {/* Routes with Header */}
         <Route element={<MainLayout />}>
