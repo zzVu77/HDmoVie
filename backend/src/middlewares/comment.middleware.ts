@@ -74,10 +74,11 @@ class CreateMovieRateAndCommentValidationStrategy implements ValidationStrategy 
       'number.max': 'Score must not exceed 10',
       'any.required': 'Score is required',
     }),
-    content: Joi.string().trim().min(1).allow(null).optional().messages({
+    content: Joi.string().trim().min(1).required().messages({
       'string.base': 'Content must be a string',
       'string.empty': 'Content cannot be empty',
       'string.min': 'Content must be at least 1 character',
+      'any.required': 'Content is required',
     }),
   })
 

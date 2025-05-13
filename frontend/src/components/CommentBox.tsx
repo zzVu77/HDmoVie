@@ -17,7 +17,8 @@ const reviewSchema = z.object({
   content: z
     .string()
     .min(60, 'Review must be at least 60 characters long')
-    .max(500, 'Review can be up to 500 characters long'),
+    .max(500, 'Review can be up to 500 characters long')
+    .refine((val) => val.trim().length > 0, 'Review content is required'),
 })
 
 type ReviewFormValues = z.infer<typeof reviewSchema>
@@ -44,13 +45,13 @@ const CommentBox: React.FC = () => {
       await apiPost('/rates/with-comment', {
         movieId: '1010581', // You might want to make this dynamic based on the current movie
         score: data.rating,
-        content: data.content || null, // If content is empty, send null
+        content: data.content,
       })
 
       toast.success('Review submitted successfully!')
       form.reset()
-      // } catch () {
-      //   // console.error('Error submitting review:', error)
+      // } catch (error: unknown) {
+      //   console.error('Error submitting review:', error)
       //   toast.error('Failed to submit review. Please try again.')
     } finally {
       setIsSubmitting(false)

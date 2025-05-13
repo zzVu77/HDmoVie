@@ -63,19 +63,21 @@ export class RateController {
       const { movieId, score, content } = req.body
       const userId = res.locals.user.id // Get user ID from authenticated user
 
-      // First rate the movie
+      if (!movieId || score === undefined || !content) {
+        res.status(400).json({ status: 'failed', message: 'Movie ID, score, and content are required' })
+        return
+      }
+
+      // Rate the movie
       const rate = await this.rateService.rateMovie(userId, movieId.toString(), score)
 
-      // If content is provided, create a comment
-      let comment = null
-      if (content) {
-        comment = await this.commentService.commentOnMovie({
-          userId,
-          movieId: Number(movieId),
-          content,
-          parentCommentId: null,
-        })
-      }
+      // Create the comment
+      const comment = await this.commentService.commentOnMovie({
+        userId,
+        movieId: Number(movieId),
+        content,
+        parentCommentId: null,
+      })
 
       res.status(201).json({
         status: 'success',
