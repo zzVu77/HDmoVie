@@ -27,6 +27,7 @@ function App() {
           <Route path='/explore' element={<Explore />} />
           <Route path='/blog/:id' element={<BlogDetail />} />
           <Route path='/blog' element={<Blogs />} />
+          <Route path='/profile/' element={<Profile />} />
           <Route path='/profile/:id' element={<Profile />} />
         </Route>
 
