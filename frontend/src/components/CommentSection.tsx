@@ -6,112 +6,54 @@ import { Button } from '@/components/ui/button'
 import { Text } from './ui/typography'
 import { Textarea } from './ui/textarea'
 import { Send } from 'lucide-react'
+import CommentService from '@/services/commentService'
 
-// interface CommentSectionProps {
-//   blogId: string
-// }
+interface CommentSectionProps {
+  blogId: string
+}
 
-const sampleComments: BlogCommentType[] = [
-  {
-    id: '0',
-    content:
-      'This looks amazing! I would love to try making this at home. This looks amazing! I would love to try making this at home. This looks amazing! I would love to try making this at home. This looks amazing! I would love to try making this at home.',
-    dateCreated: new Date('2025-05-01T12:30:00Z').toISOString(),
-    owner: {
-      id: 'user-1',
-      name: 'foodie_lover',
-    },
-  },
-  {
-    id: '1',
-    content: 'This looks amazing! I would love to try making this at home.',
-    dateCreated: new Date('2025-05-01T12:30:00Z').toISOString(),
-    owner: {
-      id: 'user-1',
-      name: 'foodie_lover',
-    },
-    replies: [
-      {
-        id: '1-1',
-        content:
-          'Thanks for sharing! Did you modify any ingredients? Thanks for sharing! Did you modify any ingredients? Thanks for sharing! Did you modify any ingredients? Thanks for sharing! Did you modify any ingredients?',
-        dateCreated: new Date('2025-05-01T12:45:00Z').toISOString(),
-        owner: {
-          id: 'user-2',
-          name: 'helenscchin',
-        },
-      },
-      {
-        id: '1-2',
-        content: 'Damnnn?',
-        dateCreated: new Date('2025-05-01T11:30:00Z').toISOString(),
-        owner: {
-          id: 'user-2',
-          name: 'helenscchin',
-        },
-      },
-    ],
-  },
-  {
-    id: '2',
-    content: 'This is a placeholder comment.',
-    dateCreated: new Date('2025-05-01T14:00:00Z').toISOString(),
-    owner: {
-      id: 'user-3',
-      name: 'chef_marcus',
-    },
-    replies: [
-      {
-        id: '2-1',
-        content: 'Thanks for sharing! Did you modify any ingredients?',
-        dateCreated: new Date('2025-05-01T15:30:00Z').toISOString(),
-        owner: {
-          id: 'user-4',
-          name: 'helenscchin',
-        },
-      },
-      {
-        id: '2-2',
-        content: 'Damnnn?',
-        dateCreated: new Date('2025-05-01T11:30:00Z').toISOString(),
-        owner: {
-          id: 'user-5',
-          name: 'helenscchin',
-        },
-      },
-    ],
-  },
-]
-
-// const CommentSection = ({ blogId }: CommentSectionProps) => {
-export default function CommentSection() {
+export default function CommentSection({ blogId }: CommentSectionProps) {
   const [comments, setComments] = useState<BlogCommentType[]>([])
   const [commentText, setCommentText] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setComments(sampleComments)
-      setIsLoading(false)
-    }, 500)
+    const fetchComments = async () => {
+      try {
+        setIsLoading(true)
+        setError(null)
+        const response = await CommentService.getBlogComments(blogId)
+        if (!response.data || !Array.isArray(response.data.data)) {
+          throw new Error('Invalid response format from server')
+        }
+        setComments(response.data.data)
+      } catch (err: unknown) {
+        alert((err as Error).message)
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
-    return () => clearTimeout(timer)
-  }, [])
+    fetchComments()
+  }, [blogId])
 
-  const handleSubmitComment = () => {
+  const handleSubmitComment = async () => {
     if (!commentText.trim()) return
 
-    const newComment: BlogCommentType = {
-      id: `new-${Date.now()}`,
-      content: commentText,
-      dateCreated: new Date().toISOString(),
-      owner: {
-        id: 'current-user',
-        name: 'current_user',
-      },
+    try {
+      const response = await CommentService.createComment({
+        content: commentText,
+        blogId: blogId,
+      })
+      if (!response.data || !response.data.data) {
+        throw new Error('Invalid response format from server')
+      }
+      setComments([...comments, response.data.data])
+      setCommentText('')
+    } catch (err: unknown) {
+      alert((err as Error).message)
     }
-    setComments([...comments, newComment])
-    setCommentText('')
   }
 
   return (
@@ -145,14 +87,28 @@ export default function CommentSection() {
       {/* Comments */}
       {isLoading ? (
         <Text className='text-center py-4'>Loading comments...</Text>
+      ) : error ? (
+        <Text className='text-center py-4 text-red-400'>{error}</Text>
       ) : comments.length === 0 ? (
         <Text className='text-center py-4'>No comments yet. Be the first to comment!</Text>
       ) : (
         <div>
           {comments.map((comment) => (
             <div key={comment.id} className='m-0'>
-              <BlogCommentCard comment={comment} />
-              {comment.replies?.map((reply) => <BlogCommentCard key={reply.id} comment={reply} isReply />)}
+              <BlogCommentCard
+                comment={comment}
+                blogId={blogId}
+                onCommentAdded={(newComment) => {
+                  setComments((prevComments) =>
+                    prevComments.map((c) =>
+                      c.id === comment.id ? { ...c, replies: [...(c.replies || []), newComment] } : c,
+                    ),
+                  )
+                }}
+              />
+              {comment.replies?.map((reply) => (
+                <BlogCommentCard key={reply.id} comment={reply} isReply blogId={blogId} />
+              ))}
             </div>
           ))}
         </div>

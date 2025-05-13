@@ -1,64 +1,62 @@
-import BlogCard, { BlogPostComponentProps } from '@/components/BlogCard'
+import { useState, useEffect } from 'react'
+import BlogCard from '@/components/BlogCard'
 import CommentSection from '@/components/CommentSection'
 import Wrapper from '@/components/shared/Wrapper'
 import { Text } from '@/components/ui/typography'
-const dummyTags = [
-  { id: '1', name: 'Movie Review' },
-  { id: '2', name: 'Action' },
-  { id: '3', name: 'Drama' },
-  { id: '4', name: 'Comedy' },
-] as const
-
-// Sample users
-const dummyUsers = [
-  {
-    id: '1',
-    name: 'John Doe',
-    email: 'john@example.com',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
-  },
-  {
-    id: '2',
-    name: 'Jane Smith',
-    email: 'jane@example.com',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jane',
-  },
-] as const
-
-// Sample blog posts
-export const dummyBlogPosts: BlogPostComponentProps = {
-  id: '1',
-  content:
-    'Just watched the new Avengers movie! The special effects were amazing and the story kept me on the edge of my seat the whole time. Definitely recommend watching it in IMAX if you can!',
-  dateCreated: new Date('2024-05-07T10:30:00'),
-  owner: dummyUsers[0],
-  tags: [dummyTags[0], dummyTags[1]],
-  likes: 42,
-  comments: 12,
-  images: ['https://example.com/movie-poster1.jpg', 'https://example.com/movie-scene1.jpg'],
-  isFirst: true,
-  isShowCommentDivider: true,
-}
+import { useParams } from 'react-router-dom'
+import BlogService from '@/services/blogService'
+import { Loader2 } from 'lucide-react'
+import { BlogPost } from '@/types'
 
 const BlogDetail = () => {
+  const { id } = useParams<{ id: string }>()
+  const [blog, setBlog] = useState<BlogPost | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchBlog = async () => {
+      if (!id) return
+
+      setLoading(true)
+      setError(null)
+
+      try {
+        const response = await BlogService.getBlogById(id)
+        setBlog(response.data.data)
+      } catch (err: unknown) {
+        alert((err as Error).message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchBlog()
+  }, [id])
+
+  if (loading) {
+    return (
+      <Wrapper className='lg:px-[200px] px-5 pt-28 flex flex-col items-center justify-center'>
+        <Loader2 className='h-8 w-8 text-primary-yellow animate-spin' />
+      </Wrapper>
+    )
+  }
+
+  if (error || !blog) {
+    return (
+      <Wrapper className='lg:px-[200px] px-5 pt-28 flex flex-col items-center justify-center'>
+        <Text className='text-red-400'>{error || 'Blog not found'}</Text>
+      </Wrapper>
+    )
+  }
+
   return (
     <Wrapper className='lg:px-[200px] px-5 pt-28 flex flex-col bg-secondary-dark rounded-3xl overflow-hidden'>
-      <BlogCard
-        id={dummyBlogPosts.id}
-        content={dummyBlogPosts.content}
-        dateCreated={dummyBlogPosts.dateCreated}
-        owner={dummyBlogPosts.owner}
-        tags={dummyBlogPosts.tags}
-        likes={dummyBlogPosts.likes}
-        comments={dummyBlogPosts.comments}
-        images={dummyBlogPosts.images}
-        isFirst={dummyBlogPosts.isFirst}
-        isShowCommentDivider={dummyBlogPosts.isShowCommentDivider}
-      />
+      <BlogCard blog={blog} isFirst={true} isShowCommentDivider={true} isDetailView={true} />
       <Text body={4} className='text-bolded text-white pt-3 pb-1 px-6'>
         Replies
       </Text>
-      <CommentSection />
+      <CommentSection blogId={blog.id} />
     </Wrapper>
   )
 }

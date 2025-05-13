@@ -9,14 +9,41 @@ import { BlogCommentType } from '@/types'
 import { cn } from '@/lib/utils'
 import { Textarea } from './ui/textarea'
 import ReportDialog from './ReportModal'
+import CommentService from '@/services/commentService'
 
-export default function BlogCommentCard({ comment, isReply = false }: { comment: BlogCommentType; isReply?: boolean }) {
+interface BlogCommentCardProps {
+  comment: BlogCommentType
+  isReply?: boolean
+  blogId: string
+  onCommentAdded?: (newComment: BlogCommentType) => void
+}
+
+export default function BlogCommentCard({ comment, isReply = false, blogId, onCommentAdded }: BlogCommentCardProps) {
   const [showReplyInput, setShowReplyInput] = useState(false)
   const [replyText, setReplyText] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const submitReply = () => {
-    setReplyText('')
-    setShowReplyInput(false)
+  const submitReply = async () => {
+    if (!replyText.trim()) return
+
+    try {
+      setIsSubmitting(true)
+      const response = await CommentService.createComment({
+        content: replyText,
+        blogId: blogId,
+        parentCommentId: comment.id,
+      })
+      if (onCommentAdded) {
+        onCommentAdded(response.data.data)
+      }
+
+      setReplyText('')
+      setShowReplyInput(false)
+    } catch (err) {
+      alert((err as Error).message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -34,10 +61,10 @@ export default function BlogCommentCard({ comment, isReply = false }: { comment:
             <div className='flex items-center gap-2'>
               <Avatar className='h-8 w-8'>
                 <AvatarImage src={`/api/placeholder/50/50`} />
-                <AvatarFallback>{comment.owner?.name.slice(0, 2)}</AvatarFallback>
+                <AvatarFallback>{comment.owner?.fullName.slice(0, 2)}</AvatarFallback>
               </Avatar>
               <div className='flex flex-col ml-2 flex-nowrap'>
-                <Text className='text-sm text-white ml-2'>{comment.owner?.name}</Text>
+                <Text className='text-sm text-white ml-2'>{comment.owner?.fullName}</Text>
                 <Text className='text-muted-foreground text-xs ml-2'>
                   {new Date(comment.dateCreated).toLocaleString()}
                 </Text>
@@ -96,11 +123,11 @@ export default function BlogCommentCard({ comment, isReply = false }: { comment:
           <div className='flex justify-end px-7 py-2 mt-1 bg-secondary-dark '>
             <Button
               className='text-sm font-medium text-primary-dark cursor-pointer bg-tertiary-yellow rounded-md px-3 py-1.5 disabled:opacity-50'
-              disabled={!replyText.trim()}
+              disabled={!replyText.trim() || isSubmitting}
               onClick={submitReply}
             >
               <Send size={16} className='mr-1' />
-              Reply
+              {isSubmitting ? 'Sending...' : 'Reply'}
             </Button>
           </div>
         </div>

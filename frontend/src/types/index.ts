@@ -86,7 +86,7 @@ export type NotificationItemProps = {
 }
 export type RegisteredUserType = {
   id: string
-  name: string
+  fullName: string
 }
 export type BlogCommentType = {
   id: string
@@ -94,4 +94,14 @@ export type BlogCommentType = {
   dateCreated: string
   owner: RegisteredUserType
   replies?: BlogCommentType[]
+}
+export type BlogPost = {
+  id: string
+  content: string
+  dateCreated: Date
+  owner: RegisteredUserType
+  tags: TagType[]
+  likeCount: number
+  commentCount: number
+  images?: string[]
 }
