@@ -67,7 +67,7 @@ export default function BlogCard({
     <Link to={`#`}>
       <Card
         className={cn(
-          'w-full overflow-hidden bg-secondary-dark border-tertiary-dark hover:shadow-md py-0 px-2 gap-0',
+          'w-full overflow-hidden bg-secondary-dark border-tertiary-dark hover:shadow-md py-0 md:px-2 gap-0 px-6 ',
           isFirst && 'rounded-t-3xl rounded-b-none border-1 border-b-0',
           isLast && 'rounded-b-3xl rounded-t-none border-1 border-t-0',
           !isFirst && !isLast && 'rounded-none border-1',
@@ -136,7 +136,7 @@ export default function BlogCard({
               <CarouselContent className='px-1 -ml-2'>
                 {images!.map((imageUrl, index) => (
                   <CarouselItem key={index} className='basis-auto pl-2 w-auto'>
-                    <div className=' rounded-sm overflow-hidden h-auto  '>
+                    <div className=' rounded-sm overflow-hidden h-auto   '>
                       <img
                         src={imageUrl}
                         alt={`Blog image ${index + 1}`}
