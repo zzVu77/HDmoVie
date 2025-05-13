@@ -1,0 +1,78 @@
+import { FollowPeopleProps, RegisteredUserProps } from '@/types'
+import { apiGet } from '@/utils/axiosConfig'
+
+// =========================================
+// DEFINE RESPONSE STRUCTURE FROM ENDPOINT
+// ========================================
+
+export interface ProfileResponse {
+  user: RegisteredUserProps
+  followersCount: number
+  followingCount: number
+  isOwner: boolean
+}
+
+export interface FollowInteractionResponse {
+  followers: FollowPeopleProps[]
+  following: FollowPeopleProps[]
+}
+
+// ====================================
+//  GENERAL CONFIGURATION FOR API CALL
+// ====================================
+
+// Define the structure of the error response
+export interface ErrorResponse {
+  status: 'failed'
+  message: string
+}
+
+// Function to handle API errors
+const handleApiError = (error: unknown, context: string): never => {
+  let errorMessage = `Error in ${context}: Unknown error`
+
+  if (typeof error === 'object' && error !== null && 'status' in error && 'message' in error) {
+    const apiError = error as ErrorResponse
+    errorMessage = `Error in ${context}: ${apiError.message}`
+  } else if (error instanceof Error) {
+    errorMessage = `Error in ${context}: ${error.message}`
+  }
+  throw new Error(errorMessage)
+}
+
+// Generic API fetch function
+const getFromApi = async <T>(endpoint: string, context: string): Promise<T> => {
+  try {
+    const response = await apiGet<T | ErrorResponse>(endpoint)
+
+    if (
+      typeof response.data === 'object' &&
+      response.data !== null &&
+      'status' in response.data &&
+      response.data.status === 'failed'
+    ) {
+      throw response.data
+    }
+    return response.data as T
+  } catch (error) {
+    return handleApiError(error, context)
+  }
+}
+
+// ====================================
+//              GET METHOD
+// ====================================
+
+export const getProfile = async (id?: string): Promise<ProfileResponse> => {
+  if (!id) {
+    return getFromApi<ProfileResponse>('/profiles/', 'fetching your profile')
+  }
+  return getFromApi<ProfileResponse>(`/profiles/${id}`, `fetching other profile with id ${id}`)
+}
+
+export const getFollowInteraction = async (userId?: string): Promise<FollowInteractionResponse> => {
+  if (!userId) {
+    throw new Error('Profile ID is required')
+  }
+  return getFromApi(`/profiles/${userId}/follow-interaction`, 'fetching follow interaction')
+}
