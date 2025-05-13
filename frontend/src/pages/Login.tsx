@@ -10,9 +10,15 @@ import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { apiPost } from '@/utils/axiosConfig'
 import { toast } from 'sonner'
+import { jwtDecode, JwtPayload } from 'jwt-decode'
 
 interface ApiErrorResponse {
   message?: string
+}
+interface MyTokenPayload extends JwtPayload {
+  id: string
+  email: string
+  role: string
 }
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -45,10 +51,18 @@ const Login: React.FC = () => {
       localStorage.setItem('access-token', token)
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
-      // console.log(response.data)
+      // Decode Token
+      const decodedToken = jwtDecode<MyTokenPayload>(token)
+
+      // Permission
+      if (decodedToken.role == 'ADMIN') {
+        navigate('/admin')
+      } else {
+        navigate('/')
+      }
+
       toast.success('Login successful!')
       form.reset()
-      navigate('/')
     } catch (error: unknown) {
       let errorMessage = 'Login Fail:'
 
