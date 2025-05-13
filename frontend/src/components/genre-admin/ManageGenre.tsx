@@ -8,6 +8,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { GenreType } from '@/types'
+import { apiGet } from '@/utils/axiosConfig'
 import {
   ColumnFiltersState,
   SortingState,
@@ -22,27 +23,23 @@ import {
 import { ChevronDown } from 'lucide-react'
 import * as React from 'react'
 import { columns } from './genre-columns'
-const data: GenreType[] = [
-  {
-    id: '1',
-    name: 'Action',
-  },
-  {
-    id: '2',
-    name: 'Sci-Fi',
-  },
-  {
-    id: '3',
-    name: 'Adventure',
-  },
-]
 
 export function ManageGenre() {
+  const [data, setData] = React.useState<GenreType[]>([])
+  const [loading, setLoading] = React.useState(true)
+
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
-
+  React.useEffect(() => {
+    const fetchGenres = async () => {
+      const response = await apiGet<GenreType[]>('/genres') // hoặc URL đầy đủ nếu cần
+      setData(response.data)
+      setLoading(false)
+    }
+    fetchGenres()
+  }, [])
   const table = useReactTable({
     data,
     columns,
@@ -110,7 +107,13 @@ export function ManageGenre() {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className='h-24 text-center'>
+                  Loading...
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
