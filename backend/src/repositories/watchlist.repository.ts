@@ -20,7 +20,7 @@ export class WatchlistRepository {
           movies: true,
         } as FindOptionsWhere<Watchlist>,
         where: { id: watchlistId } as FindOptionsWhere<Watchlist>,
-        relations: ['movies', 'owner'],
+        relations: ['movies', 'movies.genres', 'owner'],
       })
     } catch (error) {
       throw new Error((error as Error).message)
