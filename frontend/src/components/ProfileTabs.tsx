@@ -7,7 +7,15 @@ import { BlogPost } from '@/types'
 import ListBlogs from './ListBlogs'
 import WriteBlogTextEditor from './WriteBlogTextEditor'
 
-const ProfileTabs = ({ userId }: { userId?: string }) => {
+const ProfileTabs = ({
+  userId,
+  userFullName,
+  isOwner,
+}: {
+  userId?: string
+  userFullName?: string
+  isOwner?: boolean
+}) => {
   // ==============================
   //      FETCHING WATCHLISTS
   // ==============================
@@ -81,7 +89,7 @@ const ProfileTabs = ({ userId }: { userId?: string }) => {
             </div>
           ) : (
             <div className='rounded-3xl overflow-hidden pb-4 bg-secondary-dark'>
-              <WriteBlogTextEditor userFullName={'Bien Xuan Huy'} />
+              {isOwner && <WriteBlogTextEditor userFullName={userFullName} />}
               <ListBlogs blogs={blogs} />
             </div>
           )}

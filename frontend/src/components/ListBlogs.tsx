@@ -61,7 +61,7 @@ const ListBlogs = ({ blogs: propBlogs }: ListBlogsProps) => {
 
   if (blogs.length === 0) {
     return (
-      <div className='flex justify-center items-center py-12'>
+      <div className='flex justify-center items-center py-10'>
         <Text className='text-muted-foreground'>No blogs found</Text>
       </div>
     )

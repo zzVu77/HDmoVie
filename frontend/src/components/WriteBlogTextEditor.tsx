@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback } from './ui/avatar'
 import { format } from 'date-fns'
 
 type WriteBlogTextEditorProps = {
-  userFullName: string
+  userFullName?: string
 }
 
 const dbTags: TagType[] = [{ id: '1', name: 'haha' }]
