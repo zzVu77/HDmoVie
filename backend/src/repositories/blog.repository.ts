@@ -8,7 +8,37 @@ export class BlogRepository {
     this.repository = dataSource.getRepository(Blog)
   }
 
-  async findById(id: string): Promise<Blog | null> {
+  async findById(id: string): Promise<any> {
+    const blog = await this.repository
+      .createQueryBuilder('blog')
+      .select(['blog.id', 'blog.content', 'blog.dateCreated', 'owner.id', 'owner.fullName', 'tags.id', 'tags.name'])
+      .addSelect(
+        `(SELECT COUNT(*) 
+        FROM like_interactions_users liu 
+        JOIN like_interactions li ON liu.likeInteractionId = li.id 
+        WHERE li.blogId = blog.id)`,
+        'likeCount',
+      )
+      .addSelect(
+        `(SELECT COUNT(*) 
+        FROM comments c 
+        WHERE c.blogId = blog.id AND c.type = 'BLOG')`,
+        'commentCount',
+      )
+      .leftJoin('blog.owner', 'owner')
+      .leftJoin('blog.tags', 'tags')
+      .leftJoin('blog.imageUrls', 'imageUrls')
+      .where('blog.id = :id', { id })
+      .getRawOne()
+
+    if (!blog) {
+      return null
+    }
+
+    return blog
+  }
+
+  async findBlogById(id: string): Promise<Blog | null> {
     const blog = await this.repository
       .createQueryBuilder('blog')
       .select(['blog.id', 'blog.content', 'blog.dateCreated', 'owner.id', 'owner.fullName', 'tags.id', 'tags.name'])
@@ -38,28 +68,28 @@ export class BlogRepository {
     return blog
   }
 
-  async findAll(): Promise<Blog[]> {
+  async findAll(): Promise<any[]> {
     const blogs = await this.repository
       .createQueryBuilder('blog')
       .select(['blog.id', 'blog.content', 'blog.dateCreated', 'owner.id', 'owner.fullName', 'tags.id', 'tags.name'])
       .addSelect(
         `(SELECT COUNT(*) 
-          FROM like_interactions_users liu 
-          JOIN like_interactions li ON liu.likeInteractionId = li.id 
-          WHERE li.blogId = blog.id)`,
+        FROM like_interactions_users liu 
+        JOIN like_interactions li ON liu.likeInteractionId = li.id 
+        WHERE li.blogId = blog.id)`,
         'likeCount',
       )
       .addSelect(
         `(SELECT COUNT(*) 
-          FROM comments c 
-          WHERE c.blogId = blog.id AND c.type = 'BLOG')`,
+        FROM comments c 
+        WHERE c.blogId = blog.id AND c.type = 'BLOG')`,
         'commentCount',
       )
       .leftJoin('blog.owner', 'owner')
       .leftJoin('blog.tags', 'tags')
       .leftJoin('blog.imageUrls', 'imageUrls')
       .orderBy('blog.dateCreated', 'DESC')
-      .getMany()
+      .getRawMany()
 
     return blogs
   }
