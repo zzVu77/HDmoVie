@@ -11,8 +11,8 @@ export class RateController {
   async rateMovie(req: Request, res: Response): Promise<void> {
     try {
       const { movieId, score } = req.body
-      const userId = res.locals.user.id // Get user ID from authenticated user
-
+      // const userId = res.locals.user.id // Get user ID from authenticated user
+      const userId = '1'
       if (!movieId || score === undefined) {
         res.status(400).json({ status: 'failed', message: 'Missing required fields' })
         return

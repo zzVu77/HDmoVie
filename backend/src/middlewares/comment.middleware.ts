@@ -23,8 +23,8 @@ const baseCommentSchema = {
 class CreateMovieCommentValidationStrategy implements ValidationStrategy {
   private schema = Joi.object({
     ...baseCommentSchema,
-    movieId: Joi.number().integer().required().messages({
-      'number.base': 'Movie ID must be a number',
+    movieId: Joi.string().required().messages({
+      'string.base': 'Movie ID must be a string',
       'any.required': 'Movie ID is required',
     }),
   })
