@@ -49,19 +49,18 @@ export default function BlogCard({
     }
   }, [blog.content])
 
-  const hasImages = blog.images && blog.images.length > 0
+  const hasImages = blog.imageUrls && blog.imageUrls.length > 0
   const cardContent = (
     <Card
       className={cn(
-        'w-full overflow-hidden bg-secondary-dark border-tertiary-dark hover:shadow-md py-0 gap-0',
-        isFirst && 'rounded-t-3xl rounded-b-none border-1 border-b-0',
-        isLast && 'rounded-b-3xl rounded-t-none border-1 border-t-0',
-        !isFirst && !isLast && 'rounded-none border-1',
-        isShowCommentDivider ? 'border-b-0' : '',
+        'w-full overflow-hidden bg-secondary-dark border-0 border-tertiary-dark hover:shadow-md py-0 gap-0 rounded-none',
+        !isFirst && 'border-t',
+        isFirst && isLast && 'border-none',
+        isShowCommentDivider ? '' : '',
         className,
       )}
     >
-      <CardHeader className='px-4 pt-4 pb-1 space-y-0'>
+      <CardHeader className='px-5 pt-4 pb-1 space-y-0'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-2'>
             <Avatar className='h-8 w-8'>
@@ -78,7 +77,7 @@ export default function BlogCard({
         </div>
       </CardHeader>
 
-      <CardContent className='px-4 mb-1'>
+      <CardContent className='px-5 mb-1'>
         <div className='mb-2'>
           <Text body={4} ref={contentRef} className={`transition-all duration-300', ${!isExpanded && 'line-clamp-3'}`}>
             {blog.content}
@@ -97,7 +96,7 @@ export default function BlogCard({
           )}
         </div>
 
-        <div className='flex items-center gap-2 mb-3 flex-wrap'>
+        <div className='flex items-center gap-2 mb-0 flex-wrap'>
           {blog.tags.map((tag) => (
             <Badge
               key={tag.id}
@@ -114,22 +113,24 @@ export default function BlogCard({
         </div>
 
         {hasImages && (
-          <Carousel opts={{ dragFree: true }} className='w-[90%] flex justify-center mx-auto my-1 px-1'>
+          <Carousel opts={{ dragFree: true }} className='w-[90%] flex justify-center mx-auto mt-3 my-1 px-1'>
             <CarouselContent className='px-1 -ml-2'>
-              {blog.images!.map((imageUrl, index) => (
-                <CarouselItem key={index} className='basis-auto pl-2 w-auto'>
-                  <div className=' rounded-sm overflow-hidden h-auto   '>
-                    <img
-                      src={imageUrl}
-                      alt={`Blog image ${index + 1}`}
-                      className='object-cover object-center h-[280px]  w-[30api0px]'
-                      onError={(e) => {
-                        ;(e.target as HTMLImageElement).src =
-                          'https://makerworld.bblmw.com/makerworld/model/US2ab61bb7d3000c/design/2024-01-30_029b2304056c.png?x-oss-process=image/resize,w_1000/format,webp'
-                      }}
-                    />
-                  </div>
-                </CarouselItem>
+              {blog.imageUrls!.map((image, index) => (
+                <>
+                  <CarouselItem key={index} className='basis-auto pl-2 w-auto'>
+                    <div className=' rounded-sm overflow-hidden h-auto   '>
+                      <img
+                        src={image.url}
+                        alt={`Blog image ${index + 1}`}
+                        className='object-cover object-center h-[280px]  w-[30api0px]'
+                        onError={(e) => {
+                          ;(e.target as HTMLImageElement).src =
+                            'https://makerworld.bblmw.com/makerworld/model/US2ab61bb7d3000c/design/2024-01-30_029b2304056c.png?x-oss-process=image/resize,w_1000/format,webp'
+                        }}
+                      />
+                    </div>
+                  </CarouselItem>
+                </>
               ))}
             </CarouselContent>
             <CarouselPrevious />
@@ -138,7 +139,7 @@ export default function BlogCard({
         )}
       </CardContent>
 
-      <CardFooter className='flex items-center px-0 py-1'>
+      <CardFooter className='flex items-center px-1 py-1'>
         <Button
           variant='ghost'
           size='lg'

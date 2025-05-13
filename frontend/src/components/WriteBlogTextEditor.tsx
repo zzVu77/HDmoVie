@@ -13,10 +13,11 @@ import { format } from 'date-fns'
 
 type WriteBlogTextEditorProps = {
   userFullName: string
-  dbTags: TagType[]
 }
 
-export default function WriteBlogTextEditor({ userFullName, dbTags }: WriteBlogTextEditorProps) {
+const dbTags: TagType[] = [{ id: '1', name: 'haha' }]
+
+export default function WriteBlogTextEditor({ userFullName }: WriteBlogTextEditorProps) {
   const [content, setContent] = useState('')
   const [media, setMedia] = useState<MediaItem[]>([])
 
@@ -58,10 +59,10 @@ export default function WriteBlogTextEditor({ userFullName, dbTags }: WriteBlogT
   return (
     <>
       <Dialog>
-        <DialogTrigger className='w-full bg-secondary-dark border-tertiary-dark rounded-t-3xl rounded-b-none border-1 border-b-0 flex flex-row gap-x-4 items-center py-5 px-4'>
+        <DialogTrigger className='w-full bg-secondary-dark border-tertiary-dark border-b flex flex-row gap-x-4 items-center py-5 px-5'>
           <div onClick={(e) => e.stopPropagation()}>
             <a href='https://google.com'>
-              <Avatar className='ml-2'>
+              <Avatar>
                 <AvatarFallback className='bg-white text-primary-dark'>
                   {userFullName?.slice(0, 2) ?? 'US'}
                 </AvatarFallback>
@@ -72,7 +73,7 @@ export default function WriteBlogTextEditor({ userFullName, dbTags }: WriteBlogT
             What's news?
           </Text>
         </DialogTrigger>
-        <DialogContent className='gap-0 bg-secondary-dark border-tertiary-dark custom-sheet p-0'>
+        <DialogContent className='gap-0 bg-secondary-dark border-tertiary-dark custom-sheet p-0 max-w-[700px]'>
           <DialogHeader className='flex items-center text-lg text-white font-bold p-3 border-b border-tertiary-dark'>
             New Blog
           </DialogHeader>

@@ -1,4 +1,4 @@
-import { FollowPeopleProps, RegisteredUserProps, WatchlistProps } from '@/types'
+import { BlogPost, FollowPeopleProps, RegisteredUserProps, WatchlistProps } from '@/types'
 import { apiGet } from '@/utils/axiosConfig'
 
 // =========================================
@@ -85,9 +85,9 @@ export const getWatchlists = async (userId?: string): Promise<WatchlistProps[]> 
   return getFromApi(`/profiles/${userId}/watchlists`, 'fetching watchlists')
 }
 
-export const getBlogs = async (userId?: string): Promise<FollowInteractionResponse> => {
+export const getBlogs = async (userId?: string): Promise<BlogPost[]> => {
   if (!userId) {
     throw new Error('Profile ID is required')
   }
-  return getFromApi(`/profiles/${userId}/follow-interaction`, 'fetching follow interaction')
+  return getFromApi(`/profiles/${userId}/blogs`, 'fetching blogs')
 }

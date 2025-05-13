@@ -1,9 +1,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import { WatchlistProps } from '@/types'
 import { useEffect, useState } from 'react'
-import { getWatchlists } from '@/services/profileService'
+import { getBlogs, getWatchlists } from '@/services/profileService'
 import ListWatchlist from './ListWatchlist'
-// import { BlogPostComponentProps } from './BlogCard'
+import { BlogPost } from '@/types'
+import ListBlogs from './ListBlogs'
+import WriteBlogTextEditor from './WriteBlogTextEditor'
 
 const ProfileTabs = ({ userId }: { userId?: string }) => {
   // ==============================
@@ -32,23 +34,23 @@ const ProfileTabs = ({ userId }: { userId?: string }) => {
   //        FETCHING BLOGS
   // ==============================
 
-  // const [blogs, setBlogs] = useState<BlogPostComponentProps[]>([])
-  // const [isBlogsLoading, setIsBlogsLoading] = useState(true)
-  // const [blogsError, setBlogsError] = useState<string | null>(null)
+  const [blogs, setBlogs] = useState<BlogPost[]>([])
+  const [isBlogsLoading, setIsBlogsLoading] = useState(true)
+  const [blogsError, setBlogsError] = useState<string | null>(null)
 
-  // useEffect(() => {
-  //   const fetchBlogs = async () => {
-  //     try {
-  //       const data = await getBlogs(id)
-  //       setBlogs(data)
-  //     } catch (error) {
-  //       setBlogsError(error instanceof Error ? error.message : 'Error when fetching blogs')
-  //     } finally {
-  //       setIsBlogsLoading(false)
-  //     }
-  //   }
-  //   fetchBlogs()
-  // }, [id])
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const data = await getBlogs(userId)
+        setBlogs(data)
+      } catch (error) {
+        setBlogsError(error instanceof Error ? error.message : 'Error when fetching blogs')
+      } finally {
+        setIsBlogsLoading(false)
+      }
+    }
+    fetchBlogs()
+  }, [userId])
 
   return (
     <div>
@@ -67,11 +69,25 @@ const ProfileTabs = ({ userId }: { userId?: string }) => {
             Watchlist
           </TabsTrigger>
         </TabsList>
-        <TabsContent value='blogs' className='mt-1'>
-          Blogs
-          {/* <ListBlogs blogs={blogPosts}></ListBlogs> */}
+
+        <TabsContent value='blogs' className='mt-2'>
+          {isBlogsLoading ? (
+            <div className='text-center mt-[100px]'>
+              <p>Loading blogs...</p>
+            </div>
+          ) : blogsError ? (
+            <div className='text-center mt-[100px]'>
+              <p className='text-red-500'>{blogsError}</p>
+            </div>
+          ) : (
+            <div className='rounded-3xl overflow-hidden pb-4 bg-secondary-dark'>
+              <WriteBlogTextEditor userFullName={'Bien Xuan Huy'} />
+              <ListBlogs blogs={blogs} />
+            </div>
+          )}
         </TabsContent>
-        <TabsContent value='watchlist'>
+
+        <TabsContent value='watchlist' className='mt-2'>
           {isWatchlistsLoading ? (
             <div className='text-center mt-[100px]'>
               <p>Loading watchlists...</p>
