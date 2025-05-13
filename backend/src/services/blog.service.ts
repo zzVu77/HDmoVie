@@ -34,12 +34,12 @@ export class BlogService {
 
   async getAllBlogs(): Promise<BlogResponseDTO[]> {
     const blogs = await this.blogRepository.findAll()
-    return blogs.map(this.transformToResponseDTO)
+    return blogs
   }
 
   async getBlogById(id: string): Promise<BlogResponseDTO | null> {
     const blog = await this.blogRepository.findById(id)
-    return blog ? this.transformToResponseDTO(blog) : null
+    return blog
   }
 
   async createBlog(blogData: CreateBlogDTO): Promise<BlogResponseDTO> {
@@ -95,9 +95,7 @@ export class BlogService {
     try {
       const pageSize = 5
       const offset = page * pageSize
-      const blogs = await this.blogRepository.findByUserId(userId, offset, pageSize)
-      console.log(blogs)
-      return blogs.map(this.transformToResponseDTO)
+      return await this.blogRepository.findByUserId(userId, offset, pageSize)
     } catch (error) {
       throw new Error((error as Error).message)
     }
