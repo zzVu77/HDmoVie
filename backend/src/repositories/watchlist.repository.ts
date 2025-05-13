@@ -41,7 +41,7 @@ export class WatchlistRepository {
         where: { owner: { id: userId } } as FindOptionsWhere<Watchlist>,
         skip: offset,
         take: amount,
-        relations: ['movies', 'owner'],
+        relations: ['movies', 'movies.genres', 'owner'],
       })
     } catch (error) {
       throw new Error((error as Error).message)
