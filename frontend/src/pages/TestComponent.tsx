@@ -125,64 +125,7 @@ const dummyWatchlist2: WatchlistProps = {
   description:
     'An adrenaline-pumping collection of high-octane action movies that will keep you on the edge of your seat. From superhero epics to post-apocalyptic thrillers, this watchlist features some of the most iconic and explosive films in the genre, showcasing unforgettable characters, intense battles, and breathtaking stunts.',
   isPublic: false,
-  movies: [
-    {
-      id: '5',
-      title: 'The Dark Knight',
-      description: 'A gritty superhero movie featuring Batman.',
-      posterSource: '',
-      backdropSource: '',
-      releaseYear: '2008',
-      voteAvg: 9.0,
-      voteCount: 2500000,
-      genres: [
-        { id: '4', name: 'Action' },
-        { id: '5', name: 'Drama' },
-      ],
-    },
-    {
-      id: '6',
-      title: 'Mad Max: Fury Road',
-      description: 'A post-apocalyptic action-packed thrill ride.',
-      posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
-      backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
-      releaseYear: '2015',
-      voteAvg: 8.1,
-      voteCount: 1300000,
-      genres: [
-        { id: '4', name: 'Action' },
-        { id: '3', name: 'Adventure' },
-      ],
-    },
-    {
-      id: '7',
-      title: 'John Wick',
-      description: 'A retired hitman seeks vengeance for his dog.',
-      posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
-      backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
-      releaseYear: '2014',
-      voteAvg: 7.4,
-      voteCount: 1000000,
-      genres: [
-        { id: '4', name: 'Action' },
-        { id: '6', name: 'Crime' },
-      ],
-    },
-    {
-      id: '8',
-      title: 'Avengers: Endgame',
-      description: 'The epic conclusion to the Avengers saga.',
-      posterSource: 'https://cdn.myanimelist.net/images/anime/1712/148299.jpg',
-      backdropSource: 'https://image.tmdb.org/t/p/original/fTrQsdMS2MUw00RnzH0r3JWHhts.jpg',
-      releaseYear: '2019',
-      voteAvg: 8.4,
-      voteCount: 2200000,
-      genres: [
-        { id: '4', name: 'Action' },
-        { id: '7', name: 'Superhero' },
-      ],
-    },
-  ],
+  movies: [],
 }
 
 export const dummyWatchlists = [dummyWatchlist1, dummyWatchlist2, dummyWatchlist2, dummyWatchlist2]
@@ -219,7 +162,7 @@ export const dummyWatchlistMovies: WatchlistMovieProps[] = [
     ],
   },
   {
-    id: '1',
+    id: '3',
     title: 'Inception',
     description:
       'A mind-bending thriller about dreams within dreams, where a skilled thief is given a chance at redemption if he can successfully perform an almost impossible task: planting an idea into someone’s subconscious. The movie explores the boundaries of reality and imagination, with stunning visuals and a gripping narrative.',
@@ -234,7 +177,7 @@ export const dummyWatchlistMovies: WatchlistMovieProps[] = [
     ],
   },
   {
-    id: '2',
+    id: '4',
     title: 'Interstellar',
     description:
       'A journey through space and time to save humanity, where a group of explorers ventures through a wormhole in search of a new home for mankind. The movie delves into themes of love, sacrifice, and the unyielding human spirit, with breathtaking visuals and a powerful emotional core.',
@@ -310,6 +253,8 @@ export const sampleBlogs = [
     tags: [sampleTags[0], sampleTags[3]],
     images: [
       'https://fastly.picsum.photos/id/866/536/354.jpg?hmac=tGofDTV7tl2rprappPzKFiZ9vDh5MKj39oa2D--gqhA',
+      'https://fastly.picsum.photos/id/866/536/354.jpg?hmac=tGofDTV7tl2rprappPzKFiZ9vDh5MKj39oa2D--gqhA',
+      'https://makerworld.bblmw.com/makerworld/model/US2ab61bb7d3000c/design/2024-01-30_029b2304056c.png?x-oss-process=image/resize,w_1000/format,webp',
       'https://fastly.picsum.photos/id/866/536/354.jpg?hmac=tGofDTV7tl2rprappPzKFiZ9vDh5MKj39oa2D--gqhA',
     ],
   },
@@ -401,13 +346,8 @@ const TestComponent = () => {
       </div>
 
       <div className='flex flex-col items-center justify-center gap-y-5'>
-        {dummyWatchlists.map((watchlist) => (
-          <WatchlistCard
-            title={watchlist.title}
-            description={watchlist.description}
-            isPublic={watchlist.isPublic}
-            movies={watchlist.movies}
-          />
+        {dummyWatchlists.map(({ id, title, description, isPublic, movies }) => (
+          <WatchlistCard id={id} title={title} description={description} isPublic={isPublic} movies={movies} />
         ))}
       </div>
 
@@ -418,6 +358,7 @@ const TestComponent = () => {
       <div className='flex flex-col items-center justify-center gap-y-5'>
         {dummyWatchlistMovies.map((movie, index) => (
           <WatchlistItem
+            id={movie.id}
             index={index + 1}
             title={movie.title}
             description={movie.description}
