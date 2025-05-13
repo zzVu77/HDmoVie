@@ -61,6 +61,37 @@ class CreateBlogCommentValidationStrategy implements ValidationStrategy {
   }
 }
 
+// Strategy validation for Rate and Comment
+class CreateMovieRateAndCommentValidationStrategy implements ValidationStrategy {
+  private schema = Joi.object({
+    movieId: Joi.number().integer().required().messages({
+      'number.base': 'Movie ID must be a number',
+      'any.required': 'Movie ID is required',
+    }),
+    score: Joi.number().min(0).max(10).required().messages({
+      'number.base': 'Score must be a number',
+      'number.min': 'Score must be at least 0',
+      'number.max': 'Score must not exceed 10',
+      'any.required': 'Score is required',
+    }),
+    content: Joi.string().trim().min(1).allow(null).optional().messages({
+      'string.base': 'Content must be a string',
+      'string.empty': 'Content cannot be empty',
+      'string.min': 'Content must be at least 1 character',
+    }),
+  })
+
+  validate(req: Request, res: Response, next: NextFunction): void {
+    const { error } = this.schema.validate(req.body, { abortEarly: false })
+    if (error) {
+      const messages = error.details.map((detail) => detail.message)
+      res.status(400).json({ message: messages.join(', ') })
+      return
+    }
+    next()
+  }
+}
+
 // Higher-order middleware
 export const commentValidationMiddleware = (strategy: ValidationStrategy) => {
   return (req: Request, res: Response, next: NextFunction): void => {
@@ -71,3 +102,8 @@ export const commentValidationMiddleware = (strategy: ValidationStrategy) => {
 // Exported middleware instances
 export const createMovieCommentMiddleware = commentValidationMiddleware(new CreateMovieCommentValidationStrategy())
 export const createBlogCommentMiddleware = commentValidationMiddleware(new CreateBlogCommentValidationStrategy())
+
+export const createMovieRateAndCommentMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  const strategy = new CreateMovieRateAndCommentValidationStrategy()
+  strategy.validate(req, res, next)
+}

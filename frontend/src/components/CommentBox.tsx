@@ -40,21 +40,17 @@ const CommentBox: React.FC = () => {
     try {
       setIsSubmitting(true)
 
-      // Submit rating
-      await apiPost('/rates', {
+      // Submit both rating and comment in one request
+      await apiPost('/rates/with-comment', {
         movieId: '1010581', // You might want to make this dynamic based on the current movie
         score: data.rating,
-      })
-
-      // Submit comment
-      await apiPost('/comments/movie', {
-        movieId: 1010581, // You might want to make this dynamic based on the current movie
-        content: data.content,
+        content: data.content || null, // If content is empty, send null
       })
 
       toast.success('Review submitted successfully!')
       form.reset()
-      // } catch (error) {
+      // } catch () {
+      //   // console.error('Error submitting review:', error)
       //   toast.error('Failed to submit review. Please try again.')
     } finally {
       setIsSubmitting(false)

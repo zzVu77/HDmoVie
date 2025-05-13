@@ -1,8 +1,12 @@
 import { Request, Response } from 'express'
 import { RateService } from '~/services/rate.service'
+import { CommentService } from '~/services/comment.service'
 
 export class RateController {
-  constructor(private rateService: RateService) {}
+  constructor(
+    private rateService: RateService,
+    private commentService: CommentService,
+  ) {}
 
   async rateMovie(req: Request, res: Response): Promise<void> {
     try {
@@ -51,6 +55,43 @@ export class RateController {
     } catch (error) {
       console.error('Error deleting rate:', error)
       res.status(400).json({ status: 'failed', message: (error as Error).message })
+    }
+  }
+
+  async rateAndCommentMovie(req: Request, res: Response): Promise<void> {
+    try {
+      const { movieId, score, content } = req.body
+      const userId = res.locals.user.id // Get user ID from authenticated user
+
+      // First rate the movie
+      const rate = await this.rateService.rateMovie(userId, movieId.toString(), score)
+
+      // If content is provided, create a comment
+      let comment = null
+      if (content) {
+        comment = await this.commentService.commentOnMovie({
+          userId,
+          movieId: Number(movieId),
+          content,
+          parentCommentId: null,
+        })
+      }
+
+      res.status(201).json({
+        status: 'success',
+        data: {
+          rate,
+          comment,
+        },
+      })
+    } catch (error) {
+      console.error('Error rating and commenting movie:', error)
+      const message = (error as Error).message
+      if (message === 'User not found' || message === 'Movie not found') {
+        res.status(404).json({ status: 'failed', message })
+      } else {
+        res.status(400).json({ status: 'failed', message })
+      }
     }
   }
 }
