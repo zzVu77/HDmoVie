@@ -1,8 +1,6 @@
 import { Send2, Star1 } from 'iconsax-reactjs'
 import React, { useState } from 'react'
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-
 import { Button } from '@/components/ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -10,6 +8,9 @@ import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { Textarea } from './ui/textarea'
 import { Text } from './ui/typography'
+import { apiPost } from '@/utils/axiosConfig'
+import { toast } from 'sonner'
+import { useParams } from 'react-router-dom'
 
 // Define schema for form validation
 const reviewSchema = z.object({
@@ -17,13 +18,16 @@ const reviewSchema = z.object({
   content: z
     .string()
     .min(60, 'Review must be at least 60 characters long')
-    .max(500, 'Review can be up to 500 characters long'),
+    .max(500, 'Review can be up to 500 characters long')
+    .refine((val) => val.trim().length > 0, 'Review content is required'),
 })
 
 type ReviewFormValues = z.infer<typeof reviewSchema>
 
 const CommentBox: React.FC = () => {
+  const { id } = useParams<{ id: string }>()
   const [hoveredRating, setHoveredRating] = useState<number | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const form = useForm<ReviewFormValues>({
     resolver: zodResolver(reviewSchema),
@@ -33,21 +37,34 @@ const CommentBox: React.FC = () => {
     },
   })
 
-  // const onSubmit = (data: ReviewFormValues) => {
-  //   // console.log('Submitted data:', data)
-  //   // TODO: Request to API to submit review
-  //   form.reset()
-  // }
-  const onSubmit = () => {
-    form.reset()
+  const onSubmit = async (data: ReviewFormValues) => {
+    if (isSubmitting || !id) return
+
+    try {
+      setIsSubmitting(true)
+
+      // Submit both rating and comment in one request
+      await apiPost(`/rates/${id}/with-comment`, {
+        score: data.rating,
+        content: data.content,
+      })
+
+      toast.success('Review submitted successfully!')
+      form.reset()
+      // } catch (error: unknown) {
+      //   toast.error('Failed to submit review. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
+
   // Handle rating click
   const handleRatingClick = (rating: number) => {
     form.setValue('rating', rating)
   }
 
   return (
-    <Card className='  shadow-white-glow-down w-full mx-auto bg-secondary-dark border-[1px] border-tertiary-dark'>
+    <Card className='shadow-white-glow-down w-full mx-auto bg-secondary-dark border-[1px] border-tertiary-dark'>
       <CardHeader>
         <CardTitle className='text-2xl font-extrabold text-accent-yellow shadow-white-glow-down text-primary-yellow'>
           Write your review
@@ -91,27 +108,29 @@ const CommentBox: React.FC = () => {
               name='content'
               render={({ field }) => (
                 <FormItem>
-                  <div className='flex flex-row items-center justify-between '>
+                  <div className='flex flex-row items-center justify-between'>
                     <FormLabel className='text-white font-semibold'>Your Review</FormLabel>
                     {/* Submit Button */}
                     <Button
                       type='submit'
-                      className='bg-primary-yellow text-white shadow-white-glow-down w-fit flex flex-row items-center gap-2'
+                      disabled={isSubmitting}
+                      className='bg-primary-yellow text-white shadow-white-glow-down w-fit flex flex-row items-center gap-2 disabled:opacity-50'
                     >
                       <Send2 size='32' color='var(--color-primary-dark)' variant='Bold' />
                       <Text body={4} className='text-primary-dark font-bold'>
-                        Submit Review
+                        {isSubmitting ? 'Submitting...' : 'Submit Review'}
                       </Text>
                     </Button>
                   </div>
                   <FormControl>
                     <Textarea
                       placeholder='Write your review about the movie...'
-                      className=' text-white focus:ring-primary-yellow focus:border-primary-yellow'
+                      className='text-white focus:ring-primary-yellow focus:border-primary-yellow'
+                      disabled={isSubmitting}
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className=' text-red-400' />
+                  <FormMessage className='text-red-400' />
                 </FormItem>
               )}
             />

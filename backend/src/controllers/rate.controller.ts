@@ -1,16 +1,21 @@
 import { Request, Response } from 'express'
 import { RateService } from '~/services/rate.service'
+import { CommentService } from '~/services/comment.service'
 
 export class RateController {
-  constructor(private rateService: RateService) {}
+  constructor(
+    private rateService: RateService,
+    private commentService: CommentService,
+  ) {}
 
   async rateMovie(req: Request, res: Response): Promise<void> {
     try {
-      const { movieId, score } = req.body
-      const userId = res.locals.user.id // Get user ID from authenticated user
+      const { movieId } = req.params
+      const { score } = req.body
+      const userId = res.locals.user.id
 
-      if (!movieId || score === undefined) {
-        res.status(400).json({ status: 'failed', message: 'Missing required fields' })
+      if (score === undefined) {
+        res.status(400).json({ status: 'failed', message: 'Score is required' })
         return
       }
 
@@ -51,6 +56,46 @@ export class RateController {
     } catch (error) {
       console.error('Error deleting rate:', error)
       res.status(400).json({ status: 'failed', message: (error as Error).message })
+    }
+  }
+
+  async rateAndCommentMovie(req: Request, res: Response): Promise<void> {
+    try {
+      const { movieId } = req.params
+      const { score, content } = req.body
+      const userId = res.locals.user.id
+
+      if (score === undefined || !content) {
+        res.status(400).json({ status: 'failed', message: 'Score and content are required' })
+        return
+      }
+
+      // Rate the movie
+      const rate = await this.rateService.rateMovie(userId, movieId, score)
+
+      // Create the comment
+      const comment = await this.commentService.commentOnMovie({
+        userId,
+        movieId: Number(movieId),
+        content,
+        parentCommentId: null,
+      })
+
+      res.status(201).json({
+        status: 'success',
+        data: {
+          rate,
+          comment,
+        },
+      })
+    } catch (error) {
+      console.error('Error rating and commenting movie:', error)
+      const message = (error as Error).message
+      if (message === 'User not found' || message === 'Movie not found') {
+        res.status(404).json({ status: 'failed', message })
+      } else {
+        res.status(400).json({ status: 'failed', message })
+      }
     }
   }
 }
