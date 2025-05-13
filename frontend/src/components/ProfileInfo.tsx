@@ -58,7 +58,7 @@ const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, followersCount
             </Text>
           </DialogTrigger>
 
-          <DialogContent className='px-0 py-0 border-none w-full min-w-[300px]'>
+          <DialogContent className='px-0 py-0 border-none w-full min-w-[300px] max-w-lg'>
             {isLoading ? (
               <div className='p-6 text-center text-white bg-secondary-dark rounded-lg'>Loading followers...</div>
             ) : error ? (
