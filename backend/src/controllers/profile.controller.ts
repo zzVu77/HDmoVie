@@ -14,6 +14,27 @@ export class ProfileController {
     private watchlistService: WatchlistService,
   ) {}
 
+  // Return self profile include: user information, follow counts
+  // get/
+  async getSelf(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = res.locals.user?.id
+      const senderId = userId
+      const profile = await this.profileService.getProfile(userId, senderId)
+
+      // In case profile is null
+      if (!profile) {
+        res.status(404).json({ message: 'Profile not found' })
+        return
+      }
+
+      res.json(profile)
+    } catch (error) {
+      console.log('Error self fetching profile:, ', error)
+      res.status(500).json({ message: 'Internal server error' })
+    }
+  }
+
   // Return the entire profile include: user information, follow counts
   // get/:id
   async get(req: Request, res: Response): Promise<void> {
