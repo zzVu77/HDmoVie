@@ -33,7 +33,7 @@ export class AuthService {
       }
       return { accessToken, refreshToken }
     } catch (error) {
-      throw new Error(`Failed to get Token  : ${(error as Error).message}`)
+      throw new Error(` ${(error as Error).message}`)
     }
   }
 
