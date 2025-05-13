@@ -42,7 +42,7 @@ export default function WatchlistItem({
           <div className='flex flex-col ml-4'>
             <Title
               level={4}
-              className='font-bold text-primary-yellow cursor-pointer hover:text-tertiary-yellow'
+              className='font-bold text-primary-yellow cursor-pointer hover:text-tertiary-yellow line-clamp-1'
               onClick={navigateToMovie}
             >
               {index ?? '#'}. {title ?? 'Unknown Title'}

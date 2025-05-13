@@ -83,7 +83,7 @@ const Profile = () => {
           followersCount={profile.followersCount}
           isOwner={profile.isOwner}
         ></ProfileInfo>
-        <ProfileTabs></ProfileTabs>
+        <ProfileTabs userId={profile.user.id}></ProfileTabs>
       </Wrapper>
     </div>
   )
