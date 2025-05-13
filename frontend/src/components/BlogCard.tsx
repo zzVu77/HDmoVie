@@ -133,9 +133,9 @@ export default function BlogCard({
 
           {hasImages && (
             <Carousel opts={{ dragFree: true }} className='w-[90%] flex justify-center mx-auto my-1 px-1'>
-              <CarouselContent className='px-1'>
+              <CarouselContent className='px-1 -ml-2'>
                 {images!.map((imageUrl, index) => (
-                  <CarouselItem key={index} className='basis-auto pl-1 w-auto'>
+                  <CarouselItem key={index} className='basis-auto pl-2 w-auto'>
                     <div className=' rounded-sm overflow-hidden h-auto  '>
                       <img
                         src={imageUrl}
