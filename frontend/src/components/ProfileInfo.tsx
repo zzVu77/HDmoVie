@@ -5,10 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Button } from './ui/button'
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog'
 import { Text, Title } from './ui/typography'
-import Wrapper from './shared/Wrapper'
 import { getFollowInteraction, FollowInteractionResponse } from '@/services/profileService'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 
 type Props = {
   id?: string
@@ -39,43 +37,6 @@ const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, followersCount
     fetchFollowInteraction()
   }, [id])
 
-  // Initial UI, loading content from BE
-  if (isLoading) {
-    return (
-      <Wrapper className='mt-[100px]'>
-        <p className='text-center'>Loading...</p>
-      </Wrapper>
-    )
-  }
-
-  // In case error => this scene UI
-  if (error) {
-    return (
-      <Wrapper className='mt-[100px] flex flex-col items-center justify-center'>
-        <p className='text-red-500 text-center'>{error}</p>
-        <Link to={`/`}>
-          <Button
-            type='button'
-            className={
-              'bg-primary-yellow text-tertiary-dark font-semibold shadow-white-glow-down  gap-2 lg:text-lg p-3 flex'
-            }
-          >
-            Back to Home
-          </Button>
-        </Link>
-      </Wrapper>
-    )
-  }
-
-  // In case profile not found
-  if (!followInteraction) {
-    return (
-      <Wrapper className='mt-[100px]'>
-        <p className='text-center'>User not found</p>
-      </Wrapper>
-    )
-  }
-
   return (
     <div className='flex w-full flex-col items-center justify-center gap-2 lg:gap-4'>
       <div className='flex flex-col items-center justify-center gap-2 '>
@@ -91,14 +52,25 @@ const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, followersCount
       <div className='w-fit flex flex-col lg:flex-row items-center justify-between gap-2'>
         {/* Number of followers */}
         <Dialog>
-          <DialogTrigger asChild>
-            <Text className='cursor-pointer text-center'>{followersCount || 'NaN'} Followers</Text>
+          <DialogTrigger asChild disabled={isLoading || !!error || !followInteraction}>
+            <Text className='cursor-pointer text-center'>
+              {isLoading ? 'Loading...' : error ? 'Error' : (followersCount ?? 'NaN')} Followers
+            </Text>
           </DialogTrigger>
-          <DialogContent className='px-0 py-0 border-none w-fit min-w-lg'>
-            <FollowInteractionModal
-              followers={followInteraction.followers ?? []}
-              followings={followInteraction.following ?? []}
-            />
+
+          <DialogContent className='px-0 py-0 border-none w-full min-w-[300px]'>
+            {isLoading ? (
+              <div className='p-6 text-center text-white bg-secondary-dark rounded-lg'>Loading followers...</div>
+            ) : error ? (
+              <div className='p-6 text-center text-white bg-secondary-dark rounded-lg'>Failed to load data</div>
+            ) : !followInteraction ? (
+              <div className='p-6 text-center text-white bg-secondary-dark rounded-lg'>No data available</div>
+            ) : (
+              <FollowInteractionModal
+                followers={followInteraction.followers}
+                followings={followInteraction.following}
+              />
+            )}
           </DialogContent>
         </Dialog>
 
