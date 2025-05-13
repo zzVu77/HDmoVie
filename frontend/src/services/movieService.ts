@@ -1,20 +1,35 @@
 import { MovieCommentProps, MovieType } from '@/types'
 import { apiGet } from '@/utils/axiosConfig'
 
-// Define specific response types
+// Định nghĩa kiểu cho response lỗi
+export interface ErrorResponse {
+  status: 'failed'
+  message: string
+}
+
+// Định nghĩa kiểu cho response thành công
 export interface MoviesHighlightResponse {
   latestMovies: MovieType[]
   trendingMovies: MovieType[]
   topRatedMovies: MovieType[]
 }
+
 export interface MovieDetailResponse {
   movie: MovieType
   relatedMovies: MovieType[]
   comments: MovieCommentProps[]
 }
 
+// Hàm xử lý lỗi
 const handleApiError = (error: unknown, context: string): never => {
-  const errorMessage = `Error in ${context}: ${error instanceof Error ? error.message : 'Unknown error'}`
+  let errorMessage = `Error in ${context}: Unknown error`
+
+  if (typeof error === 'object' && error !== null && 'status' in error && 'message' in error) {
+    const apiError = error as ErrorResponse
+    errorMessage = `Error in ${context}: ${apiError.message}`
+  } else if (error instanceof Error) {
+    errorMessage = `Error in ${context}: ${error.message}`
+  }
   throw new Error(errorMessage)
 }
 
@@ -36,8 +51,18 @@ export const transformToMovieType = (data: MovieType): MovieType => ({
 // Generic API fetch function
 const getFromApi = async <T>(endpoint: string, context: string): Promise<T> => {
   try {
-    const response = await apiGet<T>(endpoint)
-    return response.data
+    const response = await apiGet<T | ErrorResponse>(endpoint)
+
+    if (
+      typeof response.data === 'object' &&
+      response.data !== null &&
+      'status' in response.data &&
+      response.data.status === 'failed'
+    ) {
+      throw response.data
+    }
+
+    return response.data as T
   } catch (error) {
     return handleApiError(error, context)
   }
@@ -52,4 +77,4 @@ export const getHighlightMovies = async (): Promise<MoviesHighlightResponse> =>
 
 // Fetch movie by ID
 export const getMovieById = async (id: string): Promise<MovieDetailResponse> =>
-  getFromApi<MovieDetailResponse>(`/movies/detail/${id}`, `fetching movie`)
+  getFromApi<MovieDetailResponse>(`/movies/detail/${id}`, `fetching movie `)

@@ -11,6 +11,7 @@ import VideoCard from '@/components/VideoCard'
 import { getMovieById, MovieDetailResponse } from '@/services/movieService'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 const MovieDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -42,8 +43,18 @@ const MovieDetail = () => {
 
   if (error) {
     return (
-      <Wrapper className='mt-[100px]'>
+      <Wrapper className='mt-[100px] flex flex-col items-center justify-center'>
         <p className='text-red-500 text-center'>{error}</p>
+        <Link to={`/`}>
+          <Button
+            type='button'
+            className={
+              'bg-primary-yellow text-tertiary-dark font-semibold shadow-white-glow-down  gap-2 lg:text-lg p-3 flex'
+            }
+          >
+            Back to Home
+          </Button>
+        </Link>
       </Wrapper>
     )
   }
@@ -55,7 +66,6 @@ const MovieDetail = () => {
       </Wrapper>
     )
   }
-  // console.log(movieData)
   return (
     <div className=' flex flex-col scroll-smooth '>
       <Banner {...movieData.movie}></Banner>
