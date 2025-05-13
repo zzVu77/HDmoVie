@@ -9,7 +9,8 @@ import { authenticateToken } from '~/middlewares/auth.middleware'
 import { CommentService } from '~/services/comment.service'
 import { CommentRepository } from '~/repositories/comment.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
-import { createMovieRateAndCommentMiddleware } from '~/middlewares/comment.middleware'
+import { createRateMiddleware } from '~/middlewares/rate.middleware'
+import { createMovieCommentMiddleware } from '~/middlewares/comment.middleware'
 
 const rateRouter = Router()
 
@@ -25,13 +26,19 @@ const commentService = new CommentService(commentRepository, userRepository, mov
 const rateController = new RateController(rateService, commentService)
 
 // All rating operations require authentication
-rateRouter.post('/', authenticateToken, (req: Request, res: Response) => rateController.rateMovie(req, res))
+rateRouter.post('/', authenticateToken, createRateMiddleware, (req: Request, res: Response) =>
+  rateController.rateMovie(req, res),
+)
+
+// For combined rate and comment, use both middlewares to validate each part
 rateRouter.post(
   '/with-comment',
   authenticateToken,
-  createMovieRateAndCommentMiddleware,
+  createRateMiddleware, // Validate rate fields
+  createMovieCommentMiddleware, // Validate comment fields
   (req: Request, res: Response) => rateController.rateAndCommentMovie(req, res),
 )
+
 rateRouter.delete('/:movieId', authenticateToken, (req: Request, res: Response) => rateController.deleteRate(req, res))
 
 export default rateRouter
