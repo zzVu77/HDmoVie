@@ -91,9 +91,12 @@ export type RegisteredUserType = {
 export type BlogCommentType = {
   id: string
   content: string
-  dateCreated: string
-  owner: RegisteredUserType
+  date: string
+  user: RegisteredUserType
   replies?: BlogCommentType[]
+  parentComment?: {
+    id: string
+  }
 }
 export type BlogPost = {
   id: string

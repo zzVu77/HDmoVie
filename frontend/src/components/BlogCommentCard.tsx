@@ -9,7 +9,8 @@ import { BlogCommentType } from '@/types'
 import { cn } from '@/lib/utils'
 import { Textarea } from './ui/textarea'
 import ReportDialog from './ReportModal'
-import CommentService from '@/services/commentService'
+// import CommentService from '@/services/commentService'
+import { apiPost } from '@/utils/axiosConfig'
 
 interface BlogCommentCardProps {
   comment: BlogCommentType
@@ -22,15 +23,18 @@ export default function BlogCommentCard({ comment, isReply = false, blogId, onCo
   const [showReplyInput, setShowReplyInput] = useState(false)
   const [replyText, setReplyText] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-
   const submitReply = async () => {
     if (!replyText.trim()) return
-
     try {
       setIsSubmitting(true)
-      const response = await CommentService.createComment({
-        content: replyText,
+      // const response = await CommentService.createComment({
+      //   content: replyText.trim(),
+      //   blogId: blogId,
+      //   parentCommentId: comment.id,
+      // })
+      const response = await apiPost<{ status: string; data: BlogCommentType }>('/comments/blog', {
         blogId: blogId,
+        content: replyText.trim(),
         parentCommentId: comment.id,
       })
       if (onCommentAdded) {
@@ -61,13 +65,11 @@ export default function BlogCommentCard({ comment, isReply = false, blogId, onCo
             <div className='flex items-center gap-2'>
               <Avatar className='h-8 w-8'>
                 <AvatarImage src={`/api/placeholder/50/50`} />
-                <AvatarFallback>{comment.owner?.fullName.slice(0, 2)}</AvatarFallback>
+                <AvatarFallback>{comment.user?.fullName.slice(0, 2)}</AvatarFallback>
               </Avatar>
               <div className='flex flex-col ml-2 flex-nowrap'>
-                <Text className='text-sm text-white ml-2'>{comment.owner?.fullName}</Text>
-                <Text className='text-muted-foreground text-xs ml-2'>
-                  {new Date(comment.dateCreated).toLocaleString()}
-                </Text>
+                <Text className='text-sm text-white ml-2'>{comment.user?.fullName}</Text>
+                <Text className='text-muted-foreground text-xs ml-2'>{new Date(comment.date).toLocaleString()}</Text>
               </div>
             </div>
           </div>

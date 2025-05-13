@@ -20,6 +20,37 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // Function to transform comments data structure
+  const organizeComments = (comments: BlogCommentType[]): BlogCommentType[] => {
+    // Create a map to store comments by their ID
+    const commentMap = new Map<string, BlogCommentType>()
+
+    // First pass: add all comments to the map
+    comments.forEach((comment) => {
+      commentMap.set(comment.id, { ...comment, replies: [] })
+    })
+
+    // Second pass: organize comments into a tree structure
+    const rootComments: BlogCommentType[] = []
+
+    comments.forEach((comment) => {
+      const commentWithReplies = commentMap.get(comment.id)!
+      if (comment.parentComment) {
+        // This is a reply, add it to its parent's replies
+        const parent = commentMap.get(comment.parentComment.id)
+        if (parent) {
+          parent.replies = parent.replies || []
+          parent.replies.push(commentWithReplies)
+        }
+      } else {
+        // This is a root comment
+        rootComments.push(commentWithReplies)
+      }
+    })
+
+    return rootComments
+  }
+
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -29,7 +60,9 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
         if (!response.data || !Array.isArray(response.data.data)) {
           throw new Error('Invalid response format from server')
         }
-        setComments(response.data.data)
+        // Transform the comments data structure
+        const organizedComments = organizeComments(response.data.data)
+        setComments(organizedComments)
       } catch (err: unknown) {
         alert((err as Error).message)
       } finally {
@@ -45,18 +78,18 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
 
     try {
       setIsSubmitting(true)
-      const response = await apiPost<BlogCommentType>('/comments/blog', {
-        blogId: '3', // You might want to make this dynamic based on the current blog
+      const response = await apiPost<{ status: string; data: BlogCommentType }>('/comments/blog', {
+        blogId: blogId,
         content: commentText.trim(),
         parentCommentId: null,
       })
 
-      // Add the new comment to the list
-      setComments((prevComments) => [...prevComments, response.data])
+      // Add the new comment to the list using the correct response structure
+      setComments((prevComments) => [...prevComments, response.data.data])
       setCommentText('')
       // } catch (error) {
       //   console.error('Failed to post comment:', error)
-      //   // You might want to show an error message to the user here
+      // You might want to show an error message to the user here
     } finally {
       setIsSubmitting(false)
     }
