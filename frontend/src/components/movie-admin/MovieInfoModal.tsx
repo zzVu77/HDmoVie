@@ -14,13 +14,14 @@ import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
-import { updateMovie } from '@/services/movieService'
+import { createMovie, updateMovie } from '@/services/movieService'
 import { CastType, GenreType, MovieType } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { Text } from '../ui/typography'
+import { toast } from 'sonner'
 
 // Sample data for genres and casts (thay bằng API thực tế)
 // const availableGenres: GenreType[] = [
@@ -58,18 +59,32 @@ type MovieFormValues = z.infer<typeof movieSchema>
 
 interface MovieInfoModalProps {
   movie?: MovieType
-  onSave?: () => void
   children?: React.ReactNode
   icon?: React.ReactNode
   title?: string
   genres?: GenreType[]
+  onUpdate?: () => void
+  buttonTitle?: string
+  description?: string
+  type?: 'create' | 'update'
+  onRefresh?: () => void
 }
 
-export function MovieInfoModal({ movie, onSave, children, icon, title, genres }: MovieInfoModalProps) {
+export function MovieInfoModal({
+  movie,
+  children,
+  icon,
+  title,
+  genres,
+  buttonTitle,
+  description,
+  type,
+  onRefresh,
+}: MovieInfoModalProps) {
   const form = useForm<MovieFormValues>({
     resolver: zodResolver(movieSchema),
     defaultValues: {
-      id: movie?.id || '',
+      id: movie?.id,
       title: movie?.title || '',
       releaseYear: movie?.releaseYear || '',
       voteAvg: movie?.voteAvg,
@@ -85,19 +100,21 @@ export function MovieInfoModal({ movie, onSave, children, icon, title, genres }:
 
   const onSubmit = async (data: MovieFormValues) => {
     try {
-      if (!data.id) {
-        throw new Error('Movie ID is required for updating')
+      const movieData = { ...data }
+      if (data.id && type === 'update') {
+        await updateMovie(data.id, movieData)
+        toast.success('Update successful!')
       }
-      // Transform the data to match MovieType
-      const movieData = {
-        ...data,
+      if (type === 'create') {
+        await createMovie(movieData)
+        toast.success('Create successful!')
       }
-
-      await updateMovie(data.id, movieData)
-
-      // onSave?.()
     } catch (error) {
-      throw new Error('Failed to update movie: ' + (error as Error).message)
+      throw new Error('Failed to submit movie: ' + (error as Error).message)
+      toast.error('Action failed!')
+    } finally {
+      form.reset()
+      onRefresh?.()
     }
   }
 
@@ -115,7 +132,7 @@ export function MovieInfoModal({ movie, onSave, children, icon, title, genres }:
         <DialogHeader>
           <DialogTitle className='text-center font-bold text-2xl'>{title || 'Edit Movie'}</DialogTitle>
           <DialogDescription className='text-center text-sm text-muted-foreground'>
-            Make changes to the movie information here. Click save when you're done.
+            {description || " Make changes to the movie information here. Click save when you're done."}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -363,9 +380,7 @@ export function MovieInfoModal({ movie, onSave, children, icon, title, genres }:
               />
             </div>
             <DialogFooter>
-              <Button type='submit' onClick={onSave}>
-                Save changes
-              </Button>
+              <Button type='submit'>{buttonTitle || ' Save changes'}</Button>
             </DialogFooter>
           </form>
         </Form>

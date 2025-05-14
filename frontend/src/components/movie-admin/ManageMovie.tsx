@@ -25,6 +25,7 @@ import { useEffect, useState } from 'react'
 import Wrapper from '../shared/Wrapper'
 import { columns } from './movie-columns'
 import { genreService } from '@/services/genreService'
+import { MovieInfoModal } from './MovieInfoModal'
 
 export function ManageMovie() {
   const [data, setMovies] = useState<MovieType[]>([])
@@ -32,22 +33,21 @@ export function ManageMovie() {
   const [error, setError] = useState<string | null>(null)
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  // const refreshMovies = async () => {
-  //   try {
-  //     setLoading(true)
-  //     const results = await getMovies()
-  //     setMovies(results)
-  //   } catch (err) {
-  //     setError(err instanceof Error ? err.message : 'Can not fetch movies')
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
+  const refreshMovies = async () => {
+    try {
+      setLoading(true)
+      const results = await getMovies()
+      setMovies(results)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Can not fetch movies')
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  // useEffect(() => {
-  //   refreshMovies()
-  // }, [])
-
+  useEffect(() => {
+    refreshMovies()
+  }, [])
   useEffect(() => {
     const fetchMovies = async () => {
       try {
@@ -85,7 +85,7 @@ export function ManageMovie() {
 
   const table = useReactTable({
     data: data,
-    columns: columns(genres),
+    columns: columns(genres, refreshMovies),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -118,8 +118,8 @@ export function ManageMovie() {
   }
 
   return (
-    <div className='w-full'>
-      <div className='flex items-center py-4 gap-2'>
+    <div className='w-full flex flex-col gap-2 px-1 '>
+      <div className='flex items-center pt-4 gap-2'>
         <Input
           placeholder='Filter by titles...'
           value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
@@ -161,7 +161,19 @@ export function ManageMovie() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className='rounded-md border'>
+      <div className='self-end'>
+        <MovieInfoModal
+          title='Add new movie'
+          genres={genres}
+          onRefresh={refreshMovies}
+          type='create'
+          buttonTitle='Save'
+          description='Fill in the required details such as title, genre, and other relevant information, then click Save to submit.'
+        >
+          <Button>Add new</Button>
+        </MovieInfoModal>
+      </div>
+      <div className='rounded-md border '>
         <Table>
           <TableHeader className='sticky'>
             {table.getHeaderGroups().map((headerGroup) => (

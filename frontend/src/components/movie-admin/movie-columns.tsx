@@ -10,7 +10,7 @@ import { MovieInfoModal } from './MovieInfoModal'
 import { deleteMovie } from '@/services/movieService'
 import { toast } from 'sonner'
 
-export const columns = (genres: GenreType[]): ColumnDef<MovieType>[] => [
+export const columns = (genres: GenreType[], refreshMovies: () => Promise<void>): ColumnDef<MovieType>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -51,10 +51,10 @@ export const columns = (genres: GenreType[]): ColumnDef<MovieType>[] => [
     cell: ({ row }) => <div>{row.getValue('title') || 'N/A'}</div>,
   },
   {
-    accessorKey: 'release',
+    accessorKey: 'releaseYear',
     header: 'Release Date',
     cell: ({ row }) => {
-      const releaseDate = row.getValue('release') as string
+      const releaseDate = row.getValue('releaseYear') as string
       return <div>{releaseDate ? new Date(releaseDate).toLocaleDateString() : 'N/A'}</div>
     },
   },
@@ -153,6 +153,7 @@ export const columns = (genres: GenreType[]): ColumnDef<MovieType>[] => [
         try {
           await deleteMovie(row.original.id)
           toast.success('Movie deleted successfully')
+          refreshMovies()
         } catch {
           throw Error("Can't delete")
         }
@@ -166,9 +167,10 @@ export const columns = (genres: GenreType[]): ColumnDef<MovieType>[] => [
 
           <MovieInfoModal
             icon={<PencilLine className='h-4 w-4 text-primary-dark cursor-pointer' />}
-            onSave={() => {}}
             movie={row.original}
             genres={genres}
+            type='update'
+            onRefresh={refreshMovies}
           ></MovieInfoModal>
 
           {/* <MovieInfoModal

@@ -1,5 +1,5 @@
 import { MovieCommentProps, MovieType } from '@/types'
-import { apiDelete, apiGet, apiPut } from '@/utils/axiosConfig'
+import { apiDelete, apiGet, apiPost, apiPut } from '@/utils/axiosConfig'
 
 // =Define the structure of the error response
 export interface ErrorResponse {
@@ -85,6 +85,14 @@ export const updateMovie = async (id: string, movieData: Partial<MovieType>): Pr
     return transformToMovieType(response.data)
   } catch (error) {
     return handleApiError(error, 'updating movie')
+  }
+}
+export const createMovie = async (movieData: Partial<MovieType>): Promise<MovieType> => {
+  try {
+    const response = await apiPost<MovieType>('/movies/create', movieData)
+    return transformToMovieType(response.data)
+  } catch (error) {
+    return handleApiError(error, 'creating movie')
   }
 }
 
