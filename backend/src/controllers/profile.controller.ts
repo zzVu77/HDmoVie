@@ -167,7 +167,7 @@ export class ProfileController {
       )
       res.status(200).json(updatedUser)
     } catch (error) {
-      res.status(400).json({ message: (error as Error).message })
+      res.status(400).json({ status: 'failed', message: (error as Error).message })
     }
   }
 

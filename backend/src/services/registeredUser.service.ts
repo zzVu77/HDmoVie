@@ -79,6 +79,10 @@ export class RegisteredUserService {
 
     user.setFullName(fullName).setDob(dob)
 
+    if (!RegisteredUser.isValidDOB(user)) {
+      throw new Error('User must be at least 16 years old')
+    }
+
     return await this.registeredUserRepository.update(user)
   }
 
