@@ -34,7 +34,7 @@ const MovieComment = ({ userName, comment, date, rating }: MovieCommentProps) =>
                 </Badge>
               </div>
             </div>
-            <Text className='w-10'>{comment}</Text>
+            <Text className='w-fit text-wrap'>{comment}</Text>
           </div>
         </CardContent>
       </Card>
