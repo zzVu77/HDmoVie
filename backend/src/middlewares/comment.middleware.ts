@@ -44,8 +44,8 @@ class CreateMovieCommentValidationStrategy implements ValidationStrategy {
 class CreateBlogCommentValidationStrategy implements ValidationStrategy {
   private schema = Joi.object({
     ...baseCommentSchema,
-    blogId: Joi.number().integer().required().messages({
-      'number.base': 'Blog ID must be a number',
+    blogId: Joi.string().required().messages({
+      'string.base': 'Blog ID must be a string',
       'any.required': 'Blog ID is required',
     }),
   })

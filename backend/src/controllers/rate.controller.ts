@@ -77,7 +77,7 @@ export class RateController {
       // Create the comment
       const comment = await this.commentService.commentOnMovie({
         userId,
-        movieId: Number(movieId),
+        movieId: movieId,
         content,
         parentCommentId: null,
       })

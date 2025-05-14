@@ -136,7 +136,7 @@ export class MovieRepository {
   }
 
   // Đổi tên tránh trùng với method có sẵn trong TypeORM Repository
-  async findOneById(id: number): Promise<Movie | null> {
+  async findOneById(id: string): Promise<Movie | null> {
     try {
       return this.repository.findOne({ where: { id } as FindOptionsWhere<Movie> })
     } catch (error) {

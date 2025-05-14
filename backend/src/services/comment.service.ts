@@ -21,7 +21,7 @@ export class CommentService {
     parentCommentId,
   }: {
     userId: string
-    movieId: number
+    movieId: string
     content: string
     parentCommentId: string | null
   }): Promise<MovieComment> {
