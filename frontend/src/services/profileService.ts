@@ -43,7 +43,9 @@ const handleApiError = (error: unknown, context: string): never => {
 // Generic API fetch function
 const getFromApi = async <T>(endpoint: string, context: string): Promise<T> => {
   try {
-    const response = await apiGet<T | ErrorResponse>(endpoint)
+    const response = await apiGet<T | ErrorResponse>(endpoint).catch((err) => {
+      throw err.response.data
+    })
 
     if (
       typeof response.data === 'object' &&
@@ -62,7 +64,9 @@ const getFromApi = async <T>(endpoint: string, context: string): Promise<T> => {
 // Generic API post function
 const postApi = async <T, D = unknown>(endpoint: string, data: D, context: string): Promise<T> => {
   try {
-    const response = await apiPost<T | ErrorResponse>(endpoint, data)
+    const response = await apiPost<T | ErrorResponse>(endpoint, data).catch((err) => {
+      throw err.response.data
+    })
 
     if (
       typeof response.data === 'object' &&

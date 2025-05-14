@@ -129,7 +129,7 @@ export function EditProfileModal({
               name='dateOfBirth'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='text-white'>Release Date (MM/dd/yyyy)</FormLabel>
+                  <FormLabel className='text-white'>Release Date (Month/Day/Year)</FormLabel>
                   <FormControl>
                     <Input
                       type='date'
