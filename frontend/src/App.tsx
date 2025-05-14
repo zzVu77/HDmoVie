@@ -47,7 +47,14 @@ function App() {
         </Route>
 
         {/* Admin route WITHOUT header */}
-        <Route path='/admin' element={<Admin />} />
+        <Route
+          path='/admin'
+          element={
+            <PrivateRoute>
+              <Admin />
+            </PrivateRoute>
+          }
+        />
 
         {/* Public routes - only for users not logged in */}
         <Route
