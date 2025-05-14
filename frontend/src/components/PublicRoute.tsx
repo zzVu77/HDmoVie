@@ -9,14 +9,22 @@ interface MyTokenPayload extends JwtPayload {
 }
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const accessToken = localStorage.getItem('access-token')
-  // // Permission
+
   if (accessToken) {
-    const decodedToken = jwtDecode<MyTokenPayload>(accessToken)
-    if (decodedToken.role == 'ADMIN') {
-      return <Navigate to='/admin' replace />
+    try {
+      const decoded = jwtDecode<MyTokenPayload>(accessToken)
+
+      // Redirect based on role
+      if (decoded.role === 'ADMIN') {
+        return <Navigate to='/admin' replace />
+      }
+      return <Navigate to='/' replace />
+    } catch {
+      // Token is invalid
+      localStorage.removeItem('access-token')
     }
-    return <Navigate to='/' replace />
   }
+
   return <>{children}</>
 }
 
