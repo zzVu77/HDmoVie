@@ -1,15 +1,15 @@
 import { useRef, useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { MessageCircle, Heart, MessageSquareWarning } from 'lucide-react'
+import { MessageCircle, Heart, MessageSquareWarning, X } from 'lucide-react'
 import { Text } from './ui/typography'
 import { cn } from '@/lib/utils'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import ReportDialog from './ReportModal'
 import { BlogPost } from '@/types'
+import { Dialog, DialogContent, DialogTrigger } from './ui/dialog'
 export interface BlogCardProps {
   blog: BlogPost
   className?: string
@@ -17,6 +17,7 @@ export interface BlogCardProps {
   isLast?: boolean
   isShowCommentDivider?: boolean
   isDetailView?: boolean
+  isOwner?: boolean
 }
 
 export default function BlogCard({
@@ -26,6 +27,7 @@ export default function BlogCard({
   isLast = false,
   isShowCommentDivider = false,
   isDetailView = false,
+  // isOwner = false,
 }: BlogCardProps) {
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(blog.likeCount)
@@ -50,6 +52,56 @@ export default function BlogCard({
   }, [blog.content])
 
   const hasImages = blog.imageUrls && blog.imageUrls.length > 0
+
+  const BlogContent = (
+    <>
+      <div className='mb-2'>
+        <Text body={4} ref={contentRef} className={`transition-all duration-300', ${!isExpanded && 'line-clamp-3'}`}>
+          {blog.content}
+        </Text>
+        {isClamped && (
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setIsExpanded(!isExpanded)
+            }}
+            className='text-sm text-blue-300 hover:underline mt-1 block'
+          >
+            {isExpanded ? 'Show less' : 'Show more'}
+          </button>
+        )}
+      </div>
+
+      <div className='flex items-center gap-2 mb-0 flex-wrap'>
+        {blog.tags.map((tag) => (
+          <Badge
+            key={tag.id}
+            variant='outline'
+            className='text-white cursor-pointer hover:border-primary-yellow hover:text-primary-yellow'
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+            }}
+          >
+            {tag.name}
+          </Badge>
+        ))}
+      </div>
+    </>
+  )
+
+  const CommentButton = (
+    <Button
+      variant='ghost'
+      size='lg'
+      className='p-1 h-auto flex items-center gap-1 text-primary-yellow hover:text-yellow-300 hover:bg-tertiary-dark transition-colors'
+    >
+      <MessageCircle size={18} />
+      <Text>{blog.commentCount}</Text>
+    </Button>
+  )
+
   const cardContent = (
     <Card
       className={cn(
@@ -74,43 +126,21 @@ export default function BlogCard({
               <Text className='text-muted-foreground text-xs'>{new Date(blog.dateCreated).toLocaleString()}</Text>
             </div>
           </div>
+          {/* {isOwner && ( */}
+          <Dialog>
+            <DialogTrigger>
+              <div className='text-gray-500 cursor-pointer rounded-lg hover:bg-tertiary-dark hover:text-white'>
+                <X size={18} />
+              </div>
+            </DialogTrigger>
+            <DialogContent>Are you sure to delete this blog permanently?</DialogContent>
+          </Dialog>
+          {/* )} */}
         </div>
       </CardHeader>
 
       <CardContent className='px-5 mb-1'>
-        <div className='mb-2'>
-          <Text body={4} ref={contentRef} className={`transition-all duration-300', ${!isExpanded && 'line-clamp-3'}`}>
-            {blog.content}
-          </Text>
-          {isClamped && (
-            <button
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                setIsExpanded(!isExpanded)
-              }}
-              className='text-sm text-blue-300 hover:underline mt-1 block'
-            >
-              {isExpanded ? 'Show less' : 'Show more'}
-            </button>
-          )}
-        </div>
-
-        <div className='flex items-center gap-2 mb-0 flex-wrap'>
-          {blog.tags.map((tag) => (
-            <Badge
-              key={tag.id}
-              variant='outline'
-              className='text-white cursor-pointer hover:border-primary-yellow hover:text-primary-yellow'
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-              }}
-            >
-              {tag.name}
-            </Badge>
-          ))}
-        </div>
+        {!isDetailView ? <a href={`/blog/${blog.id}`}>{BlogContent}</a> : BlogContent}
 
         {hasImages && (
           <Carousel opts={{ dragFree: true }} className='w-[90%] flex justify-center mx-auto mt-3 my-1 px-1'>
@@ -151,18 +181,9 @@ export default function BlogCard({
           <Heart size={18} fill={isLiked ? 'currentColor' : 'none'} />
           <Text>{likeCount ?? 0}</Text>
         </Button>
-        <Button
-          variant='ghost'
-          size='lg'
-          className='p-1 h-auto flex items-center gap-1 text-primary-yellow hover:text-yellow-300 hover:bg-tertiary-dark transition-colors'
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-          }}
-        >
-          <MessageCircle size={18} />
-          <Text>{blog.commentCount}</Text>
-        </Button>
+
+        {!isDetailView ? <a href={`/blog/${blog.id}`}>{CommentButton}</a> : CommentButton}
+
         <Button
           variant='ghost'
           size='lg'
@@ -182,13 +203,5 @@ export default function BlogCard({
     </Card>
   )
 
-  if (isDetailView) {
-    return cardContent
-  }
-
-  return (
-    <Link to={`/blog/${blog.id}`} className='w-full'>
-      {cardContent}
-    </Link>
-  )
+  return cardContent
 }
