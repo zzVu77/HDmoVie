@@ -9,11 +9,9 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Text, Title } from '@/components/ui/typography'
 import VideoCard from '@/components/VideoCard'
 import { getMovieById, MovieDetailResponse } from '@/services/movieService'
-import { Loader2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
 import { MovieCommentProps } from '@/types'
+import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 
 const MovieDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -21,18 +19,18 @@ const MovieDetail = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchMovieData = async () => {
-    try {
-      const data = await getMovieById(id as string)
-      setMovieData(data)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Cannot fetch movie data')
-    } finally {
-      setLoading(false)
-    }
-  }
-
   useEffect(() => {
+    const fetchMovieData = async () => {
+      try {
+        const data = await getMovieById(id as string)
+        setMovieData(data)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Cannot fetch movie data')
+      } finally {
+        setLoading(false)
+      }
+    }
+
     fetchMovieData()
   }, [id])
 
@@ -126,12 +124,12 @@ const MovieDetail = () => {
                   />
                 </div>
               ))}
-              <div className='mx-auto text-center'>
+              {/* <div className='mx-auto text-center'>
                 <Button disabled className='w-fit mx-auto bg-secondary-yellow text-black font-bold'>
                   <Loader2 className='animate-spin mr-2 h-4 w-4' />
                   Load more ...
                 </Button>
-              </div>
+              </div> */}
             </ScrollArea>
           )}
         </div>
