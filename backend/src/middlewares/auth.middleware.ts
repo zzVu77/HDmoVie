@@ -70,7 +70,7 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
 
 // Middleware to check for Admin role
 export const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
-  if (res.locals.user && res.locals.user.role === 'Admin') {
+  if (res.locals.user && res.locals.user.role === 'ADMIN') {
     next()
   } else {
     res.status(403).json({ message: 'Access denied: Admin role required' })
