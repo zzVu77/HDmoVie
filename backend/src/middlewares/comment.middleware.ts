@@ -14,8 +14,8 @@ const baseCommentSchema = {
     'string.min': 'Content must be at least 1 character',
     'any.required': 'Content is required',
   }),
-  parentCommentId: Joi.string().uuid().allow(null).optional().messages({
-    'string.guid': 'Parent Comment must be a valid UUID',
+  parentCommentId: Joi.string().allow(null).optional().messages({
+    'string.base': 'Parent Comment must be a string',
   }),
 }
 

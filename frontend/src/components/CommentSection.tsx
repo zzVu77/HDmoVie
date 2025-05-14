@@ -13,6 +13,20 @@ interface CommentSectionProps {
   blogId: string
 }
 
+// Add type guard to validate response format
+const isValidCommentResponse = (response: any): response is { status: string; data: BlogCommentType } => {
+  return (
+    response &&
+    typeof response === 'object' &&
+    'status' in response &&
+    'data' in response &&
+    typeof response.data === 'object' &&
+    'id' in response.data &&
+    'content' in response.data &&
+    'user' in response.data
+  )
+}
+
 export default function CommentSection({ blogId }: CommentSectionProps) {
   const [comments, setComments] = useState<BlogCommentType[]>([])
   const [commentText, setCommentText] = useState('')
@@ -84,12 +98,16 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
         parentCommentId: null,
       })
 
+      if (!isValidCommentResponse(response.data)) {
+        throw new Error('Invalid response format from server')
+      }
+
       // Add the new comment to the list using the correct response structure
       setComments((prevComments) => [...prevComments, response.data.data])
       setCommentText('')
-      // } catch (error) {
-      //   console.error('Failed to post comment:', error)
-      // You might want to show an error message to the user here
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to submit comment'
+      alert(errorMessage)
     } finally {
       setIsSubmitting(false)
     }
