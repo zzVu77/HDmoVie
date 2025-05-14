@@ -10,4 +10,46 @@ export class CastService {
     }
     return casts
   }
+  async getAllCasts(): Promise<Cast[]> {
+    try {
+      return await this.castRepository.findAll()
+    } catch (error) {
+      throw new Error(`Failed to get all casts: ${(error as Error).message}`)
+    }
+  }
+
+  async createCast(castData: Cast): Promise<Cast> {
+    try {
+      return await this.castRepository.create(castData)
+    } catch (error) {
+      throw new Error(`Failed to create cast: ${(error as Error).message}`)
+    }
+  }
+
+  async getCastById(id: string): Promise<Cast | null> {
+    try {
+      return this.castRepository.findById(id)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  async deleteCast(id: string): Promise<void> {
+    try {
+      await this.castRepository.delete(id)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  async updateCast(id: string, name: string, profilePath: string): Promise<Cast | null> {
+    const cast = await this.castRepository.findById(id)
+
+    const castData = new Cast(name, profilePath)
+    if (!cast) {
+      throw new Error('Cast not found')
+    }
+    cast.updateCast(castData.getName(), castData.getProfilePath())
+    return this.castRepository.update(cast)
+  }
 }

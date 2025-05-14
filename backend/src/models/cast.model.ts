@@ -9,7 +9,7 @@ export class Cast {
   @Column({ type: 'text', nullable: true })
   private profilePath!: string
 
-  constructor(id: string, name: string, profilePath: string) {
+  constructor(name: string, profilePath: string, id?: string) {
     this.id = id ? id : uuidv4()
     this.name = name
     this.profilePath = profilePath
@@ -38,5 +38,9 @@ export class Cast {
 
   setProfilePath(profilePath: string): void {
     this.profilePath = profilePath
+  }
+  updateCast(name?: string, profilePath?: string): void {
+    this.setName(name ?? this.name)
+    this.setProfilePath(profilePath ?? this.profilePath)
   }
 }
