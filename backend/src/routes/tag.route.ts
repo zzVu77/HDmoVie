@@ -21,6 +21,6 @@ tagRouter.get('/:id', (req, res) => tagController.getTagById(req, res))
 tagRouter.post('/create', authenticateToken, createTagMiddleware, (req, res) => tagController.createTag(req, res))
 
 // Delete tag - requires authentication (only admin can delete)
-tagRouter.delete('/:id', authenticateToken, isAdmin, (req, res) => tagController.deleteTag(req, res))
+tagRouter.delete('/delete/:id', authenticateToken, isAdmin, (req, res) => tagController.deleteTag(req, res))
 
 export default tagRouter

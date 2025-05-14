@@ -10,59 +10,55 @@ import {
 } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { GenreType } from '@/types'
+import { TagType } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { Text } from '../ui/typography'
 import { toast } from 'sonner'
 import * as React from 'react'
-import { genreService } from '@/services/genreService'
+import { tagService } from '@/services/tagService'
 
 // Zod schema for form validation
-const genreSchema = z.object({
+const tagSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1, 'Name is required').max(100, 'Name must be 100 characters or less'),
 })
 
-type GenreFormValues = z.infer<typeof genreSchema>
+type TagFormValues = z.infer<typeof tagSchema>
 
-interface GenreInfoModalProps {
-  genre?: GenreType
+interface TagInfoModalProps {
+  tag?: TagType
   onSave?: () => void
   children?: React.ReactNode
   icon?: React.ReactNode
   title?: string
 }
 
-export function GenreInfoModal({ genre, onSave, children, icon, title }: GenreInfoModalProps) {
+export function TagInfoModal({ tag, onSave, children, icon, title }: TagInfoModalProps) {
   const [open, setOpen] = React.useState(false)
 
-  const form = useForm<GenreFormValues>({
-    resolver: zodResolver(genreSchema),
+  const form = useForm<TagFormValues>({
+    resolver: zodResolver(tagSchema),
     defaultValues: {
-      id: genre?.id || '',
-      name: genre?.name || '',
+      id: tag?.id || '',
+      name: tag?.name || '',
     },
   })
 
-  const onSubmit = async (data: GenreFormValues) => {
+  const onSubmit = async (data: TagFormValues) => {
     try {
       const payload = { name: data.name }
-      if (genre?.id) {
-        await genreService.updateGenre(genre.id, payload)
-        toast.success('Genre updated successfully')
-      } else {
-        await genreService.createGenre(payload)
-        toast.success('Genre created successfully')
+      if (!tag?.id) {
+        await tagService.createTag(payload)
+        toast.success('Tag created successfully')
       }
-
       form.reset(data)
       setOpen(false)
 
       onSave?.()
     } catch {
-      toast.error('Failed to save genre. Please try again.')
+      toast.error('Failed to save tag. Please try again.')
     }
   }
 
@@ -80,15 +76,15 @@ export function GenreInfoModal({ genre, onSave, children, icon, title }: GenreIn
       </DialogTrigger>
       <DialogContent className='sm:max-w-md'>
         <DialogHeader>
-          <DialogTitle className='text-center font-bold text-xl'>{title || 'Edit Genre'}</DialogTitle>
+          <DialogTitle className='text-center font-bold text-xl'>{title || 'Edit Tag'}</DialogTitle>
           <DialogDescription className='text-center text-sm text-muted-foreground'>
-            {genre ? 'Edit genre details below.' : 'Create a new genre.'}
+            {tag ? 'Edit tag details below.' : 'Create a new tag.'}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6 px-1'>
             <div className='space-y-4 py-4'>
-              {genre?.id && (
+              {tag?.id && (
                 <FormField
                   control={form.control}
                   name='id'
@@ -109,7 +105,7 @@ export function GenreInfoModal({ genre, onSave, children, icon, title }: GenreIn
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
                     <FormLabel className='text-right font-medium'>Name</FormLabel>
                     <FormControl>
-                      <Input id='name' className='col-span-3' placeholder='Enter genre name' {...field} />
+                      <Input id='name' className='col-span-3' placeholder='Enter tag name' {...field} />
                     </FormControl>
                     <FormMessage className='col-span-4 text-right' />
                   </FormItem>

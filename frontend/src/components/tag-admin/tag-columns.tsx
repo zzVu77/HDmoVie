@@ -1,14 +1,13 @@
-import { GenreType } from '@/types'
+import { TagType } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '../ui/checkbox'
 import { Button } from '../ui/button'
-import { GenreInfoModal } from './GenreInfoModal'
-import { PencilLine, Trash2 } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 import { ConfirmAlertDialog } from '../shared/ConfirmAlertDialog'
-import { genreService } from '@/services/genreService'
+import { tagService } from '@/services/tagService'
 import { toast } from 'sonner'
 
-export const columns = (onGenreUpdate: () => void): ColumnDef<GenreType>[] => [
+export const columns = (onTagUpdate: () => void): ColumnDef<TagType>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -51,29 +50,21 @@ export const columns = (onGenreUpdate: () => void): ColumnDef<GenreType>[] => [
     enableHiding: false,
     cell: ({ row }) => {
       const handleDelete = async () => {
-        const genreId = row.original.id
+        const tagId = row.original.id
         try {
-          await genreService.deleteGenre(genreId)
-          toast.success('Genre deleted successfully')
-
-          onGenreUpdate()
+          await tagService.deleteTag(tagId)
+          toast.success('Tag deleted successfully')
+          onTagUpdate()
         } catch {
-          throw Error("Can't delete")
+          toast.error("Can't delete tag")
         }
       }
 
       return (
         <div className='flex items-center justify-end gap-2'>
-          <GenreInfoModal
-            icon={<PencilLine className='h-4 w-4 text-primary-dark cursor-pointer' />}
-            genre={row.original}
-            onSave={() => {
-              onGenreUpdate()
-            }}
-          />
           <ConfirmAlertDialog
             title=''
-            description='Are you sure you want to delete this genre? This action cannot be undone.'
+            description='Are you sure you want to delete this tag? This action cannot be undone.'
             onConfirm={handleDelete}
             trigger={<Trash2 className='h-4 w-4 text-primary-dark cursor-pointer' />}
             cancelText='No, go back'
