@@ -31,10 +31,16 @@ export class FollowInteraction {
   }
 
   public getFollowers(): RegisteredUser[] {
+    if (!this.followers) {
+      return []
+    }
     return this.followers
   }
 
   public getFollowings(): RegisteredUser[] {
+    if (!this.following) {
+      return []
+    }
     return this.following
   }
 
