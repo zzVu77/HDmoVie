@@ -43,12 +43,14 @@ export class MovieController {
   async getMovieById(req: Request, res: Response): Promise<void> {
     try {
       const movieId = req.params.id
+      const { userId } = req.body
+
       if (!movieId) {
         res.status(400).json({ status: 'failed', message: 'Movie ID is required' })
         return
       }
-      const movie = await this.movieService.getMovieDetail(movieId)
-      // res.status(200).json({ status: 'success', data: movie })
+
+      const movie = await this.movieService.getMovieDetail(movieId, '1')
       res.status(200).json(movie)
     } catch (error) {
       console.error('Error fetching movie:', error)

@@ -4,6 +4,7 @@ import { CommentRepository } from '~/repositories/comment.repository'
 import { MovieType } from '~/type'
 import { CastService } from './cast.service'
 import { GenreService } from './genre.service'
+import { RateService } from './rate.service'
 // import { RateService } from './rate.service'
 
 export class MovieService {
@@ -12,6 +13,7 @@ export class MovieService {
     private castService: CastService,
     private genreService: GenreService,
     private commentRepository: CommentRepository,
+    private rateService: RateService,
     // private rateService: RateService,
   ) {}
 
@@ -39,7 +41,7 @@ export class MovieService {
     }
   }
 
-  async getMovieDetail(movieId: string) {
+  async getMovieDetail(movieId: string, userId?: string) {
     try {
       // 1. Get movie info with genres and casts
       const movie = await this.movieRepository.findById(movieId)
@@ -50,21 +52,33 @@ export class MovieService {
       // 2. Get comments for movie
       const comments = await this.commentRepository.findCommentsByMovieId(movieId)
 
-      // 3. Get up to 5 movies with same genres (excluding itself)
+      // 3. Get rates for movie
+      const rates = await this.rateService.getMovieRates(movieId)
+
+      // 4. Map rates to comments based on user ID
+      const commentsWithRates = comments.map((comment) => {
+        const userRate = rates.find((rate) => rate.getUser().getId() === comment.getUser().getId())
+        return {
+          ...comment,
+          rateScore: userRate ? userRate.getRateScore() : null,
+        }
+      })
+
+      // 5. Get up to 5 movies with same genres (excluding itself)
       const genres = movie.getGenres()
       const genreIds = genres.map((genre) => genre.getId())
-
       const relatedMovies = await this.movieRepository.findMoviesByGenreIds(genreIds, movieId, 5)
 
-      // // 4. Get rates for movie
-      // const rates = await this.rateService.getMovieRates(movieId)
-
-      // 5. Return combined data
+      // 6. Check if user has commented - using strict string comparison
+      const hasCommented = userId
+        ? comments.some((comment) => String(comment.getUser().getId()) === String(userId))
+        : false
+      // 7. Return combined data
       return {
+        status: hasCommented,
         movie,
-        comments,
+        comments: commentsWithRates,
         relatedMovies,
-        // rates,
       }
     } catch (error) {
       if (error instanceof Error && error.message === 'Movie not found') {

@@ -10,6 +10,9 @@ import { GenreRepository } from '~/repositories/genre.repository'
 import { CommentRepository } from '~/repositories/comment.repository'
 import { GenreService } from '~/services/genre.service'
 import { authenticateToken, isAdmin } from '~/middlewares/auth.middleware'
+import { RateService } from '~/services/rate.service'
+import { RateRepository } from '~/repositories/rate.repository'
+import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 
 const movieRouter = Router()
 
@@ -18,10 +21,14 @@ const castRepository = new CastRepository(AppDataSource)
 const genreRepository = new GenreRepository(AppDataSource)
 const movieRepository = new MovieRepository(AppDataSource)
 const commentRepository = new CommentRepository(AppDataSource)
+const rateRepository = new RateRepository(AppDataSource)
+const registeredUserRepository = new RegisteredUserRepository(AppDataSource)
 
 const castService = new CastService(castRepository)
 const genreService = new GenreService(genreRepository)
-const movieService = new MovieService(movieRepository, castService, genreService, commentRepository)
+const rateService = new RateService(rateRepository, movieRepository, registeredUserRepository)
+
+const movieService = new MovieService(movieRepository, castService, genreService, commentRepository, rateService)
 const movieController = new MovieController(movieService)
 
 // Define routes
