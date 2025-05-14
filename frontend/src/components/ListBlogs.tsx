@@ -6,10 +6,11 @@ import { BlogPost } from '@/types'
 import BlogService from '@/services/BlogService'
 
 interface ListBlogsProps {
+  userId?: string
   blogs?: BlogPost[]
 }
 
-const ListBlogs = ({ blogs: propBlogs }: ListBlogsProps) => {
+const ListBlogs = ({ userId, blogs: propBlogs }: ListBlogsProps) => {
   const [blogs, setBlogs] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -76,6 +77,7 @@ const ListBlogs = ({ blogs: propBlogs }: ListBlogsProps) => {
           isFirst={index === 0}
           isLast={index === blogs.length - 1}
           isShowCommentDivider={false}
+          userId={userId}
         />
       ))}
     </div>
