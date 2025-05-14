@@ -14,7 +14,6 @@ import { BlogService } from '~/services/blog.service'
 import { WatchlistService } from '~/services/watchlist.service'
 import { MovieRepository } from '~/repositories/movie.repository'
 import { TagRepository } from '~/repositories/tag.repository'
-import { authenticateToken } from '~/middlewares/auth.middleware'
 
 const profileRouter = Router()
 
@@ -41,19 +40,19 @@ const profileController = new ProfileController(
 )
 
 // Public routes - anyone can view profiles and their public content
+profileRouter.get('/', (req, res) => profileController.getSelf(req, res))
 profileRouter.get('/:id', (req, res) => profileController.get(req, res))
 profileRouter.get('/:id/blogs', (req, res) => profileController.getBlogs(req, res))
-profileRouter.get('/:id/followers', (req, res) => profileController.getFollowers(req, res))
-profileRouter.get('/:id/followings', (req, res) => profileController.getFollowings(req, res))
+profileRouter.get('/:id/follow-interaction', (req, res) => profileController.getFollowInteraction(req, res))
+profileRouter.get('/:id/follow-interaction/followers', (req, res) => profileController.getFollowers(req, res))
+profileRouter.get('/:id/follow-interaction/followings', (req, res) => profileController.getFollowings(req, res))
 profileRouter.get('/:id/watchlists', (req, res) => profileController.getWatchlists(req, res))
 profileRouter.get('/:id/watchlists/:wid', (req, res) => profileController.getWatchlistDetail(req, res))
 
 // Protected routes - user must be authenticated and authorized
-profileRouter.post('/:id/update', authenticateToken, updateUserInfoMiddleware, (req, res) =>
-  profileController.updateInfor(req, res),
-)
+profileRouter.post('/:id/update', updateUserInfoMiddleware, (req, res) => profileController.updateInfor(req, res))
 
-profileRouter.post('/:id/change-password', authenticateToken, changePasswordMiddleware, (req, res) =>
+profileRouter.post('/:id/change-password', changePasswordMiddleware, (req, res) =>
   profileController.changePassword(req, res),
 )
 

@@ -96,14 +96,7 @@ export class BlogService {
     try {
       const pageSize = 5
       const offset = page * pageSize
-      const blogs = await this.blogRepository.findByUserId(userId, offset, pageSize)
-
-      // Transform the blogs to the proper response format
-      return await Promise.all(
-        blogs.map(async (blog) => {
-          return await this.blogRepository.findById(blog.getId())
-        }),
-      )
+      return await this.blogRepository.findByUserId(userId, offset, pageSize)
     } catch (error) {
       throw new Error((error as Error).message)
     }

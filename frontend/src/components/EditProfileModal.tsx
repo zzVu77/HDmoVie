@@ -13,9 +13,10 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { RegisteredUserProps } from '@/types'
-import { Calendar } from '@/components/ui/calendar'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
+import { updateProfile } from '@/services/profileService'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 
 // Define form schema
 const formSchema = z.object({
@@ -23,51 +24,64 @@ const formSchema = z.object({
   dateOfBirth: z.coerce.date().refine((date) => !isNaN(date.getTime()), { message: 'Invalid date.' }),
 })
 
-export function EditProfileModal({ id, fullName, email, dateOfBirth }: RegisteredUserProps) {
-  // Use state to manage calendar visibility
-  const [showCalendar, setShowCalendar] = useState(false)
-  const calendarRef = useRef<HTMLDivElement>(null)
+export interface EditProfileModalProps {
+  id?: string
+  fullName?: string
+  email?: string
+  dateOfBirth?: Date
+  updateProfileCallBack: () => void
+}
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
-        setShowCalendar(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
-
+export function EditProfileModal({
+  id = '',
+  fullName = '',
+  email = '',
+  dateOfBirth = new Date(),
+  updateProfileCallBack,
+}: EditProfileModalProps) {
   // Initialize form with default values
   // Use the zodResolver to validate the form schema
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName,
-      dateOfBirth,
+      fullName: fullName,
+      dateOfBirth: dateOfBirth,
     },
   })
 
-  // USED TO IGNORE THE ERROR MESSAGE
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Handle form submission logic here
-    fetch(`http://localhost:3001/api/profiles/${id}/update`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
-    }).then((response) => {
-      if (!response.ok) {
-        throw new Error('Failed to update profile')
-      }
-      return response.json()
-    })
+  // Handle update profile
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setIsLoading(true)
+      await updateProfile(id, values.fullName, values.dateOfBirth)
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Error when fetching follow interaction')
+    } finally {
+      setIsLoading(false)
+      handleCallBack(error === null)
+    }
+  }
+
+  async function handleCallBack(success: boolean) {
+    if (success) {
+      toast.success('Updated successfully')
+    } else {
+      toast.error(error)
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    updateProfileCallBack()
   }
 
   // Main component render
   return (
-    <Dialog>
+    <Dialog
+      onOpenChange={(open) => {
+        if (!open) form.reset({ fullName, dateOfBirth })
+      }}
+    >
       <DialogTrigger asChild>
         <Button
           className='bg-secondary-dark text-white cursor-pointer border border-tertiary-dark 
@@ -114,30 +128,15 @@ export function EditProfileModal({ id, fullName, email, dateOfBirth }: Registere
               control={form.control}
               name='dateOfBirth'
               render={({ field }) => (
-                <FormItem className='flex flex-col'>
-                  <FormLabel className='text-white'>Date of Birth</FormLabel>
+                <FormItem>
+                  <FormLabel className='text-white'>Release Date (Month/Day/Year)</FormLabel>
                   <FormControl>
-                    <div className='relative' ref={calendarRef}>
-                      <Input
-                        className='text-white border-tertiary-dark'
-                        value={field.value ? field.value.toLocaleDateString() : ''}
-                        readOnly
-                        onClick={() => setShowCalendar((prev) => !prev)}
-                      />
-                      {showCalendar && (
-                        <div className='absolute bottom-full mb-2 z-10 rounded-md border bg-secondary-dark text-white'>
-                          <Calendar
-                            mode='single'
-                            selected={field.value}
-                            onSelect={(date) => {
-                              field.onChange(date)
-                              setShowCalendar(false)
-                            }}
-                            className='rounded-md border-secondary-dark bg-secondary-dark text-white'
-                          />
-                        </div>
-                      )}
-                    </div>
+                    <Input
+                      type='date'
+                      className='hide-icon-calendar text-white border-tertiary-dark'
+                      {...field}
+                      value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -145,8 +144,13 @@ export function EditProfileModal({ id, fullName, email, dateOfBirth }: Registere
             />
 
             <DialogFooter>
-              <Button className='w-full bg-tertiary-yellow' type='submit'>
-                Save changes
+              <Button
+                className={`w-full bg-tertiary-yellow flex flex-row items-center ${isLoading ? 'cursor-pointer' : ''}`}
+                type='submit'
+                disabled={isLoading}
+              >
+                {isLoading && <Loader2 className='animate-spin text-white' />}
+                Save changes{' '}
               </Button>
             </DialogFooter>
           </form>

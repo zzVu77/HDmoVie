@@ -25,6 +25,14 @@ export class FollowInteractionRepository {
     }
   }
 
+  public async addFollowInteraction(followInteraction: FollowInteraction): Promise<void> {
+    try {
+      await this.repository.save(followInteraction)
+    } catch (error) {
+      throw new Error(`Failed to add follow interaction for user: ${(error as Error).message}`)
+    }
+  }
+
   public async addFollower(followInteractionId: string, follower: RegisteredUser): Promise<void> {
     try {
       // Get the current follow interaction

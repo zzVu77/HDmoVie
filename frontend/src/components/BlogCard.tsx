@@ -1,15 +1,15 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useRef, useState, useEffect } from 'react'
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
-import { cn } from '@/lib/utils'
-import { BlogPost } from '@/types'
-import { Heart, MessageCircle, MessageSquareWarning, ArrowRight } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import ReportDialog from './ReportModal'
+import { MessageCircle, Heart, MessageSquareWarning, X } from 'lucide-react'
 import { Text } from './ui/typography'
+import { cn } from '@/lib/utils'
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
+import ReportDialog from './ReportModal'
+import { BlogPost } from '@/types'
+import { Dialog, DialogContent, DialogTrigger } from './ui/dialog'
 export interface BlogCardProps {
   blog: BlogPost
   className?: string
@@ -17,6 +17,7 @@ export interface BlogCardProps {
   isLast?: boolean
   isShowCommentDivider?: boolean
   isDetailView?: boolean
+  isOwner?: boolean
 }
 
 export default function BlogCard({
@@ -26,6 +27,7 @@ export default function BlogCard({
   isLast = false,
   isShowCommentDivider = false,
   isDetailView = false,
+  // isOwner = false,
 }: BlogCardProps) {
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(blog.likeCount)
@@ -50,18 +52,67 @@ export default function BlogCard({
   }, [blog.content])
 
   const hasImages = blog.imageUrls && blog.imageUrls.length > 0
+
+  const BlogContent = (
+    <>
+      <div className='mb-2'>
+        <Text body={4} ref={contentRef} className={`transition-all duration-300', ${!isExpanded && 'line-clamp-3'}`}>
+          {blog.content}
+        </Text>
+        {isClamped && (
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setIsExpanded(!isExpanded)
+            }}
+            className='text-sm text-blue-300 hover:underline mt-1 block'
+          >
+            {isExpanded ? 'Show less' : 'Show more'}
+          </button>
+        )}
+      </div>
+
+      <div className='flex items-center gap-2 mb-0 flex-wrap'>
+        {blog.tags.map((tag) => (
+          <Badge
+            key={tag.id}
+            variant='outline'
+            className='text-white cursor-pointer hover:border-primary-yellow hover:text-primary-yellow'
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+            }}
+          >
+            {tag.name}
+          </Badge>
+        ))}
+      </div>
+    </>
+  )
+
+  const CommentButton = (
+    <Button
+      variant='ghost'
+      size='lg'
+      className='p-1 h-auto flex items-center gap-1 text-primary-yellow hover:text-yellow-300 hover:bg-tertiary-dark transition-colors'
+    >
+      <MessageCircle size={18} />
+      <Text>{blog.commentCount}</Text>
+    </Button>
+  )
+
   const cardContent = (
     <Card
       className={cn(
-        'w-full overflow-hidden bg-secondary-dark border-tertiary-dark hover:shadow-md py-0 gap-0',
-        isFirst && 'rounded-t-3xl rounded-b-none border-1 border-b-0',
-        isLast && 'rounded-b-3xl rounded-t-none border-1 border-t-0',
-        !isFirst && !isLast && 'rounded-none border-1',
-        isShowCommentDivider ? 'border-b-0' : '',
+        'w-full overflow-hidden bg-secondary-dark border-0 border-tertiary-dark hover:shadow-md py-0 gap-0 rounded-none',
+        !isFirst && 'border-t',
+        isFirst && isLast && 'border-none',
+        isShowCommentDivider ? '' : '',
         className,
       )}
     >
-      <CardHeader className='px-4 pt-4 pb-1 space-y-0'>
+      <CardHeader className='px-5 pt-4 pb-1 space-y-0'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-2'>
             <Avatar className='h-8 w-8'>
@@ -75,73 +126,50 @@ export default function BlogCard({
               <Text className='text-muted-foreground text-xs'>{new Date(blog.dateCreated).toLocaleString()}</Text>
             </div>
           </div>
+          {/* {isOwner && ( */}
+          <Dialog>
+            <DialogTrigger>
+              <div className='text-gray-500 cursor-pointer rounded-lg hover:bg-tertiary-dark hover:text-white'>
+                <X size={18} />
+              </div>
+            </DialogTrigger>
+            <DialogContent>Are you sure to delete this blog permanently?</DialogContent>
+          </Dialog>
+          {/* )} */}
         </div>
       </CardHeader>
 
-      <CardContent className='px-4 mb-1'>
-        <div className='mb-2'>
-          <Text body={4} ref={contentRef} className={`transition-all duration-300', ${!isExpanded && 'line-clamp-3'}`}>
-            {blog.content}
-          </Text>
-          {isClamped && (
-            <button
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                setIsExpanded(!isExpanded)
-              }}
-              className='text-sm text-blue-300 hover:underline mt-1 block'
-            >
-              {isExpanded ? 'Show less' : 'Show more'}
-            </button>
-          )}
-        </div>
-
-        <div className='flex items-center gap-2 mb-3 flex-wrap'>
-          {blog.tags.map((tag) => (
-            <Badge
-              key={tag.id}
-              variant='outline'
-              className='text-white cursor-pointer hover:border-primary-yellow hover:text-primary-yellow'
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-              }}
-            >
-              {tag.name}
-            </Badge>
-          ))}
-        </div>
+      <CardContent className='px-5 mb-1'>
+        {!isDetailView ? <a href={`/blog/${blog.id}`}>{BlogContent}</a> : BlogContent}
 
         {hasImages && (
-          <Carousel className='w-full mx-auto my-1'>
-            <CarouselContent>
-              {blog.imageUrls.map((image) => (
-                <CarouselItem key={image.id} className='flex justify-center'>
-                  <img
-                    src={image.url}
-                    alt={`Blog image ${image.id}`}
-                    className='w-full object-cover rounded-sm self-center'
-                    onError={(e) => {
-                      ;(e.target as HTMLImageElement).src =
-                        'https://makerworld.bblmw.com/makerworld/model/US2ab61bb7d3000c/design/2024-01-30_029b2304056c.png?x-oss-process=image/resize,w_1000/format,webp'
-                    }}
-                  />
-                </CarouselItem>
+          <Carousel opts={{ dragFree: true }} className='w-[90%] flex justify-center mx-auto mt-3 my-1 px-1'>
+            <CarouselContent className='px-1 -ml-2'>
+              {blog.imageUrls!.map((image, index) => (
+                <>
+                  <CarouselItem key={index} className='basis-auto pl-2 w-auto'>
+                    <div className=' rounded-sm overflow-hidden h-auto   '>
+                      <img
+                        src={image.url}
+                        alt={`Blog image ${index + 1}`}
+                        className='object-cover object-center h-[280px]  w-[30api0px]'
+                        onError={(e) => {
+                          ;(e.target as HTMLImageElement).src =
+                            'https://makerworld.bblmw.com/makerworld/model/US2ab61bb7d3000c/design/2024-01-30_029b2304056c.png?x-oss-process=image/resize,w_1000/format,webp'
+                        }}
+                      />
+                    </div>
+                  </CarouselItem>
+                </>
               ))}
             </CarouselContent>
-            {blog.imageUrls.length > 1 && (
-              <div className='group absolute top-1/2 -translate-y-1/2 right-4 flex justify-end items-center'>
-                <div className='rounded-full opacity-30 bg-secondary-dark text-white w-8 h-8 flex items-center justify-center'>
-                  <ArrowRight size={16} className='text-white' />
-                </div>
-              </div>
-            )}
+            <CarouselPrevious />
+            <CarouselNext />
           </Carousel>
         )}
       </CardContent>
 
-      <CardFooter className='flex items-center px-0 py-1'>
+      <CardFooter className='flex items-center px-1 py-1'>
         <Button
           variant='ghost'
           size='lg'
@@ -151,20 +179,11 @@ export default function BlogCard({
           onClick={handleLike}
         >
           <Heart size={18} fill={isLiked ? 'currentColor' : 'none'} />
-          <Text>{likeCount}</Text>
+          <Text>{likeCount ?? 0}</Text>
         </Button>
-        <Button
-          variant='ghost'
-          size='lg'
-          className='p-1 h-auto flex items-center gap-1 text-primary-yellow hover:text-yellow-300 hover:bg-tertiary-dark transition-colors'
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-          }}
-        >
-          <MessageCircle size={18} />
-          <Text>{blog.commentCount}</Text>
-        </Button>
+
+        {!isDetailView ? <a href={`/blog/${blog.id}`}>{CommentButton}</a> : CommentButton}
+
         <Button
           variant='ghost'
           size='lg'
@@ -184,13 +203,5 @@ export default function BlogCard({
     </Card>
   )
 
-  if (isDetailView) {
-    return cardContent
-  }
-
-  return (
-    <Link to={`/blog/${blog.id}`} className='w-full'>
-      {cardContent}
-    </Link>
-  )
+  return cardContent
 }

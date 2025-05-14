@@ -105,10 +105,7 @@ export type BlogPost = {
   tags: TagType[]
   likeCount: number
   commentCount: number
-  imageUrls: {
-    id: string
-    url: string
-  }[]
+  imageUrls?: { id: string; url: string }[]
 }
 export type MovieCommentProps = {
   userName: string

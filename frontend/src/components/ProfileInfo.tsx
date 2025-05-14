@@ -1,4 +1,3 @@
-import { FollowPeopleProps } from '@/types'
 import { UserPlus } from 'lucide-react'
 import { EditProfileModal } from './EditProfileModal'
 import FollowInteractionModal from './FollowInteractionModal'
@@ -6,98 +5,127 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Button } from './ui/button'
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog'
 import { Text, Title } from './ui/typography'
+import { getFollowInteraction, FollowInteractionResponse } from '@/services/profileService'
+import { useEffect, useState } from 'react'
+import { followUser, unFollowUser } from '@/services/followInteractionService'
+import { toast } from 'sonner'
 
 type Props = {
-  id: string
-  fullName: string
-  email: string
-  dateOfBirth: Date
-  countNum?: string
+  id?: string
+  fullName?: string
+  email?: string
+  dateOfBirth?: Date
+  isOwner?: boolean
+  isFollowingProp?: boolean
+  followersCount?: number
 }
-const dummyFollowPeopleData: FollowPeopleProps[] = [
-  { id: '1', fullName: 'John Doe' },
-  { id: '2', fullName: 'Jane Smith' },
-  { id: '3', fullName: 'Alice Johnson' },
-  { id: '4', fullName: 'Bob Brown' },
-  { id: '5', fullName: 'Charlie Davis' },
-  { id: '6', fullName: 'Diana Evans' },
-  { id: '7', fullName: 'Ethan Harris' },
-  { id: '8', fullName: 'Fiona Clark' },
-  { id: '9', fullName: 'George Lewis' },
-  { id: '10', fullName: 'Hannah Walker' },
-]
-const dummyFollowings: FollowPeopleProps[] = [
-  { id: '1', fullName: 'Alice Johnson' },
-  { id: '2', fullName: 'Benjamin Lee' },
-  { id: '3', fullName: 'Carla Mendes' },
-  { id: '4', fullName: 'David Kim' },
-  { id: '5', fullName: 'Ella Thompson' },
-  { id: '6', fullName: 'Frank Zhang' },
-  { id: '7', fullName: 'Grace Patel' },
-  { id: '8', fullName: 'Hector Alvarez' },
-  { id: '9', fullName: 'Isla Morgan' },
-  { id: '10', fullName: 'Jack O’Brien' },
-  { id: '11', fullName: 'Kara Nguyen' },
-  { id: '12', fullName: 'Liam Garcia' },
-  { id: '13', fullName: 'Maya Wilson' },
-  { id: '14', fullName: 'Noah Schroeder' },
-  { id: '15', fullName: 'Olivia Rossi' },
-  { id: '16', fullName: 'Peter Blake' },
-  { id: '17', fullName: 'Quinn Harper' },
-  { id: '18', fullName: 'Ruby Adams' },
-  { id: '19', fullName: 'Samuel Cohen' },
-  { id: '20', fullName: 'Tara Singh' },
-  { id: '21', fullName: 'Umar Richards' },
-  { id: '22', fullName: 'Violet Brooks' },
-  { id: '23', fullName: 'William Knight' },
-  { id: '24', fullName: 'Ximena Lopez' },
-  { id: '25', fullName: 'Yara Hussein' },
-  { id: '26', fullName: 'Zane Whitman' },
-  { id: '27', fullName: 'Amira Becker' },
-  { id: '28', fullName: 'Brian Castillo' },
-  { id: '29', fullName: 'Cecilia Grant' },
-  { id: '30', fullName: 'Diego Navarro' },
-]
 
-const ProfileInfo = ({ dateOfBirth, email, fullName, id, countNum }: Props) => {
+const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, isFollowingProp, followersCount }: Props) => {
+  // HANDLE FOLLOW INTERACTION OPEN
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  // =================================
+  //          Fetching data
+  // =================================
+  const [followInteraction, setFollowInteraction] = useState<FollowInteractionResponse>()
+  const [isProfileLoading, setIsProfileLoading] = useState<boolean>(true)
+  const [errorProfile, setErrorProfile] = useState<string | null>(null)
+  const [isFollowing, setIsFollowing] = useState<boolean>(isFollowingProp || false)
+
+  useEffect(() => {
+    // Function to fetch data
+    const fetchFollowInteraction = async () => {
+      try {
+        const data = await getFollowInteraction(id)
+        await setFollowInteraction(data)
+      } catch (error) {
+        setErrorProfile(error instanceof Error ? error.message : 'Error when fetching follow interaction')
+      } finally {
+        setIsProfileLoading(false)
+      }
+    }
+    fetchFollowInteraction()
+  }, [id, isOwner])
+
+  const handleFollowClick = async () => {
+    try {
+      setIsFollowing(!isFollowing)
+
+      if (isFollowing) {
+        await unFollowUser(id)
+        toast.success('Unfollowed')
+      } else {
+        await followUser(id)
+        toast.success('Followed')
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'System error')
+      await new Promise((res) => setTimeout(res, 1500))
+      reload()
+    }
+  }
+
+  const reload = () => {
+    window.location.reload()
+  }
+
   return (
     <div className='flex w-full flex-col items-center justify-center gap-2 lg:gap-4'>
       <div className='flex flex-col items-center justify-center gap-2 '>
         <Avatar className='cursor-pointer mx-auto lg:w-[150px] lg:h-[150px] w-[100px] h-[100px]'>
           <AvatarImage src='https://github.com/shadcn.png' alt='@user' />
-          <AvatarFallback>US</AvatarFallback>
+          <AvatarFallback>{fullName?.[0] || 'U'}</AvatarFallback>
         </Avatar>
         <Title level={5} className='lg:text-xl'>
-          {fullName || 'Nguyễn Văn Vũ'}
+          {fullName || 'Unknown'}
         </Title>
       </div>
 
       <div className='w-fit flex flex-col lg:flex-row items-center justify-between gap-2'>
         {/* Number of followers */}
-        <Dialog>
-          <DialogTrigger asChild>
-            <Text className='cursor-pointer text-center'>{countNum || 100} Followers</Text>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild disabled={isProfileLoading || !!errorProfile || !followInteraction}>
+            <Text className='cursor-pointer text-center'>
+              {isProfileLoading ? 'Loading...' : errorProfile ? 'Error' : (followersCount ?? 'NaN')} Followers
+            </Text>
           </DialogTrigger>
-          <DialogContent className='px-0 py-0 border-none w-fit min-w-lg'>
-            <FollowInteractionModal followers={dummyFollowPeopleData} followings={dummyFollowings} />
+
+          <DialogContent className='px-0 py-0 border-none w-full min-w-[300px] max-w-lg'>
+            {isProfileLoading ? (
+              <div className='p-6 text-center text-white bg-secondary-dark rounded-lg'>Loading followers...</div>
+            ) : errorProfile ? (
+              <div className='p-6 text-center text-white bg-secondary-dark rounded-lg'>Failed to load data</div>
+            ) : !followInteraction ? (
+              <div className='p-6 text-center text-white bg-secondary-dark rounded-lg'>No data available</div>
+            ) : (
+              <FollowInteractionModal
+                followers={followInteraction.followers}
+                followings={followInteraction.following}
+              />
+            )}
           </DialogContent>
         </Dialog>
+
         {/* Edit profile */}
-        <EditProfileModal
-          id={id || '1'}
-          fullName={fullName || 'Nguyễn Văn Vũ'}
-          email={email || 'nguyenvanvu@example.com'}
-          dateOfBirth={dateOfBirth || new Date('1995-05-20')}
-        />
+        {isOwner && (
+          <EditProfileModal
+            id={id || '1'}
+            fullName={fullName || 'Unknow'}
+            email={email || 'unknown@user.com'}
+            dateOfBirth={dateOfBirth instanceof Date ? dateOfBirth : new Date('1995-05-20')}
+            updateProfileCallBack={reload}
+          />
+        )}
+
         {/* Follow */}
-        <Button
-          className='bg-secondary-dark text-white cursor-pointer border border-tertiary-dark 
-             hover:[box-shadow:0_0_8px_#ffa000] hover:[text-shadow:0_0_6px_#fff] 
-             transition duration-200'
-        >
-          Follow
-          <UserPlus />
-        </Button>
+        {!isOwner && (
+          <Button
+            className={`${isFollowing ? 'bg-secondary-dark text-white' : 'bg-white text-primary-dark '} cursor-pointer border border-tertiary-dark hover:[box-shadow:0_0_4px_#ffffff] hover:[text-shadow:0_0_6px_#fff] transition duration-200`}
+            onClick={handleFollowClick}
+          >
+            {isFollowing ? 'Unfollow' : 'Follow'}
+            <UserPlus />
+          </Button>
+        )}
       </div>
     </div>
   )

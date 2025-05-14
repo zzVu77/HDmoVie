@@ -21,7 +21,7 @@ function App() {
     <BrowserRouter>
       <Toaster
         richColors
-        position='top-right'
+        position='bottom-right'
         closeButton
         duration={4000} // thời gian toast hiển thị, tính bằng mili-giây
       />
@@ -42,6 +42,7 @@ function App() {
             }
           />
           <Route path='/blog' element={<Blogs />} />
+          <Route path='/profile/' element={<Profile />} />
           <Route path='/profile/:id' element={<Profile />} />
           <Route path='/test' element={<TestComponent />} />
         </Route>

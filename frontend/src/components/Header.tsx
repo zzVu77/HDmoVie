@@ -251,8 +251,12 @@ export default function Header() {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator className='bg-tertiary-dark' />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem onSelect={handleLogout}>Log out</DropdownMenuItem>
+                  <Link to='/profile/'>
+                    <DropdownMenuItem className='cursor-pointer'>Profile</DropdownMenuItem>
+                  </Link>
+                  <DropdownMenuItem className='cursor-pointer' onSelect={handleLogout}>
+                    Log out
+                  </DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>

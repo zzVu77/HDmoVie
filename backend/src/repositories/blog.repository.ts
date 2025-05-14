@@ -128,18 +128,44 @@ export class BlogRepository {
     await this.repository.delete(id)
   }
 
-  async findByUserId(userId: string, offset: number, limit: number): Promise<Blog[]> {
-    try {
-      return this.repository.find({
-        where: { owner: { id: userId } } as FindOptionsWhere<Blog>,
-        skip: offset,
-        take: limit,
-        relations: ['tags', 'imageUrls'],
-        order: { dateCreated: 'DESC' },
-      })
-    } catch (error) {
-      throw new Error(`Failed to find blogs by user ID: ${(error as Error).message}`)
-    }
+  async findByUserId(userId: string, offset: number, limit: number): Promise<any[]> {
+    const blogs = await this.repository
+      .createQueryBuilder('blog')
+      .select([
+        'blog.id as blog_id',
+        'blog.content as blog_content',
+        'blog.dateCreated as blog_dateCreated',
+        'owner.id as owner_id',
+        'owner.fullName as owner_fullName',
+        'tags.id as tags_id',
+        'tags.name as tags_name',
+        'imageUrls.id as imageUrls_id',
+        'imageUrls.url as imageUrls_url',
+      ])
+      .addSelect(
+        `(SELECT COUNT(*) 
+        FROM like_interactions_users liu 
+        JOIN like_interactions li ON liu.likeInteractionId = li.id 
+        WHERE li.blogId = blog.id)`,
+        'likeCount',
+      )
+      .addSelect(
+        `(SELECT COUNT(*) 
+        FROM comments c 
+        WHERE c.blogId = blog.id AND c.type = 'BLOG')`,
+        'commentCount',
+      )
+      .leftJoin('blog.owner', 'owner')
+      .leftJoin('blog.tags', 'tags')
+      .leftJoin('blog.imageUrls', 'imageUrls')
+      .where('owner.id = :userId', { userId })
+      .orderBy('blog.dateCreated', 'DESC')
+      .skip(offset)
+      .take(limit)
+      .getRawMany()
+
+    // Group by blog_id and transform into the right structure
+    return this.transformToResponseDTOList(blogs)
   }
 
   // Helper method to transform raw query results

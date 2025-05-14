@@ -1,10 +1,15 @@
 import { apiGet, apiPost } from '@/utils/axiosConfig'
-import { BlogPost } from '@/types'
+import { BlogPost, TagType } from '@/types'
 
 export interface CreateBlogPostRequest {
   content: string
-  tags: string[]
-  imageUrls?: { url: string }[]
+  tags: TagType[]
+  images?: { url: string }[]
+}
+
+export interface ApiResponse<T> {
+  data: T
+  status: string
 }
 
 /**
