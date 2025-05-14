@@ -7,7 +7,6 @@ import { Text } from './ui/typography'
 import { Textarea } from './ui/textarea'
 import { Send } from 'lucide-react'
 import CommentService from '@/services/commentService'
-import { apiPost } from '@/utils/axiosConfig'
 
 interface CommentSectionProps {
   blogId: string
@@ -64,7 +63,7 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
         const organizedComments = organizeComments(response.data.data)
         setComments(organizedComments)
       } catch (err: unknown) {
-        alert((err as Error).message)
+        setError((err as Error).message)
       } finally {
         setIsLoading(false)
       }
@@ -78,18 +77,13 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
 
     try {
       setIsSubmitting(true)
-      const response = await apiPost<{ status: string; data: BlogCommentType }>('/comments/blog', {
-        blogId: blogId,
-        content: commentText.trim(),
-        parentCommentId: null,
-      })
+      const response = await CommentService.createRootComment(blogId, commentText)
 
-      // Add the new comment to the list using the correct response structure
+      // Add the new comment to the list
       setComments((prevComments) => [...prevComments, response.data.data])
       setCommentText('')
-      // } catch (error) {
-      //   console.error('Failed to post comment:', error)
-      // You might want to show an error message to the user here
+    } catch (err) {
+      setError((err as Error).message)
     } finally {
       setIsSubmitting(false)
     }

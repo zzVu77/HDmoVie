@@ -9,8 +9,7 @@ import { BlogCommentType } from '@/types'
 import { cn } from '@/lib/utils'
 import { Textarea } from './ui/textarea'
 import ReportDialog from './ReportModal'
-// import CommentService from '@/services/commentService'
-import { apiPost } from '@/utils/axiosConfig'
+import CommentService from '@/services/commentService'
 
 interface BlogCommentCardProps {
   comment: BlogCommentType
@@ -23,20 +22,16 @@ export default function BlogCommentCard({ comment, isReply = false, blogId, onCo
   const [showReplyInput, setShowReplyInput] = useState(false)
   const [replyText, setReplyText] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
   const submitReply = async () => {
     if (!replyText.trim()) return
     try {
       setIsSubmitting(true)
-      // const response = await CommentService.createComment({
-      //   content: replyText.trim(),
-      //   blogId: blogId,
-      //   parentCommentId: comment.id,
-      // })
-      const response = await apiPost<{ status: string; data: BlogCommentType }>('/comments/blog', {
-        blogId: blogId,
-        content: replyText.trim(),
-        parentCommentId: comment.id,
-      })
+      setError(null)
+
+      const response = await CommentService.createReply(blogId, comment.id, replyText)
+
       if (onCommentAdded) {
         onCommentAdded(response.data.data)
       }
@@ -44,7 +39,7 @@ export default function BlogCommentCard({ comment, isReply = false, blogId, onCo
       setReplyText('')
       setShowReplyInput(false)
     } catch (err) {
-      alert((err as Error).message)
+      setError((err as Error).message)
     } finally {
       setIsSubmitting(false)
     }
@@ -122,6 +117,7 @@ export default function BlogCommentCard({ comment, isReply = false, blogId, onCo
               onChange={(e) => setReplyText(e.target.value)}
             />
           </div>
+          {error && <Text className='text-red-400 text-sm px-7 mt-1'>{error}</Text>}
           <div className='flex justify-end px-7 py-2 mt-1 bg-secondary-dark '>
             <Button
               className='text-sm font-medium text-primary-dark cursor-pointer bg-tertiary-yellow rounded-md px-3 py-1.5 disabled:opacity-50'

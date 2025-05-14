@@ -9,7 +9,7 @@ export interface ApiResponse<T> {
 export interface CreateCommentRequest {
   content: string
   blogId: string
-  parentCommentId?: string
+  parentCommentId?: string | null
 }
 
 export const CommentService = {
@@ -21,10 +21,32 @@ export const CommentService = {
   },
 
   /**
-   * Create a new comment
+   * Create a new root comment (not a reply)
+   */
+  createRootComment: (blogId: string, content: string) => {
+    return apiPost<ApiResponse<BlogCommentType>>('/comments/blog', {
+      blogId,
+      content: content.trim(),
+      parentCommentId: null,
+    })
+  },
+
+  /**
+   * Create a reply to an existing comment
+   */
+  createReply: (blogId: string, parentCommentId: string, content: string) => {
+    return apiPost<ApiResponse<BlogCommentType>>('/comments/blog', {
+      blogId,
+      content: content.trim(),
+      parentCommentId,
+    })
+  },
+
+  /**
+   * Create a comment (can be either root or reply)
    */
   createComment: (commentData: CreateCommentRequest) => {
-    return apiPost<ApiResponse<BlogCommentType>, CreateCommentRequest>('/api/comments', commentData)
+    return apiPost<ApiResponse<BlogCommentType>>('/comments/blog', commentData)
   },
 }
 
