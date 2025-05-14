@@ -11,7 +11,7 @@ import { Text } from './ui/typography'
 import { toast } from 'sonner'
 import { useParams } from 'react-router-dom'
 import { MovieCommentProps } from '@/types'
-import { submitMovieComment } from '@/services/movieService'
+import CommentService from '@/services/commentService'
 
 // Define schema for form validation
 const reviewSchema = z.object({
@@ -48,14 +48,14 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onCommentAdded }) => {
     try {
       setIsSubmitting(true)
 
-      const newComment = await submitMovieComment(id, {
+      const response = await CommentService.createMovieComment(id, {
         score: data.rating,
         content: data.content,
       })
 
-      // Call onCommentAdded with the new comment
+      // Transform and call onCommentAdded with the new comment
       if (onCommentAdded) {
-        onCommentAdded(newComment)
+        onCommentAdded(CommentService.transformMovieCommentResponse(response.data))
       }
 
       toast.success('Review submitted successfully!')
