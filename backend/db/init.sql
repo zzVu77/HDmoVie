@@ -845,11 +845,11 @@ VALUES
 
 -- Registered User
 INSERT INTO registeredUsers (id, email, password, fullName, dateOfBirth, role, refreshToken, refreshTokenExpiresAt) VALUES
-('1',  'alice@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Alice Wonderland', NOW(), 'REGISTERED_USER', null,null),
-('2', 'bob@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Bob Dave Tint', NOW(), 'REGISTERED_USER',null,null),
-('3', 'carol@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Caroline', NOW(), 'REGISTERED_USER',null,null),
-('4', 'dave@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Dave Kit', NOW(), 'REGISTERED_USER',null,null),
-('5', 'eve@example.com', '$2a$12$dTV5LyODqGEAtr4Yo1zMSu2/WByKDgzgLpWWWi/elvt.iog4t7wDS', 'Eve Me', NOW(), 'REGISTERED_USER',null,null);
+('1',  'alice@example.com', '$2a$12$2YtirfxBoUsPZXO8OKwFguBHEmLM9o4CPVB.S/ybvdevzd0tS9fnG', 'Alice Wonderland', NOW(), 'REGISTERED_USER', null,null),
+('2', 'bob@example.com', '$2a$12$2YtirfxBoUsPZXO8OKwFguBHEmLM9o4CPVB.S/ybvdevzd0tS9fnG', 'Bob Dave Tint', NOW(), 'REGISTERED_USER',null,null),
+('3', 'carol@example.com', '$2a$12$2YtirfxBoUsPZXO8OKwFguBHEmLM9o4CPVB.S/ybvdevzd0tS9fnG', 'Caroline', NOW(), 'REGISTERED_USER',null,null),
+('4', 'dave@example.com', '$2a$12$2YtirfxBoUsPZXO8OKwFguBHEmLM9o4CPVB.S/ybvdevzd0tS9fnG', 'Dave Kit', NOW(), 'REGISTERED_USER',null,null),
+('5', 'eve@example.com', '$2a$12$2YtirfxBoUsPZXO8OKwFguBHEmLM9o4CPVB.S/ybvdevzd0tS9fnG', 'Eve Me', NOW(), 'REGISTERED_USER',null,null);
 
 
 -- Follow Interactions
@@ -1079,6 +1079,7 @@ INSERT INTO `blogs` (`id`, `content`, `dateCreated`, `ownerId`) VALUES
 -- Sample data for blog_media table
 INSERT INTO `blog_media` (`id`, `url`, `blogId`) VALUES
 ('media-001', '/media/inception_review.jpg', 'blog-001'),
+('media-006', '/media/inception_review.jpg', 'blog-001'),
 ('media-002', '/media/lalaland_music.jpg', 'blog-002'),
 ('media-003', '/media/top5_movies.jpg', 'blog-003'),
 ('media-004', '/media/marvel_impact.jpg', 'blog-004'),
