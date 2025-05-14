@@ -20,7 +20,7 @@ function App() {
     <BrowserRouter>
       <Toaster
         richColors
-        position='top-right'
+        position='bottom-right'
         closeButton
         duration={4000} // thời gian toast hiển thị, tính bằng mili-giây
       />
