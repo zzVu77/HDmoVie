@@ -97,7 +97,11 @@ const MovieDetail = () => {
       <Wrapper>
         <TitleSection>Review</TitleSection>
         <div className='flex flex-col gap-5 w-[90vw] mx-auto'>
-          {!movieData.status && (
+          {movieData.status ? (
+            <div className='w-full p-4 bg-secondary-dark rounded-lg border border-tertiary-yellow'>
+              <Text className='text-primary-yellow text-center'>You have already reviewed this movie</Text>
+            </div>
+          ) : (
             <div className='w-full'>
               <CommentBox onCommentAdded={handleCommentAdded} />
             </div>
