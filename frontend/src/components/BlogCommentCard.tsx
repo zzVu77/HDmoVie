@@ -9,8 +9,7 @@ import { BlogCommentType } from '@/types'
 import { cn } from '@/lib/utils'
 import { Textarea } from './ui/textarea'
 import ReportDialog from './ReportModal'
-// import CommentService from '@/services/commentService'
-import { apiPost } from '@/utils/axiosConfig'
+import CommentService from '@/services/commentService'
 
 interface BlogCommentCardProps {
   comment: BlogCommentType
@@ -19,19 +18,16 @@ interface BlogCommentCardProps {
   onCommentAdded?: (newComment: BlogCommentType) => void
 }
 
-// Add type guard to validate response format
-const isValidCommentResponse = (response: any): response is { status: string; data: BlogCommentType } => {
-  return (
-    response &&
-    typeof response === 'object' &&
-    'status' in response &&
-    'data' in response &&
-    typeof response.data === 'object' &&
-    'id' in response.data &&
-    'content' in response.data &&
-    'user' in response.data
-  )
-}
+// // Update type guard to only check for BlogCommentType
+// const isValidCommentResponse = (response: any): response is BlogCommentType => {
+//   return (
+//     response &&
+//     typeof response === 'object' &&
+//     'id' in response &&
+//     'content' in response &&
+//     'user' in response
+//   )
+// }
 
 export default function BlogCommentCard({ comment, isReply = false, blogId, onCommentAdded }: BlogCommentCardProps) {
   const [showReplyInput, setShowReplyInput] = useState(false)
@@ -41,18 +37,18 @@ export default function BlogCommentCard({ comment, isReply = false, blogId, onCo
     if (!replyText.trim()) return
     try {
       setIsSubmitting(true)
-      const response = await apiPost<{ status: string; data: BlogCommentType }>('/comments/blog', {
+      const response = await CommentService.createComment({
         blogId: blogId,
         content: replyText.trim(),
         parentCommentId: comment.id,
       })
-      // console.log('Response from server:', response)
-      if (!isValidCommentResponse(response.data)) {
-        throw new Error('Invalid response format from server')
-      }
+
+      // if (!isValidCommentResponse(response.data)) {
+      //   throw new Error('Invalid response format from server')
+      // }
 
       if (onCommentAdded) {
-        onCommentAdded(response.data.data)
+        onCommentAdded(response.data)
       }
 
       setReplyText('')

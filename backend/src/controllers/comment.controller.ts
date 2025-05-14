@@ -17,7 +17,7 @@ export class CommentController {
         parentCommentId,
       })
 
-      res.status(201).json({ status: 'success', data: comment })
+      res.status(201).json(comment)
     } catch (error) {
       console.error('Error creating movie comment:', error)
       res.status(400).json({ status: 'failed', message: (error as Error).message })
@@ -28,7 +28,7 @@ export class CommentController {
     try {
       const { blogId } = req.params
       const comments = await this.commentService.getBlogComments(blogId)
-      res.status(200).json({ status: 'success', data: comments })
+      res.status(201).json(comments)
     } catch (error) {
       console.error('Error fetching blog comments:', error)
 
@@ -46,7 +46,7 @@ export class CommentController {
       const user = res.locals.user
       const userId = user.id
       const comment = await this.commentService.commentOnBlog(userId, blogId, content, parentCommentId)
-      res.status(201).json({ status: 'success', data: comment })
+      res.status(201).json(comment)
     } catch (error) {
       console.error('Error creating blog comment:', error)
 
@@ -55,9 +55,9 @@ export class CommentController {
         (error as Error).message === 'User not found' ||
         (error as Error).message === 'Parent comment not found'
       ) {
-        res.status(404).json({ status: 'failed', message: (error as Error).message })
+        res.status(404).json({ message: (error as Error).message })
       } else {
-        res.status(400).json({ status: 'failed', message: (error as Error).message })
+        res.status(400).json({ message: (error as Error).message })
       }
     }
   }
@@ -66,7 +66,7 @@ export class CommentController {
     try {
       const { movieId } = req.params
       const comments = await this.commentService.getMovieComments(movieId)
-      res.status(200).json({ status: 'success', data: comments })
+      res.status(201).json(comments)
     } catch (error) {
       console.error('Error fetching movie comments:', error)
       res.status(500).json({

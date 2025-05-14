@@ -7,25 +7,21 @@ import { Text } from './ui/typography'
 import { Textarea } from './ui/textarea'
 import { Send } from 'lucide-react'
 import CommentService from '@/services/commentService'
-import { apiPost } from '@/utils/axiosConfig'
 
 interface CommentSectionProps {
   blogId: string
 }
 
-// Add type guard to validate response format
-const isValidCommentResponse = (response: any): response is { status: string; data: BlogCommentType } => {
-  return (
-    response &&
-    typeof response === 'object' &&
-    'status' in response &&
-    'data' in response &&
-    typeof response.data === 'object' &&
-    'id' in response.data &&
-    'content' in response.data &&
-    'user' in response.data
-  )
-}
+// Update type guard to only check for BlogCommentType
+// const isValidCommentResponse = (response: any): response is BlogCommentType => {
+//   return (
+//     response &&
+//     typeof response === 'object' &&
+//     'id' in response &&
+//     'content' in response &&
+//     'user' in response
+//   )
+// }
 
 export default function CommentSection({ blogId }: CommentSectionProps) {
   const [comments, setComments] = useState<BlogCommentType[]>([])
@@ -71,11 +67,11 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
         setIsLoading(true)
         setError(null)
         const response = await CommentService.getBlogComments(blogId)
-        if (!response.data || !Array.isArray(response.data.data)) {
-          throw new Error('Invalid response format from server')
-        }
+        // if (!Array.isArray(response)) {
+        //   throw new Error('Invalid response format from server')
+        // }
         // Transform the comments data structure
-        const organizedComments = organizeComments(response.data.data)
+        const organizedComments = organizeComments(response.data)
         setComments(organizedComments)
       } catch (err: unknown) {
         alert((err as Error).message)
@@ -92,18 +88,14 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
 
     try {
       setIsSubmitting(true)
-      const response = await apiPost<{ status: string; data: BlogCommentType }>('/comments/blog', {
+      const response = await CommentService.createComment({
         blogId: blogId,
         content: commentText.trim(),
-        parentCommentId: null,
+        parentCommentId: undefined,
       })
 
-      if (!isValidCommentResponse(response.data)) {
-        throw new Error('Invalid response format from server')
-      }
-
-      // Add the new comment to the list using the correct response structure
-      setComments((prevComments) => [...prevComments, response.data.data])
+      // Add the new comment to the list using the response data
+      setComments((prevComments) => [...prevComments, response.data])
       setCommentText('')
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to submit comment'
