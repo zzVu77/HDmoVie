@@ -8,10 +8,10 @@ import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { Textarea } from './ui/textarea'
 import { Text } from './ui/typography'
-import { apiPost } from '@/utils/axiosConfig'
 import { toast } from 'sonner'
 import { useParams } from 'react-router-dom'
-import { MovieCommentResponse, MovieCommentType } from '@/types'
+import { MovieCommentProps } from '@/types'
+import { submitMovieComment } from '@/services/movieService'
 
 // Define schema for form validation
 const reviewSchema = z.object({
@@ -25,29 +25,8 @@ const reviewSchema = z.object({
 
 type ReviewFormValues = z.infer<typeof reviewSchema>
 
-// Add type guard to validate response format
-const isValidMovieCommentResponse = (response: any): response is MovieCommentResponse => {
-  return (
-    response &&
-    typeof response === 'object' &&
-    'status' in response &&
-    'data' in response &&
-    typeof response.data === 'object' &&
-    'id' in response.data &&
-    'score' in response.data &&
-    'content' in response.data &&
-    'userId' in response.data &&
-    'movieId' in response.data &&
-    'createdAt' in response.data &&
-    'user' in response.data &&
-    typeof response.data.user === 'object' &&
-    'id' in response.data.user &&
-    'fullName' in response.data.user
-  )
-}
-
 interface CommentBoxProps {
-  onCommentAdded?: (comment: MovieCommentType) => void
+  onCommentAdded?: (comment: MovieCommentProps) => void
 }
 
 const CommentBox: React.FC<CommentBoxProps> = ({ onCommentAdded }) => {
@@ -69,22 +48,10 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onCommentAdded }) => {
     try {
       setIsSubmitting(true)
 
-      const response = await apiPost<MovieCommentResponse>(`/rates/${id}/with-comment`, {
+      const newComment = await submitMovieComment(id, {
         score: data.rating,
         content: data.content,
       })
-
-      if (!isValidMovieCommentResponse(response.data)) {
-        throw new Error('Invalid response format from server')
-      }
-
-      // Transform the response data to match MovieCommentType
-      const newComment: MovieCommentType = {
-        userName: response.data.data.user.fullName,
-        comment: response.data.data.content,
-        date: new Date(response.data.data.createdAt).toLocaleString(),
-        rating: response.data.data.score,
-      }
 
       // Call onCommentAdded with the new comment
       if (onCommentAdded) {

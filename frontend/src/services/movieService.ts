@@ -1,5 +1,5 @@
-import { MovieCommentProps, MovieType } from '@/types'
-import { apiGet } from '@/utils/axiosConfig'
+import { MovieCommentProps, MovieType, MovieCommentResponse } from '@/types'
+import { apiGet, apiPost } from '@/utils/axiosConfig'
 
 // =Define the structure of the error response
 export interface ErrorResponse {
@@ -76,3 +76,32 @@ export const getMovieById = async (id: string): Promise<MovieDetailResponse> =>
 // Fetch movie by Title
 export const searchMoviesByTitle = async (title: string): Promise<MovieType[]> =>
   getFromApi<MovieType[]>(`/movies/search?title=${encodeURIComponent(title)}`, 'searching movies by title')
+
+// Submit a movie comment with rating
+export const submitMovieComment = async (
+  movieId: string,
+  data: { score: number; content: string },
+): Promise<MovieCommentProps> => {
+  try {
+    const response = await apiPost<MovieCommentResponse>(`/rates/${movieId}/with-comment`, data)
+
+    if (
+      typeof response.data === 'object' &&
+      response.data !== null &&
+      'status' in response.data &&
+      response.data.status === 'failed'
+    ) {
+      throw response.data
+    }
+
+    // Transform the response to MovieCommentProps format
+    return {
+      userName: response.data.data.user.fullName,
+      comment: response.data.data.content,
+      date: new Date(response.data.data.createdAt).toLocaleString(),
+      rating: response.data.data.score,
+    }
+  } catch (error) {
+    return handleApiError(error, 'submitting movie comment')
+  }
+}
