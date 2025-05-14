@@ -1,5 +1,5 @@
 import { MovieCommentProps, MovieType } from '@/types'
-import { apiGet } from '@/utils/axiosConfig'
+import { apiDelete, apiGet, apiPost, apiPut } from '@/utils/axiosConfig'
 
 // =Define the structure of the error response
 export interface ErrorResponse {
@@ -76,3 +76,31 @@ export const getMovieById = async (id: string): Promise<MovieDetailResponse> =>
 // Fetch movie by Title
 export const searchMoviesByTitle = async (title: string): Promise<MovieType[]> =>
   getFromApi<MovieType[]>(`/movies/search?title=${encodeURIComponent(title)}`, 'searching movies by title')
+
+export const updateMovie = async (id: string, movieData: Partial<MovieType>): Promise<MovieType> => {
+  try {
+    const response = await apiPut<MovieType>(`/movies/update/${id}`, movieData)
+    // if ('status' in response.data && response.data.status === 'failed') {
+    //   throw response.data
+    // }
+    return transformToMovieType(response.data)
+  } catch (error) {
+    return handleApiError(error, 'updating movie')
+  }
+}
+export const createMovie = async (movieData: Partial<MovieType>): Promise<MovieType> => {
+  try {
+    const response = await apiPost<MovieType>('/movies/create', movieData)
+    return transformToMovieType(response.data)
+  } catch (error) {
+    return handleApiError(error, 'creating movie')
+  }
+}
+
+export const deleteMovie = async (id: string): Promise<void> => {
+  try {
+    await apiDelete(`/movies/delete/${id}`, {})
+  } catch (error) {
+    return handleApiError(error, 'deleting movie')
+  }
+}

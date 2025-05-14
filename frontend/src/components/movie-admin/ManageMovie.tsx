@@ -7,7 +7,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { MovieType } from '@/types'
+import { getMovies } from '@/services/movieService'
+import { GenreType, MovieType } from '@/types'
 import {
   ColumnFiltersState,
   SortingState,
@@ -20,62 +21,71 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { ChevronDown } from 'lucide-react'
-import * as React from 'react'
+import { useEffect, useState } from 'react'
+import Wrapper from '../shared/Wrapper'
 import { columns } from './movie-columns'
-const data: MovieType[] = [
-  {
-    id: '1',
-    title: 'Inception',
-    release: '2010-07-16',
-    voteAvg: 8.8,
-    voteCount: 35000,
-    genres: [{ name: 'Sci-Fi' }, { name: 'Action' }],
-    casts: [{ name: 'Leonardo DiCaprio' }, { name: 'Joseph Gordon-Levitt' }],
-    description: 'A thief who steals corporate secrets through dream infiltration technology.',
-    trailerSource: 'https://www.youtube.com/watch?v=YoHD9XEInc0',
-    posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-    backdropSource: 'https://image.tmdb.org/t/p/original/ce3prrjh9ZehEl5JinNqr4jIeaB.jpg',
-  },
-  {
-    id: '2',
-    title: 'The Matrix',
-    release: '1999-03-31',
-    voteAvg: 8.7,
-    voteCount: 28000,
-    genres: [{ name: 'Sci-Fi' }, { name: 'Action' }],
-    casts: [{ name: 'Keanu Reeves' }, { name: 'Laurence Fishburne' }],
-    description: 'A hacker discovers a mysterious truth about his reality.',
-    trailerSource: 'https://www.youtube.com/watch?v=m8e-FF8MsqU',
-    posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-    backdropSource: 'https://image.tmdb.org/t/p/original/ce3prrjh9ZehEl5JinNqr4jIeaB.jpg',
-  },
-  {
-    id: '3',
-    title: 'Interstellar',
-    release: '2014-11-07',
-    voteAvg: 8.6,
-    voteCount: 32000,
-    genres: [{ name: 'Sci-Fi' }, { name: 'Adventure' }],
-    casts: [{ name: 'Matthew McConaughey' }, { name: 'Anne Hathaway' }],
-    description: 'A team of explorers travel through a wormhole in space.',
-    trailerSource: 'https://www.youtube.com/watch?v=zSWdZVtXT7E',
-    posterSource: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-    backdropSource: 'https://image.tmdb.org/t/p/original/ce3prrjh9ZehEl5JinNqr4jIeaB.jpg',
-  },
-]
+import { genreService } from '@/services/genreService'
+import { MovieInfoModal } from './MovieInfoModal'
 
 export function ManageMovie() {
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
+  const [data, setMovies] = useState<MovieType[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const refreshMovies = async () => {
+    try {
+      setLoading(true)
+      const results = await getMovies()
+      setMovies(results)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Can not fetch movies')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    refreshMovies()
+  }, [])
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const results = await getMovies()
+        setMovies(results)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Can not fetch movies')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchMovies()
+  }, [])
+  const [genres, setGenres] = useState<GenreType[]>([])
+  const fetchGenres = async () => {
+    try {
+      const genres = await genreService.getGenres()
+      setGenres(genres)
+    } catch {
+      throw Error('Loading fail')
+    }
+  }
+
+  useEffect(() => {
+    fetchGenres()
+  }, [])
+
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     voteAvg: false,
     voteCount: false,
+    casts: false,
   })
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [rowSelection, setRowSelection] = useState({})
 
   const table = useReactTable({
-    data,
-    columns,
+    data: data,
+    columns: columns(genres, refreshMovies),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -91,10 +101,25 @@ export function ManageMovie() {
       rowSelection,
     },
   })
+  if (loading) {
+    return (
+      <Wrapper className='mt-[100px]'>
+        <p className='text-center'>Loading...</p>
+      </Wrapper>
+    )
+  }
+
+  if (error) {
+    return (
+      <Wrapper className='mt-[100px]'>
+        <p className='text-red-500 text-center'>{error}</p>
+      </Wrapper>
+    )
+  }
 
   return (
-    <div className='w-full'>
-      <div className='flex items-center py-4 gap-2'>
+    <div className='w-full flex flex-col gap-2 px-1 '>
+      <div className='flex items-center pt-4 gap-2'>
         <Input
           placeholder='Filter by titles...'
           value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
@@ -136,7 +161,19 @@ export function ManageMovie() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className='rounded-md border'>
+      <div className='self-end'>
+        <MovieInfoModal
+          title='Add new movie'
+          genres={genres}
+          onRefresh={refreshMovies}
+          type='create'
+          buttonTitle='Save'
+          description='Fill in the required details such as title, genre, and other relevant information, then click Save to submit.'
+        >
+          <Button>Add new</Button>
+        </MovieInfoModal>
+      </div>
+      <div className='rounded-md border '>
         <Table>
           <TableHeader className='sticky'>
             {table.getHeaderGroups().map((headerGroup) => (

@@ -7,8 +7,10 @@ import { ImageDialogCell } from '../shared/ImageDialogCell'
 import { Button } from '../ui/button'
 import { CastType, GenreType, MovieType } from '@/types'
 import { MovieInfoModal } from './MovieInfoModal'
+import { deleteMovie } from '@/services/movieService'
+import { toast } from 'sonner'
 
-export const columns: ColumnDef<MovieType>[] = [
+export const columns = (genres: GenreType[], refreshMovies: () => Promise<void>): ColumnDef<MovieType>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -49,10 +51,10 @@ export const columns: ColumnDef<MovieType>[] = [
     cell: ({ row }) => <div>{row.getValue('title') || 'N/A'}</div>,
   },
   {
-    accessorKey: 'release',
+    accessorKey: 'releaseYear',
     header: 'Release Date',
     cell: ({ row }) => {
-      const releaseDate = row.getValue('release') as string
+      const releaseDate = row.getValue('releaseYear') as string
       return <div>{releaseDate ? new Date(releaseDate).toLocaleDateString() : 'N/A'}</div>
     },
   },
@@ -147,6 +149,16 @@ export const columns: ColumnDef<MovieType>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const movieId = row.getValue('id') as number
+      const handleDelete = async () => {
+        try {
+          await deleteMovie(row.original.id)
+          toast.success('Movie deleted successfully')
+          refreshMovies()
+        } catch {
+          throw Error("Can't delete")
+        }
+      }
+
       return (
         <div className='flex items-center justify-between gap-2 '>
           <Link to={`/movie/${movieId}`} className='block'>
@@ -155,8 +167,10 @@ export const columns: ColumnDef<MovieType>[] = [
 
           <MovieInfoModal
             icon={<PencilLine className='h-4 w-4 text-primary-dark cursor-pointer' />}
-            onSave={() => {}}
             movie={row.original}
+            genres={genres}
+            type='update'
+            onRefresh={refreshMovies}
           ></MovieInfoModal>
 
           {/* <MovieInfoModal
@@ -167,7 +181,7 @@ export const columns: ColumnDef<MovieType>[] = [
           <ConfirmAlertDialog
             title=''
             description='Are you sure you want to delete this movie? This action cannot be undone.'
-            onConfirm={() => {}}
+            onConfirm={handleDelete}
             trigger={<Trash2 className='h-4 w-4 text-primary-dark cursor-pointer' />}
             cancelText='No, go back'
             confirmText='Yes, proceed'

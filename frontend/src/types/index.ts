@@ -9,7 +9,7 @@ export type CastType = {
 }
 
 export type MovieType = {
-  id?: string
+  id: string
   trailerSource?: string
   posterSource?: string
   releaseYear?: string

@@ -130,18 +130,20 @@ export default function BlogCard({
     >
       <CardHeader className='px-5 pt-4 pb-1 space-y-0'>
         <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-2'>
-            <Avatar className='h-8 w-8'>
-              <AvatarImage src={`/api/placeholder/50/50`} />
-              <AvatarFallback>{blog.owner.fullName.slice(0, 2)}</AvatarFallback>
-            </Avatar>
-            <div className='flex flex-col ml-2'>
-              <div className='flex items-center gap-1'>
-                <Text className='text-sm text-white'>{blog.owner.fullName}</Text>
+          <a href={`/profile/${blog.owner.id}`}>
+            <div className='flex items-center gap-2'>
+              <Avatar className='h-8 w-8'>
+                <AvatarImage src={`/api/placeholder/50/50`} />
+                <AvatarFallback>{blog.owner.fullName.slice(0, 2)}</AvatarFallback>
+              </Avatar>
+              <div className='flex flex-col ml-2'>
+                <div className='flex items-center gap-1'>
+                  <Text className='text-sm text-white'>{blog.owner.fullName}</Text>
+                </div>
+                <Text className='text-muted-foreground text-xs'>{new Date(blog.dateCreated).toLocaleString()}</Text>
               </div>
-              <Text className='text-muted-foreground text-xs'>{new Date(blog.dateCreated).toLocaleString()}</Text>
             </div>
-          </div>
+          </a>
           {userId === blog.owner?.id && (
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger>
