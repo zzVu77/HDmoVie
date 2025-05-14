@@ -37,6 +37,10 @@ const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, followersCount
     fetchFollowInteraction()
   }, [id])
 
+  const handleCallBack = () => {
+    window.location.reload()
+  }
+
   return (
     <div className='flex w-full flex-col items-center justify-center gap-2 lg:gap-4'>
       <div className='flex flex-col items-center justify-center gap-2 '>
@@ -81,6 +85,7 @@ const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, followersCount
             fullName={fullName || 'Unknow'}
             email={email || 'unknown@user.com'}
             dateOfBirth={dateOfBirth instanceof Date ? dateOfBirth : new Date('1995-05-20')}
+            updateProfileCallBack={handleCallBack}
           />
         )}
 

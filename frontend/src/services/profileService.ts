@@ -1,5 +1,5 @@
 import { BlogPost, FollowPeopleProps, RegisteredUserProps, WatchlistProps } from '@/types'
-import { apiGet } from '@/utils/axiosConfig'
+import { apiGet, apiPost } from '@/utils/axiosConfig'
 
 // =========================================
 // DEFINE RESPONSE STRUCTURE FROM ENDPOINT
@@ -59,6 +59,25 @@ const getFromApi = async <T>(endpoint: string, context: string): Promise<T> => {
   }
 }
 
+// Generic API post function
+const postApi = async <T, D = unknown>(endpoint: string, data: D, context: string): Promise<T> => {
+  try {
+    const response = await apiPost<T | ErrorResponse>(endpoint, data)
+
+    if (
+      typeof response.data === 'object' &&
+      response.data !== null &&
+      'status' in response.data &&
+      response.data.status === 'failed'
+    ) {
+      throw response.data
+    }
+    return response.data as T
+  } catch (error) {
+    return handleApiError(error, context)
+  }
+}
+
 // ====================================
 //              GET METHOD
 // ====================================
@@ -90,4 +109,16 @@ export const getBlogs = async (userId?: string): Promise<BlogPost[]> => {
     throw new Error('Profile ID is required')
   }
   return getFromApi(`/profiles/${userId}/blogs`, 'fetching blogs')
+}
+
+// ====================================
+//              POST METHOD
+// ====================================
+
+export const updateProfile = async (
+  userId?: string,
+  fullName?: string,
+  dateOfBirth?: Date,
+): Promise<RegisteredUserProps> => {
+  return postApi(`/profiles/${userId}/update`, { fullName: fullName, dateOfBirth: dateOfBirth }, 'updating profile')
 }
