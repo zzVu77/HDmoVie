@@ -13,9 +13,10 @@ export const tagService = {
   },
 
   // Create a new tag
-  createTag: async (payload: { name: string }): Promise<void> => {
+  createTag: async (payload: { name: string }): Promise<TagType> => {
     try {
-      await apiPost('/tags/create', payload)
+      const response = await apiPost<TagType>('/tags/create', payload)
+      return response.data
     } catch {
       throw Error("Can't create Tag")
     }
