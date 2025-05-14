@@ -63,8 +63,8 @@ export class RateController {
     try {
       const { movieId } = req.params
       const { score, content } = req.body
-      // const userId = res.locals.user.id
-      const userId = '1'
+      const userId = res.locals.user.id
+      // const userId = '1'
 
       if (score === undefined || !content) {
         res.status(400).json({ status: 'failed', message: 'Score and content are required' })
