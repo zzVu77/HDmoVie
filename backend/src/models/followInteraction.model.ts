@@ -26,6 +26,10 @@ export class FollowInteraction {
   private following!: RegisteredUser[]
   //Methods
 
+  constructor(user: RegisteredUser) {
+    this.user = user
+  }
+
   public getFollowers(): RegisteredUser[] {
     return this.followers
   }

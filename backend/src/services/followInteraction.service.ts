@@ -1,3 +1,4 @@
+import { FollowInteraction } from '~/models/followInteraction.model'
 import { RegisteredUser } from '~/models/registeredUser.model'
 import { FollowInteractionRepository } from '~/repositories/followInteraction.repository'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
@@ -14,7 +15,7 @@ export class FollowInteractionService {
       const followInteraction = await this.followInteractionRepository.findByUserId(userId)
 
       if (!followInteraction) {
-        return []
+        return { followers: [], following: [] }
       }
 
       return followInteraction
@@ -71,11 +72,18 @@ export class FollowInteractionService {
       }
 
       // Get follow interactions for both users
-      const followerInteraction = await this.followInteractionRepository.findByUserId(followerId)
-      const targetUserInteraction = await this.followInteractionRepository.findByUserId(targetUserId)
+      let followerInteraction = await this.followInteractionRepository.findByUserId(followerId)
+      let targetUserInteraction = await this.followInteractionRepository.findByUserId(targetUserId)
 
-      if (!followerInteraction || !targetUserInteraction) {
-        throw new Error('Follow interaction not found')
+      // Check if each user follow interaction exist or not, if not --> create
+      if (!followerInteraction) {
+        followerInteraction = new FollowInteraction(follower)
+        await this.followInteractionRepository.addFollowInteraction(followerInteraction)
+      }
+
+      if (!targetUserInteraction) {
+        targetUserInteraction = new FollowInteraction(targetUser)
+        await this.followInteractionRepository.addFollowInteraction(targetUserInteraction)
       }
 
       // Check if already following
