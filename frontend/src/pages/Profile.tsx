@@ -82,6 +82,7 @@ const Profile = () => {
           id={profile.user.id}
           followersCount={profile.followersCount}
           isOwner={profile.isOwner}
+          isFollowingProp={profile.isFollowing}
         ></ProfileInfo>
         <ProfileTabs
           userId={profile.user.id}

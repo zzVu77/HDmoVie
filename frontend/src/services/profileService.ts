@@ -10,6 +10,7 @@ export interface ProfileResponse {
   followersCount: number
   followingCount: number
   isOwner: boolean
+  isFollowing: boolean
 }
 
 export interface FollowInteractionResponse {

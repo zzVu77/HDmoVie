@@ -7,6 +7,8 @@ import { Dialog, DialogContent, DialogTrigger } from './ui/dialog'
 import { Text, Title } from './ui/typography'
 import { getFollowInteraction, FollowInteractionResponse } from '@/services/profileService'
 import { useEffect, useState } from 'react'
+import { followUser, unFollowUser } from '@/services/followInteractionService'
+import { toast } from 'sonner'
 
 type Props = {
   id?: string
@@ -14,13 +16,20 @@ type Props = {
   email?: string
   dateOfBirth?: Date
   isOwner?: boolean
+  isFollowingProp?: boolean
   followersCount?: number
 }
 
-const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, followersCount }: Props) => {
+const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, isFollowingProp, followersCount }: Props) => {
+  // HANDLE FOLLOW INTERACTION OPEN
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  // =================================
+  //          Fetching data
+  // =================================
   const [followInteraction, setFollowInteraction] = useState<FollowInteractionResponse>()
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
+  const [isProfileLoading, setIsProfileLoading] = useState<boolean>(true)
+  const [errorProfile, setErrorProfile] = useState<string | null>(null)
+  const [isFollowing, setIsFollowing] = useState<boolean>(isFollowingProp || false)
 
   useEffect(() => {
     // Function to fetch data
@@ -29,15 +38,33 @@ const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, followersCount
         const data = await getFollowInteraction(id)
         await setFollowInteraction(data)
       } catch (error) {
-        setError(error instanceof Error ? error.message : 'Error when fetching follow interaction')
+        setErrorProfile(error instanceof Error ? error.message : 'Error when fetching follow interaction')
       } finally {
-        setIsLoading(false)
+        setIsProfileLoading(false)
       }
     }
     fetchFollowInteraction()
-  }, [id])
+  }, [id, isOwner])
 
-  const handleCallBack = () => {
+  const handleFollowClick = async () => {
+    try {
+      setIsFollowing(!isFollowing)
+
+      if (isFollowing) {
+        await unFollowUser(id)
+        toast.success('Unfollowed')
+      } else {
+        await followUser(id)
+        toast.success('Followed')
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'System error')
+      await new Promise((res) => setTimeout(res, 1500))
+      reload()
+    }
+  }
+
+  const reload = () => {
     window.location.reload()
   }
 
@@ -46,7 +73,7 @@ const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, followersCount
       <div className='flex flex-col items-center justify-center gap-2 '>
         <Avatar className='cursor-pointer mx-auto lg:w-[150px] lg:h-[150px] w-[100px] h-[100px]'>
           <AvatarImage src='https://github.com/shadcn.png' alt='@user' />
-          <AvatarFallback>US</AvatarFallback>
+          <AvatarFallback>{fullName?.[0] || 'U'}</AvatarFallback>
         </Avatar>
         <Title level={5} className='lg:text-xl'>
           {fullName || 'Unknown'}
@@ -55,17 +82,17 @@ const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, followersCount
 
       <div className='w-fit flex flex-col lg:flex-row items-center justify-between gap-2'>
         {/* Number of followers */}
-        <Dialog>
-          <DialogTrigger asChild disabled={isLoading || !!error || !followInteraction}>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild disabled={isProfileLoading || !!errorProfile || !followInteraction}>
             <Text className='cursor-pointer text-center'>
-              {isLoading ? 'Loading...' : error ? 'Error' : (followersCount ?? 'NaN')} Followers
+              {isProfileLoading ? 'Loading...' : errorProfile ? 'Error' : (followersCount ?? 'NaN')} Followers
             </Text>
           </DialogTrigger>
 
           <DialogContent className='px-0 py-0 border-none w-full min-w-[300px] max-w-lg'>
-            {isLoading ? (
+            {isProfileLoading ? (
               <div className='p-6 text-center text-white bg-secondary-dark rounded-lg'>Loading followers...</div>
-            ) : error ? (
+            ) : errorProfile ? (
               <div className='p-6 text-center text-white bg-secondary-dark rounded-lg'>Failed to load data</div>
             ) : !followInteraction ? (
               <div className='p-6 text-center text-white bg-secondary-dark rounded-lg'>No data available</div>
@@ -73,6 +100,7 @@ const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, followersCount
               <FollowInteractionModal
                 followers={followInteraction.followers}
                 followings={followInteraction.following}
+                closeModal={() => setIsDialogOpen(false)}
               />
             )}
           </DialogContent>
@@ -85,18 +113,17 @@ const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, followersCount
             fullName={fullName || 'Unknow'}
             email={email || 'unknown@user.com'}
             dateOfBirth={dateOfBirth instanceof Date ? dateOfBirth : new Date('1995-05-20')}
-            updateProfileCallBack={handleCallBack}
+            updateProfileCallBack={reload}
           />
         )}
 
         {/* Follow */}
         {!isOwner && (
           <Button
-            className='bg-secondary-dark text-white cursor-pointer border border-tertiary-dark 
-             hover:[box-shadow:0_0_8px_#ffa000] hover:[text-shadow:0_0_6px_#fff] 
-             transition duration-200'
+            className={`${isFollowing ? 'bg-secondary-dark text-white' : 'bg-white text-primary-dark '} cursor-pointer border border-tertiary-dark hover:[box-shadow:0_0_4px_#ffffff] hover:[text-shadow:0_0_6px_#fff] transition duration-200`}
+            onClick={handleFollowClick}
           >
-            Follow
+            {isFollowing ? 'Unfollow' : 'Follow'}
             <UserPlus />
           </Button>
         )}
