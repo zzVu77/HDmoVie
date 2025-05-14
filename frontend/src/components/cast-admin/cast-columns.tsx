@@ -6,8 +6,11 @@ import { PencilLine, Trash2 } from 'lucide-react'
 import { ConfirmAlertDialog } from '../shared/ConfirmAlertDialog'
 import { CastInfoModal } from './CastInfoModal'
 import { ImageDialogCell } from '../shared/ImageDialogCell'
+import { castService } from '@/services/castService'
+import { toast } from 'sonner'
 
-export const castColumns = (data: CastType[]): ColumnDef<CastType>[] => [
+export const castColumns = (onCastUpdate: () => void): ColumnDef<CastType>[] => [
+  // ... existing code ...
   {
     id: 'select',
     header: ({ table }) => (
@@ -67,19 +70,30 @@ export const castColumns = (data: CastType[]): ColumnDef<CastType>[] => [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const castId = row.getValue('id') as string
-      const cast = data.find((c) => c.id === castId)
+      const handleDelete = async () => {
+        const castId = row.original.id
+        try {
+          await castService.deleteCast(castId)
+          toast.success('Cast deleted successfully')
+          onCastUpdate()
+        } catch {
+          toast.error("Can't delete cast")
+        }
+      }
+
       return (
         <div className='flex items-center justify-end gap-2'>
           <CastInfoModal
             icon={<PencilLine className='h-4 w-4 text-primary-dark cursor-pointer' />}
-            onSave={() => {}}
-            cast={cast!}
+            cast={row.original}
+            onSave={() => {
+              onCastUpdate()
+            }}
           />
           <ConfirmAlertDialog
             title=''
             description='Are you sure you want to delete this cast? This action cannot be undone.'
-            onConfirm={() => {}}
+            onConfirm={handleDelete}
             trigger={<Trash2 className='h-4 w-4 text-primary-dark cursor-pointer' />}
             cancelText='No, go back'
             confirmText='Yes, proceed'

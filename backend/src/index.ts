@@ -47,7 +47,7 @@ app.use('/api/profiles', profileRouter)
 app.use('/api/watchlists', watchlistRouter)
 app.use('/api/follow', followRouter)
 app.use('/api/rates', rateRouter)
-app.use('/api/cast', castRouter)
+app.use('/api/casts', castRouter)
 app.get('/', (req, res) => {
   res.send('HDmoVie API is running')
 })

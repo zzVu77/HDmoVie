@@ -19,37 +19,39 @@ import {
   VisibilityState,
 } from '@tanstack/react-table'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Plus } from 'lucide-react'
 import { castColumns } from './cast-columns'
 import { CastType } from '@/types'
-
-const castData: CastType[] = [
-  {
-    id: '1',
-    name: 'Leonardo DiCaprio',
-    profilePath: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-  },
-  {
-    id: '2',
-    name: 'Gia Huy Nguyen',
-    profilePath: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-  },
-  {
-    id: '3',
-    name: 'Matthew McConaughey',
-    profilePath: 'https://image.tmdb.org/t/p/original/janjdSMrTRGtPrI1p9uOX66jv7x.jpg',
-  },
-]
+import { castService } from '@/services/castService'
+import { CastInfoModal } from './CastInfoModal'
 
 export function ManageCast() {
+  const [data, setData] = React.useState<CastType[]>([])
+  const [loading, setLoading] = React.useState(true)
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
 
+  const fetchCasts = async () => {
+    setLoading(true)
+    try {
+      const casts = await castService.getCasts()
+      setData(casts)
+    } catch {
+      throw Error('Loading fail')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  React.useEffect(() => {
+    fetchCasts()
+  }, [])
+
   const table = useReactTable({
-    data: castData,
-    columns: castColumns(castData),
+    data,
+    columns: castColumns(fetchCasts),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -68,35 +70,40 @@ export function ManageCast() {
 
   return (
     <div className='w-full'>
-      <div className='flex items-center py-4 gap-2'>
-        <Input
-          placeholder='Filter by name...'
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
-          className='max-w-sm text-xs'
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant='outline' className='ml-auto text-xs'>
-              Columns <ChevronDown className='ml-2 h-4 w-4' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className='capitalize'
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className='flex items-center justify-between py-4'>
+        <div className='flex items-center gap-2'>
+          <Input
+            placeholder='Filter by name...'
+            value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+            onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
+            className='max-w-sm text-xs'
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='outline' className='ml-auto text-xs'>
+                Columns <ChevronDown className='ml-2 h-4 w-4' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className='capitalize'
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <CastInfoModal title='Add New Cast' icon={<Plus className='h-4 w-4' />} onSave={fetchCasts}>
+          Add New Cast
+        </CastInfoModal>
       </div>
 
       <div className='rounded-md border'>
@@ -113,7 +120,13 @@ export function ManageCast() {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows.length ? (
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={castColumns(fetchCasts).length} className='h-24 text-center'>
+                  Loading...
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
@@ -125,7 +138,7 @@ export function ManageCast() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={table.getAllColumns().length} className='h-24 text-center'>
+                <TableCell colSpan={castColumns(fetchCasts).length} className='h-24 text-center'>
                   No results.
                 </TableCell>
               </TableRow>
