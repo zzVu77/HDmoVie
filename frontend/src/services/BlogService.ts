@@ -7,11 +7,6 @@ export interface CreateBlogPostRequest {
   imageUrls?: { url: string }[]
 }
 
-export interface ApiResponse<T> {
-  data: T
-  status: string
-}
-
 /**
  * Service for handling all blog-related API requests
  */
@@ -20,21 +15,21 @@ export const BlogService = {
    * Fetch all blog posts
    */
   getAllBlogs: () => {
-    return apiGet<ApiResponse<BlogPost[]>>('/blogs')
+    return apiGet<BlogPost[]>('/blogs')
   },
 
   /**
    * Fetch a specific blog post by ID
    */
   getBlogById: (blogId: string) => {
-    return apiGet<ApiResponse<BlogPost>>(`/blogs/${blogId}`)
+    return apiGet<BlogPost>(`/blogs/${blogId}`)
   },
 
   /**
    * Create a new blog post
    */
   createBlog: (blogData: CreateBlogPostRequest) => {
-    return apiPost<ApiResponse<BlogPost>, CreateBlogPostRequest>('/blogs', blogData)
+    return apiPost<BlogPost, CreateBlogPostRequest>('/blogs', blogData)
   },
 
   /**
