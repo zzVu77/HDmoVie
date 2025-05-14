@@ -34,6 +34,8 @@ import ManageBlogReport from './blog-admin/ManageBlogReport'
 import ManageCast from './cast-admin/ManageCast'
 import ManageTag from './tag-admin/ManageTag'
 import ManageGenre from './genre-admin/ManageGenre'
+import { apiGet } from '@/utils/axiosConfig'
+import { useNavigate } from 'react-router'
 
 interface MenuItem {
   title: string
@@ -72,7 +74,14 @@ const items: MenuItem[] = [
 export default function AppSidebar() {
   const [selected, setSelected] = React.useState<string>('home')
   const [expanded, setExpanded] = React.useState<string | null>(null)
+  const navigate = useNavigate()
 
+  const handleLogout = async () => {
+    await apiGet('/registeredusers/logout')
+    localStorage.removeItem('access-token')
+
+    navigate('/login')
+  }
   const toggleSubMenu = (key: string) => {
     setExpanded(expanded === key ? null : key)
   }
@@ -131,7 +140,7 @@ export default function AppSidebar() {
                 <span>Settings</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onSelect={handleLogout}>
                 <LogOut className='mr-2 h-4 w-4' />
                 <span>Logout</span>
               </DropdownMenuItem>

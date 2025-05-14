@@ -1,15 +1,15 @@
-import { useRef, useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { MessageCircle, Heart, MessageSquareWarning, ArrowRight } from 'lucide-react'
-import { Text } from './ui/typography'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import { cn } from '@/lib/utils'
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
-import ReportDialog from './ReportModal'
 import { BlogPost } from '@/types'
+import { Heart, MessageCircle, MessageSquareWarning } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import ReportDialog from './ReportModal'
+import { Text } from './ui/typography'
 export interface BlogCardProps {
   blog: BlogPost
   className?: string

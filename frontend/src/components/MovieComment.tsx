@@ -3,13 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Badge } from './ui/badge'
 import { Card, CardContent, CardHeader } from './ui/card'
 import { Text, Title } from './ui/typography'
+import { MovieCommentProps } from '@/types'
 
-type MovieCommentProps = {
-  userName: string
-  comment: string
-  rating: number
-  date: string
-}
 const MovieComment = ({ userName, comment, date, rating }: MovieCommentProps) => {
   return (
     <div>

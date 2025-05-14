@@ -4,16 +4,23 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Text, Title } from '@/components/ui/typography'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import axios from 'axios'
 import { z } from 'zod'
 import { useState } from 'react'
-
+import { apiPost } from '@/utils/axiosConfig'
+import { toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
 // Define schema for form validation
+
+interface ApiErrorResponse {
+  message?: string
+}
 const registerSchema = z
   .object({
     fullName: z.string().min(1, 'Full name is required'),
     email: z.string().email('Please enter a valid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters long'),
-    confirmPassword: z.string().min(8, 'Please confirm your password'),
+    repassword: z.string().min(8, 'Please confirm your password'),
     dateOfBirth: z
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}$/, 'Please select a valid date')
@@ -25,19 +32,26 @@ const registerSchema = z
         { message: 'Invalid date format' },
       ),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.repassword, {
     message: 'Passwords do not match',
-    path: ['confirmPassword'],
+    path: ['repassword'],
   })
   .refine(
     (data) => {
       const parsedDate = new Date(data.dateOfBirth)
       const today = new Date()
-      const minAgeDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate())
-      return parsedDate <= minAgeDate
+      const age = today.getFullYear() - parsedDate.getFullYear()
+      const monthDiff = today.getMonth() - parsedDate.getMonth()
+      const dayDiff = today.getDate() - parsedDate.getDate()
+
+      const isOver16 = age > 16 || (age === 16 && (monthDiff > 0 || (monthDiff === 0 && dayDiff >= 0)))
+
+      const isUnder100 = age < 100 || (age === 100 && (monthDiff < 0 || (monthDiff === 0 && dayDiff <= 0)))
+
+      return isOver16 && isUnder100
     },
     {
-      message: 'You must be at least 13 years old',
+      message: 'Age must be between 16 and 100 years old',
       path: ['dateOfBirth'],
     },
   )
@@ -45,7 +59,8 @@ const registerSchema = z
 type RegisterFormValues = z.infer<typeof registerSchema>
 
 const RegisterForm: React.FC = () => {
-  const [isSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const navigate = useNavigate()
 
   // Initialize form with React Hook Form and Zod
   const form = useForm<RegisterFormValues>({
@@ -54,14 +69,38 @@ const RegisterForm: React.FC = () => {
       fullName: '',
       email: '',
       password: '',
-      confirmPassword: '',
+      repassword: '',
       dateOfBirth: '',
     },
   })
 
-  const onSubmit = () => {
-    form.reset()
+  const onSubmit = async (data: RegisterFormValues) => {
+    if (isSubmitting) return
+    try {
+      setIsSubmitting(true)
+      await apiPost('/registeredusers/register', data)
+
+      toast.success('Register Successfully!!')
+      form.reset()
+      navigate('/login')
+    } catch (error: unknown) {
+      let errorMessage = 'Register Fail:'
+
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        if (error.response?.data?.message) {
+          errorMessage = error.response.data.message
+        } else if (error.response?.status === 500) {
+          errorMessage = 'Error Server'
+        }
+      }
+      toast.error(errorMessage, {
+        description: 'Please check your information or try again',
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
+
   return (
     <div className='flex min-h-screen flex-row items-center justify-center bg-black'>
       {/* Left Side: Image with Overlay (Hidden on Mobile) */}
@@ -144,13 +183,13 @@ const RegisterForm: React.FC = () => {
               {/* Confirm Password Field */}
               <FormField
                 control={form.control}
-                name='confirmPassword'
+                name='repassword'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='text-white'>Confirm Password</FormLabel>
                     <FormControl>
                       <Input
-                        id='confirmPassword'
+                        id='repassword'
                         type='password'
                         placeholder='Confirm your password'
                         className='w-full bg-white text-black placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-tertiary-yellow'

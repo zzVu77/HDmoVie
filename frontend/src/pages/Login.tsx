@@ -7,9 +7,19 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
 import { z } from 'zod'
 import { apiPost } from '@/utils/axiosConfig'
+import { toast } from 'sonner'
+import { jwtDecode, JwtPayload } from 'jwt-decode'
+
+interface ApiErrorResponse {
+  message?: string
+}
+interface MyTokenPayload extends JwtPayload {
+  id: string
+  email: string
+  role: string
+}
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters long'),
@@ -41,15 +51,32 @@ const Login: React.FC = () => {
       localStorage.setItem('access-token', token)
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
-      toast.success('Đăng nhập thành công!')
-      form.reset()
-      navigate('/')
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.error || 'Đăng nhập thất bại')
+      // Decode Token
+      const decodedToken = jwtDecode<MyTokenPayload>(token)
+
+      // Permission
+      if (decodedToken.role == 'ADMIN') {
+        navigate('/admin')
       } else {
-        toast.error('Đăng nhập thất bại')
+        navigate('/')
       }
+
+      toast.success('Login successful!')
+      form.reset()
+    } catch (error: unknown) {
+      let errorMessage = 'Login Fail:'
+
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        if (error.response?.data?.message) {
+          errorMessage = error.response.data.message // e.g., "Password is required"
+        } else if (error.response?.status === 500) {
+          errorMessage = 'Error Server'
+        }
+      }
+
+      toast.error(errorMessage, {
+        description: 'Please check your information or try again',
+      })
     } finally {
       setIsSubmitting(false)
     }

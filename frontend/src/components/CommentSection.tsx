@@ -7,6 +7,7 @@ import { Text } from './ui/typography'
 import { Textarea } from './ui/textarea'
 import { Send } from 'lucide-react'
 import CommentService from '@/services/commentService'
+import { apiPost } from '@/utils/axiosConfig'
 
 interface CommentSectionProps {
   blogId: string
@@ -17,6 +18,38 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
   const [commentText, setCommentText] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Function to transform comments data structure
+  const organizeComments = (comments: BlogCommentType[]): BlogCommentType[] => {
+    // Create a map to store comments by their ID
+    const commentMap = new Map<string, BlogCommentType>()
+
+    // First pass: add all comments to the map
+    comments.forEach((comment) => {
+      commentMap.set(comment.id, { ...comment, replies: [] })
+    })
+
+    // Second pass: organize comments into a tree structure
+    const rootComments: BlogCommentType[] = []
+
+    comments.forEach((comment) => {
+      const commentWithReplies = commentMap.get(comment.id)!
+      if (comment.parentComment) {
+        // This is a reply, add it to its parent's replies
+        const parent = commentMap.get(comment.parentComment.id)
+        if (parent) {
+          parent.replies = parent.replies || []
+          parent.replies.push(commentWithReplies)
+        }
+      } else {
+        // This is a root comment
+        rootComments.push(commentWithReplies)
+      }
+    })
+
+    return rootComments
+  }
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -27,7 +60,9 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
         if (!response.data || !Array.isArray(response.data.data)) {
           throw new Error('Invalid response format from server')
         }
-        setComments(response.data.data)
+        // Transform the comments data structure
+        const organizedComments = organizeComments(response.data.data)
+        setComments(organizedComments)
       } catch (err: unknown) {
         alert((err as Error).message)
       } finally {
@@ -39,20 +74,24 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
   }, [blogId])
 
   const handleSubmitComment = async () => {
-    if (!commentText.trim()) return
+    if (!commentText.trim() || isSubmitting) return
 
     try {
-      const response = await CommentService.createComment({
-        content: commentText,
+      setIsSubmitting(true)
+      const response = await apiPost<{ status: string; data: BlogCommentType }>('/comments/blog', {
         blogId: blogId,
+        content: commentText.trim(),
+        parentCommentId: null,
       })
-      if (!response.data || !response.data.data) {
-        throw new Error('Invalid response format from server')
-      }
-      setComments([...comments, response.data.data])
+
+      // Add the new comment to the list using the correct response structure
+      setComments((prevComments) => [...prevComments, response.data.data])
       setCommentText('')
-    } catch (err: unknown) {
-      alert((err as Error).message)
+      // } catch (error) {
+      //   console.error('Failed to post comment:', error)
+      // You might want to show an error message to the user here
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -66,6 +105,7 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
             placeholder='Share your thoughts...'
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
+            disabled={isSubmitting}
           />
         </div>
         <div
@@ -75,11 +115,11 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
         >
           <Button
             className='text-sm font-medium text-primary-dark cursor-pointer bg-tertiary-yellow rounded-md px-3 py-1.5 disabled:opacity-50'
-            disabled={!commentText.trim()}
+            disabled={!commentText.trim() || isSubmitting}
             onClick={handleSubmitComment}
           >
             <Send size={16} className='mr-1' />
-            Reply
+            {isSubmitting ? 'Posting...' : 'Reply'}
           </Button>
         </div>
       </div>
