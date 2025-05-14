@@ -9,7 +9,10 @@ export class BlogMedia {
   @Column({ type: 'text' })
   url!: string
 
-  @ManyToOne(() => Blog, (blog) => blog.imageUrls)
+  @ManyToOne(() => Blog, (blog) => blog.imageUrls, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
   blog!: Blog
 
   constructor(url?: string, blog?: Blog) {

@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from '@/utils/axiosConfig'
+import { apiDelete, apiGet, apiPost } from '@/utils/axiosConfig'
 import { BlogPost, TagType } from '@/types'
 
 export interface CreateBlogPostRequest {
@@ -41,7 +41,7 @@ export const BlogService = {
    * Delete a blog post
    */
   deleteBlog: (blogId: string) => {
-    return apiPost<void, null>(`/blogs/${blogId}/delete`, null)
+    return apiDelete<void>(`/blogs/${blogId}`)
   },
 }
 

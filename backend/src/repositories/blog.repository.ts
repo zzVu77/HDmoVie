@@ -215,15 +215,15 @@ export class BlogRepository {
 
   // Helper method to transform raw query results
   private transformToResponseDTOList(rawBlogs: any[]): any[] {
-    // Use a dictionary to group by blog_id
     const blogDict: { [key: string]: any } = {}
+    const orderedBlogs: any[] = []
 
     for (const row of rawBlogs) {
       const blogId = row.blog_id
 
       if (!blogDict[blogId]) {
         // Create new blog entry
-        blogDict[blogId] = {
+        const blog = {
           id: blogId,
           content: row.blog_content,
           dateCreated: row.blog_dateCreated,
@@ -236,9 +236,11 @@ export class BlogRepository {
           likeCount: parseInt(row.likeCount ?? '0'),
           commentCount: parseInt(row.commentCount ?? '0'),
         }
+        blogDict[blogId] = blog
+        orderedBlogs.push(blog) // maintain order
       }
 
-      // Add tag if it doesn't exist and is not null
+      // Add tag if not already present
       if (row.tags_id && !blogDict[blogId].tags.some((t: any) => t.id === row.tags_id)) {
         blogDict[blogId].tags.push({
           id: row.tags_id,
@@ -246,7 +248,7 @@ export class BlogRepository {
         })
       }
 
-      // Add imageUrl if it doesn't exist and is not null
+      // Add imageUrl if not already present
       if (row.imageUrls_id && !blogDict[blogId].imageUrls.some((i: any) => i.id === row.imageUrls_id)) {
         blogDict[blogId].imageUrls.push({
           id: row.imageUrls_id,
@@ -255,7 +257,6 @@ export class BlogRepository {
       }
     }
 
-    // Return the list of blog objects
-    return Object.values(blogDict)
+    return orderedBlogs
   }
 }

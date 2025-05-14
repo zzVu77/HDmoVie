@@ -9,7 +9,9 @@ import { cn } from '@/lib/utils'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import ReportDialog from './ReportModal'
 import { BlogPost } from '@/types'
-import { Dialog, DialogContent, DialogTrigger } from './ui/dialog'
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogFooter } from './ui/dialog'
+import BlogService from '@/services/BlogService'
+import { toast } from 'sonner'
 export interface BlogCardProps {
   blog: BlogPost
   className?: string
@@ -17,7 +19,7 @@ export interface BlogCardProps {
   isLast?: boolean
   isShowCommentDivider?: boolean
   isDetailView?: boolean
-  isOwner?: boolean
+  userId?: string
 }
 
 export default function BlogCard({
@@ -27,13 +29,27 @@ export default function BlogCard({
   isLast = false,
   isShowCommentDivider = false,
   isDetailView = false,
-  // isOwner = false,
+  userId,
 }: BlogCardProps) {
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(blog.likeCount)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isClamped, setIsClamped] = useState(false)
   const contentRef = useRef<HTMLParagraphElement>(null)
+  // Dialog to confirm user action: DELETE BLOG
+  const [open, setOpen] = useState<boolean>(false)
+
+  const handleDelete = async () => {
+    try {
+      await BlogService.deleteBlog(blog.id)
+      toast.success('Blog deleted!')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Error occurs')
+    } finally {
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      window.location.reload()
+    }
+  }
 
   const handleLike = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -56,7 +72,7 @@ export default function BlogCard({
   const BlogContent = (
     <>
       <div className='mb-2'>
-        <Text body={4} ref={contentRef} className={`transition-all duration-300', ${!isExpanded && 'line-clamp-3'}`}>
+        <Text body={4} ref={contentRef} className={`transition-all duration-300 ${!isExpanded && 'line-clamp-3'}`}>
           {blog.content}
         </Text>
         {isClamped && (
@@ -126,16 +142,42 @@ export default function BlogCard({
               <Text className='text-muted-foreground text-xs'>{new Date(blog.dateCreated).toLocaleString()}</Text>
             </div>
           </div>
-          {/* {isOwner && ( */}
-          <Dialog>
-            <DialogTrigger>
-              <div className='text-gray-500 cursor-pointer rounded-lg hover:bg-tertiary-dark hover:text-white'>
-                <X size={18} />
-              </div>
-            </DialogTrigger>
-            <DialogContent>Are you sure to delete this blog permanently?</DialogContent>
-          </Dialog>
-          {/* )} */}
+          {userId === blog.owner?.id && (
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger>
+                <div className='text-gray-500 cursor-pointer rounded-lg hover:bg-tertiary-dark hover:text-white'>
+                  <X size={18} />
+                </div>
+              </DialogTrigger>
+              <DialogContent className='sm:max-w-md bg-secondary-dark border-tertiary-dark'>
+                <DialogHeader>
+                  <Text className='text-lg font-semibold text-white'>Are you sure?</Text>
+                  <Text className='text-sm text-muted-foreground'>
+                    This action will permanently delete your blog post. You cannot undo this.
+                  </Text>
+                </DialogHeader>
+
+                <DialogFooter className='mt-4 flex justify-end gap-2'>
+                  <Button
+                    variant='ghost'
+                    className='text-white hover:text-white bg-tertiary-dark'
+                    onClick={() => setOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant='destructive'
+                    onClick={() => {
+                      handleDelete()
+                      setOpen(false)
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
       </CardHeader>
 
@@ -152,7 +194,7 @@ export default function BlogCard({
                       <img
                         src={image.url}
                         alt={`Blog image ${index + 1}`}
-                        className='object-cover object-center h-[280px]  w-[30api0px]'
+                        className='object-cover object-center h-[280px] w-[300px]'
                         onError={(e) => {
                           ;(e.target as HTMLImageElement).src =
                             'https://makerworld.bblmw.com/makerworld/model/US2ab61bb7d3000c/design/2024-01-30_029b2304056c.png?x-oss-process=image/resize,w_1000/format,webp'

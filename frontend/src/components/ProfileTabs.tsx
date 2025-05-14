@@ -90,7 +90,7 @@ const ProfileTabs = ({
           ) : (
             <div className='rounded-3xl overflow-hidden pb-4 bg-secondary-dark'>
               {isOwner && <WriteBlogTextEditor userFullName={userFullName} />}
-              <ListBlogs blogs={blogs} />
+              <ListBlogs blogs={blogs} userId={userId} />
             </div>
           )}
         </TabsContent>
