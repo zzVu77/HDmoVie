@@ -9,7 +9,7 @@ import { CastService } from '~/services/cast.service'
 import { GenreRepository } from '~/repositories/genre.repository'
 import { CommentRepository } from '~/repositories/comment.repository'
 import { GenreService } from '~/services/genre.service'
-import { authenticateToken, isAdmin } from '~/middlewares/auth.middleware'
+import { authenticateToken, isAdmin, optionalAuthenticateToken } from '~/middlewares/auth.middleware'
 import { RateService } from '~/services/rate.service'
 import { RateRepository } from '~/repositories/rate.repository'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
@@ -35,7 +35,7 @@ const movieController = new MovieController(movieService)
 //GET route
 movieRouter.get('/', (req, res) => movieController.getAllMovies(req, res))
 movieRouter.get('/search', (req, res) => movieController.searchMoviesByTitle(req, res))
-movieRouter.get('/detail/:id', (req, res) => movieController.getMovieById(req, res))
+movieRouter.get('/detail/:id', optionalAuthenticateToken, (req, res) => movieController.getMovieById(req, res))
 movieRouter.get('/highlights', (req, res) => movieController.getMovieHighlights(req, res))
 
 //POST route

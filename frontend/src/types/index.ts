@@ -113,6 +113,7 @@ export type MovieCommentProps = {
   rating: number
   date: string
 }
+
 export type MovieCommentResponse = {
   status: string
   data: {
@@ -127,4 +128,11 @@ export type MovieCommentResponse = {
       fullName: string
     }
   }
+}
+
+export type MovieDetailResponse = {
+  status: boolean
+  movie: MovieType
+  comments: MovieCommentProps[]
+  relatedMovies: MovieType[]
 }

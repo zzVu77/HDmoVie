@@ -13,26 +13,39 @@ import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
+import { MovieCommentProps } from '@/types'
+
 const MovieDetail = () => {
   const { id } = useParams<{ id: string }>()
   const [movieData, setMovieData] = useState<MovieDetailResponse>()
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const data = await getMovieById(id as string)
-        setMovieData(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Cannot fetch movie data')
-      } finally {
-        setLoading(false)
-      }
+  const fetchMovieData = async () => {
+    try {
+      const data = await getMovieById(id as string)
+      setMovieData(data)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Cannot fetch movie data')
+    } finally {
+      setLoading(false)
     }
+  }
 
-    fetchMovies()
+  useEffect(() => {
+    fetchMovieData()
   }, [id])
+
+  const handleCommentAdded = (newComment: MovieCommentProps) => {
+    if (movieData) {
+      setMovieData({
+        ...movieData,
+        comments: [newComment, ...movieData.comments],
+        status: true, // Update status to indicate user has commented
+      })
+    }
+  }
+
   if (loading) {
     return (
       <Wrapper className='mt-[100px]'>
@@ -84,9 +97,11 @@ const MovieDetail = () => {
       <Wrapper>
         <TitleSection>Review</TitleSection>
         <div className='flex flex-col gap-5 w-[90vw] mx-auto'>
-          <div className='w-full'>
-            <CommentBox />
-          </div>
+          {!movieData.status && (
+            <div className='w-full'>
+              <CommentBox onCommentAdded={handleCommentAdded} />
+            </div>
+          )}
 
           {movieData.comments.length === 0 ? (
             <div className='h-[40vh] '>

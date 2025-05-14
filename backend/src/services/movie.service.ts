@@ -55,12 +55,14 @@ export class MovieService {
       // 3. Get rates for movie
       const rates = await this.rateService.getMovieRates(movieId)
 
-      // 4. Map rates to comments based on user ID
-      const commentsWithRates = comments.map((comment) => {
+      // 4. Transform comments to match frontend format
+      const transformedComments = comments.map((comment) => {
         const userRate = rates.find((rate) => rate.getUser().getId() === comment.getUser().getId())
         return {
-          ...comment,
-          rateScore: userRate ? userRate.getRateScore() : null,
+          userName: comment.getUser().getFullName(),
+          comment: comment.getContent(),
+          rating: userRate ? userRate.getRateScore() : 0,
+          date: comment.getDate(),
         }
       })
 
@@ -69,15 +71,16 @@ export class MovieService {
       const genreIds = genres.map((genre) => genre.getId())
       const relatedMovies = await this.movieRepository.findMoviesByGenreIds(genreIds, movieId, 5)
 
-      // 6. Check if user has commented - using strict string comparison
+      // 6. Check if user has commented
       const hasCommented = userId
         ? comments.some((comment) => String(comment.getUser().getId()) === String(userId))
         : false
+      console.log(userId, 'userId')
       // 7. Return combined data
       return {
         status: hasCommented,
         movie,
-        comments: commentsWithRates,
+        comments: transformedComments,
         relatedMovies,
       }
     } catch (error) {

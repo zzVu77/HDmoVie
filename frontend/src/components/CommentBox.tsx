@@ -11,7 +11,7 @@ import { Text } from './ui/typography'
 import { apiPost } from '@/utils/axiosConfig'
 import { toast } from 'sonner'
 import { useParams } from 'react-router-dom'
-import { MovieCommentResponse } from '@/types'
+import { MovieCommentResponse, MovieCommentType } from '@/types'
 
 // Define schema for form validation
 const reviewSchema = z.object({
@@ -46,7 +46,11 @@ const isValidMovieCommentResponse = (response: any): response is MovieCommentRes
   )
 }
 
-const CommentBox: React.FC = () => {
+interface CommentBoxProps {
+  onCommentAdded?: (comment: MovieCommentType) => void
+}
+
+const CommentBox: React.FC<CommentBoxProps> = ({ onCommentAdded }) => {
   const { id } = useParams<{ id: string }>()
   const [hoveredRating, setHoveredRating] = useState<number | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -72,6 +76,19 @@ const CommentBox: React.FC = () => {
 
       if (!isValidMovieCommentResponse(response.data)) {
         throw new Error('Invalid response format from server')
+      }
+
+      // Transform the response data to match MovieCommentType
+      const newComment: MovieCommentType = {
+        userName: response.data.data.user.fullName,
+        comment: response.data.data.content,
+        date: new Date(response.data.data.createdAt).toLocaleString(),
+        rating: response.data.data.score,
+      }
+
+      // Call onCommentAdded with the new comment
+      if (onCommentAdded) {
+        onCommentAdded(newComment)
       }
 
       toast.success('Review submitted successfully!')

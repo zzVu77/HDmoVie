@@ -15,6 +15,7 @@ export interface MoviesHighlightResponse {
 }
 
 export interface MovieDetailResponse {
+  status: boolean
   movie: MovieType
   relatedMovies: MovieType[]
   comments: MovieCommentProps[]
