@@ -18,7 +18,7 @@ const Explore = () => {
         const data = await getMovies()
         setMovies(data)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Không thể tải danh sách phim')
+        setError(err instanceof Error ? err.message : 'Can not fetch movies')
       } finally {
         setLoading(false)
       }
@@ -36,7 +36,7 @@ const Explore = () => {
   if (loading) {
     return (
       <Wrapper className='mt-[100px]'>
-        <p className='text-center'>Đang tải...</p>
+        <p className='text-center'>Loading...</p>
       </Wrapper>
     )
   }

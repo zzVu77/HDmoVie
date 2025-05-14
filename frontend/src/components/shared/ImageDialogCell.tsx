@@ -18,7 +18,12 @@ export const ImageDialogCell = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <img src={src} alt={alt} className={`${smallClassName} object-cover rounded cursor-pointer mx-auto`} />
+        <img
+          src={src}
+          alt={alt}
+          loading='lazy'
+          className={`${smallClassName}  object-cover rounded cursor-pointer mx-auto`}
+        />
       </DialogTrigger>
       <DialogContent className='flex justify-center items-center bg-transparent border-none shadow-none'>
         <img src={src} alt={alt} className={`${largeClassName} rounded `} />

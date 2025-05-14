@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
+import { updateMovie } from '@/services/movieService'
 import { CastType, GenreType, MovieType } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, ChevronsUpDown } from 'lucide-react'
@@ -22,13 +23,13 @@ import * as z from 'zod'
 import { Text } from '../ui/typography'
 
 // Sample data for genres and casts (thay bằng API thực tế)
-const availableGenres: GenreType[] = [
-  { id: '1', name: 'Action' },
-  { id: '2', name: 'Sci-Fi' },
-  { id: '3', name: 'Adventure' },
-  { id: '4', name: 'Drama' },
-  { id: '5', name: 'Comedy' },
-]
+// const availableGenres: GenreType[] = [
+//   { id: '1', name: 'Action' },
+//   { id: '2', name: 'Sci-Fi' },
+//   { id: '3', name: 'Adventure' },
+//   { id: '4', name: 'Drama' },
+//   { id: '5', name: 'Comedy' },
+// ]
 
 const availableCasts: CastType[] = [
   { id: '1', name: 'Leonardo DiCaprio' },
@@ -42,7 +43,7 @@ const availableCasts: CastType[] = [
 const movieSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(1, 'Title is required'),
-  release: z.string().optional(),
+  releaseYear: z.string().optional(),
   voteAvg: z.number().min(0).max(10).optional(),
   voteCount: z.number().min(0).optional(),
   description: z.string().optional(),
@@ -61,15 +62,16 @@ interface MovieInfoModalProps {
   children?: React.ReactNode
   icon?: React.ReactNode
   title?: string
+  genres?: GenreType[]
 }
 
-export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieInfoModalProps) {
+export function MovieInfoModal({ movie, onSave, children, icon, title, genres }: MovieInfoModalProps) {
   const form = useForm<MovieFormValues>({
     resolver: zodResolver(movieSchema),
     defaultValues: {
       id: movie?.id || '',
       title: movie?.title || '',
-      release: movie?.releaseYear || '',
+      releaseYear: movie?.releaseYear || '',
       voteAvg: movie?.voteAvg,
       voteCount: movie?.voteCount,
       description: movie?.description || '',
@@ -81,14 +83,26 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
     },
   })
 
-  const onSubmit = (data: MovieFormValues) => {
-    // if (data) onSave(data)
-    // if (data) onSave() // Call onSave function if provided
-    form.reset(data) // Reset form with current values
+  const onSubmit = async (data: MovieFormValues) => {
+    try {
+      if (!data.id) {
+        throw new Error('Movie ID is required for updating')
+      }
+      // Transform the data to match MovieType
+      const movieData = {
+        ...data,
+      }
+
+      await updateMovie(data.id, movieData)
+
+      // onSave?.()
+    } catch (error) {
+      throw new Error('Failed to update movie: ' + (error as Error).message)
+    }
   }
 
   return (
-    <Dialog>
+    <Dialog modal={false}>
       <DialogTrigger asChild>
         <div className={`flex flex-row items-center ${title ? 'gap-2' : 'gap-0'}`}>
           {icon}
@@ -97,7 +111,7 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
           </Text>
         </div>
       </DialogTrigger>
-      <DialogContent className=' w-full  lg:px-2 h-[90vh] overflow-y-scroll '>
+      <DialogContent className='w-full lg:w-[70vw]  lg:px-2 px-[2px] h-[90vh] overflow-y-scroll  '>
         <DialogHeader>
           <DialogTitle className='text-center font-bold text-2xl'>{title || 'Edit Movie'}</DialogTitle>
           <DialogDescription className='text-center text-sm text-muted-foreground'>
@@ -112,24 +126,24 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                 name='title'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Title</FormLabel>
+                    <FormLabel className='text-left'>Title</FormLabel>
                     <FormControl>
                       <Input id='title' className='col-span-3' {...field} />
                     </FormControl>
-                    <FormMessage className='col-span-4 text-right' />
+                    <FormMessage className='col-span-4 text-left' />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name='release'
+                name='releaseYear'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Release Date</FormLabel>
+                    <FormLabel className='text-left'>Release Date</FormLabel>
                     <FormControl>
-                      <Input id='release' type='date' className='col-span-3' {...field} />
+                      <Input id='releaseYear' type='date' className='col-span-3' {...field} />
                     </FormControl>
-                    <FormMessage className='col-span-4 text-right' />
+                    <FormMessage className='col-span-4 text-left' />
                   </FormItem>
                 )}
               />
@@ -138,12 +152,12 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                 name='voteAvg'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Vote Average</FormLabel>
+                    <FormLabel className='text-left'>Vote Average</FormLabel>
                     <FormControl>
                       <Input
                         id='voteAvg'
                         type='number'
-                        step='0.1'
+                        step='0.001'
                         min='0'
                         max='10'
                         className='col-span-3'
@@ -151,7 +165,7 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                         onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
                       />
                     </FormControl>
-                    <FormMessage className='col-span-4 text-right' />
+                    <FormMessage className='col-span-4 text-left' />
                   </FormItem>
                 )}
               />
@@ -160,7 +174,7 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                 name='voteCount'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Vote Count</FormLabel>
+                    <FormLabel className='text-left'>Vote Count</FormLabel>
                     <FormControl>
                       <Input
                         id='voteCount'
@@ -171,7 +185,7 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                         onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                       />
                     </FormControl>
-                    <FormMessage className='col-span-4 text-right' />
+                    <FormMessage className='col-span-4 text-left' />
                   </FormItem>
                 )}
               />
@@ -180,11 +194,11 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                 name='description'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Description</FormLabel>
+                    <FormLabel className='text-left'>Description</FormLabel>
                     <FormControl>
                       <Textarea id='description' className='col-span-3' {...field} />
                     </FormControl>
-                    <FormMessage className='col-span-4 text-right' />
+                    <FormMessage className='col-span-4 text-left' />
                   </FormItem>
                 )}
               />
@@ -193,11 +207,11 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                 name='trailerSource'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Trailer Source</FormLabel>
+                    <FormLabel className='text-left'>Trailer Source</FormLabel>
                     <FormControl>
                       <Input id='trailerSource' className='col-span-3' {...field} />
                     </FormControl>
-                    <FormMessage className='col-span-4 text-right' />
+                    <FormMessage className='col-span-4 text-left' />
                   </FormItem>
                 )}
               />
@@ -206,11 +220,11 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                 name='posterSource'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Poster Source</FormLabel>
+                    <FormLabel className='text-left'>Poster Source</FormLabel>
                     <FormControl>
                       <Input id='posterSource' className='col-span-3' {...field} />
                     </FormControl>
-                    <FormMessage className='col-span-4 text-right' />
+                    <FormMessage className='col-span-4 text-left' />
                   </FormItem>
                 )}
               />
@@ -219,11 +233,11 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                 name='backdropSource'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Backdrop Source</FormLabel>
+                    <FormLabel className='text-left'>Backdrop Source</FormLabel>
                     <FormControl>
                       <Input id='backdropSource' className='col-span-3' {...field} />
                     </FormControl>
-                    <FormMessage className='col-span-4 text-right' />
+                    <FormMessage className='col-span-4 text-left' />
                   </FormItem>
                 )}
               />
@@ -232,7 +246,7 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                 name='genres'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Genres</FormLabel>
+                    <FormLabel className='text-left'>Genres</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -255,7 +269,7 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                           <CommandList>
                             <CommandEmpty>No genres found.</CommandEmpty>
                             <CommandGroup>
-                              {availableGenres.map((genre) => (
+                              {genres?.map((genre) => (
                                 <CommandItem
                                   key={genre.id}
                                   value={genre.name}
@@ -283,7 +297,7 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                         </Command>
                       </PopoverContent>
                     </Popover>
-                    <FormMessage className='col-span-4 text-right' />
+                    <FormMessage className='col-span-4 text-left' />
                   </FormItem>
                 )}
               />
@@ -292,8 +306,8 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                 name='casts'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Casts</FormLabel>
-                    <Popover>
+                    <FormLabel className='text-left'>Casts</FormLabel>
+                    <Popover modal={true}>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
@@ -343,7 +357,7 @@ export function MovieInfoModal({ movie, onSave, children, icon, title }: MovieIn
                         </Command>
                       </PopoverContent>
                     </Popover>
-                    <FormMessage className='col-span-4 text-right' />
+                    <FormMessage className='col-span-4 text-left' />
                   </FormItem>
                 )}
               />

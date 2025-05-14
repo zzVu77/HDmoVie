@@ -44,6 +44,7 @@ export const apiPost = <T, D = unknown>(url: string, data: D, config?: AxiosRequ
   axiosInstance.post<T>(url, data, config).then((response) => ({ data: response.data }))
 
 export const apiPut = <T, D = unknown>(url: string, data: D, config?: AxiosRequestConfig) =>
-  axiosInstance.post<T>(url, data, config).then((response) => ({ data: response.data }))
+  axiosInstance.put<T>(url, data, config).then((response) => ({ data: response.data }))
 
+export const apiDelete = <T>(url: string, config?: AxiosRequestConfig) => axiosInstance.delete<T>(url, config)
 export default axiosInstance
