@@ -100,7 +100,6 @@ const ProfileInfo = ({ dateOfBirth, email, fullName, id, isOwner, isFollowingPro
               <FollowInteractionModal
                 followers={followInteraction.followers}
                 followings={followInteraction.following}
-                closeModal={() => setIsDialogOpen(false)}
               />
             )}
           </DialogContent>

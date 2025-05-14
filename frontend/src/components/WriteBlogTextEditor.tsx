@@ -81,6 +81,7 @@ export default function WriteBlogTextEditor({ userFullName }: WriteBlogTextEdito
       setContent('')
       setMedia([])
       setSelectedTags([])
+      window.location.reload()
     }
   }
 
