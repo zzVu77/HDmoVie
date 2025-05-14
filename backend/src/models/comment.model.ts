@@ -31,9 +31,23 @@ export abstract class Comment {
   setParentComment(parent: Comment): void {
     this.parentComment = parent
   }
+
   getId(): string {
     return this.id
   }
+
+  getContent(): string {
+    return this.content
+  }
+
+  getUser(): RegisteredUser {
+    return this.user
+  }
+
+  getDate(): Date {
+    return this.date
+  }
+
   getParentComment(): Comment | undefined {
     return this.parentComment
   }

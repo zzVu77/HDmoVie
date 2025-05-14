@@ -11,6 +11,7 @@ import { Text } from './ui/typography'
 import { apiPost } from '@/utils/axiosConfig'
 import { toast } from 'sonner'
 import { useParams } from 'react-router-dom'
+import { MovieCommentResponse } from '@/types'
 
 // Define schema for form validation
 const reviewSchema = z.object({
@@ -23,6 +24,27 @@ const reviewSchema = z.object({
 })
 
 type ReviewFormValues = z.infer<typeof reviewSchema>
+
+// Add type guard to validate response format
+const isValidMovieCommentResponse = (response: any): response is MovieCommentResponse => {
+  return (
+    response &&
+    typeof response === 'object' &&
+    'status' in response &&
+    'data' in response &&
+    typeof response.data === 'object' &&
+    'id' in response.data &&
+    'score' in response.data &&
+    'content' in response.data &&
+    'userId' in response.data &&
+    'movieId' in response.data &&
+    'createdAt' in response.data &&
+    'user' in response.data &&
+    typeof response.data.user === 'object' &&
+    'id' in response.data.user &&
+    'fullName' in response.data.user
+  )
+}
 
 const CommentBox: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -43,16 +65,20 @@ const CommentBox: React.FC = () => {
     try {
       setIsSubmitting(true)
 
-      // Submit both rating and comment in one request
-      await apiPost(`/rates/${id}/with-comment`, {
+      const response = await apiPost<MovieCommentResponse>(`/rates/${id}/with-comment`, {
         score: data.rating,
         content: data.content,
       })
 
+      if (!isValidMovieCommentResponse(response.data)) {
+        throw new Error('Invalid response format from server')
+      }
+
       toast.success('Review submitted successfully!')
       form.reset()
-      // } catch (error: unknown) {
-      //   toast.error('Failed to submit review. Please try again.')
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to submit review'
+      toast.error(errorMessage)
     } finally {
       setIsSubmitting(false)
     }

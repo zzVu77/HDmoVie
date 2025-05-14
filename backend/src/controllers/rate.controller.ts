@@ -63,7 +63,8 @@ export class RateController {
     try {
       const { movieId } = req.params
       const { score, content } = req.body
-      const userId = res.locals.user.id
+      // const userId = res.locals.user.id
+      const userId = '1'
 
       if (score === undefined || !content) {
         res.status(400).json({ status: 'failed', message: 'Score and content are required' })
@@ -81,13 +82,28 @@ export class RateController {
         parentCommentId: null,
       })
 
-      res.status(201).json({
+      if (!rate || !comment) {
+        throw new Error('Failed to create rate or comment')
+      }
+
+      // Format response using getter methods
+      const response = {
         status: 'success',
         data: {
-          rate,
-          comment,
+          id: comment.getId(),
+          score: rate.getRateScore(),
+          content: comment.getContent(),
+          userId: comment.getUser().getId(),
+          movieId: comment.getMovie().getId(),
+          createdAt: comment.getDate(),
+          user: {
+            id: comment.getUser().getId(),
+            fullName: comment.getUser().getFullName(),
+          },
         },
-      })
+      }
+
+      res.status(201).json(response)
     } catch (error) {
       console.error('Error rating and commenting movie:', error)
       const message = (error as Error).message

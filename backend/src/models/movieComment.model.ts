@@ -13,4 +13,8 @@ export class MovieComment extends Comment {
     super(user, content, date, parentComment) // call constructor of Comment
     this.movie = movie
   }
+
+  getMovie(): Movie {
+    return this.movie
+  }
 }

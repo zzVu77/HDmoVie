@@ -32,4 +32,16 @@ export class Rate {
   public getId(): string {
     return this.id
   }
+
+  public getRateScore(): number {
+    return this.rateScore
+  }
+
+  public getUser(): RegisteredUser {
+    return this.user
+  }
+
+  public getMovie(): Movie {
+    return this.movie
+  }
 }
