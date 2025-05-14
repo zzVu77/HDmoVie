@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { TagType } from '@/types'
 import { Text } from './ui/typography'
+import { tagService } from '@/services/tagService'
+import { toast } from 'sonner'
 
 type TagInputProps = {
   dbTags: TagType[]
@@ -44,14 +46,14 @@ export default function TagInput({ dbTags, onChange }: TagInputProps) {
   }
 
   const createNewTag = async (name: string) => {
-    return { id: (Date.now() + Math.random()).toString(), name: name.trim() }
-    // const res = await fetch('/api/tags/create', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ name }),
-    // })
-    // if (!res.ok) throw new Error('Failed to create tag')
-    // return await res.json()
+    try {
+      const newTag = await tagService.createTag({ name: name.trim() })
+      return newTag
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Cannot create tag')
+      const newTag: TagType = { id: Math.floor(Date.now()).toString(), name: name.trim() }
+      return newTag
+    }
   }
 
   // Filter tags to display on tag suggestion
