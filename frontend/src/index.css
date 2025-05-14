@@ -272,3 +272,9 @@ body {
 .custom-sheet > button.absolute:hover {
   color: #facc15; /* Tailwind yellow-400 */
 }
+
+/* Hide calender icon */
+input.hide-icon-calendar[type='date']::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
