@@ -2,10 +2,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import { cn } from '@/lib/utils'
 import { BlogPost } from '@/types'
-import { Heart, MessageCircle, MessageSquareWarning } from 'lucide-react'
+import { Heart, MessageCircle, MessageSquareWarning, ArrowRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ReportDialog from './ReportModal'
@@ -49,7 +49,7 @@ export default function BlogCard({
     }
   }, [blog.content])
 
-  const hasImages = blog.images && blog.images.length > 0
+  const hasImages = blog.imageUrls && blog.imageUrls.length > 0
   const cardContent = (
     <Card
       className={cn(
@@ -114,26 +114,29 @@ export default function BlogCard({
         </div>
 
         {hasImages && (
-          <Carousel opts={{ dragFree: true }} className='w-[90%] flex justify-center mx-auto my-1 px-1'>
-            <CarouselContent className='px-1 -ml-2'>
-              {blog.images!.map((imageUrl, index) => (
-                <CarouselItem key={index} className='basis-auto pl-2 w-auto'>
-                  <div className=' rounded-sm overflow-hidden h-auto   '>
-                    <img
-                      src={imageUrl}
-                      alt={`Blog image ${index + 1}`}
-                      className='object-cover object-center h-[280px]  w-[30api0px]'
-                      onError={(e) => {
-                        ;(e.target as HTMLImageElement).src =
-                          'https://makerworld.bblmw.com/makerworld/model/US2ab61bb7d3000c/design/2024-01-30_029b2304056c.png?x-oss-process=image/resize,w_1000/format,webp'
-                      }}
-                    />
-                  </div>
+          <Carousel className='w-full mx-auto my-1'>
+            <CarouselContent>
+              {blog.imageUrls.map((image) => (
+                <CarouselItem key={image.id} className='flex justify-center'>
+                  <img
+                    src={image.url}
+                    alt={`Blog image ${image.id}`}
+                    className='w-full object-cover rounded-sm self-center'
+                    onError={(e) => {
+                      ;(e.target as HTMLImageElement).src =
+                        'https://makerworld.bblmw.com/makerworld/model/US2ab61bb7d3000c/design/2024-01-30_029b2304056c.png?x-oss-process=image/resize,w_1000/format,webp'
+                    }}
+                  />
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            {blog.imageUrls.length > 1 && (
+              <div className='group absolute top-1/2 -translate-y-1/2 right-4 flex justify-end items-center'>
+                <div className='rounded-full opacity-30 bg-secondary-dark text-white w-8 h-8 flex items-center justify-center'>
+                  <ArrowRight size={16} className='text-white' />
+                </div>
+              </div>
+            )}
           </Carousel>
         )}
       </CardContent>

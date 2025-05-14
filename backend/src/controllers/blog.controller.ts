@@ -7,10 +7,10 @@ export class BlogController {
   async getAllBlogs(req: Request, res: Response): Promise<void> {
     try {
       const blogs = await this.blogService.getAllBlogs()
-      res.status(200).json({ status: 'success', data: blogs })
+      res.status(200).json(blogs)
     } catch (error) {
       console.error('Error fetching blogs:', error)
-      res.status(500).json({ status: 'failed', message: 'Internal server error' })
+      res.status(500).json({ message: 'Internal server error' })
     }
   }
 
@@ -20,14 +20,14 @@ export class BlogController {
       const blog = await this.blogService.getBlogById(blogId)
 
       if (!blog) {
-        res.status(404).json({ status: 'failed', message: 'Blog not found' })
+        res.status(404).json({ message: 'Blog not found' })
         return
       }
 
-      res.status(200).json({ status: 'success', data: blog })
+      res.status(200).json(blog)
     } catch (error) {
       console.error('Error fetching blog:', error)
-      res.status(500).json({ status: 'failed', message: 'Internal server error' })
+      res.status(500).json({ message: 'Internal server error' })
     }
   }
 
@@ -44,15 +44,10 @@ export class BlogController {
         images,
       })
 
-      res.status(201).json({
-        status: 'success',
-        message: 'Blog created successfully',
-        data: blog,
-      })
+      res.status(201).json(blog)
     } catch (error) {
       console.error('Error creating blog:', error)
       res.status(500).json({
-        status: 'failed',
         message: (error as Error).message || 'Internal server error',
       })
     }
@@ -63,18 +58,18 @@ export class BlogController {
       const { blogId } = req.params
 
       await this.blogService.deleteBlog(blogId)
-      res.status(200).json({ status: 'success', message: 'Blog deleted successfully' })
+      res.status(200).json({ message: 'Blog deleted successfully' })
     } catch (error) {
       console.error('Error deleting blog:', error)
 
       const message = (error as Error).message
 
       if (message === 'You do not have permission to delete this blog') {
-        res.status(403).json({ status: 'failed', message })
+        res.status(403).json({ message })
       } else if (message === 'Blog not found') {
-        res.status(404).json({ status: 'failed', message })
+        res.status(404).json({ message })
       } else {
-        res.status(400).json({ status: 'failed', message })
+        res.status(400).json({ message })
       }
     }
   }

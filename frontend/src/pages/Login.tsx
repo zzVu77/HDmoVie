@@ -6,11 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { apiPost } from '@/utils/axiosConfig'
 import { toast } from 'sonner'
 import { jwtDecode, JwtPayload } from 'jwt-decode'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 
 interface ApiErrorResponse {
   message?: string
@@ -28,9 +28,10 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>
 
 const Login: React.FC = () => {
+  const [searchParams] = useSearchParams()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
-
+  const redirectPath = searchParams.get('redirect') || '/'
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -55,10 +56,14 @@ const Login: React.FC = () => {
       const decodedToken = jwtDecode<MyTokenPayload>(token)
 
       // Permission
-      if (decodedToken.role == 'ADMIN') {
-        navigate('/admin')
+      if (redirectPath === '/' || redirectPath === '/login') {
+        if (decodedToken.role === 'ADMIN') {
+          navigate('/admin', { replace: true })
+        } else {
+          navigate('/', { replace: true })
+        }
       } else {
-        navigate('/')
+        navigate(redirectPath, { replace: true })
       }
 
       toast.success('Login successful!')

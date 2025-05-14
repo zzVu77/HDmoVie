@@ -3,7 +3,7 @@ import BlogCard from './BlogCard'
 import { Text } from './ui/typography'
 import { Loader2 } from 'lucide-react'
 import { BlogPost } from '@/types'
-import BlogService from '@/services/blogService'
+import BlogService from '@/services/BlogService'
 
 interface ListBlogsProps {
   blogs?: BlogPost[]
@@ -29,12 +29,12 @@ const ListBlogs = ({ blogs: propBlogs }: ListBlogsProps) => {
 
       try {
         const response = await BlogService.getAllBlogs()
-        if (!response.data || !Array.isArray(response.data.data)) {
+        if (!Array.isArray(response.data)) {
           throw new Error('Invalid response format from server')
         }
-        setBlogs(response.data.data)
+        setBlogs(response.data)
       } catch (err: unknown) {
-        alert((err as Error).message)
+        setError((err as Error).message)
       } finally {
         setLoading(false)
       }

@@ -1,11 +1,6 @@
 import { apiGet, apiPost } from '@/utils/axiosConfig'
 import { BlogCommentType, MovieCommentProps, MovieCommentResponse } from '@/types'
 
-export interface ApiResponse<T> {
-  data: T
-  status: string
-}
-
 export interface CreateCommentRequest {
   content: string
   blogId: string
@@ -22,30 +17,29 @@ export const CommentService = {
    * Fetch all comments for a blog post
    */
   getBlogComments: (blogId: string) => {
-    return apiGet<ApiResponse<BlogCommentType[]>>(`/comments/blog/${blogId}`)
+    return apiGet<BlogCommentType[]>(`/comments/blog/${blogId}`)
   },
 
   /**
    * Create a new comment
    */
   createComment: (commentData: CreateCommentRequest) => {
-    return apiPost<ApiResponse<BlogCommentType>>('/comments/blog', commentData)
+    return apiPost<BlogCommentType>('/comments/blog', commentData)
   },
 
   /**
    * Fetch all comments for a movie
    */
   getMovieComments: (movieId: string) => {
-    return apiGet<ApiResponse<MovieCommentProps[]>>(`/comments/movie/${movieId}`)
+    return apiGet<MovieCommentProps[]>(`/comments/movie/${movieId}`)
   },
 
   /**
    * Create a new comment for a movie
    */
   createMovieComment: (movieId: string, commentData: CreateMovieCommentRequest) => {
-    return apiPost<ApiResponse<MovieCommentResponse>>(`/rates/${movieId}/with-comment`, commentData)
+    return apiPost<MovieCommentResponse>(`/rates/${movieId}/with-comment`, commentData)
   },
-
   /**
    * Transform movie comment response to MovieCommentProps
    */

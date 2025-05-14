@@ -34,12 +34,12 @@ export class BlogService {
 
   async getAllBlogs(): Promise<BlogResponseDTO[]> {
     const blogs = await this.blogRepository.findAll()
-    return blogs.map(this.transformToResponseDTO)
+    return blogs
   }
 
   async getBlogById(id: string): Promise<BlogResponseDTO | null> {
     const blog = await this.blogRepository.findById(id)
-    return blog ? this.transformToResponseDTO(blog) : null
+    return blog
   }
 
   async createBlog(blogData: CreateBlogDTO): Promise<BlogResponseDTO> {
@@ -78,7 +78,8 @@ export class BlogService {
     // Save blog with associated media (cascade: true in Blog model will save imageUrls)
     const savedBlog = await this.blogRepository.create(blog)
 
-    return this.transformToResponseDTO(savedBlog)
+    // Return the saved blog through the repository's findById to ensure consistent format
+    return await this.blogRepository.findById(savedBlog.getId())
   }
 
   async deleteBlog(blogId: string): Promise<void> {
@@ -96,33 +97,15 @@ export class BlogService {
       const pageSize = 5
       const offset = page * pageSize
       const blogs = await this.blogRepository.findByUserId(userId, offset, pageSize)
-      return blogs.map(this.transformToResponseDTO)
+
+      // Transform the blogs to the proper response format
+      return await Promise.all(
+        blogs.map(async (blog) => {
+          return await this.blogRepository.findById(blog.getId())
+        }),
+      )
     } catch (error) {
       throw new Error((error as Error).message)
-    }
-  }
-
-  private transformToResponseDTO(blog: any): BlogResponseDTO {
-    return {
-      id: blog.blog_id ?? blog.id,
-      content: blog.blog_content ?? blog.content,
-      dateCreated: blog.blog_dateCreated ?? blog.dateCreated,
-      owner: {
-        id: blog.owner_id ?? blog.owner?.id ?? '', // fallback chain
-        fullName: blog.owner_fullName ?? blog.owner?.fullName ?? '',
-      },
-      tags:
-        blog.tags?.map((tag: any) => ({
-          id: tag.id,
-          name: tag.name,
-        })) ?? [],
-      imageUrls:
-        blog.imageUrls?.map((media: any) => ({
-          id: media.id,
-          url: media.url,
-        })) ?? [],
-      likeCount: parseInt(blog.likeCount ?? '0'),
-      commentCount: parseInt(blog.commentCount ?? '0'),
     }
   }
 }

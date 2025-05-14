@@ -13,6 +13,7 @@ import RegisterForm from './pages/Register'
 import TestComponent from './pages/TestComponent'
 import Home from './pages/Home'
 import PublicRoute from './components/PublicRoute'
+import PrivateRoute from './components/PrivateRoute'
 import { Toaster } from '@/components/ui/sonner' // hoặc từ "sonner" nếu dùng trực tiếp
 
 function App() {
@@ -32,14 +33,28 @@ function App() {
           <Route path='/movie/:id' element={<Movie />} />
           <Route path='/test' element={<TestComponent />} />
           <Route path='/explore' element={<Explore />} />
-          <Route path='/blog/:id' element={<BlogDetail />} />
+          <Route
+            path='/blog/:id'
+            element={
+              <PrivateRoute>
+                <BlogDetail />
+              </PrivateRoute>
+            }
+          />
           <Route path='/blog' element={<Blogs />} />
           <Route path='/profile/:id' element={<Profile />} />
           <Route path='/test' element={<TestComponent />} />
         </Route>
 
         {/* Admin route WITHOUT header */}
-        <Route path='/admin' element={<Admin />} />
+        <Route
+          path='/admin'
+          element={
+            <PrivateRoute requiredRole='ADMIN'>
+              <Admin />
+            </PrivateRoute>
+          }
+        />
 
         {/* Public routes - only for users not logged in */}
         <Route
