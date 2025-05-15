@@ -32,13 +32,13 @@ import { toast } from 'sonner'
 //   { id: '5', name: 'Comedy' },
 // ]
 
-const availableCasts: CastType[] = [
-  { id: '1', name: 'Leonardo DiCaprio' },
-  { id: '2', name: 'Keanu Reeves' },
-  { id: '3', name: 'Matthew McConaughey' },
-  { id: '4', name: 'Anne Hathaway' },
-  { id: '5', name: 'Joseph Gordon-Levitt' },
-]
+// const availableCasts: CastType[] = [
+//   { id: '1', name: 'Leonardo DiCaprio' },
+//   { id: '2', name: 'Keanu Reeves' },
+//   { id: '3', name: 'Matthew McConaughey' },
+//   { id: '4', name: 'Anne Hathaway' },
+//   { id: '5', name: 'Joseph Gordon-Levitt' },
+// ]
 
 // Zod schema for form validation
 const movieSchema = z.object({
@@ -68,6 +68,7 @@ interface MovieInfoModalProps {
   description?: string
   type?: 'create' | 'update'
   onRefresh?: () => void
+  casts?: CastType[]
 }
 
 export function MovieInfoModal({
@@ -80,6 +81,7 @@ export function MovieInfoModal({
   description,
   type,
   onRefresh,
+  casts,
 }: MovieInfoModalProps) {
   const form = useForm<MovieFormValues>({
     resolver: zodResolver(movieSchema),
@@ -324,7 +326,7 @@ export function MovieInfoModal({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
                     <FormLabel className='text-left'>Casts</FormLabel>
-                    <Popover modal={true}>
+                    <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
@@ -335,35 +337,34 @@ export function MovieInfoModal({
                               !field.value?.length && 'text-muted-foreground',
                             )}
                           >
-                            {field.value?.length ? field.value.map((c) => c.name).join(', ') : 'Select casts'}
+                            {field.value?.length ? field.value.map((g) => g.name).join(', ') : 'Select casts'}
                             <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className='w-[200px] p-0'>
+                      <PopoverContent className='w-[var(--popover-width)] p-0'>
                         <Command>
-                          <CommandInput placeholder='Search casts...' />
+                          <CommandInput placeholder='Search cast...' />
                           <CommandList>
-                            <CommandEmpty>No casts found.</CommandEmpty>
+                            <CommandEmpty>No cast found</CommandEmpty>
                             <CommandGroup>
-                              {availableCasts.map((cast) => (
+                              {casts?.map((cast) => (
                                 <CommandItem
                                   key={cast.id}
-                                  value={cast.name}
                                   onSelect={() => {
-                                    const currentCasts = field.value || []
-                                    const isSelected = currentCasts.some((c) => c.id === cast.id)
-                                    if (isSelected) {
-                                      field.onChange(currentCasts.filter((c) => c.id !== cast.id))
+                                    // Cập nhật field
+                                    const alreadySelected = field.value?.find((c) => c.id === cast.id)
+                                    if (alreadySelected) {
+                                      field.onChange(field.value?.filter((c) => c.id !== cast.id))
                                     } else {
-                                      field.onChange([...currentCasts, cast])
+                                      field.onChange([...(field.value || []), cast])
                                     }
                                   }}
                                 >
                                   <Check
                                     className={cn(
                                       'mr-2 h-4 w-4',
-                                      field.value?.some((c) => c.id === cast.id) ? 'opacity-100' : 'opacity-0',
+                                      field.value?.find((c) => c.id === cast.id) ? 'opacity-100' : 'opacity-0',
                                     )}
                                   />
                                   {cast.name}

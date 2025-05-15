@@ -8,7 +8,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { getMovies } from '@/services/movieService'
-import { GenreType, MovieType } from '@/types'
+import { CastType, GenreType, MovieType } from '@/types'
 import {
   ColumnFiltersState,
   SortingState,
@@ -26,6 +26,7 @@ import Wrapper from '../shared/Wrapper'
 import { columns } from './movie-columns'
 import { genreService } from '@/services/genreService'
 import { MovieInfoModal } from './MovieInfoModal'
+import { castService } from '@/services/castService'
 
 export function ManageMovie() {
   const [data, setMovies] = useState<MovieType[]>([])
@@ -62,6 +63,7 @@ export function ManageMovie() {
 
     fetchMovies()
   }, [])
+
   const [genres, setGenres] = useState<GenreType[]>([])
   const fetchGenres = async () => {
     try {
@@ -71,9 +73,20 @@ export function ManageMovie() {
       throw Error('Loading fail')
     }
   }
-
+  const [casts, setCasts] = useState<CastType[]>([])
+  const fetchCasts = async () => {
+    try {
+      const data = await castService.getCasts()
+      setCasts(data)
+    } catch {
+      throw Error('Loading fail')
+    }
+  }
   useEffect(() => {
     fetchGenres()
+  }, [])
+  useEffect(() => {
+    fetchCasts()
   }, [])
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -85,7 +98,7 @@ export function ManageMovie() {
 
   const table = useReactTable({
     data: data,
-    columns: columns(genres, refreshMovies),
+    columns: columns(genres, casts, refreshMovies),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -165,6 +178,7 @@ export function ManageMovie() {
         <MovieInfoModal
           title='Add new movie'
           genres={genres}
+          casts={casts}
           onRefresh={refreshMovies}
           type='create'
           buttonTitle='Save'

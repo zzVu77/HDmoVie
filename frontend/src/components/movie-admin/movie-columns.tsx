@@ -10,7 +10,11 @@ import { MovieInfoModal } from './MovieInfoModal'
 import { deleteMovie } from '@/services/movieService'
 import { toast } from 'sonner'
 
-export const columns = (genres: GenreType[], refreshMovies: () => Promise<void>): ColumnDef<MovieType>[] => [
+export const columns = (
+  genres: GenreType[],
+  casts: CastType[],
+  refreshMovies: () => Promise<void>,
+): ColumnDef<MovieType>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -169,6 +173,7 @@ export const columns = (genres: GenreType[], refreshMovies: () => Promise<void>)
             icon={<PencilLine className='h-4 w-4 text-primary-dark cursor-pointer' />}
             movie={row.original}
             genres={genres}
+            casts={casts}
             type='update'
             onRefresh={refreshMovies}
           ></MovieInfoModal>
