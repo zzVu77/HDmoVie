@@ -112,8 +112,8 @@ export function MovieInfoModal({
         toast.success('Create successful!')
       }
     } catch (error) {
-      throw new Error('Failed to submit movie: ' + (error as Error).message)
       toast.error('Action failed!')
+      throw new Error('Failed to submit movie: ' + (error as Error).message)
     } finally {
       form.reset()
       onRefresh?.()

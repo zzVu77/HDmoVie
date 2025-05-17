@@ -20,19 +20,21 @@ export class MovieController {
   async createMovie(req: Request, res: Response): Promise<void> {
     try {
       const data = req.body
-      const movieData = new Movie(
-        data.title,
-        data.description,
-        data.releaseYear,
-        data.trailerSource,
-        data.posterSource,
-        data.backdropSource,
-        data.voteAvg,
-        data.voteCount,
-        data.genres,
-        data.casts,
-      )
-      const newMovie = await this.movieService.createMovie(movieData)
+      const { title, description, releaseYear, trailerSource, posterSource, backdropSource, voteAvg, voteCount } = data
+
+      const newMovie = await this.movieService.createMovie({
+        title,
+        description,
+        releaseYear,
+        trailerSource,
+        posterSource,
+        backdropSource,
+        voteAvg,
+        voteCount,
+        genres: data.genres || [],
+        casts: data.casts || [],
+      })
+
       res.status(201).json({ status: 'success', data: newMovie })
     } catch (error) {
       console.error('Error creating movie:', error)

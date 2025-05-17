@@ -1,6 +1,8 @@
+import { Cast } from '~/models/cast.model'
+import { Genre } from '~/models/genre.model'
 import { Movie } from '~/models/movie.model'
-import { MovieRepository } from '~/repositories/movie.repository'
 import { CommentRepository } from '~/repositories/comment.repository'
+import { MovieRepository } from '~/repositories/movie.repository'
 import { MovieType } from '~/type'
 import { CastService } from './cast.service'
 import { GenreService } from './genre.service'
@@ -17,17 +19,33 @@ export class MovieService {
     // private rateService: RateService,
   ) {}
 
-  async getAllMovies(): Promise<Movie[]> {
+  async createMovie(movieData: MovieType): Promise<Movie | null> {
     try {
-      return this.movieRepository.findAll()
+      const genres = (movieData.genres || []).map((genre) => new Genre(genre.name))
+
+      const casts = (movieData.casts || []).map((cast) => new Cast(cast.name, cast.profilePath))
+
+      const data = new Movie(
+        movieData.title,
+        movieData.description,
+        movieData.releaseYear,
+        movieData.trailerSource,
+        movieData.posterSource,
+        movieData.backdropSource,
+        movieData.voteAvg,
+        movieData.voteCount,
+        genres,
+        casts,
+      )
+      return await this.movieRepository.create(data)
     } catch (error) {
       throw new Error((error as Error).message)
     }
   }
 
-  async createMovie(movieData: Movie): Promise<Movie> {
+  async getAllMovies(): Promise<Movie[]> {
     try {
-      return await this.movieRepository.create(movieData)
+      return this.movieRepository.findAll()
     } catch (error) {
       throw new Error((error as Error).message)
     }

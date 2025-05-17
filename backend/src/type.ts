@@ -9,7 +9,7 @@ export type GenreType = {
   id: string
 }
 export type MovieType = {
-  id: string
+  id?: string
   title: string
   description: string
   releaseYear: string
