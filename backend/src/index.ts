@@ -57,7 +57,7 @@ AppDataSource.initialize()
   .then(() => {
     console.log('Database connected')
     app.listen(port, () => {
-      console.log(`Server running on http://localhost:${port}`)
+      console.log(`Server running on http://${process.env.MYSQLHOST || 'localhost'}/${process.env.MYSQLPORT || 3001}`)
     })
   })
   .catch((error) => console.log('Error connecting to database:', error))
