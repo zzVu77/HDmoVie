@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:3001/api',
+  baseURL: 'https://hdmovie-1.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
