@@ -6,8 +6,11 @@ import { RegisteredUserRepository } from '~/repositories/registeredUser.reposito
 import { AppDataSource } from '~/data-source'
 import { JwtPayload } from 'jsonwebtoken'
 
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access_secret'
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET as string
 
+if (!ACCESS_TOKEN_SECRET) {
+  throw new Error('JWT secrets are not defined in environment variables')
+}
 // Khởi tạo dependencies
 const registeredUserRepository = new RegisteredUserRepository(AppDataSource)
 const authService = new AuthService(registeredUserRepository)
