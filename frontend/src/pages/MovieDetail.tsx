@@ -94,7 +94,7 @@ const MovieDetail = () => {
       </Wrapper>
       <Wrapper>
         <TitleSection>Review</TitleSection>
-        <div className='flex flex-col gap-5 w-[90vw] mx-auto'>
+        <div className='flex flex-col gap-5 w-full mx-auto'>
           {!movieData.status && (
             <div className='w-full'>
               <CommentBox onCommentAdded={handleCommentAdded} />
