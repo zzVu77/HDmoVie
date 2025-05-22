@@ -3,7 +3,7 @@ import BlogCard from './BlogCard'
 import { Text } from './ui/typography'
 import { Loader2 } from 'lucide-react'
 import { BlogPost } from '@/types'
-import BlogService from '@/services/BlogService'
+import BlogService from '@/services/blogService'
 
 interface ListBlogsProps {
   userId?: string

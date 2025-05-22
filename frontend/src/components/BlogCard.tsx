@@ -10,7 +10,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import ReportDialog from './ReportModal'
 import { BlogPost } from '@/types'
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogFooter } from './ui/dialog'
-import BlogService from '@/services/BlogService'
+import BlogService from '@/services/blogService'
 import { toast } from 'sonner'
 export interface BlogCardProps {
   blog: BlogPost

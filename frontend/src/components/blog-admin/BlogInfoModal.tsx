@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import {
   Dialog,
   DialogContent,
@@ -9,144 +8,104 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
+
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
-import { BlogType, TagType } from './ManageBlog'
+import { TagType } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { Text } from '../ui/typography'
+import blogService from '@/services/blogService'
+import { toast } from 'sonner'
 
-// Sample data for tags (replace with API in real implementation)
-const availableTags: TagType[] = [
-  { id: '1', name: 'Avenger' },
-  { id: '2', name: 'Anime' },
-  { id: '3', name: 'Action' },
-  { id: '4', name: 'Marvel' },
-  { id: '5', name: 'DC' },
-]
-
-// Zod schema for form validation
 const blogSchema = z.object({
-  id: z.string().optional(),
   content: z.string().min(1, 'Content is required'),
-  dateCreated: z.string().optional(),
-  owner: z
-    .object({
-      id: z.string(),
-      fullName: z.string(),
-    })
-    .optional(),
-  tags: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
-  imageUrls: z.array(z.string()).optional(),
+  tags: z.array(z.object({ id: z.string().optional(), name: z.string() })).optional(),
+  imageUrls: z.array(z.string().or(z.object({ id: z.string().optional(), url: z.string() }))).optional(),
 })
 
-type BlogFormValues = z.infer<typeof blogSchema>
+export type BlogFormValues = z.infer<typeof blogSchema>
 
 interface BlogInfoModalProps {
-  blog?: BlogType
-  onSave?: (data: BlogFormValues) => void
+  tags?: TagType[]
   children?: React.ReactNode
   icon?: React.ReactNode
-  title?: string
+  onRefresh?: () => void
 }
 
-export function BlogInfoModal({ blog, onSave, children, icon, title }: BlogInfoModalProps) {
+export function BlogInfoModal({ tags = [], children, icon, onRefresh }: BlogInfoModalProps) {
   const form = useForm<BlogFormValues>({
     resolver: zodResolver(blogSchema),
     defaultValues: {
-      id: blog?.id || '',
-      content: blog?.content || '',
-      dateCreated: blog?.dateCreated || '',
-      owner: blog?.owner || { id: '', fullName: '' },
-      tags: blog?.tags || [],
-      imageUrls: blog?.imageUrls?.map((url) => (typeof url === 'string' ? url : url.url)) || [],
+      content: '',
+      tags: [],
+      imageUrls: [],
     },
   })
 
-  const onSubmit = (data: BlogFormValues) => {
-    if (onSave) onSave(data)
-    form.reset(data) // Reset form with current values
+  const onSubmit = async (data: BlogFormValues) => {
+    try {
+      await blogService.createBlog({
+        content: data.content,
+        tags: data.tags || [],
+        images: data.imageUrls?.map((img) => (typeof img === 'string' ? { url: img } : { url: img.url })),
+      })
+      toast.success('Blog created successfully!')
+      form.reset()
+      onRefresh?.()
+    } catch (error) {
+      toast.error('Failed to create blog: ' + (error as Error).message)
+    }
   }
 
   return (
-    <Dialog>
+    <Dialog modal={false}>
       <DialogTrigger asChild>
-        <div className={`flex flex-row items-center ${title ? 'gap-2' : 'gap-0'}`}>
+        <div className='flex flex-row items-center gap-2 cursor-pointer'>
           {icon}
           <Text body={4} className='text-primary-dark'>
             {children || ''}
           </Text>
         </div>
       </DialogTrigger>
-      <DialogContent className='w-full lg:px-2 overflow-y-scroll'>
+      <DialogContent className='w-full lg:w-[70vw] lg:px-2 px-[2px] h-[90vh] overflow-y-scroll'>
         <DialogHeader>
-          <DialogTitle className='text-center font-bold text-2xl'>{title || 'Edit Blog'}</DialogTitle>
+          <DialogTitle className='text-center font-bold text-2xl'>Create New Blog</DialogTitle>
           <DialogDescription className='text-center text-sm text-muted-foreground'>
-            Make changes to the blog information here. Click save when you're done.
+            Fill in the information to publish a new blog post.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6 px-1'>
             <div className='grid gap-4 py-4'>
+              {/* Content */}
               <FormField
                 control={form.control}
                 name='content'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Content</FormLabel>
+                    <FormLabel className='text-left'>Content</FormLabel>
                     <FormControl>
                       <Textarea id='content' className='col-span-3' {...field} />
                     </FormControl>
-                    <FormMessage className='col-span-4 text-right' />
+                    <FormMessage className='col-span-4 text-left' />
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name='dateCreated'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Date Created</FormLabel>
-                    <FormControl>
-                      <Input
-                        id='dateCreated'
-                        type='datetime-local'
-                        className='col-span-3'
-                        value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ''}
-                        onChange={(e) => {
-                          const date = new Date(e.target.value)
-                          field.onChange(date.toISOString())
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 text-right' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='owner.fullName'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Owner</FormLabel>
-                    <FormControl>
-                      <Input id='owner.fullName' className='col-span-3' readOnly {...field} />
-                    </FormControl>
-                    <FormMessage className='col-span-4 text-right' />
-                  </FormItem>
-                )}
-              />
+
+              {/* Tags */}
               <FormField
                 control={form.control}
                 name='tags'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Tags</FormLabel>
+                    <FormLabel className='text-left'>Tags</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -169,18 +128,16 @@ export function BlogInfoModal({ blog, onSave, children, icon, title }: BlogInfoM
                           <CommandList>
                             <CommandEmpty>No tags found.</CommandEmpty>
                             <CommandGroup>
-                              {availableTags.map((tag) => (
+                              {tags.map((tag) => (
                                 <CommandItem
                                   key={tag.id}
                                   value={tag.name}
                                   onSelect={() => {
                                     const currentTags = field.value || []
                                     const isSelected = currentTags.some((t) => t.id === tag.id)
-                                    if (isSelected) {
-                                      field.onChange(currentTags.filter((t) => t.id !== tag.id))
-                                    } else {
-                                      field.onChange([...currentTags, tag])
-                                    }
+                                    field.onChange(
+                                      isSelected ? currentTags.filter((t) => t.id !== tag.id) : [...currentTags, tag],
+                                    )
                                   }}
                                 >
                                   <Check
@@ -197,40 +154,48 @@ export function BlogInfoModal({ blog, onSave, children, icon, title }: BlogInfoM
                         </Command>
                       </PopoverContent>
                     </Popover>
-                    <FormMessage className='col-span-4 text-right' />
+                    <FormMessage className='col-span-4 text-left' />
                   </FormItem>
                 )}
               />
+
+              {/* Images */}
               <FormField
                 control={form.control}
                 name='imageUrls'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-4 items-center gap-4'>
-                    <FormLabel className='text-right'>Image URLs</FormLabel>
+                    <FormLabel className='text-left'>Images</FormLabel>
                     <div className='col-span-3 space-y-2'>
-                      {field.value?.map((url, index) => (
-                        <div key={index} className='flex items-center gap-2'>
-                          <Input
-                            value={url}
-                            onChange={(e) => {
-                              const currentUrls = [...(field.value || [])]
-                              currentUrls[index] = e.target.value
-                              field.onChange(currentUrls)
-                            }}
-                            placeholder='Image URL'
-                          />
-                          <Button
-                            type='button'
-                            variant='outline'
-                            size='sm'
-                            onClick={() => {
-                              field.onChange(field.value?.filter((_, i) => i !== index))
-                            }}
-                          >
-                            Remove
-                          </Button>
-                        </div>
-                      ))}
+                      {field.value?.map((url, index) => {
+                        const urlValue = typeof url === 'string' ? url : url.url
+                        return (
+                          <div key={index} className='flex items-center gap-2'>
+                            <Input
+                              value={urlValue}
+                              onChange={(e) => {
+                                const updatedUrls = [...(field.value || [])]
+                                updatedUrls[index] =
+                                  typeof updatedUrls[index] === 'string'
+                                    ? e.target.value
+                                    : { ...updatedUrls[index], url: e.target.value }
+                                field.onChange(updatedUrls)
+                              }}
+                              placeholder='Image URL'
+                            />
+                            <Button
+                              type='button'
+                              variant='outline'
+                              size='sm'
+                              onClick={() => {
+                                field.onChange(field.value?.filter((_, i) => i !== index))
+                              }}
+                            >
+                              Remove
+                            </Button>
+                          </div>
+                        )
+                      })}
                       <Button
                         type='button'
                         variant='outline'
@@ -240,13 +205,13 @@ export function BlogInfoModal({ blog, onSave, children, icon, title }: BlogInfoM
                         Add Image URL
                       </Button>
                     </div>
-                    <FormMessage className='col-span-4 text-right' />
+                    <FormMessage className='col-span-4 text-left' />
                   </FormItem>
                 )}
               />
             </div>
             <DialogFooter>
-              <Button type='submit'>Save changes</Button>
+              <Button type='submit'>Create Blog</Button>
             </DialogFooter>
           </form>
         </Form>
