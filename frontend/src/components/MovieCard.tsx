@@ -4,6 +4,7 @@ import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { Text } from './ui/typography'
+import QuickAddToWatchlist from './QuickAddToWatchlist'
 const MovieCard = ({ posterSource = '', releaseYear = '', title = '', voteAvg = 0, genres, id }: MovieType) => {
   return (
     <div className='mx-auto'>
@@ -39,12 +40,14 @@ const MovieCard = ({ posterSource = '', releaseYear = '', title = '', voteAvg = 
               </Badge>
             ))}
           </div>
-          <Button className='grow bg-tertiary-yellow w-full rounded-4xl hover:ease-in-out hover:scale-105 cursor-pointer transition-all duration-300'>
-            <SaveAdd size='32' color='#ffff' variant='Bold' />
-            <Text body={4} className=' font-bold leading-3'>
-              Add to Watchlist
-            </Text>
-          </Button>
+          <QuickAddToWatchlist>
+            <Button className='grow bg-tertiary-yellow w-full rounded-4xl hover:ease-in-out hover:scale-105 cursor-pointer transition-all duration-300'>
+              <SaveAdd size='32' color='#ffff' variant='Bold' />
+              <Text body={4} className=' font-bold leading-3'>
+                Add to Watchlist
+              </Text>
+            </Button>
+          </QuickAddToWatchlist>
         </CardFooter>
       </Card>
     </div>
