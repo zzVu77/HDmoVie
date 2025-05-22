@@ -88,18 +88,14 @@ export class RateController {
 
       // Format response using getter methods
       const response = {
-        status: 'success',
-        data: {
-          id: comment.getId(),
-          score: rate.getRateScore(),
-          content: comment.getContent(),
-          userId: comment.getUser().getId(),
-          movieId: comment.getMovie().getId(),
-          createdAt: comment.getDate(),
-          user: {
-            id: comment.getUser().getId(),
-            fullName: comment.getUser().getFullName(),
-          },
+        id: comment.getId(),
+        score: rate.getRateScore(),
+        content: comment.getContent(),
+        movieId: comment.getMovie().getId(),
+        createdAt: comment.getDate(),
+        user: {
+          id: comment.getUser().getId(),
+          fullName: comment.getUser().getFullName(),
         },
       }
 

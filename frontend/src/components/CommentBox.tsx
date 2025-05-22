@@ -55,7 +55,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onCommentAdded }) => {
 
       // Transform and call onCommentAdded with the new comment
       if (onCommentAdded) {
-        onCommentAdded(CommentService.transformMovieCommentResponse(response.data))
+        onCommentAdded(response)
       }
 
       toast.success('Review submitted successfully!')
