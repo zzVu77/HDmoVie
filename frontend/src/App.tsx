@@ -42,8 +42,22 @@ function App() {
             }
           />
           <Route path='/blog' element={<Blogs />} />
-          <Route path='/profile/' element={<Profile />} />
-          <Route path='/profile/:id' element={<Profile />} />
+          <Route
+            path='/profile/'
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/profile/:id'
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
           <Route path='/test' element={<TestComponent />} />
         </Route>
 
