@@ -24,12 +24,11 @@ export class InteractionService {
     likers: { id: string; fullName: string; email: string }[]
   }> {
     const user = await this.userRepo.findOne(userId)
-    const blog = await this.blogRepo.findById(blogId)
+    const blog = await this.blogRepo.findBlogById(blogId)
 
     if (!user || !blog) {
       throw new Error('User or Blog not found')
     }
-
     let likeInteraction = await this.likeInteractionRepo.findLikeInteractionByBlogID(blog.getId())
 
     if (!likeInteraction) {

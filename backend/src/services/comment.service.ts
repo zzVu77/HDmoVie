@@ -43,9 +43,9 @@ export class CommentService {
     const movieComment = new MovieComment(user, content, new Date(), movie, parentComment)
     return this.commentRepository.saveMovieComment(movieComment)
   }
-  async getBlogComments(blogId: string): Promise<BlogComment[]> {
+  async getBlogComments(blogId: string, userId: string): Promise<BlogComment[]> {
     // Check if blog exists first
-    const blog = await this.blogRepository.findById(blogId)
+    const blog = await this.blogRepository.findById(blogId, userId)
     if (!blog) {
       throw new Error('Blog not found')
     }

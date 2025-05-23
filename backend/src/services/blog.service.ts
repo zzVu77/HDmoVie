@@ -23,6 +23,7 @@ interface BlogResponseDTO {
   imageUrls: { id: string; url: string }[]
   likeCount?: number
   commentCount?: number
+  isLiked: boolean
 }
 
 export class BlogService {
@@ -32,13 +33,13 @@ export class BlogService {
     private tagRepository: TagRepository,
   ) {}
 
-  async getAllBlogs(): Promise<BlogResponseDTO[]> {
-    const blogs = await this.blogRepository.findAll()
+  async getAllBlogs(userId: string): Promise<BlogResponseDTO[]> {
+    const blogs = await this.blogRepository.findAll(userId)
     return blogs
   }
 
-  async getBlogById(id: string): Promise<BlogResponseDTO | null> {
-    const blog = await this.blogRepository.findById(id)
+  async getBlogById(id: string, userId: string): Promise<BlogResponseDTO | null> {
+    const blog = await this.blogRepository.findById(id, userId)
     return blog
   }
 
@@ -79,11 +80,11 @@ export class BlogService {
     const savedBlog = await this.blogRepository.create(blog)
 
     // Return the saved blog through the repository's findById to ensure consistent format
-    return await this.blogRepository.findById(savedBlog.getId())
+    return await this.blogRepository.findById(savedBlog.getId(), userId)
   }
 
-  async deleteBlog(blogId: string): Promise<void> {
-    const blog = await this.blogRepository.findById(blogId)
+  async deleteBlog(blogId: string, userId: string): Promise<void> {
+    const blog = await this.blogRepository.findById(blogId, userId)
 
     if (!blog) {
       throw new Error('Blog not found')
