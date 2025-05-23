@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Text } from './ui/typography'
-import { MessageCircle, Flag, Send } from 'lucide-react'
+import { MessageCircle, Flag, Send, MessageSquareWarning } from 'lucide-react'
 import { BlogCommentType } from '@/types'
 import { cn } from '@/lib/utils'
 import { Textarea } from './ui/textarea'
@@ -113,8 +113,8 @@ export default function BlogCommentCard({ comment, isReply = false, blogId, onCo
             size='lg'
             className='p-1 h-auto flex items-center gap-1 text-primary-yellow hover:text-yellow-300 hover:bg-tertiary-dark transition-colors'
           >
-            <ReportDialog>
-              <Flag size={18} />
+            <ReportDialog type="comment" targetId={comment.id}>
+              <MessageSquareWarning size={16} />
             </ReportDialog>
           </Button>
         </CardFooter>

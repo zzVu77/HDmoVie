@@ -237,7 +237,7 @@ export default function BlogCard({
             e.stopPropagation()
           }}
         >
-          <ReportDialog>
+          <ReportDialog type="blog" targetId={blog.id}>
             <MessageSquareWarning size={18} />
           </ReportDialog>
         </Button>
