@@ -12,8 +12,9 @@ export class GenreService {
     }
   }
 
-  async createGenre(genreData: Genre): Promise<Genre> {
+  async createGenre(name: string): Promise<Genre> {
     try {
+      const genreData = new Genre(name)
       return await this.genreRepository.create(genreData)
     } catch (error) {
       throw new Error(`Failed to create genre: ${(error as Error).message}`)
@@ -44,12 +45,10 @@ export class GenreService {
   }
   async updateGenre(id: string, genreName: string): Promise<Genre | null> {
     const genre = await this.genreRepository.findById(id)
-
-    const genreData = new Genre(genreName)
     if (!genre) {
       throw new Error('Genre not found')
     }
-    genre.updateGenre(genreData.getName())
+    genre.updateGenre(genreName)
     return this.genreRepository.update(genre)
   }
 }
