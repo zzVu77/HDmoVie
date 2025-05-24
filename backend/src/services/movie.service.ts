@@ -59,6 +59,7 @@ export class MovieService {
       const transformedComments = comments.map((comment) => {
         const userRate = rates.find((rate) => rate.getUser().getId() === comment.getUser().getId())
         return {
+          id: comment.getId(),
           userName: comment.getUser().getFullName(),
           comment: comment.getContent(),
           rating: userRate ? userRate.getRateScore() : 0,
