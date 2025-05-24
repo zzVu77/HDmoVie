@@ -50,7 +50,23 @@ export class ReportRepository {
       relations: ['reporter', 'comment', 'comment.blog'], // Include the blog relation
     })
   }
-
+  async findReportBlog(): Promise<BlogReport[]> {
+    return this.blogReportRepo.find({
+      select: {
+        id: true,
+        reason: true,
+        reporter: {
+          id: true,
+          email: true,
+          password: false,
+          fullName: true,
+          dateOfBirth: true,
+        },
+        blog: { id: true, content: true },
+      } as FindOptionsSelect<BlogReport>,
+      relations: ['reporter', 'blog'], // Include the blog relation
+    })
+  }
   async findReportCommentMovieAll(movieId: string): Promise<CommentReport[]> {
     return this.commentReportRepo
       .createQueryBuilder('report')

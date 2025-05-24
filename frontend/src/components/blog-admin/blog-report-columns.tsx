@@ -1,4 +1,4 @@
-import { BlogCommentReportType, ReporterType } from '@/types'
+import { BlogReportType, ReporterType } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '../ui/checkbox'
 import { Button } from '../ui/button'
@@ -7,8 +7,9 @@ import { Link } from 'react-router-dom'
 import { ConfirmAlertDialog } from '../shared/ConfirmAlertDialog'
 import { toast } from 'sonner'
 import reportService from '@/services/reportService'
+// Sample data for blog reports
 
-export const columns = (onReportUpdate: () => void): ColumnDef<BlogCommentReportType>[] => [
+export const columns = (onReportUpdate: () => void): ColumnDef<BlogReportType>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -66,7 +67,6 @@ export const columns = (onReportUpdate: () => void): ColumnDef<BlogCommentReport
       return reason?.toLowerCase().includes(value.toLowerCase())
     },
   },
-
   {
     accessorKey: 'content',
     header: ({ column }) => (
@@ -93,7 +93,7 @@ export const columns = (onReportUpdate: () => void): ColumnDef<BlogCommentReport
 
       const handleDelete = async () => {
         try {
-          await reportService.deleteBlogCommentReport(report.commentId)
+          await reportService.deleteBlogReport(report.blogId)
           toast.success('Report deleted successfully')
           onReportUpdate()
         } catch {
