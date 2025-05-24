@@ -15,34 +15,34 @@ export interface ApiResponse<T> {
 /**
  * Service for handling all blog-related API requests
  */
-export const BlogService = {
+export const blogService = {
   /**
    * Fetch all blog posts
    */
-  getAllBlogs: () => {
-    return apiGet<BlogPost[]>('/blogs')
+  getAllBlogs: async () => {
+    return await apiGet<BlogPost[]>('/blogs')
   },
 
   /**
    * Fetch a specific blog post by ID
    */
-  getBlogById: (blogId: string) => {
-    return apiGet<BlogPost>(`/blogs/${blogId}`)
+  getBlogById: async (blogId: string) => {
+    return await apiGet<BlogPost>(`/blogs/${blogId}`)
   },
 
   /**
    * Create a new blog post
    */
-  createBlog: (blogData: CreateBlogPostRequest) => {
-    return apiPost<BlogPost, CreateBlogPostRequest>('/blogs', blogData)
+  createBlog: async (blogData: CreateBlogPostRequest) => {
+    return await apiPost<BlogPost, CreateBlogPostRequest>('/blogs', blogData)
   },
 
   /**
    * Delete a blog post
    */
-  deleteBlog: (blogId: string) => {
-    return apiDelete<void>(`/blogs/${blogId}`)
+  deleteBlog: async (blogId: string) => {
+    return await apiDelete<void>(`/blogs/${blogId}`)
   },
 }
 
-export default BlogService
+export default blogService

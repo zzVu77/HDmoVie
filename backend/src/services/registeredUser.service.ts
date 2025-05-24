@@ -8,8 +8,9 @@ import { RegisteredUser } from '../models/registeredUser.model'
 export class RegisteredUserService {
   constructor(private registeredUserRepository: RegisteredUserRepository) {}
 
-  async createUser(userData: RegisteredUser): Promise<RegisteredUser> {
+  async createUser(email: string, password: string, fullName: string, dateOfBirth: Date): Promise<RegisteredUser> {
     try {
+      const userData = new RegisteredUser(email, password, fullName, dateOfBirth)
       if (!RegisteredUser.isValidDOB(userData)) {
         throw new Error('User must be at least 16 years old')
       }

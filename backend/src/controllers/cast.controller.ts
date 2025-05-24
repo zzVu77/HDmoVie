@@ -17,8 +17,8 @@ export class CastController {
   async createCast(req: Request, res: Response): Promise<void> {
     try {
       const { name, profilePath } = req.body
-      const castData = new Cast(name, profilePath)
-      const newCast = await this.castService.createCast(castData)
+
+      const newCast = await this.castService.createCast(name, profilePath)
       res.status(201).json(newCast)
     } catch (error) {
       console.error('Error creating Cast:', error)

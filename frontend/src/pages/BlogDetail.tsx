@@ -4,7 +4,7 @@ import CommentSection from '@/components/CommentSection'
 import Wrapper from '@/components/shared/Wrapper'
 import { Text } from '@/components/ui/typography'
 import { useParams } from 'react-router-dom'
-import BlogService from '@/services/BlogService'
+import BlogService from '@/services/blogService'
 import { Loader2 } from 'lucide-react'
 import { BlogPost } from '@/types'
 

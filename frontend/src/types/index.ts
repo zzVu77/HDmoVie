@@ -77,7 +77,21 @@ export type WatchlistProps = {
 }
 export type TagType = {
   id?: string
-  name?: string
+  name: string
+}
+
+export type BlogOwnerType = {
+  id: string
+  fullName: string
+}
+
+export type BlogType = {
+  id: string
+  content: string
+  dateCreated: string
+  owner: BlogOwnerType
+  tags: TagType[]
+  imageUrls: Array<string | { id: string; url: string }>
 }
 export type MediaItem = {
   index: number
@@ -105,10 +119,11 @@ export type BlogCommentType = {
     id: string
   }
 }
+
 export type BlogPost = {
   id: string
   content: string
-  dateCreated: Date
+  dateCreated: string
   owner: RegisteredUserType
   tags: TagType[]
   likeCount: number

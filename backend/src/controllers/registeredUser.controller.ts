@@ -13,9 +13,13 @@ export class RegisteredUserController {
     try {
       const data = req.body
       // Create instance RegisterUser
-      const userData = new RegisteredUser(data.email, data.password, data.fullName, data.dateOfBirth)
       // move to service
-      const newUser = await this.registeredUserService.createUser(userData)
+      const newUser = await this.registeredUserService.createUser(
+        data.email,
+        data.password,
+        data.fullName,
+        data.dateOfBirth,
+      )
       res.status(201).json(newUser)
     } catch (error) {
       console.error('Error creating user:', error)

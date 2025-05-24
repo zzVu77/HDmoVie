@@ -17,8 +17,8 @@ export class GenreController {
   async createGenre(req: Request, res: Response): Promise<void> {
     try {
       const data = req.body
-      const genreData = new Genre(data.name)
-      const newGenre = await this.genreService.createGenre(genreData)
+
+      const newGenre = await this.genreService.createGenre(data.name)
       res.status(201).json(newGenre)
     } catch (error) {
       console.error('Error creating Genre:', error)
