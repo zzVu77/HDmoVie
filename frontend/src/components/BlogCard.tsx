@@ -11,6 +11,7 @@ import ReportDialog from './ReportModal'
 import { BlogPost } from '@/types'
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogFooter } from './ui/dialog'
 import BlogService from '@/services/blogService'
+import LikeService from '@/services/likeService'
 import { toast } from 'sonner'
 export interface BlogCardProps {
   blog: BlogPost
@@ -31,7 +32,7 @@ export default function BlogCard({
   isDetailView = false,
   userId,
 }: BlogCardProps) {
-  const [isLiked, setIsLiked] = useState(false)
+  const [isLiked, setIsLiked] = useState(blog.isLiked)
   const [likeCount, setLikeCount] = useState(blog.likeCount)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isClamped, setIsClamped] = useState(false)
@@ -51,11 +52,13 @@ export default function BlogCard({
     }
   }
 
-  const handleLike = (e: React.MouseEvent) => {
+  const handleLike = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
+    //the value respone is the like count of the blog
+    const response = await LikeService.likeOrUnlikePost(blog.id)
     setIsLiked(!isLiked)
-    setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
+    setLikeCount(response)
   }
 
   useEffect(() => {

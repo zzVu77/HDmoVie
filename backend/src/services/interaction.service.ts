@@ -28,12 +28,11 @@ export class InteractionService {
     likers: { id: string; fullName: string; email: string }[]
   }> {
     const user = await this.userRepo.findOne(userId)
-    const blog = await this.blogRepo.findById(blogId)
+    const blog = await this.blogRepo.findBlogById(blogId)
 
     if (!user || !blog) {
       throw new Error('User or Blog not found')
     }
-
     let likeInteraction = await this.likeInteractionRepo.findLikeInteractionByBlogID(blog.getId())
 
     if (!likeInteraction) {
@@ -60,7 +59,7 @@ export class InteractionService {
     await this.likeInteractionRepo.save(likeInteraction)
 
     // Create notification only when liking (not unliking) and user is not blog owner
-    const blogOwner = blog.getAuthor() // Assuming blog has getAuthor() method
+    const blogOwner = blog.getOwner() // Assuming blog has getAuthor() method
     if (isLiking && blogOwner.getId() !== userId) {
       const likeNotification = new LikeNotification()
       Object.assign(likeNotification, {

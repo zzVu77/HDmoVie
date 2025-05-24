@@ -129,6 +129,7 @@ export type BlogPost = {
   likeCount: number
   commentCount: number
   imageUrls?: { id: string; url: string }[]
+  isLiked: boolean
 }
 export type MovieCommentProps = {
   userName: string
@@ -138,18 +139,14 @@ export type MovieCommentProps = {
 }
 
 export type MovieCommentResponse = {
-  status: string
-  data: {
+  id: string
+  score: number
+  content: string
+  movieId: string
+  createdAt: string
+  user: {
     id: string
-    score: number
-    content: string
-    userId: string
-    movieId: string
-    createdAt: string
-    user: {
-      id: string
-      fullName: string
-    }
+    fullName: string
   }
 }
 
@@ -158,4 +155,10 @@ export type MovieDetailResponse = {
   movie: MovieType
   comments: MovieCommentProps[]
   relatedMovies: MovieType[]
+}
+
+export type LikeResponse = {
+  id: string
+  blogID: string
+  likers: RegisteredUserType[]
 }

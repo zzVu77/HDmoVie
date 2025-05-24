@@ -15,18 +15,18 @@ export class ReportService {
     private movieRepository: MovieRepository,
   ) {}
 
-  async getReportBlog(blogId: string): Promise<BlogReport[]> {
+  async getReportBlog(blogId: string, userId: string): Promise<BlogReport[]> {
     try {
-      const blog = await this.blogRepository.findById(blogId)
+      const blog = await this.blogRepository.findById(blogId, userId)
       if (!blog) throw new Error('Blog not found')
       return this.reportRepository.findReportBlogAll(blogId)
     } catch (error) {
       throw new Error((error as Error).message)
     }
   }
-  async getReportCommentBlog(blogId: string): Promise<CommentReport[]> {
+  async getReportCommentBlog(blogId: string, userId: string): Promise<CommentReport[]> {
     try {
-      const blog = await this.blogRepository.findById(blogId)
+      const blog = await this.blogRepository.findById(blogId, userId)
       if (!blog) throw new Error('Blog not found')
       return this.reportRepository.findReportCommentBlogAll(blogId)
     } catch (error) {
@@ -63,7 +63,7 @@ export class ReportService {
     if (!reporter) throw new Error('Reporter not found')
 
     // Find the blog
-    const blog = await this.blogRepository.findById(blogId)
+    const blog = await this.blogRepository.findById(blogId, reporterId)
     if (!blog) throw new Error('Blog not found')
 
     // Create the report using direct constructor parameters

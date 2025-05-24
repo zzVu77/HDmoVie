@@ -6,7 +6,9 @@ export class BlogController {
 
   async getAllBlogs(req: Request, res: Response): Promise<void> {
     try {
-      const blogs = await this.blogService.getAllBlogs()
+      const user = res.locals.user
+      const userId = user?.id ?? ''
+      const blogs = await this.blogService.getAllBlogs(userId)
       res.status(200).json(blogs)
     } catch (error) {
       console.error('Error fetching blogs:', error)
@@ -17,7 +19,9 @@ export class BlogController {
   async getBlogById(req: Request, res: Response): Promise<void> {
     try {
       const { blogId } = req.params
-      const blog = await this.blogService.getBlogById(blogId)
+      const user = res.locals.user
+      const userId = user.id
+      const blog = await this.blogService.getBlogById(blogId, userId)
 
       if (!blog) {
         res.status(404).json({ message: 'Blog not found' })
@@ -36,7 +40,6 @@ export class BlogController {
       const { content, tags, images } = req.body
       const user = res.locals.user
       const userId = user.id
-
       const blog = await this.blogService.createBlog({
         content,
         userId,
@@ -56,8 +59,10 @@ export class BlogController {
   async deleteBlog(req: Request, res: Response): Promise<void> {
     try {
       const { blogId } = req.params
+      const user = res.locals.user
+      const userId = user.id
 
-      await this.blogService.deleteBlog(blogId)
+      await this.blogService.deleteBlog(blogId, userId)
       res.status(200).json({ message: 'Blog deleted successfully' })
     } catch (error) {
       console.error('Error deleting blog:', error)

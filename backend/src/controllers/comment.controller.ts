@@ -48,7 +48,9 @@ export class CommentController {
   async getBlogComments(req: Request, res: Response): Promise<void> {
     try {
       const { blogId } = req.params
-      const comments = await this.commentService.getBlogComments(blogId)
+      const user = res.locals.user
+      const userId = user.id
+      const comments = await this.commentService.getBlogComments(blogId, userId)
       res.status(201).json(comments)
     } catch (error) {
       console.error('Error fetching blog comments:', error)

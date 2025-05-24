@@ -31,24 +31,34 @@ export const CommentService = {
    * Fetch all comments for a movie
    */
   getMovieComments: (movieId: string) => {
-    return apiGet<MovieCommentProps[]>(`/comments/movie/${movieId}`)
+    return apiGet<MovieCommentProps[]>(`/comments/movie/${movieId}`).then((res) =>
+      res.data.map(CommentService.transformGetMovieCommentResponse),
+    )
   },
 
   /**
    * Create a new comment for a movie
    */
   createMovieComment: (movieId: string, commentData: CreateMovieCommentRequest) => {
-    return apiPost<MovieCommentResponse>(`/rates/${movieId}/with-comment`, commentData)
+    return apiPost<MovieCommentResponse>(`/rates/${movieId}/with-comment`, commentData).then((res) =>
+      CommentService.transformPostMovieCommentResponse(res.data),
+    )
   },
-  /**
-   * Transform movie comment response to MovieCommentProps
-   */
-  transformMovieCommentResponse: (response: MovieCommentResponse): MovieCommentProps => {
+
+  transformPostMovieCommentResponse: (response: MovieCommentResponse): MovieCommentProps => {
     return {
-      userName: response.data.user.fullName,
-      comment: response.data.content,
-      date: new Date(response.data.createdAt).toLocaleString(),
-      rating: response.data.score,
+      userName: response.user.fullName,
+      comment: response.content,
+      date: new Date(response.createdAt).toLocaleString(),
+      rating: response.score,
+    }
+  },
+  transformGetMovieCommentResponse: (response: MovieCommentProps): MovieCommentProps => {
+    return {
+      userName: response.userName,
+      comment: response.comment,
+      date: new Date(response.date).toLocaleString(),
+      rating: response.rating,
     }
   },
 }
