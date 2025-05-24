@@ -3,22 +3,34 @@ import { Star, X } from 'lucide-react'
 import { Text, Title } from '@/components/ui/typography'
 import { Badge } from '@/components/ui/badge'
 import { useNavigate } from 'react-router'
+import { deletMovieFromeWatchlist } from '@/services/watchlistService'
+import { toast } from 'sonner'
 
-export default function WatchlistItem({
-  index,
-  id,
-  title,
-  description,
-  posterSource,
-  releaseYear,
-  voteAvg,
-  voteCount,
-  genres,
-}: WatchlistMovieProps) {
+export interface WatchlistItemProps {
+  onDelete: (id: string) => void
+  watchlistId: string
+  watchlistMovie: WatchlistMovieProps
+}
+
+export default function WatchlistItem({ onDelete, watchlistId, watchlistMovie }: WatchlistItemProps) {
+  // Dumb data
+  const { index, id, title, description, posterSource, releaseYear, voteAvg, voteCount, genres } = watchlistMovie
+
+  // Used to navigate to another page
   const navigation = useNavigate()
-
   const navigateToMovie = () => {
     navigation(`/movie/${id}`)
+  }
+
+  // Handle delete movie
+  async function handleDeleteMovieFromWatchlist(movieId: string) {
+    try {
+      await deletMovieFromeWatchlist(watchlistId, movieId)
+      toast.success('Movie is deleted from watchlist')
+      onDelete(id!)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'System error')
+    }
   }
 
   return (
@@ -85,7 +97,10 @@ export default function WatchlistItem({
           </div>
         </div>
         {/* Right: Delete Icon */}
-        <X className='text-gray-300 w-4 h-4 mr-1 cursor-pointer hover:text-red-400' />
+        <X
+          className='text-gray-300 w-4 h-4 mr-1 cursor-pointer hover:text-red-400'
+          onClick={() => handleDeleteMovieFromWatchlist(id!)}
+        />
       </div>
 
       {/* Below: Description */}

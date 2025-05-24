@@ -16,7 +16,7 @@ export class WatchlistController {
       res.status(201).json(createdMovie)
     } catch (error) {
       console.error('Error creating watchlist: ', error)
-      res.status(400).json({ message: (error as Error).message })
+      res.status(400).json({ status: 'failed', message: (error as Error).message })
     }
   }
 
@@ -54,14 +54,14 @@ export class WatchlistController {
       )
 
       if (!updatedWatchlist) {
-        res.status(404).json({ message: 'Watchlist not found' })
+        res.status(404).json({ status: 'failed', message: 'Watchlist not found' })
         return
       }
 
       res.status(200).json(updatedWatchlist)
     } catch (error) {
       console.error('Error updating watchlist: ', error)
-      res.status(400).json({ message: (error as Error).message })
+      res.status(400).json({ status: 'failed', message: (error as Error).message })
     }
   }
 
@@ -75,13 +75,15 @@ export class WatchlistController {
 
       const isDeleted = await this.watchlistService.deleteWatchlist(wid, senderId)
       if (!isDeleted) {
-        res.status(404).json({ message: 'Watchlist not found or you do not have permission to delete it' })
+        res
+          .status(404)
+          .json({ status: 'failed', message: 'Watchlist not found or you do not have permission to delete it' })
       } else {
-        res.status(200).json({ message: 'Watchlist has been deleted successfully' })
+        res.status(200).json({ status: 'success', message: 'Watchlist has been deleted successfully' })
       }
     } catch (error) {
       console.error('Error deleting watchlist: ', error)
-      res.status(400).json({ message: (error as Error).message })
+      res.status(400).json({ status: 'failed', message: (error as Error).message })
     }
   }
 

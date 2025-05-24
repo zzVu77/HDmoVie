@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 import { ScrollArea } from './ui/scroll-area'
 import { Text } from '@/components/ui/typography'
 import WatchlistItem from './WatchlistItem'
-import { WatchlistProps } from '@/types'
+import { WatchlistMovieProps, WatchlistProps } from '@/types'
 
 type Props = {
   watchlist: WatchlistProps
   children: React.ReactNode
 }
 const ListWatchlistDialog = ({ watchlist, children }: Props) => {
+  const [watchlistMovies, setWatchlistMovies] = useState<WatchlistMovieProps[]>(watchlist.movies ?? [])
+
   return (
     <div>
       <Dialog>
@@ -28,18 +30,23 @@ const ListWatchlistDialog = ({ watchlist, children }: Props) => {
               </div>
             ) : (
               <div className='flex flex-col h-full items-center gap-4'>
-                {watchlist.movies?.map((movie, index) => (
+                {watchlistMovies?.map((movie, index) => (
                   <WatchlistItem
-                    key={index}
-                    index={index + 1}
-                    title={movie.title}
-                    description={movie.description}
-                    posterSource={movie.posterSource}
-                    backdropSource={movie.backdropSource}
-                    releaseYear={movie.releaseYear}
-                    voteAvg={movie.voteAvg}
-                    voteCount={movie.voteCount}
-                    genres={movie.genres}
+                    key={movie.id}
+                    watchlistId={watchlist.id ?? ''}
+                    watchlistMovie={{
+                      index: index + 1,
+                      id: movie.id,
+                      description: movie.description,
+                      posterSource: movie.posterSource,
+                      releaseYear: movie.releaseYear,
+                      voteAvg: movie.voteAvg,
+                      voteCount: movie.voteCount,
+                      genres: movie.genres,
+                    }}
+                    onDelete={(id) => {
+                      setWatchlistMovies((prev) => prev.filter((m) => m.id !== id))
+                    }}
                   />
                 ))}
               </div>
