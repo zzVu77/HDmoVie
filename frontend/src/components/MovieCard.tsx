@@ -40,7 +40,7 @@ const MovieCard = ({ posterSource = '', releaseYear = '', title = '', voteAvg = 
               </Badge>
             ))}
           </div>
-          <QuickAddToWatchlist>
+          <QuickAddToWatchlist movieId={id}>
             <Button className='grow bg-tertiary-yellow w-full rounded-4xl hover:ease-in-out hover:scale-105 cursor-pointer transition-all duration-300'>
               <SaveAdd size='32' color='#ffff' variant='Bold' />
               <Text body={4} className=' font-bold leading-3'>
