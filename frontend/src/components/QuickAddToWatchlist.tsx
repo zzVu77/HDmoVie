@@ -122,11 +122,15 @@ const QuickAddToWatchlist = ({ movieId, children }: Props) => {
         {/* Ẩn danh sách watchlists khi showCreateForm và watchlists tồn tại */}
         {watchlists.length > 0 && !showCreateForm && (
           <ScrollArea className='h-[auto] max-h-[200px] md:max-h-[300px] w-full'>
-            <RadioGroup value={selectedWatchlist} onValueChange={setSelectedWatchlist} className='space-y-4'>
+            <RadioGroup
+              value={selectedWatchlist}
+              onValueChange={setSelectedWatchlist}
+              className='space-y-4 max-h-[200px] md:max-h-[300px] '
+            >
               {watchlists.map((watchlist) => (
-                <div key={watchlist.id} className='flex items-center gap-4 mb-4 mx-auto'>
+                <div key={watchlist.id} className='flex items-start w-auto gap-4 mb-4 '>
                   <RadioGroupItem value={watchlist.id || '1'} id={`watchlist-${watchlist.id}`} />
-                  <Label htmlFor={`watchlist-${watchlist.id}`} className='flex'>
+                  <Label htmlFor={`watchlist-${watchlist.id}`} className='flex w-full'>
                     <WatchlistCard
                       title={watchlist.title}
                       description={watchlist.description}

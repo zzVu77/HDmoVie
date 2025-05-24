@@ -17,7 +17,7 @@ export default function WatchlistCard({ id, title, description, isPublic, movies
     <div
       className={cn(
         'group relative w-full max-h-[144px] overflow-hidden rounded-lg border-none shadow-none p-3 bg-secondary-dark',
-        isQuickAdd && 'w-fit sm:w-full ',
+        isQuickAdd && 'w-fit sm:w-full',
       )}
     >
       <div
