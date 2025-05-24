@@ -8,8 +8,9 @@ import { WatchlistMovieProps, WatchlistProps } from '@/types'
 type Props = {
   watchlist: WatchlistProps
   children: React.ReactNode
+  isOwner?: boolean
 }
-const ListWatchlistDialog = ({ watchlist, children }: Props) => {
+const ListWatchlistDialog = ({ watchlist, children, isOwner = false }: Props) => {
   const [watchlistMovies, setWatchlistMovies] = useState<WatchlistMovieProps[]>(watchlist.movies ?? [])
 
   return (
@@ -47,6 +48,7 @@ const ListWatchlistDialog = ({ watchlist, children }: Props) => {
                     onDelete={(id) => {
                       setWatchlistMovies((prev) => prev.filter((m) => m.id !== id))
                     }}
+                    isOwner={isOwner}
                   />
                 ))}
               </div>

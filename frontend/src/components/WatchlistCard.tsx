@@ -14,9 +14,10 @@ interface WatchlistCardProps {
   onDelete: (id: string) => void
   initialWatchlist: WatchlistProps
   isQuickAdd?: boolean
+  isOwner?: boolean
 }
 
-export default function WatchlistCard({ onDelete, initialWatchlist, isQuickAdd }: WatchlistCardProps) {
+export default function WatchlistCard({ onDelete, initialWatchlist, isQuickAdd, isOwner = false }: WatchlistCardProps) {
   const [watchlist, setWatchlist] = useState(initialWatchlist)
 
   // Handle edit watchlist modal result
@@ -59,7 +60,7 @@ export default function WatchlistCard({ onDelete, initialWatchlist, isQuickAdd }
         style={{ backgroundImage: `url(${backdropUrl})` }}
       ></div>
       <div className='relative z-10 flex flex-row items-start  '>
-        <ListWatchlistDialog watchlist={{ id, title, description, isPublic, movies }}>
+        <ListWatchlistDialog watchlist={{ id, title, description, isPublic, movies }} isOwner={isOwner}>
           <div className='min-w-[90px] min-h-[120px] flex items-center justify-center'>
             <img
               src={
@@ -100,7 +101,7 @@ export default function WatchlistCard({ onDelete, initialWatchlist, isQuickAdd }
             </Text>
           </div>
         </div>
-        <div className={cn('flex flex-row items-center justify-between gap-2', isQuickAdd && 'hidden sm:flex')}>
+        <div className={cn('flex flex-row items-center justify-between gap-2', (!isOwner || isQuickAdd) && 'hidden')}>
           <Dialog>
             <DialogTrigger asChild>
               <Button

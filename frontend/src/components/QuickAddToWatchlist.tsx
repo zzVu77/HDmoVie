@@ -131,13 +131,7 @@ const QuickAddToWatchlist = ({ movieId, children }: Props) => {
                 <div key={watchlist.id} className='flex items-center w-auto gap-4 mb-4 '>
                   <RadioGroupItem value={watchlist.id || '1'} id={`watchlist-${watchlist.id}`} />
                   <Label htmlFor={`watchlist-${watchlist.id}`} className='flex w-full'>
-                    <WatchlistCard
-                      title={watchlist.title}
-                      description={watchlist.description}
-                      isPublic={watchlist.isPublic}
-                      movies={watchlist.movies}
-                      isQuickAdd={true}
-                    />
+                    <WatchlistCard initialWatchlist={watchlist} onDelete={() => {}} isQuickAdd={true} />
                   </Label>
                   <Text body={3} className='text-white sm:hidden'>
                     {watchlist.title}

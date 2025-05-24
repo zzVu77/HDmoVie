@@ -4,9 +4,10 @@ import WatchlistInformationFormModal from './WatchlistInformationFormModal'
 import { useState } from 'react'
 type Props = {
   data: WatchlistProps[]
+  isOwner?: boolean
 }
 
-const ListWatchlist = ({ data }: Props) => {
+const ListWatchlist = ({ data, isOwner = false }: Props) => {
   const [watchlists, setWatchlists] = useState<WatchlistProps[]>(data)
 
   function onAddWatchlistSubmit(watchlist: WatchlistProps) {
@@ -15,7 +16,7 @@ const ListWatchlist = ({ data }: Props) => {
 
   return (
     <div className='flex flex-col items-center justify-center gap-y-5'>
-      <div className='w-full flex justify-end'>
+      <div className={`w-full flex justify-end ${!isOwner ? 'hidden' : ''}`}>
         <WatchlistInformationFormModal
           watchlist={{ id: '', description: '', isPublic: true }}
           isAdd={true}
@@ -28,6 +29,7 @@ const ListWatchlist = ({ data }: Props) => {
           key={watchlist.id}
           onDelete={(id) => setWatchlists((prev) => prev.filter((w) => w.id !== id))}
           initialWatchlist={watchlist}
+          isOwner={isOwner}
         />
       ))}
     </div>

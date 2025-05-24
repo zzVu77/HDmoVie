@@ -10,9 +10,10 @@ export interface WatchlistItemProps {
   onDelete: (id: string) => void
   watchlistId: string
   watchlistMovie: WatchlistMovieProps
+  isOwner?: boolean
 }
 
-export default function WatchlistItem({ onDelete, watchlistId, watchlistMovie }: WatchlistItemProps) {
+export default function WatchlistItem({ onDelete, watchlistId, watchlistMovie, isOwner = false }: WatchlistItemProps) {
   // Dumb data
   const { index, id, title, description, posterSource, releaseYear, voteAvg, voteCount, genres } = watchlistMovie
 
@@ -98,13 +99,13 @@ export default function WatchlistItem({ onDelete, watchlistId, watchlistMovie }:
         </div>
         {/* Right: Delete Icon */}
         <X
-          className='text-gray-300 w-4 h-4 mr-1 cursor-pointer hover:text-red-400'
+          className={`text-gray-300 w-4 h-4 mr-1 cursor-pointer hover:text-red-400 ${!isOwner ? 'hidden' : ''}`}
           onClick={() => handleDeleteMovieFromWatchlist(id!)}
         />
       </div>
 
       {/* Below: Description */}
-      <Text body={4} className='text-gray-300 mt-3 line-clamp-3'>
+      <Text body={4} className='text-gray-300 mt-3 line-clamp-3 '>
         {description?.length !== 0 ? description : 'No description'}
       </Text>
     </div>
