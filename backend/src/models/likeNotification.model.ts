@@ -3,7 +3,7 @@ import { ChildEntity, JoinColumn, ManyToOne } from 'typeorm'
 import { Notification } from './notification.model'
 import { RegisteredUser } from './registeredUser.model'
 
-@ChildEntity('LIKE_NOTI')
+@ChildEntity('LIKE')
 export class LikeNotification extends Notification {
   @ManyToOne(() => RegisteredUser, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })

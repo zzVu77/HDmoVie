@@ -5,31 +5,74 @@ export class NotificationService {
   constructor(private notificationRepository: NotificationRepository) {}
 
   async getAllNotificationsForUser(userId: string): Promise<NotificationResponse[]> {
-    const rawNotifications = await this.notificationRepository.findAllByOwner(userId)
+    const notifications = await this.notificationRepository.findAllByOwner(userId)
 
-    return rawNotifications.map((notification: any): NotificationResponse => {
+    return notifications.map((notification: any): NotificationResponse => {
+      let notificationType: 'COMMENT' | 'FOLLOW' | 'LIKE' | 'REPORT'
+
+      if (notification.comment) {
+        notificationType = 'COMMENT'
+      } else if (notification.follower) {
+        notificationType = 'FOLLOW'
+      } else if (notification.user) {
+        notificationType = 'LIKE'
+      } else if (notification.report) {
+        notificationType = 'REPORT'
+      } else {
+        console.error('Could not determine notification type for:', notification)
+        throw new Error('Invalid notification: unable to determine type')
+      }
+
       const base = {
-        id: notification.notification_id,
-        time: notification.notification_time,
-        status: notification.notification_status,
-        type: notification.notification_type,
+        id: notification.id,
+        time: notification.time,
+        status: notification.status,
+        type: notificationType,
         owner: {
-          id: notification.owner_id,
-          fullName: notification.owner_fullName,
+          id: notification.owner.id,
+          fullName: notification.owner.fullName,
         },
       }
 
-      switch (notification.notification_type) {
+      switch (notificationType) {
         case 'COMMENT':
-          return { ...base, commentId: notification.commentId }
+          return {
+            ...base,
+            commentId: notification.comment?.id,
+            user: {
+              id: notification.comment?.user?.id,
+              fullName: notification.comment?.user?.fullName,
+            },
+          }
         case 'FOLLOW':
-          return { ...base, followerId: notification.followerId }
+          return {
+            ...base,
+            followerId: notification.follower?.id,
+            user: {
+              id: notification.follower?.id,
+              fullName: notification.follower?.fullName,
+            },
+          }
         case 'LIKE':
-          return { ...base, userId: notification.userId }
+          return {
+            ...base,
+            userId: notification.user?.id,
+            user: {
+              id: notification.user?.id,
+              fullName: notification.user?.fullName,
+            },
+          }
         case 'REPORT':
-          return { ...base, reportId: notification.reportId }
+          return {
+            ...base,
+            reportId: notification.report?.id,
+            user: {
+              id: notification.report?.reporter?.id,
+              fullName: notification.report?.reporter?.fullName,
+            },
+          }
         default:
-          return base
+          throw new Error(`Unknown notification type: ${notificationType}`)
       }
     })
   }

@@ -70,7 +70,6 @@ export default function Header() {
     try {
       setNotificationLoading(true)
       const response = await NotificationService.getAllNotifications()
-
       // Handle the nested response structure from your API
       if (response.data && response.data.data) {
         const notificationsData = response.data.data
@@ -80,8 +79,7 @@ export default function Header() {
         const unreadNotifications = notificationsData.filter((n) => n.status === 'UNREAD')
         setUnreadCount(unreadNotifications.length)
       }
-    } catch (error) {
-      console.error('Failed to fetch notifications:', error)
+    } catch {
       // If API fails, clear notifications
       setNotifications([])
       setUnreadCount(0)
@@ -93,49 +91,47 @@ export default function Header() {
   // Mark notification as read
   const handleMarkAsRead = async (notificationId: string) => {
     try {
-      console.log('Marking notification as read:', notificationId)
-      const response = await NotificationService.markAsRead(notificationId)
-      console.log('Mark as read response:', response)
+      await NotificationService.markAsRead(notificationId)
 
       // Update local state
       setNotifications((prev) => prev.map((n) => (n.id === notificationId ? { ...n, status: 'READ' as const } : n)))
 
       // Update unread count
       setUnreadCount((prev) => Math.max(0, prev - 1))
-    } catch (error) {
-      console.error('Failed to mark notification as read:', error)
+    } catch {
+      throw new Error('Failed to mark notification as read')
     }
   }
 
   // Mark all notifications as read
   const handleMarkAllAsRead = async () => {
     try {
-      console.log('Marking all notifications as read')
-      const response = await NotificationService.markAllAsRead()
-      console.log('Mark all as read response:', response)
-
+      await NotificationService.markAllAsRead()
       // Update local state
       setNotifications((prev) => prev.map((n) => ({ ...n, status: 'READ' as const })))
 
       setUnreadCount(0)
-    } catch (error) {
-      console.error('Failed to mark all notifications as read:', error)
+    } catch {
+      throw new Error('Failed to mark all notifications as read')
     }
   }
 
   // Convert API notification to display format
   const convertNotificationToDisplay = (apiNotification: NotificationData) => {
     let message = ''
-
     switch (apiNotification.type) {
       case 'COMMENT':
-        message = `${apiNotification.owner.fullName} commented on your post`
+        message = apiNotification.user
+          ? `${apiNotification.user.fullName} commented on your post`
+          : 'Someone commented on your post'
         break
       case 'FOLLOW':
-        message = `${apiNotification.owner.fullName} started following you`
+        message = apiNotification.user
+          ? `${apiNotification.user.fullName} started following you`
+          : 'Someone started following you'
         break
       case 'LIKE':
-        message = `${apiNotification.owner.fullName} liked your post`
+        message = apiNotification.user ? `${apiNotification.user.fullName} liked your post` : 'Someone liked your post'
         break
       case 'REPORT':
         message = `Your content has been reported`
@@ -156,10 +152,7 @@ export default function Header() {
     const handleScroll = () => {
       // Take current scroll POS on the page
       const currentScrollPos = window.scrollY
-      // Check for visibility
-      // If pre pos > current pos --> scroll up --> show
-      // Other wise, hide
-      // Additional, current scroll pos is less than 10 will also show the header
+
       const visible = prevScrollPos > currentScrollPos || currentScrollPos < 10
 
       setIsVisible(visible)
@@ -199,7 +192,7 @@ export default function Header() {
       fetchNotifications()
 
       // Set up polling for real-time updates (optional)
-      const interval = setInterval(fetchNotifications, 30000) // Poll every 30 seconds
+      const interval = setInterval(fetchNotifications, 30000)
 
       return () => clearInterval(interval)
     } else {

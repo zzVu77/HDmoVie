@@ -28,4 +28,7 @@ export abstract class Report {
     this.reporter = reporter
     this.reason = reason
   }
+  getId(): string {
+    return this.id
+  }
 }

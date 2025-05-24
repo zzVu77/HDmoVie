@@ -3,7 +3,7 @@ import { ChildEntity, JoinColumn, ManyToOne } from 'typeorm'
 import { BlogComment } from './blogComment.model'
 import { Notification } from './notification.model'
 import { RegisteredUser } from './registeredUser.model'
-@ChildEntity('COMMENT_NOTI')
+@ChildEntity('COMMENT')
 export class CommentNotification extends Notification {
   @ManyToOne(() => BlogComment, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'commentId', referencedColumnName: 'id' })

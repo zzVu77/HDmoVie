@@ -3,7 +3,7 @@ import { ChildEntity, JoinColumn, ManyToOne } from 'typeorm'
 import { Notification } from './notification.model'
 import { Report } from './report.model'
 
-@ChildEntity('REPORT_NOTI')
+@ChildEntity('REPORT')
 export class ReportNotification extends Notification {
   @ManyToOne(() => Report, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'reportId', referencedColumnName: 'id' })
