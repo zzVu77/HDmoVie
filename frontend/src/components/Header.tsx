@@ -52,7 +52,7 @@ export default function Header() {
   const pathMap: Record<string, string> = {
     Home: '/',
     Explore: '/explore',
-    Blog: '/blogs',
+    Blog: '/blog',
   }
 
   // Handle current time display
@@ -125,7 +125,7 @@ export default function Header() {
     <header
       className={`transition-transform duration-300 ease-in-out transform ${
         isVisible ? 'translate-y-0 drop-shadow-white-glow mt-1' : '-translate-y-full drop-shadow-none mt-0'
-      } flex h-20 w-[90vw] shrink-0 items-center justify-between px-4 md:px-6 text-white bg-tertiary-dark/55 rounded-3xl shadow-md fixed backdrop-blur-[2px] z-[999] top-0 left-1/2 -translate-x-1/2`}
+      } flex h-20 w-[90vw] shrink-0 items-center justify-between px-4 md:px-6 text-white bg-tertiary-dark/35 rounded-3xl shadow-md fixed backdrop-blur-[2px] z-[999] top-0 left-1/2 -translate-x-1/2`}
     >
       {/* Left Section: Hamburger Menu + Logo */}
       <div className='flex items-center'>
