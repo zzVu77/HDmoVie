@@ -10,7 +10,7 @@ export class NotificationController {
 
       const notifications = await this.notificationService.getAllNotificationsForUser(userId)
 
-      res.status(200).json({ status: 'success', data: notifications })
+      res.status(200).json(notifications)
     } catch (error) {
       console.error('View all notifications failed ==>', error)
       res.status(500).json({ status: 'failed', message: 'Internal server error' })

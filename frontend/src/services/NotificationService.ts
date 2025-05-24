@@ -32,7 +32,7 @@ export const NotificationService = {
    * Fetch all notifications for the current user
    */
   getAllNotifications: async () => {
-    const response = await apiGet<ApiResponse<Notification[]>>('/notifications')
+    const response = await apiGet<Notification[]>('/notifications')
     return response
   },
 

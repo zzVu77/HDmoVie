@@ -69,16 +69,12 @@ export default function Header() {
 
     try {
       setNotificationLoading(true)
-      const response = await NotificationService.getAllNotifications()
-      // Handle the nested response structure from your API
-      if (response.data && response.data.data) {
-        const notificationsData = response.data.data
-        setNotifications(notificationsData)
+      const notificationsData = (await NotificationService.getAllNotifications()).data
+      setNotifications(notificationsData)
 
-        // Count unread notifications
-        const unreadNotifications = notificationsData.filter((n) => n.status === 'UNREAD')
-        setUnreadCount(unreadNotifications.length)
-      }
+      // Count unread notifications
+      const unreadNotifications = notificationsData.filter((n: NotificationData) => n.status === 'UNREAD')
+      setUnreadCount(unreadNotifications.length)
     } catch {
       // If API fails, clear notifications
       setNotifications([])
