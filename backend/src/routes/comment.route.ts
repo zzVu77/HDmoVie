@@ -4,7 +4,7 @@ import { CommentRepository } from '~/repositories/comment.repository'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { MovieRepository } from '~/repositories/movie.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
-
+import { NotificationRepository } from '~/repositories/notification.repository'
 import { CommentController } from '~/controllers/comment.controller'
 import { CommentService } from '~/services/comment.service'
 
@@ -18,8 +18,14 @@ const commentRepository = new CommentRepository(AppDataSource)
 const userRepository = new RegisteredUserRepository(AppDataSource)
 const movieRepository = new MovieRepository(AppDataSource)
 const blogRepository = new BlogRepository(AppDataSource)
-
-const commentService = new CommentService(commentRepository, userRepository, movieRepository, blogRepository)
+const notificationRepository = new NotificationRepository(AppDataSource)
+const commentService = new CommentService(
+  commentRepository,
+  userRepository,
+  movieRepository,
+  blogRepository,
+  notificationRepository,
+)
 // Initialize CommentController
 const commentController = new CommentController(commentService)
 

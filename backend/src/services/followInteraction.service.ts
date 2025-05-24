@@ -2,11 +2,14 @@ import { FollowInteraction } from '~/models/followInteraction.model'
 import { RegisteredUser } from '~/models/registeredUser.model'
 import { FollowInteractionRepository } from '~/repositories/followInteraction.repository'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
+import { NotificationRepository } from '~/repositories/notification.repository'
+import { FollowNotification } from '~/models/followNotification.model'
 
 export class FollowInteractionService {
   constructor(
     private followInteractionRepository: FollowInteractionRepository,
     private userRepository: RegisteredUserRepository,
+    private notificationRepository: NotificationRepository,
   ) {}
 
   // Get user follow interaction
@@ -95,6 +98,17 @@ export class FollowInteractionService {
       // Update follow relationships
       await this.followInteractionRepository.addFollower(targetUserInteraction.getId(), follower)
       await this.followInteractionRepository.addFollowing(followerInteraction.getId(), targetUser)
+
+      // Create follow notification for the target user
+      const followNotification = new FollowNotification()
+      Object.assign(followNotification, {
+        follower: follower,
+        owner: targetUser,
+        time: new Date(),
+        status: 'UNREAD',
+      })
+
+      await this.notificationRepository.save(followNotification)
 
       return
     } catch (error) {

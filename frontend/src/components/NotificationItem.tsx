@@ -3,6 +3,9 @@ import { formatDistanceToNow } from 'date-fns/formatDistanceToNow'
 import { NotificationItemProps } from '@/types'
 
 export function NotificationItem({ message, time, status }: NotificationItemProps) {
+  // Convert time to Date object if it's a string
+  const timeDate = typeof time === 'string' ? new Date(time) : time
+
   return (
     <div
       className={cn(
@@ -15,10 +18,10 @@ export function NotificationItem({ message, time, status }: NotificationItemProp
 
       <div className='flex-1 z-10'>
         <p className='text-sm text-white'>{message}</p>
-        <p className='text-xs text-muted-foreground'>{formatDistanceToNow(new Date(time), { addSuffix: true })}</p>
+        <p className='text-xs text-muted-foreground'>{formatDistanceToNow(timeDate, { addSuffix: true })}</p>
       </div>
 
-      {status === 'UNREAD' && <div className='w-2 h-2 mt-1 rounded-full bg-white z-10' />}
+      {status === 'UNREAD' && <div className='w-2 h-2 mt-1 rounded-full bg-accent-yellow z-10' />}
     </div>
   )
 }

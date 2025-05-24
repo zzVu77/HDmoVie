@@ -1,4 +1,4 @@
-import { DataSource, Repository, FindOptionsWhere } from 'typeorm'
+import { DataSource, Repository } from 'typeorm'
 import { Notification } from '../models/notification.model'
 
 export class NotificationRepository {
@@ -27,5 +27,29 @@ export class NotificationRepository {
         'owner.fullName',
       ])
       .getRawMany()
+  }
+
+  async findOne(id: string): Promise<Notification | null> {
+    return await this.repo
+      .createQueryBuilder('notification')
+      .leftJoinAndSelect('notification.owner', 'owner')
+      .where('notification.id = :id', { id })
+      .getOne()
+  }
+
+  async save(notification: Notification): Promise<Notification> {
+    return await this.repo.save(notification)
+  }
+
+  async updateAllUnreadToRead(ownerId: string): Promise<void> {
+    await this.repo
+      .createQueryBuilder()
+      .update(Notification)
+      .set({ status: 'READ' } as any)
+      .where('owner.id = :ownerId AND status = :status', {
+        ownerId,
+        status: 'UNREAD',
+      })
+      .execute()
   }
 }

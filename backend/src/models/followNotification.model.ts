@@ -10,6 +10,11 @@ export class FollowNotification extends Notification {
   @IsNotEmpty({ message: 'Follower is required' })
   protected follower!: RegisteredUser
   //Methods
+  constructor(follower?: RegisteredUser, owner?: RegisteredUser) {
+    super()
+    if (follower) this.follower = follower
+    if (owner) this.owner = owner
+  }
   // Getter and Setter
   public getFollower(): RegisteredUser {
     return this.follower

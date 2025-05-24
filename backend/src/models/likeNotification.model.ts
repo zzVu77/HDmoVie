@@ -10,6 +10,11 @@ export class LikeNotification extends Notification {
   @IsNotEmpty({ message: 'User is required' })
   protected user!: RegisteredUser
   //Methods
+  constructor(user?: RegisteredUser, owner?: RegisteredUser) {
+    super()
+    if (user) this.user = user
+    if (owner) this.owner = owner
+  }
   // Getter and Setter
   public getUser(): RegisteredUser {
     return this.user

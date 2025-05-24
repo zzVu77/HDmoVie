@@ -2,16 +2,17 @@ import { CommentRepository } from '~/repositories/comment.repository'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { MovieRepository } from '~/repositories/movie.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
-
+import { NotificationRepository } from '~/repositories/notification.repository'
 import { MovieComment } from '~/models/movieComment.model'
 import { BlogComment } from '~/models/blogComment.model'
-
+import { CommentNotification } from '~/models/commentNotification.model'
 export class CommentService {
   constructor(
     private commentRepository: CommentRepository,
     private userRepository: RegisteredUserRepository,
     private movieRepository: MovieRepository,
     private blogRepository: BlogRepository,
+    private notificationRepository: NotificationRepository,
   ) {}
 
   async commentOnMovie({
@@ -57,11 +58,9 @@ export class CommentService {
     const user = await this.userRepository.findOne(userId)
     if (!user) throw new Error('User not found')
 
-    // Get the blog
     const blog = await this.blogRepository.findBlogById(blogId)
     if (!blog) throw new Error('Blog not found')
 
-    // Create a new blog comment
     let parentComment = undefined
     if (parentCommentId) {
       parentComment = await this.commentRepository.findCommentById(parentCommentId)
@@ -71,9 +70,23 @@ export class CommentService {
     }
 
     const blogComment = new BlogComment(user, content, new Date(), blog, parentComment)
+    const savedComment = await this.commentRepository.saveBlogComment(blogComment)
 
-    // Save the comment
-    return this.commentRepository.saveBlogComment(blogComment)
+    // Create notification for blog owner (if commenter is not the blog owner)
+    const blogOwner = blog.getOwner()
+    if (blogOwner.getId() !== userId) {
+      const commentNotification = new CommentNotification()
+      Object.assign(commentNotification, {
+        comment: savedComment,
+        owner: blogOwner,
+        time: new Date(),
+        status: 'UNREAD',
+      })
+
+      await this.notificationRepository.save(commentNotification)
+    }
+
+    return savedComment
   }
   // Get all comments for a specific movie
   async getMovieComments(movieId: string): Promise<MovieComment[]> {
