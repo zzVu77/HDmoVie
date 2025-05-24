@@ -8,15 +8,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import React, { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
+import reportService from '@/services/reportService'
 
-// Định nghĩa lý do báo cáo
 export enum ReportReason {
   SPAM = 'Spam or scams',
   DISCRIMINATION = 'Hate speech or discrimination',
@@ -38,37 +37,35 @@ const reportSchema = z.object({
     ReportReason.ILLEGAL_CONTENT,
     ReportReason.SEXUAL_CONTENT,
   ]),
-  comment: z.string().optional(),
 })
+
 type Props = {
   children?: React.ReactNode
+  type: 'blog' | 'comment'
+  targetId: string
 }
-export function ReportDialog({ children }: Props) {
+
+export function ReportDialog({ children, type, targetId }: Props) {
   const [open, setOpen] = useState(false)
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof reportSchema>>({
     resolver: zodResolver(reportSchema),
     defaultValues: {
-      reason: ReportReason.SPAM, // Default value
-      comment: '', // Optional comment
+      reason: ReportReason.SPAM,
     },
   })
 
-  //   const onSubmit = async (data: any) => {
-  //     try {
-  //       toast.success("Report submitted successfully!")
-  //       setOpen(false)
-  //     } catch (error) {
-  //       toast.error("Failed to submit report.")
-  //     }
-  //   }
-
-  const onSubmit = async () => {
+  const onSubmit = async (data: z.infer<typeof reportSchema>) => {
     try {
+      if (type === 'blog') {
+        await reportService.reportBlog(targetId, data.reason)
+      } else {
+        await reportService.reportComment(targetId, data.reason)
+      }
       toast.success('Report submitted successfully!')
       setOpen(false)
-    } catch {
-      toast.error('Failed to submit report.')
+    } catch (error) {
+      toast.error('Failed to submit report: ' + (error as Error).message)
     }
   }
 
@@ -84,7 +81,7 @@ export function ReportDialog({ children }: Props) {
       </DialogTrigger>
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
-          <DialogTitle>Report Content</DialogTitle>
+          <DialogTitle>Report {type === 'blog' ? 'Blog' : 'Comment'}</DialogTitle>
           <DialogDescription>Select a reason for the report and add any relevant comments.</DialogDescription>
         </DialogHeader>
 
@@ -100,13 +97,10 @@ export function ReportDialog({ children }: Props) {
             </select>
           </div>
 
-          <div>
-            <Label htmlFor='comment'>Additional Comments</Label>
-            <Input id='comment' {...form.register('comment')} placeholder='Enter any additional comments (optional)' />
-          </div>
-
           <DialogFooter>
-            <Button type='submit'>Submit Report</Button>
+            <Button type='submit' onClick={form.handleSubmit(onSubmit)}>
+              Submit Report
+            </Button>
             <Button type='button' onClick={() => setOpen(false)} variant='outline'>
               Cancel
             </Button>
@@ -116,4 +110,5 @@ export function ReportDialog({ children }: Props) {
     </Dialog>
   )
 }
+
 export default ReportDialog

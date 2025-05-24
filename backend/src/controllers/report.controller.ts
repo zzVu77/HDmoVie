@@ -9,7 +9,7 @@ export class ReportController {
       const { blogId } = req.params
       const reports = await this.reportService.getReportBlog(blogId)
       //console.log(reports)
-      res.status(201).json({ status: 'success', data: reports })
+      res.status(201).json(reports)
     } catch (error) {
       console.error('Error reporting blog:', error)
 
@@ -26,7 +26,7 @@ export class ReportController {
       const { blogId } = req.params
       const reports = await this.reportService.getReportCommentBlog(blogId)
       //console.log(reports)
-      res.status(201).json({ status: 'success', data: reports })
+      res.status(201).json(reports)
     } catch (error) {
       console.error('Error reporting blog:', error)
 
@@ -43,7 +43,7 @@ export class ReportController {
       const { movieId } = req.params
       const reports = await this.reportService.getReportCommentMovie(movieId)
       //console.log(reports)
-      res.status(201).json({ status: 'success', data: reports })
+      res.status(201).json(reports)
     } catch (error) {
       console.error('Error reporting blog:', error)
 
