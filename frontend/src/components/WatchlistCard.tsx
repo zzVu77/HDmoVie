@@ -3,8 +3,11 @@ import { WatchlistProps } from '@/types'
 import { Film, Globe, Lock } from 'lucide-react'
 import WatchlistInformationFormModal from './WatchlistInformationFormModal'
 import ListWatchlistDialog from './ListWatchlistDialog'
-
-export default function WatchlistCard({ id, title, description, isPublic, movies }: WatchlistProps) {
+import { cn } from '@/lib/utils'
+type WatchlistCardProps = WatchlistProps & {
+  isQuickAdd?: boolean
+}
+export default function WatchlistCard({ id, title, description, isPublic, movies, isQuickAdd }: WatchlistCardProps) {
   const backdropUrl =
     typeof movies?.[0]?.backdropSource === 'string' && movies[0].backdropSource.trim() !== ''
       ? movies[0].backdropSource
@@ -12,13 +15,16 @@ export default function WatchlistCard({ id, title, description, isPublic, movies
 
   return (
     <div
-      className={`group relative w-full max-h-[144px] overflow-hidden rounded-lg border-none shadow-none p-3 bg-secondary-dark`}
+      className={cn(
+        'group relative w-full max-h-[144px] overflow-hidden rounded-lg border-none shadow-none p-3 bg-secondary-dark',
+        isQuickAdd && 'w-fit sm:w-full',
+      )}
     >
       <div
-        className='absolute inset-0 bg-cover bg-center blur-[10px] opacity-100'
+        className='absolute inset-0 bg-cover bg-center blur-[10px] w-auto opacity-100'
         style={{ backgroundImage: `url(${backdropUrl})` }}
       ></div>
-      <div className='relative z-10 flex flex-row items-start '>
+      <div className='relative z-10 flex flex-row items-start  '>
         <ListWatchlistDialog watchlist={{ id, title, description, isPublic, movies }}>
           <div className='min-w-[90px] min-h-[120px] flex items-center justify-center'>
             <img
@@ -34,7 +40,10 @@ export default function WatchlistCard({ id, title, description, isPublic, movies
           </div>
         </ListWatchlistDialog>
         <div
-          className='w-full flex flex-col items-start justify-start bg-transparent border-none gap-0 px-0 py-0 ml-2'
+          className={cn(
+            'flex w-full flex-col items-start justify-start bg-transparent border-none gap-0 px-0 py-0 ml-2 ',
+            isQuickAdd && 'hidden sm:flex',
+          )}
           style={{ textShadow: '0 0 3px #000, 0 0 6px #000, 0 0 9px #000' }}
         >
           <div className='w-full px-2'>
@@ -57,7 +66,7 @@ export default function WatchlistCard({ id, title, description, isPublic, movies
             </Text>
           </div>
         </div>
-        <div className='flex flex-row items-center justify-between gap-2'>
+        <div className={cn('flex flex-row items-center justify-between gap-2', isQuickAdd && 'hidden sm:flex')}>
           <WatchlistInformationFormModal
             isAdd={false}
             watchlist={{ id, title, description, isPublic }}

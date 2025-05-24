@@ -96,7 +96,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onCommentAdded }) => {
                         <Star1
                           variant='Bold'
                           key={star}
-                          size={24}
+                          size={20}
                           className={`cursor-pointer transition-colors border-red-100 ${
                             (hoveredRating ?? field.value) >= star ? 'text-primary-yellow' : 'text-tertiary-dark'
                           }`}

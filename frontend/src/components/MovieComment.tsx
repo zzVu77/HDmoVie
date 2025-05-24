@@ -9,9 +9,9 @@ const MovieComment = ({ userName, comment, date, rating }: MovieCommentProps) =>
   // console.log('MovieComment', userName, comment, date, rating)
   return (
     <div>
-      <Card className='w-auto flex flex-row items-center gap-10 bg-tertiary-dark border-none drop-shadow-white-glow'>
+      <Card className='w-full flex flex-col sm:flex-row items-center gap-2 md:gap-10 bg-tertiary-dark border-none drop-shadow-white-glow py-5'>
         <CardHeader className='px-5'>
-          <Avatar className='lg:w-[50px] lg:h-[50px] w-[40px] h-[40px]'>
+          <Avatar className='w-[50px] h-[50px]'>
             <AvatarImage src='https://github.com/shadcn.png' />
             <AvatarFallback>{userName?.charAt(0) || 'A'}</AvatarFallback>
           </Avatar>
@@ -22,7 +22,7 @@ const MovieComment = ({ userName, comment, date, rating }: MovieCommentProps) =>
               <Title level={4}>{userName}</Title>
               <div className='flex flex-row items-center gap-2 h-auto'>
                 <Text body={4} className='text-gray-300 italic'>
-                  {date}
+                  {new Date(date).toLocaleDateString('en-US')}
                 </Text>
                 <Badge className='bg-white text-black font-bold rounded-2xl min-w-20 flex flex-row items-start justify-center gap-2 px-3 text-center'>
                   <Text body={3} className='text-black font-extrabold'>
@@ -34,7 +34,7 @@ const MovieComment = ({ userName, comment, date, rating }: MovieCommentProps) =>
                 </Badge>
               </div>
             </div>
-            <Text className='w-fit text-wrap'>{comment}</Text>
+            <Text className='w-full text-wrap block max-w-[90vw] '>{comment}</Text>
           </div>
         </CardContent>
       </Card>

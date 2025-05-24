@@ -30,9 +30,6 @@ axiosInstance.interceptors.response.use(
     return response
   },
   (error) => {
-    if (error.response) {
-      return Promise.resolve(error.response)
-    }
     return Promise.reject(error)
   },
 )
