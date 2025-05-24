@@ -23,7 +23,28 @@ export class CommentController {
       res.status(400).json({ status: 'failed', message: (error as Error).message })
     }
   }
+  async deleteCommentBlog(req: Request, res: Response): Promise<void> {
+    try {
+      const { commentId } = req.params
+      const comment = await this.commentService.getCommentById(commentId)
+      if (!comment) {
+        throw new Error('Comment not found')
+      }
+      const reports = await this.commentService.deleteComment(commentId)
 
+      //console.log(reports)
+      res.status(201).json({ status: 'success', data: reports })
+    } catch (error) {
+      console.error('Error reporting blog:', error)
+
+      const message = (error as Error).message
+      if (message === 'Blog not found') {
+        res.status(404).json({ status: 'failed', message })
+      } else {
+        res.status(400).json({ status: 'failed', message })
+      }
+    }
+  }
   async getBlogComments(req: Request, res: Response): Promise<void> {
     try {
       const { blogId } = req.params

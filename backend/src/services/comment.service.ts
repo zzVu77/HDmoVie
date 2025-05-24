@@ -6,6 +6,7 @@ import { BlogRepository } from '~/repositories/blog.repository'
 import { MovieComment } from '~/models/movieComment.model'
 import { BlogComment } from '~/models/blogComment.model'
 
+import { Comment } from '~/models/comment.model'
 export class CommentService {
   constructor(
     private commentRepository: CommentRepository,
@@ -74,6 +75,20 @@ export class CommentService {
 
     // Save the comment
     return this.commentRepository.saveBlogComment(blogComment)
+  }
+  async getCommentById(id: string): Promise<Comment | null> {
+    try {
+      return this.commentRepository.findCommentById(id)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+  async deleteComment(commentId: string): Promise<void> {
+    try {
+      return this.commentRepository.deleteComment(commentId)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   }
   // Get all comments for a specific movie
   async getMovieComments(movieId: string): Promise<MovieComment[]> {

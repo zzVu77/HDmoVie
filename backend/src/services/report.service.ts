@@ -33,6 +33,14 @@ export class ReportService {
       throw new Error((error as Error).message)
     }
   }
+  async getReportCommentBlogAll(): Promise<CommentReport[]> {
+    try {
+      return this.reportRepository.findReportCommentBlog()
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
   async getReportCommentMovie(movieId: string): Promise<CommentReport[]> {
     try {
       const blog = await this.movieRepository.findById(movieId)

@@ -35,6 +35,9 @@ reportRouter.get('/comment/blog/:blogId', authenticateToken, isAdmin, (req, res)
 reportRouter.get('/comment/movie/:movieId', authenticateToken, isAdmin, (req, res) =>
   reportController.getReportCommentMovie(req, res),
 )
+reportRouter.get('/comment/blog', authenticateToken, isAdmin, (req, res) =>
+  reportController.getReportCommentBlogAll(req, res),
+)
 
 // POST routes - require authentication (any registered user can report)
 reportRouter.post('/blog', authenticateToken, (req, res) => reportController.reportBlog(req, res))

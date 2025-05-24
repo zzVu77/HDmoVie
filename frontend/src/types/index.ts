@@ -48,6 +48,7 @@ export type RegisteredUserProps = {
   email?: string
   dateOfBirth?: Date
 }
+
 export type WatchlistMovieProps = {
   index?: number
   id?: string
