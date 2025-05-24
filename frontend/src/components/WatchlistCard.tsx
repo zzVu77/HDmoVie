@@ -1,10 +1,45 @@
 import { Text, Title } from '@/components/ui/typography'
 import { WatchlistProps } from '@/types'
-import { Film, Globe, Lock } from 'lucide-react'
+import { Film, Globe, Lock, Trash } from 'lucide-react'
 import WatchlistInformationFormModal from './WatchlistInformationFormModal'
 import ListWatchlistDialog from './ListWatchlistDialog'
+import { useState } from 'react'
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter } from '@/components/ui/dialog'
+import { Button } from './ui/button'
+import { toast } from 'sonner'
+import { deleteWatchlist } from '@/services/watchlistService'
 
-export default function WatchlistCard({ id, title, description, isPublic, movies }: WatchlistProps) {
+interface WatchlistCardProps {
+  onDelete: (id: string) => void
+  initialWatchlist: WatchlistProps
+}
+
+export default function WatchlistCard({ onDelete, initialWatchlist }: WatchlistCardProps) {
+  const [watchlist, setWatchlist] = useState(initialWatchlist)
+
+  // Handle edit watchlist modal result
+  function onEditInformationSubmit(updated: WatchlistProps) {
+    setWatchlist((prev) => ({
+      ...prev,
+      title: updated.title,
+      description: updated.description,
+      isPublic: updated.isPublic,
+    }))
+  }
+
+  // Delete watchlist call
+  async function handleDeleteWatchlist(wid: string) {
+    try {
+      await deleteWatchlist(wid)
+      toast.success('Watchlist deleted')
+      onDelete(id!)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'System error')
+    }
+  }
+
+  const { id, title, description, isPublic, movies } = watchlist
+
   const backdropUrl =
     typeof movies?.[0]?.backdropSource === 'string' && movies[0].backdropSource.trim() !== ''
       ? movies[0].backdropSource
@@ -58,9 +93,41 @@ export default function WatchlistCard({ id, title, description, isPublic, movies
           </div>
         </div>
         <div className='flex flex-row items-center justify-between gap-2'>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                className='bg-secondary-dark text-white cursor-pointer border border-tertiary-dark 
+             hover:[box-shadow:0_0_8px_#ffa000] hover:[text-shadow:0_0_6px_#fff] 
+             transition duration-200'
+              >
+                <Trash />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className='max-w-[350px] bg-secondary-dark border-tertiary-dark text-white'>
+              <DialogHeader className='font-bold text-primary-yellow'>Delete watchlist</DialogHeader>
+
+              <div className='max-w-[500px] text-sm'>
+                Are you sure to delete this watchllist? <br />
+                This is an un-recoverable action!
+              </div>
+
+              <DialogFooter>
+                <Button
+                  className='bg-tertiary-dark'
+                  onClick={async () => {
+                    await handleDeleteWatchlist(id!)
+                  }}
+                >
+                  Confirm
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
           <WatchlistInformationFormModal
             isAdd={false}
             watchlist={{ id, title, description, isPublic }}
+            submitCallBack={onEditInformationSubmit}
           ></WatchlistInformationFormModal>
         </div>
       </div>

@@ -6,7 +6,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Switch } from '@/components/ui/switch'
 import { Input } from '@/components/ui/input'
@@ -16,6 +15,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { WatchlistProps } from '@/types'
 import { Pen } from 'lucide-react'
+import { toast } from 'sonner'
+import { createWatchlist, updateWatchlist } from '@/services/watchlistService'
+import { useState } from 'react'
 
 // Define form schema
 const formSchema = z.object({
@@ -27,12 +29,16 @@ const formSchema = z.object({
 export type WatchlistFormProps = {
   watchlist: WatchlistProps
   isAdd: boolean
+  submitCallBack: (watchlist: WatchlistProps) => void
 }
 
 export default function WatchlistInformationFormModal({
   watchlist: { id, title, description, isPublic },
   isAdd = true,
+  submitCallBack,
 }: WatchlistFormProps) {
+  const [open, setOpen] = useState(false)
+
   // Initialize form with default values
   // Use the zodResolver to validate the form schema
   const form = useForm<z.infer<typeof formSchema>>({
@@ -44,41 +50,38 @@ export default function WatchlistInformationFormModal({
     },
   })
 
-  // USED TO IGNORE THE ERROR MESSAGE
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Handle form submission logic here
-    fetch(`http://localhost:3001/api/watchlists/${id}/updateeeeeee`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
-    }).then((response) => {
-      if (!response.ok) {
-        throw new Error('Failed to update profile')
+  // HANDLE SUBMITTING
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      if (isAdd) {
+        const newWatchlist = await createWatchlist(values.title, values.description, values.isPublic)
+        setOpen(false)
+
+        toast.success('Watchlist added')
+        submitCallBack(newWatchlist)
+      } else {
+        const updatedWatchlist = await updateWatchlist(id, values.title, values.description, values.isPublic)
+        setOpen(false)
+
+        toast.success('Watchlist updated')
+        submitCallBack(updatedWatchlist)
       }
-      return response.json()
-    })
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'System error')
+    }
   }
 
   // Main component render
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          className='bg-secondary-dark text-white cursor-pointer border border-tertiary-dark 
+    <Dialog open={open} onOpenChange={setOpen}>
+      <Button
+        onClick={() => setOpen(true)}
+        className='bg-secondary-dark text-white cursor-pointer border border-tertiary-dark 
              hover:[box-shadow:0_0_8px_#ffa000] hover:[text-shadow:0_0_6px_#fff] 
              transition duration-200'
-        >
-          {isAdd ? (
-            'Add new Watchlist'
-          ) : (
-            <div className='flex flex-row items-center gap-2'>
-              <Pen className='w-4 h-4' /> Edit
-            </div>
-          )}
-        </Button>
-      </DialogTrigger>
+      >
+        {isAdd ? 'Add new Watchlist' : <Pen className='w-4 h-4' />}
+      </Button>
       <DialogContent className='sm:max-w-[425px] bg-secondary-dark border-tertiary-dark border-2 rounded-lg'>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
