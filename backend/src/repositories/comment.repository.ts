@@ -62,6 +62,13 @@ export class CommentRepository {
       relations: ['user', 'parentComment', 'blog'],
     })
   }
+  async deleteComment(commentId: string): Promise<void> {
+    try {
+      await this.commentRepo.delete(commentId)
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
   //Load Movie Comments by Movie ID
   async findCommentsByMovieId(movieId: string): Promise<MovieComment[]> {
     return this.movieCommentRepo.find({

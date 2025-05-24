@@ -36,6 +36,13 @@ export type BlogCommentReportType = {
   commentId: string
   blogId: string
 }
+export type BlogReportType = {
+  id: string
+  reporter: ReporterType
+  reason: string
+  content: string
+  blogId: string
+}
 
 export type FollowPeopleProps = {
   id?: string
@@ -48,6 +55,7 @@ export type RegisteredUserProps = {
   email?: string
   dateOfBirth?: Date
 }
+
 export type WatchlistMovieProps = {
   index?: number
   id?: string
