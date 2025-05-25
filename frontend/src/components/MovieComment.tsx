@@ -12,7 +12,7 @@ const MovieComment = ({ userName, comment, date, rating, id }: MovieCommentProps
   return (
     <div>
       <Card className='w-full flex flex-col sm:flex-row items-center gap-2 md:gap-10 bg-tertiary-dark border-none drop-shadow-white-glow py-5 justify-center'>
-        <CardHeader className='px-5  w-full flex justify-center md:justify-start'>
+        <CardHeader className='px-5  w-full md:w-auto flex justify-center md:justify-start'>
           <Avatar className='w-[50px] h-[50px]'>
             <AvatarImage src='https://github.com/shadcn.png' />
             <AvatarFallback>{userName?.charAt(0) || 'A'}</AvatarFallback>
@@ -39,7 +39,7 @@ const MovieComment = ({ userName, comment, date, rating, id }: MovieCommentProps
                 </ReportDialog>
               </div>
             </div>
-            <Text className='w-full text-wrap text-center block max-w-[90vw] '>{comment}</Text>
+            <Text className='w-full text-wrap text-center md:text-start block max-w-[90vw] '>{comment}</Text>
           </div>
         </CardContent>
       </Card>
