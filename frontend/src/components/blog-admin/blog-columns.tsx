@@ -16,7 +16,7 @@ function getFirstImageUrl(imageUrls: Array<string | { id: string; url: string }>
   return typeof firstUrl === 'string' ? firstUrl : firstUrl.url
 }
 
-export const columns = (tags: TagType[], refreshBlogs: () => Promise<void>): ColumnDef<BlogPost>[] => [
+export const columns = (refreshBlogs: () => Promise<void>): ColumnDef<BlogPost>[] => [
   {
     id: 'select',
     header: ({ table }) => (

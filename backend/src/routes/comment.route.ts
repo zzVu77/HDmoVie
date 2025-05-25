@@ -36,7 +36,7 @@ commentRouter.post('/movie', authenticateToken, createMovieCommentMiddleware, (r
 commentRouter.post('/blog', authenticateToken, createBlogCommentMiddleware, (req, res) =>
   commentController.commentOnBlog(req, res),
 )
-commentRouter.delete('/blog/delete/:commentId', authenticateToken, isAdmin, (req, res) =>
+commentRouter.delete('/delete/:commentId', authenticateToken, isAdmin, (req, res) =>
   commentController.deleteCommentBlog(req, res),
 )
 commentRouter.get('/blog/:blogId', authenticateToken, (req, res) => commentController.getBlogComments(req, res))

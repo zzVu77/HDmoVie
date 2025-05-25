@@ -1,4 +1,4 @@
-import { BlogReportType, ReporterType } from '@/types'
+import { MovieCommentReportType, ReporterType } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '../ui/checkbox'
 import { Button } from '../ui/button'
@@ -7,9 +7,8 @@ import { Link } from 'react-router-dom'
 import { ConfirmAlertDialog } from '../shared/ConfirmAlertDialog'
 import { toast } from 'sonner'
 import reportService from '@/services/reportService'
-// Sample data for blog reports
 
-export const columns = (onReportUpdate: () => void): ColumnDef<BlogReportType>[] => [
+export const columns = (onReportUpdate: () => void): ColumnDef<MovieCommentReportType>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -71,7 +70,7 @@ export const columns = (onReportUpdate: () => void): ColumnDef<BlogReportType>[]
     accessorKey: 'content',
     header: ({ column }) => (
       <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Content
+        Comment Content
       </Button>
     ),
     cell: ({ row }) => {
@@ -91,6 +90,11 @@ export const columns = (onReportUpdate: () => void): ColumnDef<BlogReportType>[]
     },
   },
   {
+    accessorKey: 'title',
+    header: 'Title',
+    cell: ({ row }) => <div>{row.getValue('title') as string}</div>,
+  },
+  {
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
@@ -98,7 +102,7 @@ export const columns = (onReportUpdate: () => void): ColumnDef<BlogReportType>[]
 
       const handleDelete = async () => {
         try {
-          await reportService.deleteBlogReport(report.blogId)
+          await reportService.deleteCommentReport(report.commentId)
           toast.success('Report deleted successfully')
           onReportUpdate()
         } catch {
@@ -108,7 +112,7 @@ export const columns = (onReportUpdate: () => void): ColumnDef<BlogReportType>[]
 
       return (
         <div className='flex items-center justify-center gap-2'>
-          <Link to={`/blog/${report.blogId}`} className='block'>
+          <Link to={`/movie/${report.movieId}`} className='block'>
             <Eye className='h-4 w-4 text-primary-dark cursor-pointer' />
           </Link>
           <ConfirmAlertDialog

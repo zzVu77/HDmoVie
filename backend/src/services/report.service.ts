@@ -40,6 +40,13 @@ export class ReportService {
       throw new Error((error as Error).message)
     }
   }
+  async getReportCommentMovieAll(): Promise<CommentReport[]> {
+    try {
+      return this.reportRepository.findReportCommentMovie()
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
   async getReportBlogAll(): Promise<BlogReport[]> {
     try {
       return this.reportRepository.findReportBlog()

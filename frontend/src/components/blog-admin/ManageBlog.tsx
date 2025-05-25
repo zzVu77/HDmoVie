@@ -22,10 +22,9 @@ import { ChevronDown } from 'lucide-react'
 import * as React from 'react'
 import Wrapper from '../shared/Wrapper'
 import { columns } from './blog-columns'
-import { BlogInfoModal } from './BlogInfoModal'
+
 import { blogService } from '@/services/blogService'
-import { BlogPost, TagType } from '@/types'
-import { tagService } from '@/services/tagService'
+import { BlogPost } from '@/types'
 
 export function ManageBlog() {
   const [data, setBlogs] = React.useState<BlogPost[]>([])
@@ -33,7 +32,6 @@ export function ManageBlog() {
   const [error, setError] = React.useState<string | null>(null)
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [tags, setTags] = React.useState<TagType[]>([])
 
   const refreshBlogs = async () => {
     try {
@@ -47,18 +45,8 @@ export function ManageBlog() {
     }
   }
 
-  const fetchTags = async () => {
-    try {
-      const tags = await tagService.getTags()
-      setTags(tags)
-    } catch {
-      throw Error('Không thể tải danh sách tags')
-    }
-  }
-
   React.useEffect(() => {
     refreshBlogs()
-    fetchTags()
   }, [])
 
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
@@ -68,7 +56,7 @@ export function ManageBlog() {
 
   const table = useReactTable({
     data,
-    columns: columns(tags, refreshBlogs),
+    columns: columns(refreshBlogs),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -145,11 +133,6 @@ export function ManageBlog() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className='self-end'>
-        <BlogInfoModal>
-          <Button>Add new</Button>
-        </BlogInfoModal>
-      </div>
       <div className='rounded-md border'>
         <Table>
           <TableHeader className='sticky'>
@@ -177,7 +160,7 @@ export function ManageBlog() {
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  Không có kết quả.
+                  No results.
                 </TableCell>
               </TableRow>
             )}
@@ -186,8 +169,8 @@ export function ManageBlog() {
       </div>
       <div className='flex items-center justify-end space-x-2 py-4'>
         <div className='flex-1 text-sm text-muted-foreground'>
-          {table.getFilteredSelectedRowModel().rows.length} của {table.getFilteredRowModel().rows.length} dòng được
-          chọn.
+          {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
+          selected.
         </div>
         <div className='space-x-2'>
           <Button
@@ -196,10 +179,10 @@ export function ManageBlog() {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Trước
+            Previous
           </Button>
           <Button variant='outline' size='sm' onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-            Sau
+            Next
           </Button>
         </div>
       </div>
