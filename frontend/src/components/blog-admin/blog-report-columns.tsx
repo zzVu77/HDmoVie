@@ -74,7 +74,12 @@ export const columns = (onReportUpdate: () => void): ColumnDef<BlogReportType>[]
         Comment Content
       </Button>
     ),
-    cell: ({ row }) => <div>{row.getValue('content') || 'N/A'}</div>,
+    cell: ({ row }) => {
+      const content = row.getValue('content')
+      return (
+        <div className='truncate max-w'>{typeof content === 'string' ? content.substring(0, 50) + '...' : 'N/A'}</div>
+      )
+    },
     filterFn: (row, id, value) => {
       const content = row.getValue(id) as string
       return content?.toLowerCase().includes(value.toLowerCase())

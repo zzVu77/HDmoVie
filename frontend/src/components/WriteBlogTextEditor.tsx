@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback } from './ui/avatar'
 import { format } from 'date-fns'
 import { tagService } from '@/services/tagService'
 import { DialogTitle } from '@radix-ui/react-dialog'
-import BlogService from '@/services/BlogService'
+import BlogService from '@/services/blogService'
 import { toast } from 'sonner'
 
 type WriteBlogTextEditorProps = {
