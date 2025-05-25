@@ -9,7 +9,6 @@ export class NotificationController {
       const userId = res.locals.user.id
 
       const notifications = await this.notificationService.getAllNotificationsForUser(userId)
-
       res.status(200).json(notifications)
     } catch (error) {
       console.error('View all notifications failed ==>', error)

@@ -4,7 +4,7 @@ import { AppDataSource } from '~/data-source'
 import { FollowInteractionRepository } from '~/repositories/followInteraction.repository'
 import { FollowInteractionService } from '~/services/followInteraction.service'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
-import { NotificationRepository } from '~/repositories/notification.repository'
+import { NotificationObserverConfig } from '~/config/notification-observer-config'
 import { authenticateToken } from '~/middlewares/auth.middleware'
 
 const followRouter = Router()
@@ -12,11 +12,11 @@ const followRouter = Router()
 // Initialize dependencies
 const followInteractionRepository = new FollowInteractionRepository(AppDataSource)
 const userRepository = new RegisteredUserRepository(AppDataSource)
-const notificationRepository = new NotificationRepository(AppDataSource)
+const notificationEventManager = NotificationObserverConfig.initialize(AppDataSource)
 const followInteractionService = new FollowInteractionService(
   followInteractionRepository,
   userRepository,
-  notificationRepository,
+  notificationEventManager,
 )
 const followInteractionController = new FollowInteractionController(followInteractionService)
 

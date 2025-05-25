@@ -70,4 +70,9 @@ export type NotificationResponse = {
   followerId?: string
   userId?: string
   reportId?: string
+  blogId?: string
+  blog?: {
+    id: string
+    title: string
+  }
 }

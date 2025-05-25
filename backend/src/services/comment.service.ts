@@ -2,19 +2,18 @@ import { CommentRepository } from '~/repositories/comment.repository'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { MovieRepository } from '~/repositories/movie.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
-import { NotificationRepository } from '~/repositories/notification.repository'
 import { MovieComment } from '~/models/movieComment.model'
 import { BlogComment } from '~/models/blogComment.model'
-
 import { Comment } from '~/models/comment.model'
-import { CommentNotification } from '~/models/commentNotification.model'
+import { NotificationEventManager } from '~/patterns/observers/notification-event-manager'
+
 export class CommentService {
   constructor(
     private commentRepository: CommentRepository,
     private userRepository: RegisteredUserRepository,
     private movieRepository: MovieRepository,
     private blogRepository: BlogRepository,
-    private notificationRepository: NotificationRepository,
+    private notificationEventManager: NotificationEventManager,
   ) {}
 
   async commentOnMovie({
@@ -34,7 +33,6 @@ export class CommentService {
     const movie = await this.movieRepository.findOneById(movieId)
     if (!movie) throw new Error('Movie not found')
 
-    // Create a new blog comment
     let parentComment = undefined
     if (parentCommentId) {
       parentComment = await this.commentRepository.findCommentById(parentCommentId)
@@ -46,8 +44,8 @@ export class CommentService {
     const movieComment = new MovieComment(user, content, new Date(), movie, parentComment)
     return this.commentRepository.saveMovieComment(movieComment)
   }
+
   async getBlogComments(blogId: string, userId: string): Promise<BlogComment[]> {
-    // Check if blog exists first
     const blog = await this.blogRepository.findById(blogId, userId)
     if (!blog) {
       throw new Error('Blog not found')
@@ -74,22 +72,19 @@ export class CommentService {
     const blogComment = new BlogComment(user, content, new Date(), blog, parentComment)
     const savedComment = await this.commentRepository.saveBlogComment(blogComment)
 
-    // Create notification for blog owner (if commenter is not the blog owner)
-    const blogOwner = blog.getOwner()
-    if (blogOwner.getId() !== userId) {
-      const commentNotification = new CommentNotification()
-      Object.assign(commentNotification, {
+    // Notify observers about the comment event
+    await this.notificationEventManager.notify({
+      type: 'COMMENT',
+      data: {
         comment: savedComment,
-        owner: blogOwner,
-        time: new Date(),
-        status: 'UNREAD',
-      })
-
-      await this.notificationRepository.save(commentNotification)
-    }
+        blogOwner: blog.getOwner(),
+      },
+      timestamp: new Date(),
+    })
 
     return savedComment
   }
+
   async getCommentById(id: string): Promise<Comment | null> {
     try {
       return this.commentRepository.findCommentById(id)
@@ -97,6 +92,7 @@ export class CommentService {
       throw new Error((error as Error).message)
     }
   }
+
   async deleteComment(commentId: string): Promise<void> {
     try {
       return this.commentRepository.deleteComment(commentId)
@@ -104,9 +100,8 @@ export class CommentService {
       throw new Error((error as Error).message)
     }
   }
-  // Get all comments for a specific movie
+
   async getMovieComments(movieId: string): Promise<MovieComment[]> {
-    // Check if movie exists first
     const movie = await this.movieRepository.findById(movieId)
     if (!movie) {
       throw new Error('Movie not found')

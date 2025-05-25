@@ -31,6 +31,13 @@ export const blogService = {
   },
 
   /**
+   * Search blogs by content or title
+   */
+  searchBlogs: async (query: string) => {
+    return await apiGet<BlogPost[]>(`/blogs/search?q=${encodeURIComponent(query)}`)
+  },
+
+  /**
    * Create a new blog post
    */
   createBlog: async (blogData: CreateBlogPostRequest) => {

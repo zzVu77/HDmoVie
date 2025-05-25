@@ -147,6 +147,11 @@ export default function Header() {
       message,
       time: new Date(apiNotification.time), // Ensure time is converted to Date object
       status: apiNotification.status,
+      type: apiNotification.type,
+      commentId: apiNotification.commentId,
+      followerId: apiNotification.followerId,
+      reportId: apiNotification.reportId,
+      blogId: apiNotification.blogId,
     }
   }
 

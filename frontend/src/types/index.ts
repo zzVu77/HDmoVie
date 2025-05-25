@@ -104,6 +104,12 @@ export type NotificationItemProps = {
   message: string
   time: Date
   status: 'UNREAD' | 'READ'
+  type: 'COMMENT' | 'FOLLOW' | 'LIKE' | 'REPORT'
+  userId?: string
+  commentId?: string
+  followerId?: string
+  reportId?: string
+  blogId?: string
 }
 export type RegisteredUserType = {
   id: string

@@ -1,22 +1,22 @@
 import { LikeInteractionRepository } from '~/repositories/likeInteraction.repository'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
-import { NotificationRepository } from '~/repositories/notification.repository'
 import { LikeInteraction } from '../models/likeInteraction.model'
-import { LikeNotification } from '../models/likeNotification.model'
 import { DataSource } from 'typeorm'
+import { NotificationEventManager } from '~/patterns/observers/notification-event-manager'
 
 export class InteractionService {
   private likeInteractionRepo: LikeInteractionRepository
   private userRepo: RegisteredUserRepository
   private blogRepo: BlogRepository
-  private notificationRepo: NotificationRepository
 
-  constructor(dataSource: DataSource) {
+  constructor(
+    dataSource: DataSource,
+    private notificationEventManager: NotificationEventManager,
+  ) {
     this.likeInteractionRepo = new LikeInteractionRepository(dataSource)
     this.userRepo = new RegisteredUserRepository(dataSource)
     this.blogRepo = new BlogRepository(dataSource)
-    this.notificationRepo = new NotificationRepository(dataSource)
   }
 
   async likeBlog(
@@ -33,6 +33,7 @@ export class InteractionService {
     if (!user || !blog) {
       throw new Error('User or Blog not found')
     }
+
     let likeInteraction = await this.likeInteractionRepo.findLikeInteractionByBlogID(blog.getId())
 
     if (!likeInteraction) {
@@ -40,7 +41,7 @@ export class InteractionService {
     }
 
     const likers = likeInteraction.getLikers() || []
-    let isLiking = false // Track if this is a like (not unlike)
+    let isLiking = false
 
     if (!likers || likers.length === 0) {
       user.likeBlog(likeInteraction)
@@ -58,21 +59,20 @@ export class InteractionService {
 
     await this.likeInteractionRepo.save(likeInteraction)
 
-    // Create notification only when liking (not unliking) and user is not blog owner
-    const blogOwner = blog.getOwner() // Assuming blog has getAuthor() method
+    // Notify observers about the like event if user is not blog owner
+    const blogOwner = blog.getOwner()
     if (isLiking && blogOwner.getId() !== userId) {
-      const likeNotification = new LikeNotification()
-      Object.assign(likeNotification, {
-        user: user,
-        owner: blogOwner,
-        time: new Date(),
-        status: 'UNREAD',
+      await this.notificationEventManager.notify({
+        type: 'LIKE',
+        data: {
+          likeInteraction: likeInteraction,
+          blogOwner: blogOwner,
+          isLiking: isLiking,
+        },
+        timestamp: new Date(),
       })
-
-      await this.notificationRepo.save(likeNotification)
     }
 
-    // Return the updated like interaction
     const saved = await this.likeInteractionRepo.findLikeInteractionByBlogID(blog.getId())
     if (!saved) throw new Error('LikeInteraction not found after save')
 

@@ -5,18 +5,19 @@ export interface Notification {
   time: Date
   status: 'UNREAD' | 'READ'
   type: 'COMMENT' | 'FOLLOW' | 'LIKE' | 'REPORT'
-  owner: {
+  owner: {  // user who received the notification
     id: string
     fullName: string
   }
-  user: {
+  user: {  // user who triggered the notification
     id: string
     fullName: string
   }
-  reportId?: string
-  userId?: string
-  followerId?: string
-  commentId?: string
+  reportId?: string // for report
+  userId?: string // for like
+  followerId?: string // for follow
+  commentId?: string // for comment
+  blogId?: string // for blog
 }
 
 export interface ApiResponse<T> {

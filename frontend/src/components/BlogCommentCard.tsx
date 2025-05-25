@@ -64,6 +64,7 @@ export default function BlogCommentCard({ comment, isReply = false, blogId, onCo
   return (
     <>
       <Card
+        id={`comment-${comment.id}`}
         className={cn(
           'bg-secondary-dark m-0 pb-2 pt-4 px-2 gap-0 rounded-none',
           !isReply

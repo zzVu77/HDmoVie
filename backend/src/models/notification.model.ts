@@ -43,4 +43,7 @@ export abstract class Notification {
   public setStatus(status: 'UNREAD' | 'READ'): void {
     this.status = status
   }
+  public setTime(time: Date): void {
+    this.time = time
+  }
 }

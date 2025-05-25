@@ -78,4 +78,22 @@ export class BlogController {
       }
     }
   }
+  async searchBlogs(req: Request, res: Response): Promise<void> {
+    try {
+      const { q: query } = req.query
+      const user = res.locals.user
+      const userId = user?.id ?? ''
+      console.log('Search query:', query)
+      if (!query || typeof query !== 'string') {
+        res.status(400).json({ message: 'Search query is required' })
+        return
+      }
+
+      const blogs = await this.blogService.searchBlogs(query, userId)
+      res.status(200).json(blogs)
+    } catch (error) {
+      console.error('Error searching blogs:', error)
+      res.status(500).json({ message: 'Internal server error' })
+    }
+  }
 }

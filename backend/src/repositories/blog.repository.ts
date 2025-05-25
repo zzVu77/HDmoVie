@@ -228,6 +228,58 @@ export class BlogRepository {
     // Group by blog_id and transform into the right structure
     return this.transformToResponseDTOList(blogs)
   }
+  async searchBlogs(query: string, userId: string): Promise<any[]> {
+    const blogs = await this.repository
+      .createQueryBuilder('blog')
+      .select([
+        'blog.id as blog_id',
+        'blog.content as blog_content',
+        'blog.dateCreated as blog_dateCreated',
+        'owner.id as owner_id',
+        'owner.fullName as owner_fullName',
+        'tags.id as tags_id',
+        'tags.name as tags_name',
+        'imageUrls.id as imageUrls_id',
+        'imageUrls.url as imageUrls_url',
+      ])
+      .addSelect(
+        `(SELECT COUNT(*) 
+      FROM like_interactions_users liu 
+      JOIN like_interactions li ON liu.likeInteractionId = li.id 
+      WHERE li.blogId = blog.id)`,
+        'likeCount',
+      )
+      .addSelect(
+        `(SELECT COUNT(*) 
+      FROM comments c 
+      WHERE c.blogId = blog.id AND c.type = 'BLOG')`,
+        'commentCount',
+      )
+      .addSelect(
+        `(SELECT 1 FROM like_interactions_users liu
+      JOIN like_interactions li ON liu.likeInteractionId = li.id
+      WHERE li.blogId = blog.id AND liu.userId = :userId
+      LIMIT 1)`,
+        'isLiked',
+      )
+      .leftJoin('blog.owner', 'owner')
+      .leftJoin('blog.tags', 'tags')
+      .leftJoin('blog.imageUrls', 'imageUrls')
+      .where('LOWER(blog.content) LIKE LOWER(:query)', {
+        query: `%${query}%`,
+      })
+      .orWhere('LOWER(owner.fullName) LIKE LOWER(:query)', {
+        query: `%${query}%`,
+      })
+      .orWhere('LOWER(tags.name) LIKE LOWER(:query)', {
+        query: `%${query}%`,
+      })
+      .orderBy('blog.dateCreated', 'DESC')
+      .setParameter('userId', userId)
+      .getRawMany()
+
+    return this.transformToResponseDTOList(blogs)
+  }
 
   // Helper method to transform raw query results
   private transformToResponseDTO(rawBlogs: any[]): any {

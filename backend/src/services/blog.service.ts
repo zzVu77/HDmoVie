@@ -102,4 +102,12 @@ export class BlogService {
       throw new Error((error as Error).message)
     }
   }
+  async searchBlogs(query: string, userId: string): Promise<BlogResponseDTO[]> {
+    if (!query.trim()) {
+      return await this.getAllBlogs(userId)
+    }
+
+    const blogs = await this.blogRepository.searchBlogs(query, userId)
+    return blogs
+  }
 }
