@@ -10,7 +10,7 @@ class Database {
     if (!Database.instance) {
       Database.instance = new DataSource({
         type: 'mysql',
-        host: 'localhost', // hoặc 'mysql' nếu dùng Docker
+        host: 'localhost',
         port: 33061,
         username: 'root',
         password: '123456',
