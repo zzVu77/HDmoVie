@@ -117,6 +117,7 @@ const MovieDetail = () => {
               {movieData.comments.map((comment, index) => (
                 <div className='pb-8' key={index}>
                   <MovieComment
+                    id={comment.id}
                     userName={comment.userName}
                     comment={comment.comment}
                     date={comment.date}
