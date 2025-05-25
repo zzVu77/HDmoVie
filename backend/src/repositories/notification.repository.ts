@@ -87,5 +87,4 @@ export class NotificationRepository {
       .where('like.id = :likeInteractionId', { likeInteractionId })
       .getOne()
   }
-
 }

@@ -9,17 +9,17 @@ export class NotificationObserverConfig {
   static initialize(dataSource: DataSource): NotificationEventManager {
     if (!this.instance) {
       this.instance = new NotificationEventManager()
-      
+
       // Create notification repository
       const notificationRepository = new NotificationRepository(dataSource)
-      
+
       // Create and register all observers
       const observers = NotificationObserverFactory.createObservers(notificationRepository)
-      observers.forEach(observer => {
+      observers.forEach((observer) => {
         this.instance.subscribe(observer)
       })
     }
-    
+
     return this.instance
   }
 
@@ -29,4 +29,4 @@ export class NotificationObserverConfig {
     }
     return this.instance
   }
-} 
+}
