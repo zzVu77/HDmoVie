@@ -2,6 +2,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import About from './pages/About'
 import Admin from './pages/Admin'
 import Login from './pages/Login'
+import ForgotPasswordPage from './pages/ForgotPassword'
+import VerifyOtpPage from './pages/VerifyOtp'
+import ResetPasswordPage from './pages/ResetPassword'
+
 import Movie from './pages/MovieDetail'
 import NotFound404 from './pages/NotFound404'
 import Explore from './pages/Explore'
@@ -85,6 +89,30 @@ function App() {
           element={
             <PublicRoute>
               <RegisterForm />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path='/forgot-password'
+          element={
+            <PublicRoute>
+              <ForgotPasswordPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path='/verify-otp'
+          element={
+            <PublicRoute>
+              <VerifyOtpPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path='/reset-password'
+          element={
+            <PublicRoute>
+              <ResetPasswordPage />
             </PublicRoute>
           }
         />

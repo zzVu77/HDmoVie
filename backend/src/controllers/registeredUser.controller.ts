@@ -80,4 +80,10 @@ export class RegisteredUserController {
     const result = await this.registeredUserService.resetPassword(email, otp, password)
     res.status(result.success ? 200 : 400).json(result)
   }
+
+  async verifyOtp(req: Request, res: Response) {
+    const { email, otp } = req.body
+    const result = await this.registeredUserService.verifyOtpForReset(email, otp)
+    res.status(result.success ? 200 : 400).json(result)
+  }
 }

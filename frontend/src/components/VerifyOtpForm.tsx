@@ -3,11 +3,13 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from '@/components/ui/input-otp'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import ForgotPasswordService from '@/services/forgotPasswordService'
 
 const otpSchema = z.object({
   otp: z.string().length(6, 'OTP must be 6 digits'),
@@ -15,6 +17,19 @@ const otpSchema = z.object({
 
 export default function VerifyOtpForm() {
   const navigate = useNavigate()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [email, setEmail] = useState<string>('')
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem('resetEmail')
+    if (!storedEmail) {
+      toast.error('Please start from forgot password page')
+      navigate('/forgot-password')
+      return
+    }
+    setEmail(storedEmail)
+  }, [navigate])
+
   const form = useForm<z.infer<typeof otpSchema>>({
     resolver: zodResolver(otpSchema),
     defaultValues: {
@@ -22,21 +37,23 @@ export default function VerifyOtpForm() {
     },
   })
 
-  // async function onSubmit(values: z.infer<typeof otpSchema>) {
-  //   try {
-  //     toast.success('OTP verified')
-  //     navigate('/reset-password') // chuyển tới trang đặt lại mật khẩu
-  //   } catch (error) {
-  //     toast.error('Invalid OTP. Please try again.')
-  //   }
-  // }
+  async function onSubmit(values: z.infer<typeof otpSchema>) {
+    if (!email) return
 
-  async function onSubmit() {
+    setIsSubmitting(true)
     try {
-      toast.success('OTP verified')
-      navigate('/reset-password') // chuyển tới trang đặt lại mật khẩu
+      const response = await ForgotPasswordService.verifyOtp(email, values.otp)
+      if (response.data.success) {
+        toast.success(response.data.message)
+        localStorage.setItem('resetOtp', values.otp)
+        navigate('/reset-password')
+      } else {
+        toast.error(response.data.errorMessage || 'Invalid OTP')
+      }
     } catch {
-      toast.error('Invalid OTP. Please try again.')
+      toast.error('Failed to verify OTP. Please try again.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -75,8 +92,8 @@ export default function VerifyOtpForm() {
                   </FormItem>
                 )}
               />
-              <Button type='submit' className='w-full'>
-                Verify OTP
+              <Button type='submit' className='w-full' disabled={isSubmitting}>
+                {isSubmitting ? 'Verifying...' : 'Verify OTP'}
               </Button>
             </form>
           </Form>
