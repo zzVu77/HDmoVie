@@ -4,9 +4,9 @@ import { CommentRepository } from '~/repositories/comment.repository'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { MovieRepository } from '~/repositories/movie.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
-import { NotificationRepository } from '~/repositories/notification.repository'
 import { CommentController } from '~/controllers/comment.controller'
 import { CommentService } from '~/services/comment.service'
+import { NotificationObserverConfig } from '~/config/notification-observer-config'
 
 import { createMovieCommentMiddleware, createBlogCommentMiddleware } from '~/middlewares/comment.middleware'
 import { authenticateToken, isAdmin } from '~/middlewares/auth.middleware'
@@ -18,13 +18,13 @@ const commentRepository = new CommentRepository(AppDataSource)
 const userRepository = new RegisteredUserRepository(AppDataSource)
 const movieRepository = new MovieRepository(AppDataSource)
 const blogRepository = new BlogRepository(AppDataSource)
-const notificationRepository = new NotificationRepository(AppDataSource)
+const notificationEventManager = NotificationObserverConfig.initialize(AppDataSource)
 const commentService = new CommentService(
   commentRepository,
   userRepository,
   movieRepository,
   blogRepository,
-  notificationRepository,
+  notificationEventManager,
 )
 // Initialize CommentController
 const commentController = new CommentController(commentService)

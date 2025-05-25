@@ -7,7 +7,7 @@ import { RegisteredUserRepository } from '~/repositories/registeredUser.reposito
 import { BlogRepository } from '~/repositories/blog.repository'
 import { FollowInteractionRepository } from '~/repositories/followInteraction.repository'
 import { WatchlistRepository } from '~/repositories/watchlist.repository'
-import { NotificationRepository } from '~/repositories/notification.repository'
+import { NotificationObserverConfig } from '~/config/notification-observer-config'
 import { RegisteredUserService } from '~/services/registeredUser.service'
 import { changePasswordMiddleware, updateUserInfoMiddleware } from '~/middlewares/registeredUser.middleware'
 import { FollowInteractionService } from '~/services/followInteraction.service'
@@ -25,14 +25,14 @@ const tagRepository = new TagRepository(AppDataSource)
 const followInteractionRepository = new FollowInteractionRepository(AppDataSource)
 const watchlistRepository = new WatchlistRepository(AppDataSource)
 const movieRepository = new MovieRepository(AppDataSource)
-const notificationRepository = new NotificationRepository(AppDataSource)
+const notificationEventManager = NotificationObserverConfig.initialize(AppDataSource)
 const profileService = new ProfileService(registeredUserRepository, followInteractionRepository)
 const registeredUserService = new RegisteredUserService(registeredUserRepository)
 const blogService = new BlogService(blogRepository, registeredUserRepository, tagRepository)
 const followInteractionService = new FollowInteractionService(
   followInteractionRepository,
   registeredUserRepository,
-  notificationRepository,
+  notificationEventManager,
 )
 const watchlistService = new WatchlistService(watchlistRepository, registeredUserRepository, movieRepository)
 
