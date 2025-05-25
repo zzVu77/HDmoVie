@@ -61,15 +61,14 @@ export class InteractionService {
     // Create notification only when liking (not unliking) and user is not blog owner
     const blogOwner = blog.getOwner() // Assuming blog has getAuthor() method
     if (isLiking && blogOwner.getId() !== userId) {
-      const likeNotification = new LikeNotification()
-      Object.assign(likeNotification, {
-        user: user,
-        owner: blogOwner,
-        time: new Date(),
-        status: 'UNREAD',
-      })
+      // Check if notification already exists for this like interaction
+      const existingNotification = await this.notificationRepo.findByLikeInteractionId(likeInteraction.getId());
 
-      await this.notificationRepo.save(likeNotification)
+      if (!existingNotification) {
+        const likeNotification = new LikeNotification(likeInteraction, blogOwner)
+        likeNotification.setStatus('UNREAD')
+        await this.notificationRepo.save(likeNotification)
+      }
     }
 
     // Return the updated like interaction

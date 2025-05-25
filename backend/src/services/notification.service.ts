@@ -6,15 +6,13 @@ export class NotificationService {
 
   async getAllNotificationsForUser(userId: string): Promise<NotificationResponse[]> {
     const notifications = await this.notificationRepository.findAllByOwner(userId)
-
     return notifications.map((notification: any): NotificationResponse => {
       let notificationType: 'COMMENT' | 'FOLLOW' | 'LIKE' | 'REPORT'
-
       if (notification.comment) {
         notificationType = 'COMMENT'
       } else if (notification.follower) {
         notificationType = 'FOLLOW'
-      } else if (notification.user) {
+      } else if (notification.like) {
         notificationType = 'LIKE'
       } else if (notification.report) {
         notificationType = 'REPORT'
@@ -39,6 +37,7 @@ export class NotificationService {
           return {
             ...base,
             commentId: notification.comment?.id,
+            blogId: notification.comment?.blog?.id,
             user: {
               id: notification.comment?.user?.id,
               fullName: notification.comment?.user?.fullName,
@@ -53,19 +52,27 @@ export class NotificationService {
               fullName: notification.follower?.fullName,
             },
           }
-        case 'LIKE':
+        case 'LIKE': {
+          const likerUser = notification.like?.likers?.[0]
           return {
             ...base,
-            userId: notification.user?.id,
+            userId: likerUser?.id,
+            blogId: notification.like?.blog?.id,
             user: {
-              id: notification.user?.id,
-              fullName: notification.user?.fullName,
+              id: likerUser?.id,
+              fullName: likerUser?.fullName,
+            },
+            blog: {
+              id: notification.like?.blog?.id,
+              title: notification.like?.blog?.title,
             },
           }
+        }
         case 'REPORT':
           return {
             ...base,
             reportId: notification.report?.id,
+            blogId: notification.report?.blogId,
             user: {
               id: notification.report?.reporter?.id,
               fullName: notification.report?.reporter?.fullName,
@@ -78,16 +85,7 @@ export class NotificationService {
   }
 
   async markNotificationAsRead(notificationId: string, userId: string): Promise<void> {
-    const notification = await this.notificationRepository.findOne(notificationId)
-    if (!notification) {
-      throw new Error('Notification not found')
-    }
-    if (notification.getOwner().getId() !== userId) {
-      throw new Error('Unauthorized: You can only mark your own notifications as read')
-    }
-
-    notification.setStatus('READ')
-    await this.notificationRepository.save(notification)
+    await this.notificationRepository.updateNotificationStatus(notificationId, userId)
   }
 
   async markAllNotificationsAsRead(userId: string): Promise<void> {
