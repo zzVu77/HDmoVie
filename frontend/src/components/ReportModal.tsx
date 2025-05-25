@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import reportService from '@/services/reportService'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 export enum ReportReason {
   SPAM = 'Spam or scams',
@@ -47,6 +48,17 @@ type Props = {
 
 export function ReportDialog({ children, type, targetId }: Props) {
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const handleReportClick = () => {
+    const accessToken = localStorage.getItem('access-token')
+    if (!accessToken) {
+      navigate(`/login?redirect=${location.pathname}`)
+      return
+    }
+    setOpen(true)
+  }
 
   const form = useForm<z.infer<typeof reportSchema>>({
     resolver: zodResolver(reportSchema),
@@ -75,6 +87,7 @@ export function ReportDialog({ children, type, targetId }: Props) {
         <Button
           variant='outline'
           className='w-fit h-fit bg-transparent hover:bg-transparent hover:text-primary-yellow border-none shadow-none'
+          onClick={handleReportClick}
         >
           {children || 'Report'}
         </Button>
