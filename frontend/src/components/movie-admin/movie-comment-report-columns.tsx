@@ -3,10 +3,44 @@ import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '../ui/checkbox'
 import { Button } from '../ui/button'
 import { Eye, Trash2 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ConfirmAlertDialog } from '../shared/ConfirmAlertDialog'
 import { toast } from 'sonner'
 import reportService from '@/services/reportService'
+
+const ActionCell = ({ report, onReportUpdate }: { report: MovieCommentReportType; onReportUpdate: () => void }) => {
+  const navigate = useNavigate()
+
+  const handleDelete = async () => {
+    try {
+      await reportService.deleteCommentReport(report.commentId)
+      toast.success('Report deleted successfully')
+      onReportUpdate()
+    } catch {
+      toast.error('Failed to delete report')
+    }
+  }
+
+  const handleView = () => {
+    navigate(`/movie/${report.movieId}#${report.commentId}`)
+  }
+
+  return (
+    <div className='flex items-center justify-center gap-2'>
+      <Button variant='ghost' size='icon' onClick={handleView}>
+        <Eye className='h-4 w-4 text-primary-dark' />
+      </Button>
+      <ConfirmAlertDialog
+        title='Delete Report'
+        description='Are you sure you want to delete this report? This action cannot be undone.'
+        onConfirm={handleDelete}
+        trigger={<Trash2 className='h-4 w-4 text-primary-dark cursor-pointer' />}
+        cancelText='No, go back'
+        confirmText='Yes, delete'
+      />
+    </div>
+  )
+}
 
 export const columns = (onReportUpdate: () => void): ColumnDef<MovieCommentReportType>[] => [
   {
@@ -97,34 +131,6 @@ export const columns = (onReportUpdate: () => void): ColumnDef<MovieCommentRepor
   {
     id: 'actions',
     enableHiding: false,
-    cell: ({ row }) => {
-      const report = row.original
-
-      const handleDelete = async () => {
-        try {
-          await reportService.deleteCommentReport(report.commentId)
-          toast.success('Report deleted successfully')
-          onReportUpdate()
-        } catch {
-          toast.error('Failed to delete report')
-        }
-      }
-
-      return (
-        <div className='flex items-center justify-center gap-2'>
-          <Link to={`/movie/${report.movieId}`} className='block'>
-            <Eye className='h-4 w-4 text-primary-dark cursor-pointer' />
-          </Link>
-          <ConfirmAlertDialog
-            title='Delete Report'
-            description='Are you sure you want to delete this report? This action cannot be undone.'
-            onConfirm={handleDelete}
-            trigger={<Trash2 className='h-4 w-4 text-primary-dark cursor-pointer' />}
-            cancelText='No, go back'
-            confirmText='Yes, delete'
-          />
-        </div>
-      )
-    },
+    cell: ({ row }) => <ActionCell report={row.original} onReportUpdate={onReportUpdate} />,
   },
 ]

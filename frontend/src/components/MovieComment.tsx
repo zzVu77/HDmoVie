@@ -12,7 +12,7 @@ const MovieComment = ({ userName, comment, date, rating, id }: MovieCommentProps
   return (
     <div>
       <Card
-        id={`comment-${id}`}
+        id={`${id}`}
         className='w-full flex flex-col sm:flex-row items-center gap-2 md:gap-10 bg-tertiary-dark border-none drop-shadow-white-glow py-5 justify-center'
       >
         <CardHeader className='px-5  w-full md:w-auto flex justify-center md:justify-start'>
