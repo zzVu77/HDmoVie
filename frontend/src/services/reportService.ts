@@ -73,9 +73,9 @@ export const reportService = {
   /**
    * Delete a blog comment report
    */
-  deleteBlogCommentReport: async (commentId: string): Promise<void> => {
+  deleteCommentReport: async (commentId: string): Promise<void> => {
     try {
-      await apiDelete(`/comments/blog/delete/${commentId}`)
+      await apiDelete(`/comments/delete/${commentId}`)
     } catch {
       throw new Error('Failed to delete report')
     }
@@ -93,6 +93,14 @@ export const reportService = {
       await apiDelete(`/blogs/${blogId}`)
     } catch {
       throw new Error('Failed to delete report')
+    }
+  },
+  getMovieCommentReports: async (): Promise<BlogReportType[]> => {
+    try {
+      const response = await apiGet<{ status: string; data: BlogReportType[] }>('/reports/comment/movie')
+      return response.data.data || []
+    } catch {
+      throw new Error('Failed to fetch blog comment reports')
     }
   },
 }

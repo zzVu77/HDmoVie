@@ -98,7 +98,7 @@ export const columns = (onReportUpdate: () => void): ColumnDef<BlogCommentReport
 
       const handleDelete = async () => {
         try {
-          await reportService.deleteBlogCommentReport(report.commentId)
+          await reportService.deleteCommentReport(report.commentId)
           toast.success('Report deleted successfully')
           onReportUpdate()
         } catch {

@@ -58,6 +58,22 @@ export class ReportController {
       }
     }
   }
+  async getReportCommentMovieAll(req: Request, res: Response): Promise<void> {
+    try {
+      const reports = await this.reportService.getReportCommentMovieAll()
+      //console.log(reports)
+      res.status(201).json({ status: 'success', data: reports })
+    } catch (error) {
+      console.error('Error reporting movie:', error)
+
+      const message = (error as Error).message
+      if (message === 'Blog not found') {
+        res.status(404).json({ status: 'failed', message })
+      } else {
+        res.status(400).json({ status: 'failed', message })
+      }
+    }
+  }
   async getReportBlogAll(req: Request, res: Response): Promise<void> {
     try {
       const reports = await this.reportService.getReportBlogAll()

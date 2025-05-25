@@ -26,6 +26,15 @@ export type ReporterType = {
   id: string
   fullName: string
 }
+export type MovieCommentReportType = {
+  id: string
+  reporter: ReporterType
+  reason: string
+  content: string
+  commentId: string
+  movieId: string
+  title: string
+}
 
 export type BlogCommentReportType = {
   id: string

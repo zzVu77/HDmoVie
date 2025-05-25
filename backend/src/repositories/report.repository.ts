@@ -3,6 +3,8 @@ import { BlogReport } from '~/models/blogReport.model'
 import { CommentReport } from '~/models/commentReport.model'
 import { Report } from '~/models/report.model'
 import { BlogComment } from '~/models/blogComment.model'
+import { MovieComment } from '~/models/movieComment.model'
+import { title } from 'process'
 export class ReportRepository {
   private reportRepo: Repository<Report>
   private blogReportRepo: Repository<BlogReport>
@@ -48,6 +50,29 @@ export class ReportRepository {
       } as FindOptionsSelect<CommentReport>,
       where: { comment: { type: 'BLOG' } as FindOptionsWhere<BlogComment> },
       relations: ['reporter', 'comment', 'comment.blog'], // Include the blog relation
+    })
+  }
+
+  async findReportCommentMovie(): Promise<CommentReport[]> {
+    return this.commentReportRepo.find({
+      select: {
+        id: true,
+        reason: true,
+        reporter: {
+          id: true,
+          email: true,
+          password: false,
+          fullName: true,
+          dateOfBirth: true,
+        },
+        comment: {
+          id: true,
+          content: true,
+          movie: { id: true, title: true }, // Excludes tags and imageUrls
+        },
+      } as FindOptionsSelect<CommentReport>,
+      where: { comment: { type: 'MOVIE' } as FindOptionsWhere<MovieComment> },
+      relations: ['reporter', 'comment', 'comment.movie'], // Include the blog relation
     })
   }
   async findReportBlog(): Promise<BlogReport[]> {
