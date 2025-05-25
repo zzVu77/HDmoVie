@@ -19,7 +19,7 @@ export class NotificationEventManager implements NotificationSubject {
   }
 
   async notify(event: NotificationEvent): Promise<void> {
-    const promises = this.observers.map(observer => observer.update(event))
+    const promises = this.observers.map((observer) => observer.update(event))
     await Promise.all(promises)
   }
 }
