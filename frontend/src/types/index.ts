@@ -132,6 +132,7 @@ export type BlogPost = {
   isLiked: boolean
 }
 export type MovieCommentProps = {
+  id: string
   userName: string
   comment: string
   rating: number

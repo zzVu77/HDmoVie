@@ -21,6 +21,7 @@ import { SearchBar } from './SearchBar'
 import { apiGet } from '@/utils/axiosConfig'
 import { useNavigate } from 'react-router-dom'
 import { NotificationService, Notification as NotificationData } from '@/services/NotificationService'
+import { jwtDecode } from 'jwt-decode'
 
 const menuItems = [
   { label: 'Home', path: '/' },
@@ -55,7 +56,12 @@ export default function Header() {
   const [prevScrollPos, setPrevScrollPos] = useState(window.scrollY)
   const [isVisible, setIsVisible] = useState(true)
   const [isLogin, setIsLogin] = useState(false)
-
+  const token = localStorage.getItem('access-token')
+  let role: string | null = null
+  if (token) {
+    const decoded = jwtDecode(token) as { role: string }
+    role = decoded.role
+  }
   const handleLogout = async () => {
     await apiGet('/registeredusers/logout')
     localStorage.removeItem('access-token')
@@ -357,6 +363,11 @@ export default function Header() {
               >
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator className='bg-tertiary-dark' />
+                {role === 'ADMIN' && (
+                  <Link to='/admin'>
+                    <DropdownMenuItem className='cursor-pointer'>Dashboard</DropdownMenuItem>
+                  </Link>
+                )}
                 <DropdownMenuGroup>
                   <Link to='/profile/'>
                     <DropdownMenuItem className='cursor-pointer'>Profile</DropdownMenuItem>

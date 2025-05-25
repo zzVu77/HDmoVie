@@ -36,6 +36,7 @@ import ManageTag from './tag-admin/ManageTag'
 import ManageGenre from './genre-admin/ManageGenre'
 import { apiGet } from '@/utils/axiosConfig'
 import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 
 interface MenuItem {
   title: string
@@ -154,7 +155,9 @@ export default function AppSidebar() {
         <Sidebar className='static border-r-2 '>
           <SidebarContent className='w-fit'>
             <SidebarGroup className='w-fit h-full flex-col flex gap-5 items-center justify-start'>
-              <img src='/brand_logo.png' className='aspect-auto' alt='' />
+              <Link to='/'>
+                <img src='/brand_logo.png' className='aspect-auto' alt='' />
+              </Link>
               <SidebarGroupLabel className=''>
                 <Title level={2} className='text-primary-dark'>
                   Admin Dashboard
