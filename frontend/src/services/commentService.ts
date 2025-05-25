@@ -47,6 +47,7 @@ export const CommentService = {
 
   transformPostMovieCommentResponse: (response: MovieCommentResponse): MovieCommentProps => {
     return {
+      id: response.id,
       userName: response.user.fullName,
       comment: response.content,
       date: new Date(response.createdAt).toLocaleString(),
@@ -55,6 +56,7 @@ export const CommentService = {
   },
   transformGetMovieCommentResponse: (response: MovieCommentProps): MovieCommentProps => {
     return {
+      id: response.id,
       userName: response.userName,
       comment: response.comment,
       date: new Date(response.date).toLocaleString(),

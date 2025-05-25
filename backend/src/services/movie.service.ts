@@ -73,9 +73,9 @@ export class MovieService {
       const relatedMovies = await this.movieRepository.findMoviesByGenreIds(genreIds, movieId, 5)
 
       // 6. Check if user has commented
-      const hasCommented = userId
-        ? comments.some((comment) => String(comment.getUser().getId()) === String(userId))
-        : false
+      const hasCommented =
+        userId === undefined ? true : comments.some((comment) => String(comment.getUser().getId()) === String(userId))
+
       console.log(userId, 'userId')
       // 7. Return combined data
       return {
