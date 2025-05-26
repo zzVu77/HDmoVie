@@ -2,22 +2,91 @@
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
-@theme extend {
-  /* define for color --color-* */
-  --color-primary-50: #1e3a8a;
-  --color-primary-100: #fbbf24;
-  --color-primary-200: #9333ea;
+
+@theme {
+  /* --color-*	Color utilities like bg-red-500, text-sky-300, and many more */
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary-dark: var(--secondary-dark);
+  --color-tertiary-dark: var(--tertiary-dark);
+  --color-primary-yellow: var(--accent-yellow);
+  --color-secondary-yellow: var(--accent-yellow-light);
+  --color-tertiary-yellow: var(--accent-yellow-dark);
   --color-success-50: #059669;
-  /* define for border radius --border-radius-* */
+  /* --radius-*	Border radius utilities like rounded-sm */
   --radius-small: 0.25rem; /* 4px */
   --radius-medium: 0.5rem; /* 8px */
   --radius-large: 1rem; /* 16px */
+  /* --drop-shadow-*	Drop shadow filter utilities like drop-shadow-md */
+  --drop-shadow-white-glow: 0 2px 5px rgba(255, 255, 255, 0.2);
+  --drop-shadow-yellow-glow: 0 0 30px rgba(255, 193, 7, 0.7);
+  /* --font-*	Font family utilities like font-sans */
+  /* --text-*	Font size utilities like text-xl */
+  /* --font-weight-*	Font weight utilities like font-bold */
+  /* --tracking-*	Letter spacing utilities like tracking-wide */
+  /* --leading-*	Line height utilities like leading-tight */
+  /* --breakpoint-*	Responsive breakpoint variants like sm:* */
+  /* --container-*	Container query variants like @sm:* and size utilities like max-w-md */
+  /* --spacing-*	Spacing and sizing utilities like px-4, max-h-16, and many more */
+  /* --shadow-*	Box shadow utilities like shadow-md */
+  /* --inset-shadow-*	Inset box shadow utilities like inset-shadow-xs */
+  /* --blur-*	Blur filter utilities like blur-md */
+  /* --perspective-*	Perspective utilities like perspective-near */
+  /* --aspect-*	Aspect ratio utilities like aspect-video */
+  /* --ease-*	Transition timing function utilities like ease-out */
+  /* --animate-*	Animation utilities like animate-spin */
+  /* define for color --color-* */
+  /* define for border radius --border-radius-* */
+}
+
+body {
+  background-color: var(--primary-dark);
+}
+.carousel-3d-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.carousel-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.5s ease;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.carousel-item h3 {
+  margin: 10px 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+body {
+  background-color: black;
 }
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 500;
+  font-size: 1rem; /* 16px */
+  /* global variables style */
+  /* begin */
 
+  --primary-dark: #030303;
+  --secondary-dark: #121212;
+  --tertiary-dark: #2d2d2d;
+  --accent-yellow: #ffc107;
+  --accent-yellow-light: #ffd54f;
+  --accent-yellow-dark: #ffa000;
+  /* end */
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -128,7 +197,84 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  /* Ensure scrolling still works */
+  html,
+  body {
+    overflow: auto;
+  }
+}
+@layer utilities {
+  .text-gradient-yellow {
+    background: linear-gradient(90deg, #ffa000, #ffc107, #ffd54f);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
   body {
     @apply bg-background text-foreground;
   }
+  * {
+    scrollbar-width: thin; /* Làm thanh scrollbar mỏng hơn trên Firefox */
+  }
+  *::-webkit-scrollbar {
+    width: 12px; /* Tăng độ rộng của scrollbar để tạo khoảng trống */
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent; /* Nền của track scrollbar */
+    border: 2px solid transparent; /* Tạo hiệu ứng padding bằng border */
+    border-radius: 10px; /* Bo góc cho track */
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--accent-yellow); /* Màu của thanh cuộn */
+    border-radius: 10px; /* Bo góc cho thanh cuộn */
+    border: 2px solid transparent; /* Tạo khoảng cách giữa thumb và track */
+  }
+}
+
+/* globals.css */
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: var(--secondary-dark); /* Match your dark background */
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--tertiary-dark); /* Primary yellow */
+  border-radius: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: var(--tertiary-dark); /* Slightly darker yellow on hover */
+}
+
+/* Optional: Firefox support */
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--tertiary-dark) var(--secondary-dark);
+}
+
+/* Custom sheet close for header sheet*/
+.custom-sheet > button.absolute {
+  color: white; /* changes icon stroke */
+}
+
+.custom-sheet > button.absolute:hover {
+  color: #facc15; /* Tailwind yellow-400 */
+}
+
+/* Hide calender icon */
+input.hide-icon-calendar[type='date']::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
 }
