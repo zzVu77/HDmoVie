@@ -45,6 +45,7 @@ export class MovieService {
     try {
       // 1. Get movie info with genres and casts
       const movie = await this.movieRepository.findById(movieId)
+      console.log(movie, 'movie')
       if (!movie) {
         throw new Error('Movie not found')
       }
@@ -73,7 +74,11 @@ export class MovieService {
       // 5. Get up to 5 movies with same genres (excluding itself)
       const genres = movie.getGenres()
       const genreIds = genres.map((genre) => genre.getId())
-      const relatedMovies = await this.movieRepository.findMoviesByGenreIds(genreIds, movieId, 5)
+      const relatedMovies = await this.movieRepository.findMoviesByGenreIds(
+        genreIds.length !== 0 ? genreIds : [''],
+        movieId,
+        5,
+      )
 
       // 6. Check if user has commented
       const hasCommented =
