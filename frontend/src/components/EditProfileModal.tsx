@@ -58,7 +58,7 @@ export function EditProfileModal({
       setIsLoading(true)
       await updateProfile(id, values.fullName, values.dateOfBirth)
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Error when fetching follow interaction')
+      setError(error instanceof Error ? error.message : 'Error occurs, please try again later.')
     } finally {
       setIsLoading(false)
       handleCallBack(error === null)
@@ -129,7 +129,7 @@ export function EditProfileModal({
               name='dateOfBirth'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='text-white'>Release Date (Month/Day/Year)</FormLabel>
+                  <FormLabel className='text-white'>Date of Birth (Month/Day/Year)</FormLabel>
                   <FormControl>
                     <Input
                       type='date'
