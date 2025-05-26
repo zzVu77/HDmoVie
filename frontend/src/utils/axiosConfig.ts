@@ -30,6 +30,18 @@ axiosInstance.interceptors.response.use(
     return response
   },
   (error) => {
+    // Xử lý các lỗi xác thực và chuyển hướng ngay lập tức
+    if (
+      error.response?.status === 403 ||
+      error.message?.includes('Error in fetching your profile') ||
+      (error.response?.data?.message &&
+        (error.response.data.message === 'Can not decode token' ||
+          error.response.data.message === 'Authentication failed'))
+    ) {
+      // Xóa token và chuyển hướng ngay lập tức
+      localStorage.removeItem('access-token')
+      return new Promise(() => {}) // Ngăn chặn promise rejection để tránh hiển thị lỗi
+    }
     return Promise.reject(error)
   },
 )
