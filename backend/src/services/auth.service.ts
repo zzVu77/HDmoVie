@@ -41,7 +41,11 @@ export class AuthService {
     try {
       const decoded = AuthService.verifyRefreshToken(refreshToken) as { id: string; email: string; role: string }
 
+      if (!decoded) {
+        return ''
+      }
       const user = await this.registeredUserRepository.findByEmail(decoded.email)
+
       if (!user || user['refreshToken'] !== refreshToken || user.isTokenExpired()) {
         throw new Error('Invalid or expired refresh token')
       }
@@ -64,7 +68,7 @@ export class AuthService {
     try {
       return jwt.verify(token, REFRESH_TOKEN_SECRET)
     } catch {
-      throw new Error('Invalid refresh token')
+      return null
     }
   }
 
