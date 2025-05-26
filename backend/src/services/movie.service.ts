@@ -45,7 +45,6 @@ export class MovieService {
     try {
       // 1. Get movie info with genres and casts
       const movie = await this.movieRepository.findById(movieId)
-      console.log(movie, 'movie')
       if (!movie) {
         throw new Error('Movie not found')
       }
