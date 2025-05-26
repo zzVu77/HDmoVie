@@ -118,7 +118,7 @@ const MovieDetail = () => {
                 <div className='pb-8' key={index}>
                   <MovieComment
                     id={comment.id}
-                    userName={comment.userName}
+                    user={comment.user}
                     comment={comment.comment}
                     date={comment.date}
                     rating={comment.rating}
