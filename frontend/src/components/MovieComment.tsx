@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader } from './ui/card'
 import { Text, Title } from './ui/typography'
 import ReportDialog from './ReportModal'
 
-const MovieComment = ({ userName, comment, date, rating, id }: MovieCommentProps) => {
+const MovieComment = ({ user, comment, date, rating, id }: MovieCommentProps) => {
   // console.log('MovieComment', userName, comment, date, rating)
   return (
     <div>
@@ -16,15 +16,20 @@ const MovieComment = ({ userName, comment, date, rating, id }: MovieCommentProps
         className='w-full flex flex-col sm:flex-row items-center gap-2 md:gap-10 bg-tertiary-dark border-none drop-shadow-white-glow py-5 justify-center'
       >
         <CardHeader className='px-5  w-full md:w-auto flex justify-center md:justify-start'>
-          <Avatar className='w-[50px] h-[50px]'>
-            <AvatarImage src='https://github.com/shadcn.png' />
-            <AvatarFallback>{userName?.charAt(0) || 'A'}</AvatarFallback>
-          </Avatar>
+          <a href={`/profile/${user?.id}`}>
+            <Avatar className='w-[50px] h-[50px]'>
+              <AvatarImage src='https://github.com/shadcn.png' />
+              <AvatarFallback>{user?.fullName?.charAt(0) || 'A'}</AvatarFallback>
+            </Avatar>
+          </a>
         </CardHeader>
         <CardContent className='w-full'>
           <div className='flex flex-col gap-2'>
             <div className='flex flex-col md:flex-row items-center justify-between gap-2'>
-              <Title level={4}>{userName}</Title>
+              <a href={`/profile/${user?.id}`}>
+                <Title level={4}>{user?.fullName ?? 'Unknown'}</Title>
+              </a>
+
               <div className='flex flex-row items-center gap-2 h-auto'>
                 <Text body={4} className='text-gray-300 italic'>
                   {new Date(date).toLocaleDateString('en-US')}
