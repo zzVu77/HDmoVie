@@ -148,7 +148,10 @@ export type BlogPost = {
 }
 export type MovieCommentProps = {
   id: string
-  userName: string
+  user: {
+    id: string
+    fullName: string
+  }
   comment: string
   rating: number
   date: string

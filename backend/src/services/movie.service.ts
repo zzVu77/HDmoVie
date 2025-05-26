@@ -60,7 +60,10 @@ export class MovieService {
         const userRate = rates.find((rate) => rate.getUser().getId() === comment.getUser().getId())
         return {
           id: comment.getId(),
-          userName: comment.getUser().getFullName(),
+          user: {
+            id: comment.getUser().getId(),
+            fullName: comment.getUser().getFullName(),
+          },
           comment: comment.getContent(),
           rating: userRate ? userRate.getRateScore() : 0,
           date: comment.getDate(),
