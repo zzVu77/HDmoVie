@@ -38,6 +38,7 @@ const ListWatchlistDialog = ({ watchlist, children, isOwner = false }: Props) =>
                     watchlistMovie={{
                       index: index + 1,
                       id: movie.id,
+                      title: movie.title,
                       description: movie.description,
                       posterSource: movie.posterSource,
                       releaseYear: movie.releaseYear,
