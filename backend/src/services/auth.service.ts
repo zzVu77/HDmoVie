@@ -2,8 +2,12 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access_secret'
-const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'refresh_secret'
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET as string
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET as string
+
+if (!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
+  throw new Error('JWT secrets are not defined in environment variables')
+}
 
 export class AuthService {
   constructor(private registeredUserRepository: RegisteredUserRepository) {}
