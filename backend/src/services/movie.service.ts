@@ -72,14 +72,20 @@ export class MovieService {
       const genreIds = genres.map((genre) => genre.getId())
       const relatedMovies = await this.movieRepository.findMoviesByGenreIds(genreIds, movieId, 5)
 
-      // 6. Check if user has commented
-      const hasCommented =
-        userId === undefined ? true : comments.some((comment) => String(comment.getUser().getId()) === String(userId))
+      // 6. Determine user comment status
+      let status: 'unauthorized' | 'commented' | 'not_commented'
 
-      console.log(userId, 'userId')
+      if (!userId) {
+        status = 'unauthorized'
+      } else if (comments.some((comment) => String(comment.getUser().getId()) === String(userId))) {
+        status = 'commented'
+      } else {
+        status = 'not_commented'
+      }
+
       // 7. Return combined data
       return {
-        status: hasCommented,
+        status,
         movie,
         comments: transformedComments,
         relatedMovies,
