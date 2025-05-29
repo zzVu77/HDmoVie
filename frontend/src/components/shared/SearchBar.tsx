@@ -1,10 +1,10 @@
 import { cn } from '@/lib/utils'
 import { getMovies, searchMoviesByTitle } from '@/services/movieService'
-import blogService from '@/services/blogService'
 import { MovieType, BlogPost } from '@/types'
 import { Search } from 'lucide-react'
 import { useState } from 'react'
 import { Input } from '../ui/input'
+import blogService from '@/services/BlogService'
 
 interface SearchBarProps {
   placeholder?: string

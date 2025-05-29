@@ -4,9 +4,9 @@ import CommentSection from '@/components/CommentSection'
 import Wrapper from '@/components/shared/Wrapper'
 import { Text } from '@/components/ui/typography'
 import { useParams } from 'react-router-dom'
-import BlogService from '@/services/blogService'
 import { Loader2 } from 'lucide-react'
 import { BlogPost } from '@/types'
+import BlogServices from '@/services/BlogService'
 
 const BlogDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -22,7 +22,7 @@ const BlogDetail = () => {
       setError(null)
 
       try {
-        const response = await BlogService.getBlogById(id)
+        const response = await BlogServices.getBlogById(id)
         setBlog(response.data)
       } catch (err: unknown) {
         setError((err as Error).message)

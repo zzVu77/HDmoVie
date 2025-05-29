@@ -48,7 +48,10 @@ export const CommentService = {
   transformPostMovieCommentResponse: (response: MovieCommentResponse): MovieCommentProps => {
     return {
       id: response.id,
-      userName: response.user.fullName,
+      user: {
+        id: response.user.id,
+        fullName: response.user.fullName,
+      },
       comment: response.content,
       date: new Date(response.createdAt).toLocaleString(),
       rating: response.score,
@@ -57,7 +60,10 @@ export const CommentService = {
   transformGetMovieCommentResponse: (response: MovieCommentProps): MovieCommentProps => {
     return {
       id: response.id,
-      userName: response.userName,
+      user: {
+        id: response.user.id,
+        fullName: response.user.fullName,
+      },
       comment: response.comment,
       date: new Date(response.date).toLocaleString(),
       rating: response.rating,

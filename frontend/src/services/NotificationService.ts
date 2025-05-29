@@ -5,11 +5,13 @@ export interface Notification {
   time: Date
   status: 'UNREAD' | 'READ'
   type: 'COMMENT' | 'FOLLOW' | 'LIKE' | 'REPORT'
-  owner: {  // user who received the notification
+  owner: {
+    // user who received the notification
     id: string
     fullName: string
   }
-  user: {  // user who triggered the notification
+  user: {
+    // user who triggered the notification
     id: string
     fullName: string
   }
