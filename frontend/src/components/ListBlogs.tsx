@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react'
 import BlogCard from './BlogCard'
+import SearchBar from './shared/SearchBar'
 import { Text } from './ui/typography'
 import { Loader2 } from 'lucide-react'
-import { BlogPost } from '@/types'
-import BlogService from '@/services/BlogService'
+import { BlogPost, MovieType } from '@/types'
+import BlogService from '@/services/blogService'
 
 interface ListBlogsProps {
   userId?: string
   blogs?: BlogPost[]
+  showSearchBar?: boolean
 }
 
-const ListBlogs = ({ userId, blogs: propBlogs }: ListBlogsProps) => {
+const ListBlogs = ({ userId, blogs: propBlogs, showSearchBar = false }: ListBlogsProps) => {
   const [blogs, setBlogs] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -44,6 +46,17 @@ const ListBlogs = ({ userId, blogs: propBlogs }: ListBlogsProps) => {
     fetchBlogs()
   }, [propBlogs])
 
+  const handleSearch = (searchResults: string | MovieType[] | BlogPost[]) => {
+    try {
+      if (Array.isArray(searchResults) && searchResults.length > 0 && 'content' in searchResults[0]) {
+        setBlogs(searchResults as BlogPost[])
+        setError(null)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error searching blogs')
+    }
+  }
+
   if (loading) {
     return (
       <div className='flex justify-center items-center py-12'>
@@ -60,26 +73,34 @@ const ListBlogs = ({ userId, blogs: propBlogs }: ListBlogsProps) => {
     )
   }
 
-  if (blogs.length === 0) {
-    return (
-      <div className='flex justify-center items-center py-10'>
-        <Text className='text-muted-foreground'>No blogs found</Text>
-      </div>
-    )
-  }
-
   return (
     <div className='flex flex-col items-center justify-center w-full'>
-      {blogs.map((blog, index) => (
-        <BlogCard
-          key={blog.id}
-          blog={blog}
-          isFirst={index === 0}
-          isLast={index === blogs.length - 1}
-          isShowCommentDivider={false}
-          userId={userId}
-        />
-      ))}
+      {showSearchBar && (
+        <div className='w-full mb-6'>
+          <SearchBar
+            searchType='blogs'
+            placeholder='Search blogs by content, author, or tags...'
+            onSearch={handleSearch}
+          />
+        </div>
+      )}
+
+      {blogs.length === 0 ? (
+        <div className='flex justify-center items-center py-10'>
+          <Text className='text-muted-foreground'>No blogs found</Text>
+        </div>
+      ) : (
+        blogs.map((blog, index) => (
+          <BlogCard
+            key={blog.id}
+            blog={blog}
+            isFirst={index === 0}
+            isLast={index === blogs.length - 1}
+            isShowCommentDivider={false}
+            userId={userId}
+          />
+        ))
+      )}
     </div>
   )
 }

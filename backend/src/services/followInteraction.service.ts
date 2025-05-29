@@ -2,14 +2,15 @@ import { FollowInteraction } from '~/models/followInteraction.model'
 import { RegisteredUser } from '~/models/registeredUser.model'
 import { FollowInteractionRepository } from '~/repositories/followInteraction.repository'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
+import { NotificationEventManager } from '~/patterns/observers/notification-event-manager'
 
 export class FollowInteractionService {
   constructor(
     private followInteractionRepository: FollowInteractionRepository,
     private userRepository: RegisteredUserRepository,
+    private notificationEventManager: NotificationEventManager,
   ) {}
 
-  // Get user follow interaction
   public async getUserFollowInteraction(userId: string) {
     try {
       const followInteraction = await this.followInteractionRepository.findByUserId(userId)
@@ -24,7 +25,6 @@ export class FollowInteractionService {
     }
   }
 
-  // Get user follower list
   public async getUserFollowers(userId: string): Promise<RegisteredUser[]> {
     try {
       const followInteraction = await this.followInteractionRepository.findByUserId(userId)
@@ -39,7 +39,6 @@ export class FollowInteractionService {
     }
   }
 
-  // Get user following list
   public async getUserFollowings(userId: string): Promise<RegisteredUser[]> {
     try {
       const followInteraction = await this.followInteractionRepository.findByUserId(userId)
@@ -53,9 +52,9 @@ export class FollowInteractionService {
       throw new Error((error as Error).message)
     }
   }
+
   public async followUser(followerId: string, targetUserId: string): Promise<void> {
     try {
-      // Validate users exist
       const follower = await this.userRepository.findById(followerId)
       const targetUser = await this.userRepository.findById(targetUserId)
 
@@ -71,11 +70,9 @@ export class FollowInteractionService {
         throw new Error('Users cannot follow themselves')
       }
 
-      // Get follow interactions for both users
       let followerInteraction = await this.followInteractionRepository.findByUserId(followerId)
       let targetUserInteraction = await this.followInteractionRepository.findByUserId(targetUserId)
 
-      // Check if each user follow interaction exist or not, if not --> create
       if (!followerInteraction) {
         followerInteraction = new FollowInteraction(follower)
         await this.followInteractionRepository.addFollowInteraction(followerInteraction)
@@ -86,15 +83,23 @@ export class FollowInteractionService {
         await this.followInteractionRepository.addFollowInteraction(targetUserInteraction)
       }
 
-      // Check if already following
       const isAlreadyFollowing = targetUserInteraction.getFollowers().some((user) => user.getId() === followerId)
       if (isAlreadyFollowing) {
         throw new Error('Already following this user')
       }
 
-      // Update follow relationships
       await this.followInteractionRepository.addFollower(targetUserInteraction.getId(), follower)
       await this.followInteractionRepository.addFollowing(followerInteraction.getId(), targetUser)
+
+      // Notify observers about the follow event
+      await this.notificationEventManager.notify({
+        type: 'FOLLOW',
+        data: {
+          follower: follower,
+          targetUser: targetUser,
+        },
+        timestamp: new Date(),
+      })
 
       return
     } catch (error) {
@@ -102,10 +107,8 @@ export class FollowInteractionService {
     }
   }
 
-  // Unfollow a user
   public async unfollowUser(followerId: string, targetUserId: string): Promise<void> {
     try {
-      // Validate users exist
       const follower = await this.userRepository.findById(followerId)
       const targetUser = await this.userRepository.findById(targetUserId)
 
@@ -117,7 +120,6 @@ export class FollowInteractionService {
         throw new Error('Target user not found')
       }
 
-      // Get follow interactions for both users
       const followerInteraction = await this.followInteractionRepository.findByUserId(followerId)
       const targetUserInteraction = await this.followInteractionRepository.findByUserId(targetUserId)
 
@@ -125,13 +127,11 @@ export class FollowInteractionService {
         throw new Error('Follow interaction not found')
       }
 
-      // Check if actually following
       const isFollowing = targetUserInteraction.getFollowers().some((user) => user.getId() === followerId)
       if (!isFollowing) {
         throw new Error('Not following this user')
       }
 
-      // Update follow relationships
       await this.followInteractionRepository.removeFollower(targetUserInteraction.getId(), followerId)
       await this.followInteractionRepository.removeFollowing(followerInteraction.getId(), targetUserId)
 

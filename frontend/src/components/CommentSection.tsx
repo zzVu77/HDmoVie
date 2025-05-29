@@ -61,6 +61,19 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
     return rootComments
   }
 
+  // Function to scroll to a specific comment
+  const scrollToComment = (commentId: string) => {
+    const element = document.getElementById(`comment-${commentId}`)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      // Add a highlight effect
+      element.classList.add('bg-tertiary-dark')
+      setTimeout(() => {
+        element.classList.remove('bg-tertiary-dark')
+      }, 2000)
+    }
+  }
+
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -73,6 +86,14 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
         // Transform the comments data structure
         const organizedComments = organizeComments(response.data)
         setComments(organizedComments)
+
+        // Check if there's a comment ID in the URL hash
+        const hash = window.location.hash
+        if (hash) {
+          const commentId = hash.substring(1) // Remove the # symbol
+          // Wait for comments to be rendered
+          setTimeout(() => scrollToComment(commentId), 100)
+        }
       } catch (err: unknown) {
         alert((err as Error).message)
       } finally {

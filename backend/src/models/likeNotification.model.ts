@@ -1,17 +1,25 @@
 import { IsNotEmpty } from 'class-validator'
-import { ChildEntity, JoinColumn, ManyToOne } from 'typeorm'
+import { ChildEntity, JoinColumn, OneToOne } from 'typeorm'
 import { Notification } from './notification.model'
+import { LikeInteraction } from './likeInteraction.model'
 import { RegisteredUser } from './registeredUser.model'
 
-@ChildEntity('LIKE_NOTI')
+@ChildEntity('LIKE')
 export class LikeNotification extends Notification {
-  @ManyToOne(() => RegisteredUser, { nullable: true, onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
-  @IsNotEmpty({ message: 'User is required' })
-  protected user!: RegisteredUser
+  @OneToOne(() => LikeInteraction, { nullable: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'likeInteractionId', referencedColumnName: 'id' })
+  @IsNotEmpty({ message: 'Like interaction is required' })
+  protected like!: LikeInteraction
+
   //Methods
+  constructor(like?: LikeInteraction, owner?: RegisteredUser) {
+    super()
+    if (like) this.like = like
+    if (owner) this.owner = owner
+  }
+
   // Getter and Setter
-  public getUser(): RegisteredUser {
-    return this.user
+  public getLike(): LikeInteraction {
+    return this.like
   }
 }

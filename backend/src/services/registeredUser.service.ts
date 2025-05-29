@@ -8,8 +8,9 @@ import { RegisteredUser } from '../models/registeredUser.model'
 export class RegisteredUserService {
   constructor(private registeredUserRepository: RegisteredUserRepository) {}
 
-  async createUser(userData: RegisteredUser): Promise<RegisteredUser> {
+  async createUser(email: string, password: string, fullName: string, dateOfBirth: Date): Promise<RegisteredUser> {
     try {
+      const userData = new RegisteredUser(email, password, fullName, dateOfBirth)
       if (!RegisteredUser.isValidDOB(userData)) {
         throw new Error('User must be at least 16 years old')
       }
@@ -24,6 +25,29 @@ export class RegisteredUserService {
     } catch (error) {
       throw new Error(`${(error as Error).message}`)
     }
+  }
+  private async verifyOtp(email: string, otp: string) {
+    const savedOtp = await redisClient.get(`otp:${email}`)
+    if (!savedOtp) {
+      return { success: false, errorMessage: 'OTP expired' }
+    }
+    if (savedOtp !== otp) {
+      return { success: false, errorMessage: 'Invalid OTP' }
+    }
+    return { success: true }
+  }
+  async verifyOtpForReset(email: string, otp: string) {
+    const verifyResult = await this.verifyOtp(email, otp)
+    if (!verifyResult.success) {
+      return verifyResult
+    }
+
+    // Nếu verify thành công, chúng ta có thể thêm một flag trong Redis
+    // để đánh dấu rằng OTP đã được verify và có thể dùng để reset password
+    const resetKey = `reset:${email}`
+    await redisClient.set(resetKey, 'verified', { EX: 5 * 60 }) // 5 phút để reset password
+
+    return { success: true, message: 'OTP verified successfully' }
   }
   async forgotPassword(email: string) {
     const user = await this.registeredUserRepository.findOneByEmail(email)
@@ -49,9 +73,16 @@ export class RegisteredUserService {
   }
 
   async resetPassword(email: string, otp: string, newPassword: string) {
-    const savedOtp = await redisClient.get(`otp:${email}`)
-    if (savedOtp !== otp) {
-      return { success: false, errorMessage: 'Invalid OTP' }
+    const verifyResult = await this.verifyOtp(email, otp)
+    if (!verifyResult.success) {
+      return verifyResult
+    }
+
+    // Check xem có flag reset không
+    const resetKey = `reset:${email}`
+    const canReset = await redisClient.get(resetKey)
+    if (!canReset) {
+      return { success: false, errorMessage: 'Please verify OTP first' }
     }
 
     const user = await this.registeredUserRepository.findOneByEmail(email)

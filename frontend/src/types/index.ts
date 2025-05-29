@@ -26,6 +26,15 @@ export type ReporterType = {
   id: string
   fullName: string
 }
+export type MovieCommentReportType = {
+  id: string
+  reporter: ReporterType
+  reason: string
+  content: string
+  commentId: string
+  movieId: string
+  title: string
+}
 
 export type BlogCommentReportType = {
   id: string
@@ -34,6 +43,13 @@ export type BlogCommentReportType = {
   dateReported: string
   content: string
   commentId: string
+  blogId: string
+}
+export type BlogReportType = {
+  id: string
+  reporter: ReporterType
+  reason: string
+  content: string
   blogId: string
 }
 
@@ -48,6 +64,7 @@ export type RegisteredUserProps = {
   email?: string
   dateOfBirth?: Date
 }
+
 export type WatchlistMovieProps = {
   index?: number
   id?: string
@@ -69,7 +86,21 @@ export type WatchlistProps = {
 }
 export type TagType = {
   id?: string
-  name?: string
+  name: string
+}
+
+export type BlogOwnerType = {
+  id: string
+  fullName: string
+}
+
+export type BlogType = {
+  id: string
+  content: string
+  dateCreated: string
+  owner: BlogOwnerType
+  tags: TagType[]
+  imageUrls: Array<string | { id: string; url: string }>
 }
 export type MediaItem = {
   index: number
@@ -82,6 +113,12 @@ export type NotificationItemProps = {
   message: string
   time: Date
   status: 'UNREAD' | 'READ'
+  type: 'COMMENT' | 'FOLLOW' | 'LIKE' | 'REPORT'
+  userId?: string
+  commentId?: string
+  followerId?: string
+  reportId?: string
+  blogId?: string
 }
 export type RegisteredUserType = {
   id: string
@@ -97,36 +134,38 @@ export type BlogCommentType = {
     id: string
   }
 }
+
 export type BlogPost = {
   id: string
   content: string
-  dateCreated: Date
+  dateCreated: string
   owner: RegisteredUserType
   tags: TagType[]
   likeCount: number
   commentCount: number
   imageUrls?: { id: string; url: string }[]
+  isLiked: boolean
 }
 export type MovieCommentProps = {
-  userName: string
+  id: string
+  user: {
+    id: string
+    fullName: string
+  }
   comment: string
   rating: number
   date: string
 }
 
 export type MovieCommentResponse = {
-  status: string
-  data: {
+  id: string
+  score: number
+  content: string
+  movieId: string
+  createdAt: string
+  user: {
     id: string
-    score: number
-    content: string
-    userId: string
-    movieId: string
-    createdAt: string
-    user: {
-      id: string
-      fullName: string
-    }
+    fullName: string
   }
 }
 
@@ -135,4 +174,10 @@ export type MovieDetailResponse = {
   movie: MovieType
   comments: MovieCommentProps[]
   relatedMovies: MovieType[]
+}
+
+export type LikeResponse = {
+  id: string
+  blogID: string
+  likers: RegisteredUserType[]
 }

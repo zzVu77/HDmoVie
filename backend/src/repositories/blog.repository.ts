@@ -8,7 +8,47 @@ export class BlogRepository {
     this.repository = dataSource.getRepository(Blog)
   }
 
-  async findById(id: string): Promise<any> {
+  // async findById(id: string): Promise<any> {
+  //   const blogs = await this.repository
+  //     .createQueryBuilder('blog')
+  //     .select([
+  //       'blog.id as blog_id',
+  //       'blog.content as blog_content',
+  //       'blog.dateCreated as blog_dateCreated',
+  //       'owner.id as owner_id',
+  //       'owner.fullName as owner_fullName',
+  //       'tags.id as tags_id',
+  //       'tags.name as tags_name',
+  //       'imageUrls.id as imageUrls_id',
+  //       'imageUrls.url as imageUrls_url',
+  //     ])
+  //     .addSelect(
+  //       `(SELECT COUNT(*)
+  //       FROM like_interactions_users liu
+  //       JOIN like_interactions li ON liu.likeInteractionId = li.id
+  //       WHERE li.blogId = blog.id)`,
+  //       'likeCount',
+  //     )
+  //     .addSelect(
+  //       `(SELECT COUNT(*)
+  //       FROM comments c
+  //       WHERE c.blogId = blog.id AND c.type = 'BLOG')`,
+  //       'commentCount',
+  //     )
+  //     .leftJoin('blog.owner', 'owner')
+  //     .leftJoin('blog.tags', 'tags')
+  //     .leftJoin('blog.imageUrls', 'imageUrls')
+  //     .where('blog.id = :id', { id })
+  //     .getRawMany()
+
+  //   if (!blogs.length) {
+  //     return null
+  //   }
+
+  //   // Transform raw query results into proper structure
+  //   return this.transformToResponseDTO(blogs)
+  // }
+  async findById(id: string, userId: string): Promise<any> {
     const blogs = await this.repository
       .createQueryBuilder('blog')
       .select([
@@ -22,6 +62,7 @@ export class BlogRepository {
         'imageUrls.id as imageUrls_id',
         'imageUrls.url as imageUrls_url',
       ])
+      // Tổng số lượt like
       .addSelect(
         `(SELECT COUNT(*) 
         FROM like_interactions_users liu 
@@ -29,23 +70,33 @@ export class BlogRepository {
         WHERE li.blogId = blog.id)`,
         'likeCount',
       )
+      // Tổng số comment
       .addSelect(
         `(SELECT COUNT(*) 
         FROM comments c 
         WHERE c.blogId = blog.id AND c.type = 'BLOG')`,
         'commentCount',
       )
+      // Check xem user có like bài viết không, trả về 1 hoặc 0
+      .addSelect(
+        `(SELECT 1 FROM like_interactions_users liu
+        JOIN like_interactions li ON liu.likeInteractionId = li.id
+        WHERE li.blogId = blog.id AND liu.userId = :userId
+        LIMIT 1)`,
+        'isLiked',
+      )
       .leftJoin('blog.owner', 'owner')
       .leftJoin('blog.tags', 'tags')
       .leftJoin('blog.imageUrls', 'imageUrls')
       .where('blog.id = :id', { id })
+      .setParameter('userId', userId)
       .getRawMany()
 
     if (!blogs.length) {
       return null
     }
 
-    // Transform raw query results into proper structure
+    // Vì subquery có thể trả về NULL nếu không tìm thấy, nên chuyển thành 0 hoặc 1 trong transform
     return this.transformToResponseDTO(blogs)
   }
 
@@ -79,7 +130,7 @@ export class BlogRepository {
     return blog
   }
 
-  async findAll(): Promise<any[]> {
+  async findAll(userId: string): Promise<any[]> {
     const blogs = await this.repository
       .createQueryBuilder('blog')
       .select([
@@ -106,10 +157,20 @@ export class BlogRepository {
         WHERE c.blogId = blog.id AND c.type = 'BLOG')`,
         'commentCount',
       )
+      // Check xem user có like bài viết không, trả về 1 hoặc 0
+      .addSelect(
+        `(SELECT 1 FROM like_interactions_users liu
+        JOIN like_interactions li ON liu.likeInteractionId = li.id
+        WHERE li.blogId = blog.id AND liu.userId = :userId
+        LIMIT 1)`,
+        'isLiked',
+      )
       .leftJoin('blog.owner', 'owner')
       .leftJoin('blog.tags', 'tags')
       .leftJoin('blog.imageUrls', 'imageUrls')
       .orderBy('blog.dateCreated', 'DESC')
+      .setParameter('userId', userId) // 👈 Thêm dòng này để truyền tham số
+
       .getRawMany()
 
     // Group by blog_id and transform into the right structure
@@ -167,6 +228,58 @@ export class BlogRepository {
     // Group by blog_id and transform into the right structure
     return this.transformToResponseDTOList(blogs)
   }
+  async searchBlogs(query: string, userId: string): Promise<any[]> {
+    const blogs = await this.repository
+      .createQueryBuilder('blog')
+      .select([
+        'blog.id as blog_id',
+        'blog.content as blog_content',
+        'blog.dateCreated as blog_dateCreated',
+        'owner.id as owner_id',
+        'owner.fullName as owner_fullName',
+        'tags.id as tags_id',
+        'tags.name as tags_name',
+        'imageUrls.id as imageUrls_id',
+        'imageUrls.url as imageUrls_url',
+      ])
+      .addSelect(
+        `(SELECT COUNT(*) 
+      FROM like_interactions_users liu 
+      JOIN like_interactions li ON liu.likeInteractionId = li.id 
+      WHERE li.blogId = blog.id)`,
+        'likeCount',
+      )
+      .addSelect(
+        `(SELECT COUNT(*) 
+      FROM comments c 
+      WHERE c.blogId = blog.id AND c.type = 'BLOG')`,
+        'commentCount',
+      )
+      .addSelect(
+        `(SELECT 1 FROM like_interactions_users liu
+      JOIN like_interactions li ON liu.likeInteractionId = li.id
+      WHERE li.blogId = blog.id AND liu.userId = :userId
+      LIMIT 1)`,
+        'isLiked',
+      )
+      .leftJoin('blog.owner', 'owner')
+      .leftJoin('blog.tags', 'tags')
+      .leftJoin('blog.imageUrls', 'imageUrls')
+      .where('LOWER(blog.content) LIKE LOWER(:query)', {
+        query: `%${query}%`,
+      })
+      .orWhere('LOWER(owner.fullName) LIKE LOWER(:query)', {
+        query: `%${query}%`,
+      })
+      .orWhere('LOWER(tags.name) LIKE LOWER(:query)', {
+        query: `%${query}%`,
+      })
+      .orderBy('blog.dateCreated', 'DESC')
+      .setParameter('userId', userId)
+      .getRawMany()
+
+    return this.transformToResponseDTOList(blogs)
+  }
 
   // Helper method to transform raw query results
   private transformToResponseDTO(rawBlogs: any[]): any {
@@ -189,6 +302,7 @@ export class BlogRepository {
           imageUrls: [],
           likeCount: parseInt(row.likeCount ?? '0'),
           commentCount: parseInt(row.commentCount ?? '0'),
+          isLiked: Boolean(row.isLiked ?? false),
         }
       }
 
@@ -235,6 +349,7 @@ export class BlogRepository {
           imageUrls: [],
           likeCount: parseInt(row.likeCount ?? '0'),
           commentCount: parseInt(row.commentCount ?? '0'),
+          isLiked: Boolean(row.isLiked ?? false),
         }
         blogDict[blogId] = blog
         orderedBlogs.push(blog) // maintain order

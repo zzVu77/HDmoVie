@@ -105,7 +105,7 @@ const ProfileTabs = ({
               <p className='text-red-500'>{watchlistsError}</p>
             </div>
           ) : (
-            <ListWatchlist data={watchlists} />
+            <ListWatchlist data={watchlists} isOwner={isOwner} />
           )}
         </TabsContent>
       </Tabs>

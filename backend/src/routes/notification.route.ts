@@ -12,6 +12,12 @@ const notificationService = new NotificationService(notificationRepository)
 const notificationController = new NotificationController(notificationService)
 
 // Get notifications - requires authentication (user can only view their own notifications)
-router.get('/:userId', authenticateToken, (req, res) => notificationController.viewAllNotifications(req, res))
+router.get('/', authenticateToken, (req, res) => notificationController.viewAllNotifications(req, res))
+
+// Mark notification as read - requires authentication
+router.put('/:notificationId/read', authenticateToken, (req, res) => notificationController.markAsRead(req, res))
+
+// Mark all notifications as read - requires authentication
+router.put('/read-all', authenticateToken, (req, res) => notificationController.markAllAsRead(req, res))
 
 export default router

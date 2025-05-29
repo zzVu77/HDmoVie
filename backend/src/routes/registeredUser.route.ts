@@ -25,7 +25,7 @@ registeredUserRouter.post('/login', loginUserMiddleware, (req, res) => registere
 registeredUserRouter.post('/forgot-password', (req, res) => registeredUserController.forgotPassword(req, res))
 
 registeredUserRouter.post('/reset-password', (req, res) => registeredUserController.resetPassword(req, res))
-
+registeredUserRouter.post('/verify-otp', (req, res) => registeredUserController.verifyOtp(req, res))
 // Protected routes - authentication required
 registeredUserRouter.get('/me', authenticateToken, (req, res) => registeredUserController.getProfile(req, res))
 

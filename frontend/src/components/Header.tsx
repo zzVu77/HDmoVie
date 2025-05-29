@@ -20,27 +20,20 @@ import { Link } from 'react-router-dom'
 import { SearchBar } from './SearchBar'
 import { apiGet } from '@/utils/axiosConfig'
 import { useNavigate } from 'react-router-dom'
+import { NotificationService, Notification as NotificationData } from '@/services/NotificationService'
+import { jwtDecode } from 'jwt-decode'
 
-export type NotificationType = {
-  id: string
-  message: string
-  time: Date
-  status: 'UNREAD' | 'READ'
-}
 const menuItems = [
   { label: 'Home', path: '/' },
   { label: 'Explore', path: '/explore' },
   { label: 'Blogs', path: '/blog' },
 ]
 
-const notifications: NotificationType[] = [
-  { id: '1', message: 'New comment on your post', time: new Date(), status: 'UNREAD' },
-  { id: '2', message: 'Your profile was updated', time: new Date(), status: 'READ' },
-  { id: '3', message: 'You are banned', time: new Date(), status: 'READ' },
-]
-
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [notifications, setNotifications] = useState<NotificationData[]>([])
+  const [notificationLoading, setNotificationLoading] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0)
   const searchRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 
@@ -52,7 +45,7 @@ export default function Header() {
   const pathMap: Record<string, string> = {
     Home: '/',
     Explore: '/explore',
-    Blog: '/blogs',
+    Blog: '/blog',
   }
 
   // Handle current time display
@@ -62,20 +55,111 @@ export default function Header() {
   // Down -> hide, up -> show
   const [prevScrollPos, setPrevScrollPos] = useState(window.scrollY)
   const [isVisible, setIsVisible] = useState(true)
+  const [isLogin, setIsLogin] = useState(false)
+  const token = localStorage.getItem('access-token')
+  let role: string | null = null
+  if (token) {
+    const decoded = jwtDecode(token) as { role: string }
+    role = decoded.role
+  }
   const handleLogout = async () => {
     await apiGet('/registeredusers/logout')
     localStorage.removeItem('access-token')
     setIsLogin(false)
     navigate('/')
   }
+
+  // Fetch notifications from API
+  const fetchNotifications = async () => {
+    if (!isLogin) return
+
+    try {
+      setNotificationLoading(true)
+      const notificationsData = (await NotificationService.getAllNotifications()).data
+      setNotifications(notificationsData)
+
+      // Count unread notifications
+      const unreadNotifications = notificationsData.filter((n: NotificationData) => n.status === 'UNREAD')
+      setUnreadCount(unreadNotifications.length)
+    } catch {
+      // If API fails, clear notifications
+      setNotifications([])
+      setUnreadCount(0)
+    } finally {
+      setNotificationLoading(false)
+    }
+  }
+
+  // Mark notification as read
+  const handleMarkAsRead = async (notificationId: string) => {
+    try {
+      await NotificationService.markAsRead(notificationId)
+
+      // Update local state
+      setNotifications((prev) => prev.map((n) => (n.id === notificationId ? { ...n, status: 'READ' as const } : n)))
+
+      // Update unread count
+      setUnreadCount((prev) => Math.max(0, prev - 1))
+    } catch {
+      throw new Error('Failed to mark notification as read')
+    }
+  }
+
+  // Mark all notifications as read
+  const handleMarkAllAsRead = async () => {
+    try {
+      await NotificationService.markAllAsRead()
+      // Update local state
+      setNotifications((prev) => prev.map((n) => ({ ...n, status: 'READ' as const })))
+
+      setUnreadCount(0)
+    } catch {
+      throw new Error('Failed to mark all notifications as read')
+    }
+  }
+
+  // Convert API notification to display format
+  const convertNotificationToDisplay = (apiNotification: NotificationData) => {
+    let message = ''
+    switch (apiNotification.type) {
+      case 'COMMENT':
+        message = apiNotification.user
+          ? `${apiNotification.user.fullName} commented on your post`
+          : 'Someone commented on your post'
+        break
+      case 'FOLLOW':
+        message = apiNotification.user
+          ? `${apiNotification.user.fullName} started following you`
+          : 'Someone started following you'
+        break
+      case 'LIKE':
+        message = apiNotification.user ? `${apiNotification.user.fullName} liked your post` : 'Someone liked your post'
+        break
+      case 'REPORT':
+        message = `Your content has been reported`
+        break
+      default:
+        message = 'You have a new notification'
+    }
+
+    return {
+      id: apiNotification.id,
+      message,
+      time: new Date(apiNotification.time), // Ensure time is converted to Date object
+      status: apiNotification.status,
+      type: apiNotification.type,
+      commentId: apiNotification.commentId,
+      followerId: apiNotification.followerId,
+      reportId: apiNotification.reportId,
+      blogId: apiNotification.blogId,
+    }
+  }
+
   useEffect(() => {
     const handleScroll = () => {
       // Take current scroll POS on the page
       const currentScrollPos = window.scrollY
-      // Check for visibility
-      // If pre pos > current pos --> scroll up --> show
-      // Other wise, hide
-      // Additional, current scroll pos is less than 10 will also show the header
+
       const visible = prevScrollPos > currentScrollPos || currentScrollPos < 10
 
       setIsVisible(visible)
@@ -103,29 +187,33 @@ export default function Header() {
       clearInterval(timer)
     }
   }, [])
-  const pathName = useLocation()
-  const [isLogin, setIsLogin] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('access-token')
     setIsLogin(!!token) // Converts token to true/false
   }, [])
 
-  // useEffect(() => {
-  //   apiPost('/comments/blog', {
-  //     blogId: '3',
-  //     content: 'This blog post was really insightful!',
-  //     parentCommentId: null,
-  //   })
-  //     .then((res) => console.log(res.data))
-  //     .catch((err) => console.error(err))
-  // }, [])
+  // Fetch notifications when user logs in
+  useEffect(() => {
+    if (isLogin) {
+      fetchNotifications()
+
+      // Set up polling for real-time updates (optional)
+      const interval = setInterval(fetchNotifications, 30000)
+
+      return () => clearInterval(interval)
+    } else {
+      // Clear notifications when user logs out
+      setNotifications([])
+      setUnreadCount(0)
+    }
+  }, [isLogin])
 
   return (
     <header
       className={`transition-transform duration-300 ease-in-out transform ${
         isVisible ? 'translate-y-0 drop-shadow-white-glow mt-1' : '-translate-y-full drop-shadow-none mt-0'
-      } flex h-20 w-[90vw] shrink-0 items-center justify-between px-4 md:px-6 text-white bg-tertiary-dark/55 rounded-3xl shadow-md fixed backdrop-blur-[2px] z-[999] top-0 left-1/2 -translate-x-1/2`}
+      } flex h-20 w-[90vw] shrink-0 items-center justify-between px-4 md:px-6 text-white bg-tertiary-dark/35 rounded-3xl shadow-md fixed backdrop-blur-[2px] z-[999] top-0 left-1/2 -translate-x-1/2`}
     >
       {/* Left Section: Hamburger Menu + Logo */}
       <div className='flex items-center'>
@@ -195,7 +283,7 @@ export default function Header() {
               to={item.path}
               className={cn(
                 `inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-md font-bold hover:text-secondary-yellow transition`,
-                item.path === pathName.pathname ? 'text-secondary-yellow' : 'text-white',
+                item.path === location.pathname ? 'text-secondary-yellow' : 'text-white',
               )}
             >
               {item.label}
@@ -214,27 +302,57 @@ export default function Header() {
           className={`items-center gap-1 md:gap-4 transition-all duration-200 ease-in-out ${isSearchOpen ? 'hidden sm:flex' : 'flex'}`}
         >
           {/* Notification Icon */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
-                <Notification
-                  size='32'
-                  className='h-5 w-5 text-white group-hover:text-accent-yellow cursor-pointer'
-                  variant='Bold'
-                />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align='end'
-              className='w-80 max-h-96 overflow-auto p-2 space-y-2 bg-secondary-dark border-tertiary-dark text-white z-[1000]'
-            >
-              {notifications.length > 0 ? (
-                notifications.map((n) => <NotificationItem key={n.id} {...n} />)
-              ) : (
-                <div className='text-sm text-muted-foreground px-2 py-4'>No notifications</div>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {isLogin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className='group relative hover:ring-2 hover:ring-offset-2 hover:ring-[var(--accent-yellow)] transition-all duration-200 ease-in-out rounded-full p-2'>
+                  <Notification
+                    size='32'
+                    className='h-5 w-5 text-white group-hover:text-accent-yellow cursor-pointer'
+                    variant='Bold'
+                  />
+                  {/* Unread notification badge */}
+                  {unreadCount > 0 && (
+                    <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold'>
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align='end'
+                className='w-80 max-h-96 overflow-auto p-2 space-y-2 bg-secondary-dark border-tertiary-dark text-white z-[1000]'
+              >
+                <div className='flex items-center justify-between px-2 py-1'>
+                  <Text body={4} className='font-semibold'>
+                    Notifications
+                  </Text>
+                  {unreadCount > 0 && (
+                    <button onClick={handleMarkAllAsRead} className='text-xs text-accent-yellow hover:underline'>
+                      Mark all as read
+                    </button>
+                  )}
+                </div>
+                <DropdownMenuSeparator className='bg-tertiary-dark' />
+
+                {notificationLoading ? (
+                  <div className='text-sm text-muted-foreground px-2 py-4 text-center'>Loading notifications...</div>
+                ) : notifications.length > 0 ? (
+                  notifications.map((n) => (
+                    <div
+                      key={n.id}
+                      onClick={() => n.status === 'UNREAD' && handleMarkAsRead(n.id)}
+                      className='cursor-pointer'
+                    >
+                      <NotificationItem {...convertNotificationToDisplay(n)} />
+                    </div>
+                  ))
+                ) : (
+                  <div className='text-sm text-muted-foreground px-2 py-4 text-center'>No notifications</div>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
           {/* Profile Dropdown */}
           <div className={cn(`hidden`, isLogin && `flex`)}>
@@ -250,6 +368,11 @@ export default function Header() {
               >
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator className='bg-tertiary-dark' />
+                {role === 'ADMIN' && (
+                  <Link to='/admin'>
+                    <DropdownMenuItem className='cursor-pointer'>Dashboard</DropdownMenuItem>
+                  </Link>
+                )}
                 <DropdownMenuGroup>
                   <Link to='/profile/'>
                     <DropdownMenuItem className='cursor-pointer'>Profile</DropdownMenuItem>

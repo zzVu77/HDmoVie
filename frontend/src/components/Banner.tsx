@@ -1,7 +1,7 @@
 import { dummyGenres } from '@/data/dummyData'
 import { cn } from '@/lib/utils'
 import { MovieType } from '@/types'
-import { Star1 } from 'iconsax-reactjs'
+import { SaveAdd, Star1 } from 'iconsax-reactjs'
 import { useMediaQuery } from 'usehooks-ts'
 import Desktop from './shared/Desktop'
 import { AspectRatio } from './ui/aspect-ratio'
@@ -9,6 +9,7 @@ import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { Text, Title } from './ui/typography'
 import { Link } from 'react-router-dom'
+import QuickAddToWatchlist from './QuickAddToWatchlist'
 interface BannerProps extends MovieType {
   isDesktop?: boolean
   position?: string
@@ -116,6 +117,18 @@ export const InformationContainer = ({
             </Badge>
           ))}
         </div>
+        {/* Quick Add to Watchlist Button */}
+        <div className='max-w-[300px]'>
+          <QuickAddToWatchlist movieId={id}>
+            <Button className='grow bg-tertiary-yellow w-full rounded-4xl hover:ease-in-out hover:scale-105 cursor-pointer transition-all duration-300'>
+              <SaveAdd size='32' color='#ffff' variant='Bold' />
+              <Text body={4} className=' font-bold leading-3'>
+                Add to Watchlist
+              </Text>
+            </Button>
+          </QuickAddToWatchlist>
+        </div>
+
         <Link to={`/movie/${id}`}>
           <Button
             type='button'

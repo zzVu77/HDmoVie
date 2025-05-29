@@ -104,3 +104,17 @@ export const deleteMovie = async (id: string): Promise<void> => {
     return handleApiError(error, 'deleting movie')
   }
 }
+export const createNewWatchlist = async (title: string): Promise<void> => {
+  try {
+    await apiPost('/watchlists/create-fast', { title })
+  } catch (error) {
+    return handleApiError(error, 'fast creating new watchlist')
+  }
+}
+export const addMovieToWatchlist = async (watchlistId: string, movieId: string): Promise<void> => {
+  try {
+    await apiPost(`/watchlists/${watchlistId}/add/${movieId}`, { movieId })
+  } catch (error) {
+    throw Error(error instanceof Error ? error.message : 'Failed to add movie to watchlist')
+  }
+}

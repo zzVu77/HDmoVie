@@ -18,8 +18,9 @@ export class CastService {
     }
   }
 
-  async createCast(castData: Cast): Promise<Cast> {
+  async createCast(name: string, profilePath: string): Promise<Cast> {
     try {
+      const castData = new Cast(name, profilePath)
       return await this.castRepository.create(castData)
     } catch (error) {
       throw new Error(`Failed to create cast: ${(error as Error).message}`)
@@ -45,11 +46,10 @@ export class CastService {
   async updateCast(id: string, name: string, profilePath: string): Promise<Cast | null> {
     const cast = await this.castRepository.findById(id)
 
-    const castData = new Cast(name, profilePath)
     if (!cast) {
       throw new Error('Cast not found')
     }
-    cast.updateCast(castData.getName(), castData.getProfilePath())
+    cast.updateCast(name, profilePath)
     return this.castRepository.update(cast)
   }
 }

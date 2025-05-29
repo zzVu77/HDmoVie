@@ -1,14 +1,14 @@
-// SearchBar.tsx
 import { cn } from '@/lib/utils'
 import { getMovies, searchMoviesByTitle } from '@/services/movieService'
-import { MovieType } from '@/types'
+import blogService from '@/services/blogService'
+import { MovieType, BlogPost } from '@/types'
 import { Search } from 'lucide-react'
 import { useState } from 'react'
 import { Input } from '../ui/input'
 
 interface SearchBarProps {
   placeholder?: string
-  onSearch?: (value: string | MovieType[]) => void
+  onSearch?: (value: string | MovieType[] | BlogPost[]) => void
   className?: string
   searchType: 'movies' | 'blogs'
 }
@@ -33,7 +33,28 @@ const SearchBar = ({ placeholder, onSearch, className, searchType = 'movies', ..
       } catch {
         throw new Error('Error fetching data from API')
       }
+    } else if (searchType === 'blogs') {
+      try {
+        if (searchValue.trim()) {
+          const response = await blogService.searchBlogs(searchValue)
+          if (onSearch) {
+            onSearch(response.data)
+          }
+        } else {
+          const response = await blogService.getAllBlogs()
+          if (onSearch) {
+            onSearch(response.data)
+          }
+        }
+      } catch {
+        throw new Error('Error fetching blogs from API')
+      }
     }
+  }
+
+  const getPlaceholder = () => {
+    if (placeholder) return placeholder
+    return searchType === 'movies' ? 'Search movies...' : 'Search blogs...'
   }
 
   return (
@@ -47,7 +68,7 @@ const SearchBar = ({ placeholder, onSearch, className, searchType = 'movies', ..
           'w-full pl-10 bg-primary-dark/80 text-[5px] h-12 text-primary-yellow shadow-none border-[3px] border-tertiary-dark/80 focus-within:border-none text-xl',
           className,
         )}
-        placeholder={placeholder || 'Search...'}
+        placeholder={getPlaceholder()}
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
         onKeyDown={(e) => {

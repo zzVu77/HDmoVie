@@ -4,12 +4,12 @@ import { CommentRepository } from '~/repositories/comment.repository'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { MovieRepository } from '~/repositories/movie.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
-
 import { CommentController } from '~/controllers/comment.controller'
 import { CommentService } from '~/services/comment.service'
+import { NotificationObserverConfig } from '~/config/notification-observer-config'
 
 import { createMovieCommentMiddleware, createBlogCommentMiddleware } from '~/middlewares/comment.middleware'
-import { authenticateToken } from '~/middlewares/auth.middleware'
+import { authenticateToken, isAdmin } from '~/middlewares/auth.middleware'
 
 const commentRouter = Router()
 
@@ -18,8 +18,14 @@ const commentRepository = new CommentRepository(AppDataSource)
 const userRepository = new RegisteredUserRepository(AppDataSource)
 const movieRepository = new MovieRepository(AppDataSource)
 const blogRepository = new BlogRepository(AppDataSource)
-
-const commentService = new CommentService(commentRepository, userRepository, movieRepository, blogRepository)
+const notificationEventManager = NotificationObserverConfig.initialize(AppDataSource)
+const commentService = new CommentService(
+  commentRepository,
+  userRepository,
+  movieRepository,
+  blogRepository,
+  notificationEventManager,
+)
 // Initialize CommentController
 const commentController = new CommentController(commentService)
 
@@ -29,6 +35,9 @@ commentRouter.post('/movie', authenticateToken, createMovieCommentMiddleware, (r
 )
 commentRouter.post('/blog', authenticateToken, createBlogCommentMiddleware, (req, res) =>
   commentController.commentOnBlog(req, res),
+)
+commentRouter.delete('/delete/:commentId', authenticateToken, isAdmin, (req, res) =>
+  commentController.deleteCommentBlog(req, res),
 )
 commentRouter.get('/blog/:blogId', authenticateToken, (req, res) => commentController.getBlogComments(req, res))
 commentRouter.get('/movie/:movieId', (req, res) => commentController.getMovieComments(req, res))

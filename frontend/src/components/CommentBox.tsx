@@ -55,7 +55,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onCommentAdded }) => {
 
       // Transform and call onCommentAdded with the new comment
       if (onCommentAdded) {
-        onCommentAdded(CommentService.transformMovieCommentResponse(response.data))
+        onCommentAdded(response)
       }
 
       toast.success('Review submitted successfully!')
@@ -96,7 +96,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({ onCommentAdded }) => {
                         <Star1
                           variant='Bold'
                           key={star}
-                          size={24}
+                          size={20}
                           className={`cursor-pointer transition-colors border-red-100 ${
                             (hoveredRating ?? field.value) >= star ? 'text-primary-yellow' : 'text-tertiary-dark'
                           }`}

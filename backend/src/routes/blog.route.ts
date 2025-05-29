@@ -6,7 +6,7 @@ import { BlogService } from '~/services/blog.service'
 import { RegisteredUserRepository } from '~/repositories/registeredUser.repository'
 import { TagRepository } from '~/repositories/tag.repository'
 import { createBlogMiddleware } from '~/middlewares/blog.middleware'
-import { authenticateToken } from '~/middlewares/auth.middleware'
+import { authenticateToken, optionalAuthenticateToken } from '~/middlewares/auth.middleware'
 // import { authMiddleware } from '~/middlewares/auth.middleware'
 
 const blogRouter = Router()
@@ -20,7 +20,8 @@ const blogService = new BlogService(blogRepository, userRepository, tagRepositor
 const blogController = new BlogController(blogService)
 
 // Define routes
-blogRouter.get('/', (req, res) => blogController.getAllBlogs(req, res))
+blogRouter.get('/', optionalAuthenticateToken, (req, res) => blogController.getAllBlogs(req, res))
+blogRouter.get('/search', authenticateToken, (req, res) => blogController.searchBlogs(req, res))
 blogRouter.get('/:blogId', authenticateToken, (req, res) => blogController.getBlogById(req, res))
 blogRouter.post('/', authenticateToken, createBlogMiddleware, (req, res) => blogController.createBlog(req, res))
 blogRouter.delete('/:blogId', authenticateToken, (req, res) => blogController.deleteBlog(req, res))

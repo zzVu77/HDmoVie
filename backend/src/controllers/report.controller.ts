@@ -7,9 +7,11 @@ export class ReportController {
   async getReportBlog(req: Request, res: Response): Promise<void> {
     try {
       const { blogId } = req.params
-      const reports = await this.reportService.getReportBlog(blogId)
+      const user = res.locals.user
+      const userId = user.id
+      const reports = await this.reportService.getReportBlog(blogId, userId)
       //console.log(reports)
-      res.status(201).json({ status: 'success', data: reports })
+      res.status(201).json(reports)
     } catch (error) {
       console.error('Error reporting blog:', error)
 
@@ -24,7 +26,25 @@ export class ReportController {
   async getReportCommentBlog(req: Request, res: Response): Promise<void> {
     try {
       const { blogId } = req.params
-      const reports = await this.reportService.getReportCommentBlog(blogId)
+      const user = res.locals.user
+      const userId = user.id
+      const reports = await this.reportService.getReportCommentBlog(blogId, userId)
+      //console.log(reports)
+      res.status(201).json(reports)
+    } catch (error) {
+      console.error('Error reporting blog:', error)
+
+      const message = (error as Error).message
+      if (message === 'Blog not found') {
+        res.status(404).json({ status: 'failed', message })
+      } else {
+        res.status(400).json({ status: 'failed', message })
+      }
+    }
+  }
+  async getReportCommentBlogAll(req: Request, res: Response): Promise<void> {
+    try {
+      const reports = await this.reportService.getReportCommentBlogAll()
       //console.log(reports)
       res.status(201).json({ status: 'success', data: reports })
     } catch (error) {
@@ -38,12 +58,45 @@ export class ReportController {
       }
     }
   }
+  async getReportCommentMovieAll(req: Request, res: Response): Promise<void> {
+    try {
+      const reports = await this.reportService.getReportCommentMovieAll()
+      //console.log(reports)
+      res.status(201).json({ status: 'success', data: reports })
+    } catch (error) {
+      console.error('Error reporting movie:', error)
+
+      const message = (error as Error).message
+      if (message === 'Blog not found') {
+        res.status(404).json({ status: 'failed', message })
+      } else {
+        res.status(400).json({ status: 'failed', message })
+      }
+    }
+  }
+  async getReportBlogAll(req: Request, res: Response): Promise<void> {
+    try {
+      const reports = await this.reportService.getReportBlogAll()
+      //console.log(reports)
+      res.status(201).json({ status: 'success', data: reports })
+    } catch (error) {
+      console.error('Error reporting blog:', error)
+
+      const message = (error as Error).message
+      if (message === 'Blog not found') {
+        res.status(404).json({ status: 'failed', message })
+      } else {
+        res.status(400).json({ status: 'failed', message })
+      }
+    }
+  }
+
   async getReportCommentMovie(req: Request, res: Response): Promise<void> {
     try {
       const { movieId } = req.params
       const reports = await this.reportService.getReportCommentMovie(movieId)
       //console.log(reports)
-      res.status(201).json({ status: 'success', data: reports })
+      res.status(201).json(reports)
     } catch (error) {
       console.error('Error reporting blog:', error)
 
@@ -59,7 +112,6 @@ export class ReportController {
     try {
       const { blogId, reason } = req.body
       const reporterId = res.locals.user?.id
-
       const report = await this.reportService.reportBlog(reporterId, blogId, reason)
       res.status(201).json({ status: 'success', data: report })
     } catch (error) {

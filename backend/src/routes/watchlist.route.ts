@@ -40,7 +40,7 @@ watchlistRouter.put('/:wid/update', updateWatchlistMiddleware, (req, res) =>
 )
 
 // Add movie to watchlist
-watchlistRouter.put('/:wid/add/:mid', (req, res) => watchlistController.addMovie(req, res))
+watchlistRouter.post('/:wid/add/:mid', (req, res) => watchlistController.addMovie(req, res))
 
 // Delete operations
 watchlistRouter.delete('/:wid/delete', (req, res) => watchlistController.deleteWatchlist(req, res))

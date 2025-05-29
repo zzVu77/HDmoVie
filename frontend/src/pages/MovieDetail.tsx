@@ -92,9 +92,9 @@ const MovieDetail = () => {
         <TitleSection>Related Movie</TitleSection>
         <MovieSlider movies={movieData.relatedMovies}></MovieSlider>
       </Wrapper>
-      <Wrapper>
+      <Wrapper className='px-[30px]'>
         <TitleSection>Review</TitleSection>
-        <div className='flex flex-col gap-5 w-[90vw] mx-auto'>
+        <div className='flex flex-col gap-5 w-full mx-auto'>
           {!movieData.status && (
             <div className='w-full'>
               <CommentBox onCommentAdded={handleCommentAdded} />
@@ -113,11 +113,12 @@ const MovieDetail = () => {
               </div>
             </div>
           ) : (
-            <ScrollArea className='h-[70vh] w-[90vw] mx-auto flex flex-col items-center mb-10 lg:px-5'>
+            <ScrollArea className='h-[70vh] w-full mx-auto flex flex-col items-center mb-10 lg:px-5'>
               {movieData.comments.map((comment, index) => (
                 <div className='pb-8' key={index}>
                   <MovieComment
-                    userName={comment.userName}
+                    id={comment.id}
+                    user={comment.user}
                     comment={comment.comment}
                     date={comment.date}
                     rating={comment.rating}

@@ -2,11 +2,14 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PasswordInput } from '@/components/ui/password-input'
+import ForgotPasswordService from '@/services/forgotPasswordService'
 
 const formSchema = z
   .object({
@@ -22,6 +25,23 @@ const formSchema = z
   })
 
 export default function ResetPasswordForm() {
+  const navigate = useNavigate()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [email, setEmail] = useState<string>('')
+  const [otp, setOtp] = useState<string>('')
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem('resetEmail')
+    const storedOtp = localStorage.getItem('resetOtp')
+    if (!storedEmail || !storedOtp) {
+      toast.error('Please complete the verification process')
+      navigate('/forgot-password')
+      return
+    }
+    setEmail(storedEmail)
+    setOtp(storedOtp)
+  }, [navigate])
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -29,19 +49,27 @@ export default function ResetPasswordForm() {
       confirmPassword: '',
     },
   })
-  // async function onSubmit(values: z.infer<typeof formSchema>) {
-  //   try {
-  //     toast.success('Password reset successfully')
-  //   } catch (error) {
-  //     toast.error('Failed to reset password')
-  //   }
-  // }
 
-  async function onSubmit() {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!email || !otp) return
+
+    setIsSubmitting(true)
     try {
-      toast.success('Password reset successfully')
+      const response = await ForgotPasswordService.resetPassword(email, otp, values.password)
+      if (response.data.success) {
+        toast.success(response.data.message)
+        // Clear stored data
+        localStorage.removeItem('resetEmail')
+        localStorage.removeItem('resetOtp')
+        // Redirect to login
+        navigate('/login')
+      } else {
+        toast.error(response.data.errorMessage || 'Failed to reset password')
+      }
     } catch {
-      toast.error('Failed to reset password')
+      toast.error('Failed to reset password. Please try again.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -81,8 +109,8 @@ export default function ResetPasswordForm() {
                   </FormItem>
                 )}
               />
-              <Button type='submit' className='w-full'>
-                Reset Password
+              <Button type='submit' className='w-full' disabled={isSubmitting}>
+                {isSubmitting ? 'Resetting...' : 'Reset Password'}
               </Button>
             </form>
           </Form>

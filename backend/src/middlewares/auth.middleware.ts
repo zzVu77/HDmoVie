@@ -43,8 +43,13 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
     if (refreshToken) {
       const newAccessToken = await authService.refreshAccessToken(refreshToken)
 
-      if (!newAccessToken) {
-        res.status(403).json({ message: 'Invalid refresh token' })
+      if (newAccessToken == '') {
+        res.clearCookie('refreshToken', {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+        })
+        res.status(403).json({ message: 'Can not  decode token' })
         return
       }
 

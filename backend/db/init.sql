@@ -928,35 +928,6 @@ INSERT INTO comments (id, content, date, type, userId, parentCommentId, movieId,
 ('6', 'Yeah...', NOW(), 'BLOG', '1', NULL, NULL, '3');
 
 
--- Notification
-INSERT INTO notifications (id, time, `status`, type, ownerId, reportId, userId, followerId, commentId) VALUES
-('1', NOW(), 'UNREAD', 'FOLLOW', '1', NULL, NULL, '2', NULL),
-('2', NOW(), 'UNREAD', 'FOLLOW', '1', NULL, NULL, '3', NULL),
-('3', NOW(), 'UNREAD', 'FOLLOW', '2', NULL, NULL, '1', NULL),
-('4', NOW(), 'UNREAD', 'FOLLOW', '2', NULL, NULL, '5', NULL),
-('5', NOW(), 'UNREAD', 'FOLLOW', '3', NULL, NULL, '1', NULL),
-('6', NOW(), 'UNREAD', 'FOLLOW', '3', NULL, NULL, '2', NULL),
-('7', NOW(), 'UNREAD', 'FOLLOW', '3', NULL, NULL, '5', NULL),
-('8', NOW(), 'UNREAD', 'FOLLOW', '4', NULL, NULL, '1', NULL),
-('9', NOW(), 'UNREAD', 'FOLLOW', '4', NULL, NULL, '3', NULL),
-('10', NOW(), 'UNREAD', 'FOLLOW', '5', NULL, NULL, '1', NULL),
-('11', NOW(), 'UNREAD', 'FOLLOW', '5', NULL, NULL, '4', NULL),
-('12', NOW(), 'UNREAD', 'LIKE', '1', NULL, '1', NULL, NULL),
-('13', NOW(), 'UNREAD', 'LIKE', '1', NULL, '2', NULL, NULL),
-('14', NOW(), 'UNREAD', 'LIKE', '1', NULL, '3', NULL, NULL),
-('15', NOW(), 'UNREAD', 'LIKE', '2', NULL, '1', NULL, NULL),
-('16', NOW(), 'UNREAD', 'LIKE', '2', NULL, '4', NULL, NULL),
-('17', NOW(), 'UNREAD', 'LIKE', '3', NULL, '1', NULL, NULL),
-('18', NOW(), 'UNREAD', 'LIKE', '4', NULL, '3', NULL, NULL),
-('19', NOW(), 'UNREAD', 'LIKE', '5', NULL, '5', NULL, NULL),
-('20', NOW(), 'UNREAD', 'COMMENT', '1', NULL, NULL, NULL, '1'),
-('21', NOW(), 'UNREAD', 'COMMENT', '1', NULL, NULL, NULL, '2'),
-('22', NOW(), 'UNREAD', 'COMMENT', '2', NULL, NULL, NULL, '3'),
-('23', NOW(), 'UNREAD', 'COMMENT', '2', NULL, NULL, NULL, '4'),
-('24', NOW(), 'UNREAD', 'COMMENT', '1', NULL, NULL, NULL, '5'),
-('25', NOW(), 'UNREAD', 'COMMENT', '3', NULL, NULL, NULL, '6');
-
-
 -- Watchlist
 INSERT INTO watchlists (id, title, description, isPublic, ownerId) VALUES
 ('1', 'My watchlist', 'Nothing to say, just best to watch', 1, '1'),

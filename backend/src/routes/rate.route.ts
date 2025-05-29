@@ -9,6 +9,7 @@ import { authenticateToken } from '~/middlewares/auth.middleware'
 import { CommentService } from '~/services/comment.service'
 import { CommentRepository } from '~/repositories/comment.repository'
 import { BlogRepository } from '~/repositories/blog.repository'
+import { NotificationObserverConfig } from '~/config/notification-observer-config'
 import { createRateMiddleware, createRateWithCommentMiddleware } from '~/middlewares/rate.middleware'
 
 const rateRouter = Router()
@@ -19,9 +20,15 @@ const movieRepository = new MovieRepository(AppDataSource)
 const userRepository = new RegisteredUserRepository(AppDataSource)
 const commentRepository = new CommentRepository(AppDataSource)
 const blogRepository = new BlogRepository(AppDataSource)
-
+const notificationEventManager = NotificationObserverConfig.initialize(AppDataSource)
 const rateService = new RateService(rateRepository, movieRepository, userRepository)
-const commentService = new CommentService(commentRepository, userRepository, movieRepository, blogRepository)
+const commentService = new CommentService(
+  commentRepository,
+  userRepository,
+  movieRepository,
+  blogRepository,
+  notificationEventManager,
+)
 const rateController = new RateController(rateService, commentService)
 
 // All rating operations require authentication

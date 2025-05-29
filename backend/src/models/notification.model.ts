@@ -39,4 +39,11 @@ export abstract class Notification {
   public getOwner(): RegisteredUser {
     return this.owner
   }
+
+  public setStatus(status: 'UNREAD' | 'READ'): void {
+    this.status = status
+  }
+  public setTime(time: Date): void {
+    this.time = time
+  }
 }

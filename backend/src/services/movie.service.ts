@@ -59,7 +59,11 @@ export class MovieService {
       const transformedComments = comments.map((comment) => {
         const userRate = rates.find((rate) => rate.getUser().getId() === comment.getUser().getId())
         return {
-          userName: comment.getUser().getFullName(),
+          id: comment.getId(),
+          user: {
+            id: comment.getUser().getId(),
+            fullName: comment.getUser().getFullName(),
+          },
           comment: comment.getContent(),
           rating: userRate ? userRate.getRateScore() : 0,
           date: comment.getDate(),
@@ -69,12 +73,16 @@ export class MovieService {
       // 5. Get up to 5 movies with same genres (excluding itself)
       const genres = movie.getGenres()
       const genreIds = genres.map((genre) => genre.getId())
-      const relatedMovies = await this.movieRepository.findMoviesByGenreIds(genreIds, movieId, 5)
+      const relatedMovies = await this.movieRepository.findMoviesByGenreIds(
+        genreIds.length !== 0 ? genreIds : [''],
+        movieId,
+        5,
+      )
 
       // 6. Check if user has commented
-      const hasCommented = userId
-        ? comments.some((comment) => String(comment.getUser().getId()) === String(userId))
-        : false
+      const hasCommented =
+        userId === undefined ? true : comments.some((comment) => String(comment.getUser().getId()) === String(userId))
+
       console.log(userId, 'userId')
       // 7. Return combined data
       return {

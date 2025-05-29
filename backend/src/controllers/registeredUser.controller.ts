@@ -13,9 +13,13 @@ export class RegisteredUserController {
     try {
       const data = req.body
       // Create instance RegisterUser
-      const userData = new RegisteredUser(data.email, data.password, data.fullName, data.dateOfBirth)
       // move to service
-      const newUser = await this.registeredUserService.createUser(userData)
+      const newUser = await this.registeredUserService.createUser(
+        data.email,
+        data.password,
+        data.fullName,
+        data.dateOfBirth,
+      )
       res.status(201).json(newUser)
     } catch (error) {
       console.error('Error creating user:', error)
@@ -74,6 +78,12 @@ export class RegisteredUserController {
   async resetPassword(req: Request, res: Response) {
     const { email, otp, password } = req.body
     const result = await this.registeredUserService.resetPassword(email, otp, password)
+    res.status(result.success ? 200 : 400).json(result)
+  }
+
+  async verifyOtp(req: Request, res: Response) {
+    const { email, otp } = req.body
+    const result = await this.registeredUserService.verifyOtpForReset(email, otp)
     res.status(result.success ? 200 : 400).json(result)
   }
 }
