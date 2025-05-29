@@ -4,7 +4,7 @@ import SearchBar from './shared/SearchBar'
 import { Text } from './ui/typography'
 import { Loader2 } from 'lucide-react'
 import { BlogPost, MovieType } from '@/types'
-import BlogService from '@/services/blogService'
+import BlogService from '@/services/BlogService'
 
 interface ListBlogsProps {
   userId?: string
@@ -78,13 +78,13 @@ const ListBlogs = ({ userId, blogs: propBlogs, showSearchBar = false }: ListBlog
       {showSearchBar && (
         <div className='w-full mb-6'>
           <SearchBar
-            searchType="blogs"
-            placeholder="Search blogs by content, author, or tags..."
+            searchType='blogs'
+            placeholder='Search blogs by content, author, or tags...'
             onSearch={handleSearch}
           />
         </div>
       )}
-      
+
       {blogs.length === 0 ? (
         <div className='flex justify-center items-center py-10'>
           <Text className='text-muted-foreground'>No blogs found</Text>

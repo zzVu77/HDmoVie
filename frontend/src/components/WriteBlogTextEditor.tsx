@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback } from './ui/avatar'
 import { format } from 'date-fns'
 import { tagService } from '@/services/tagService'
 import { DialogTitle } from '@radix-ui/react-dialog'
-import BlogService from '@/services/blogService'
+import blogService from '@/services/BlogService'
 import { toast } from 'sonner'
 
 type WriteBlogTextEditorProps = {
@@ -66,7 +66,7 @@ export default function WriteBlogTextEditor({ userFullName }: WriteBlogTextEdito
       // Upload images to cloud
       const mediaCloudUrls = await uploadMediasToCloud(media)
 
-      await BlogService.createBlog({
+      await blogService.createBlog({
         content: content,
         images: mediaCloudUrls.map((url) => ({ url })),
         tags: selectedTag,
