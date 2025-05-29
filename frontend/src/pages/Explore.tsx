@@ -1,5 +1,6 @@
 // Explore.tsx
 import ListMovie from '@/components/ListMovie'
+import MovieSkeleton from '@/components/shared/MoveCardSkeleton'
 import SearchBar from '@/components/shared/SearchBar'
 import Wrapper from '@/components/shared/Wrapper'
 import { Button } from '@/components/ui/button'
@@ -35,8 +36,18 @@ const Explore = () => {
 
   if (loading) {
     return (
-      <Wrapper className='mt-[100px]'>
-        <p className='text-center'>Loading...</p>
+      <Wrapper className='mt-[100px] '>
+        <div className='flex flex-row flex-wrap justify-center items-center gap-4 p-4'>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+        </div>
       </Wrapper>
     )
   }

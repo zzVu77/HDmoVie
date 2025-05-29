@@ -216,6 +216,14 @@ export class BlogRepository {
         WHERE c.blogId = blog.id AND c.type = 'BLOG')`,
         'commentCount',
       )
+      .addSelect(
+        `(SELECT 1 
+        FROM like_interactions_users liu
+        JOIN like_interactions li ON liu.likeInteractionId = li.id
+        WHERE li.blogId = blog.id AND liu.userId = :userId
+        LIMIT 1)`,
+        'isLiked',
+      )
       .leftJoin('blog.owner', 'owner')
       .leftJoin('blog.tags', 'tags')
       .leftJoin('blog.imageUrls', 'imageUrls')

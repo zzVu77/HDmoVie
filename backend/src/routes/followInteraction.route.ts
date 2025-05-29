@@ -12,7 +12,7 @@ const followRouter = Router()
 // Initialize dependencies
 const followInteractionRepository = new FollowInteractionRepository(AppDataSource)
 const userRepository = new RegisteredUserRepository(AppDataSource)
-const notificationEventManager = NotificationObserverConfig.initialize(AppDataSource)
+const notificationEventManager = NotificationObserverConfig.getInstance()
 const followInteractionService = new FollowInteractionService(
   followInteractionRepository,
   userRepository,

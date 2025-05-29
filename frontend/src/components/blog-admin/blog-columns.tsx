@@ -6,8 +6,8 @@ import { ConfirmAlertDialog } from '../shared/ConfirmAlertDialog'
 import { ImageDialogCell } from '../shared/ImageDialogCell'
 import { Button } from '../ui/button'
 import { BlogPost, TagType } from '@/types'
-import { blogService } from '@/services/blogService'
 import { toast } from 'sonner'
+import BlogServices from '@/services/BlogService'
 
 // Function to get first image URL for display
 function getFirstImageUrl(imageUrls: Array<string | { id: string; url: string }>): string | null {
@@ -141,7 +141,7 @@ export const columns = (refreshBlogs: () => Promise<void>): ColumnDef<BlogPost>[
       const blog = row.original
       const handleDelete = async () => {
         try {
-          await blogService.deleteBlog(blog.id)
+          await BlogServices.deleteBlog(blog.id)
           toast.success('Blog deleted successfully')
           refreshBlogs()
         } catch {

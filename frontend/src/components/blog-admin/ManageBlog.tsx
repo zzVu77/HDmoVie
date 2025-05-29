@@ -22,9 +22,8 @@ import { ChevronDown } from 'lucide-react'
 import * as React from 'react'
 import Wrapper from '../shared/Wrapper'
 import { columns } from './blog-columns'
-
-import { blogService } from '@/services/blogService'
 import { BlogPost } from '@/types'
+import blogService from '@/services/BlogService'
 
 export function ManageBlog() {
   const [data, setBlogs] = React.useState<BlogPost[]>([])
