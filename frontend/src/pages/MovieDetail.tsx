@@ -39,7 +39,7 @@ const MovieDetail = () => {
       setMovieData({
         ...movieData,
         comments: [newComment, ...movieData.comments],
-        status: true, // Update status to indicate user has commented
+        status: 'commented', // Update status to indicate user has commented
       })
     }
   }
@@ -95,7 +95,11 @@ const MovieDetail = () => {
       <Wrapper className='px-[30px]'>
         <TitleSection>Review</TitleSection>
         <div className='flex flex-col gap-5 w-full mx-auto'>
-          {!movieData.status && (
+          {movieData.status === 'unauthorized' && (
+            <div className='text-center text-red-500 w-full'> You need to log in to comment.</div>
+          )}
+
+          {movieData.status === 'not_commented' && (
             <div className='w-full'>
               <CommentBox onCommentAdded={handleCommentAdded} />
             </div>

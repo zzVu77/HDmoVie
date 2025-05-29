@@ -170,7 +170,7 @@ export type MovieCommentResponse = {
 }
 
 export type MovieDetailResponse = {
-  status: boolean
+  status: 'unauthorized' | 'commented' | 'not_commented'
   movie: MovieType
   comments: MovieCommentProps[]
   relatedMovies: MovieType[]

@@ -15,7 +15,7 @@ export interface MoviesHighlightResponse {
 }
 
 export interface MovieDetailResponse {
-  status: boolean
+  status: 'unauthorized' | 'commented' | 'not_commented'
   movie: MovieType
   relatedMovies: MovieType[]
   comments: MovieCommentProps[]
