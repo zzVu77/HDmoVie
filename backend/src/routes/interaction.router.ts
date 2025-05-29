@@ -7,7 +7,7 @@ import { authenticateToken } from '~/middlewares/auth.middleware'
 
 const interactionRouter = Router()
 
-const notificationEventManager = NotificationObserverConfig.initialize(AppDataSource)
+const notificationEventManager = NotificationObserverConfig.getInstance()
 const interactionService = new InteractionService(AppDataSource, notificationEventManager)
 const interactionController = new InteractionController(interactionService)
 

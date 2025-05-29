@@ -10,6 +10,7 @@ import { WatchlistRepository } from '~/repositories/watchlist.repository'
 import { NotificationObserverConfig } from '~/config/notification-observer-config'
 import { RegisteredUserService } from '~/services/registeredUser.service'
 import { changePasswordMiddleware, updateUserInfoMiddleware } from '~/middlewares/registeredUser.middleware'
+import { optionalAuthenticateToken } from '~/middlewares/auth.middleware'
 import { FollowInteractionService } from '~/services/followInteraction.service'
 import { BlogService } from '~/services/blog.service'
 import { WatchlistService } from '~/services/watchlist.service'
@@ -25,7 +26,7 @@ const tagRepository = new TagRepository(AppDataSource)
 const followInteractionRepository = new FollowInteractionRepository(AppDataSource)
 const watchlistRepository = new WatchlistRepository(AppDataSource)
 const movieRepository = new MovieRepository(AppDataSource)
-const notificationEventManager = NotificationObserverConfig.initialize(AppDataSource)
+const notificationEventManager = NotificationObserverConfig.getInstance()
 const profileService = new ProfileService(registeredUserRepository, followInteractionRepository)
 const registeredUserService = new RegisteredUserService(registeredUserRepository)
 const blogService = new BlogService(blogRepository, registeredUserRepository, tagRepository)
@@ -47,7 +48,7 @@ const profileController = new ProfileController(
 // Public routes - anyone can view profiles and their public content
 profileRouter.get('/', (req, res) => profileController.getSelf(req, res))
 profileRouter.get('/:id', (req, res) => profileController.get(req, res))
-profileRouter.get('/:id/blogs', (req, res) => profileController.getBlogs(req, res))
+profileRouter.get('/:id/blogs', optionalAuthenticateToken, (req, res) => profileController.getBlogs(req, res))
 profileRouter.get('/:id/follow-interaction', (req, res) => profileController.getFollowInteraction(req, res))
 profileRouter.get('/:id/follow-interaction/followers', (req, res) => profileController.getFollowers(req, res))
 profileRouter.get('/:id/follow-interaction/followings', (req, res) => profileController.getFollowings(req, res))

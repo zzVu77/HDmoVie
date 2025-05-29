@@ -20,7 +20,7 @@ const movieRepository = new MovieRepository(AppDataSource)
 const userRepository = new RegisteredUserRepository(AppDataSource)
 const commentRepository = new CommentRepository(AppDataSource)
 const blogRepository = new BlogRepository(AppDataSource)
-const notificationEventManager = NotificationObserverConfig.initialize(AppDataSource)
+const notificationEventManager = NotificationObserverConfig.getInstance()
 const rateService = new RateService(rateRepository, movieRepository, userRepository)
 const commentService = new CommentService(
   commentRepository,
