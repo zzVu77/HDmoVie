@@ -4,6 +4,7 @@ import Wrapper from '@/components/shared/Wrapper'
 import { getHighlightMovies, MoviesHighlightResponse } from '@/services/movieService'
 import { useEffect, useState } from 'react'
 import { TitleSection } from './MovieDetail'
+import MovieSkeleton from '@/components/shared/MoveCardSkeleton'
 
 const Home = () => {
   const [movies, setMovies] = useState<MoviesHighlightResponse | null>(null)
@@ -27,7 +28,17 @@ const Home = () => {
   if (loading) {
     return (
       <Wrapper className='mt-[100px]'>
-        <p className='text-center'>Đang tải...</p>
+        <div className='flex flex-row flex-wrap justify-center items-center gap-4 p-4'>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+          <MovieSkeleton></MovieSkeleton>
+        </div>
       </Wrapper>
     )
   }

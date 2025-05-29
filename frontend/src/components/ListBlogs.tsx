@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import BlogService from '@/services/BlogService'
+import { BlogPost, MovieType } from '@/types'
+import { useEffect, useState } from 'react'
 import BlogCard from './BlogCard'
 import SearchBar from './shared/SearchBar'
+import SkeletonPostCard from './shared/SkeletonPostCard'
+import Wrapper from './shared/Wrapper'
 import { Text } from './ui/typography'
-import { Loader2 } from 'lucide-react'
-import { BlogPost, MovieType } from '@/types'
-import BlogService from '@/services/BlogService'
 
 interface ListBlogsProps {
   userId?: string
@@ -59,9 +60,19 @@ const ListBlogs = ({ userId, blogs: propBlogs, showSearchBar = false }: ListBlog
 
   if (loading) {
     return (
-      <div className='flex justify-center items-center py-12'>
-        <Loader2 className='h-8 w-8 text-primary-yellow animate-spin' />
-      </div>
+      <Wrapper>
+        <div className='flex flex-row flex-wrap justify-center items-center gap-4 p-4'>
+          <SkeletonPostCard></SkeletonPostCard>
+          <SkeletonPostCard></SkeletonPostCard>
+          <SkeletonPostCard></SkeletonPostCard>
+          <SkeletonPostCard></SkeletonPostCard>
+          <SkeletonPostCard></SkeletonPostCard>
+          <SkeletonPostCard></SkeletonPostCard>
+          <SkeletonPostCard></SkeletonPostCard>
+          <SkeletonPostCard></SkeletonPostCard>
+          <SkeletonPostCard></SkeletonPostCard>
+        </div>
+      </Wrapper>
     )
   }
 

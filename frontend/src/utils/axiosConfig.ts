@@ -5,8 +5,8 @@ const axiosInstance: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // để gửi cookie (refresh token)
-  timeout: 10000,
+  withCredentials: true,
+  timeout: 300000,
 })
 
 // ✅ Correct way: use .set() on AxiosHeaders
